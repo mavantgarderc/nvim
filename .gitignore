@@ -1,0 +1,6 @@
+*.swp
+*.bak
+*.tmp
+lua/user/lazy-lock.json
+
+
