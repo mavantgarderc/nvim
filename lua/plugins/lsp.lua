@@ -17,4 +17,17 @@ lspconfig.lua_ls.setup({
 	},
 })
 
+-- Python LSP setup with Pyright
+lspconfig.pyright.setup({
+	settings = {
+		python = {
+			analysis = {
+				typeCheckingMode = "basic", -- Or "strict" for strict checking
+				autoSearchPaths = true,
+				useLibraryCodeForTypes = true,
+			},
+		},
+	},
+})
+
 -- Add more language servers as needed...

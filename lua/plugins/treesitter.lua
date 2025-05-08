@@ -11,7 +11,7 @@ require("nvim-treesitter.configs").setup({
 		"html",
 		"css",
 		"javascript",
-		"csharp",
+		"c_sharp",
 	},
 	highlight = {
 		enable = true,
