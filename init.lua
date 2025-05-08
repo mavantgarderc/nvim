@@ -3,15 +3,32 @@
 -- Load editor settings
 require("lua.options")
 
--- Bootstrap and setup lazy.nvim plugins
-require("lua.lua")
+-- Bootstrapping lazy.nvim
+local lazypath = vim.fn.stdpath("data") .. "/lazy/lazy.nvim"
+if not vim.loop.fs_stat(lazypath) then
+  vim.fn.system({
+    "git", "clone", "--filter=blob:none",
+    "https://github.com/folke/lazy.nvim.git",
+    "--branch=stable", lazypath
+  })
+end
+vim.opt.rtp:prepend(lazypath)
+
+-- Load plugins
+require("plugins")
+
+
+-- null_ls loader
+local null_ls = require("null-ls")
 
 -- Load plugin configurations
-require("lua.plugins.lsp")
-require("lua.plugins.cmp")
-require("lua.plugins.ui")
-require("lua.plugins.gruvbox")
-require("lua.plugins.treesitter")
+require("custom.lua.plugins.lsp")
+require("custom.lua.plugins.cmp")
+require("custom.lua.plugins.ui")
+require("custom.lua.plugins.gruvbox")
+require("custom.lua.plugins.treesitter")
+require("custom.lua.plugins.linter")
+
 
 -- my addons
 vim.g.loaded_perl_provider = 0 -- disable perl 
@@ -35,6 +52,7 @@ null_ls.setup({
 	sources = {
 		-- Python linters
 		null_ls.builtins.diagnostics.flake8,
+		null_ls.builtins.diagnostics.isort,
 		null_ls.builtins.formatting.black,
 		null_ls.builtins.diagnostics.pylint,
 	},
