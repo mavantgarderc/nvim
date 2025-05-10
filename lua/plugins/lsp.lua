@@ -1,33 +1,24 @@
--- Language Server Protocol setup
-
-local lspconfig = require("lspconfig")
-
--- Example: Python
-lspconfig.pyright.setup({})
-
--- Lua (Neovim internal)
-lspconfig.lua_ls.setup({
-	settings = {
-		Lua = {
-			runtime = { version = "LuaJIT" },
-			diagnostics = { globals = { "vim" } },
-			workspace = { library = vim.api.nvim_get_runtime_file("", true) },
-			telemetry = { enable = false },
-		},
-	},
-})
-
--- Python LSP setup with Pyright
-lspconfig.pyright.setup({
-	settings = {
-		python = {
-			analysis = {
-				typeCheckingMode = "basic", -- Or "strict" for strict checking
-				autoSearchPaths = true,
-				useLibraryCodeForTypes = true,
-			},
-		},
-	},
-})
-
--- Add more language servers as needed...
+return {
+    { "neovim/nvim-lspconfig" },
+    { "williamboman/mason.nvim", build = ":MasonUpdate" },
+    { "williamboman/mason-lspconfig.nvim" },
+    {
+      "hrsh7th/nvim-cmp",
+      dependencies = {
+        "hrsh7th/cmp-nvim-lsp",
+        "hrsh7th/cmp-buffer",
+        "hrsh7th/cmp-path",
+        "L3MON4D3/LuaSnip",
+        "saadparwaiz1/cmp_luasnip",
+        "rafamadriz/friendly-snippets",
+        "nvim-lua/plenary.nvim",
+      },
+    },
+  config = function()
+    require(
+      "config.lsp.servers",
+      "config.cmp",
+      "config.formatter",
+    )
+  end,
+}  
