@@ -11,14 +11,20 @@ let's generate its filetree structure & confirm it.
 
 ~/.config/nvim/
 │
-├── init.lua                 # Bootstrap: Loads core modules & plugin manager
+├── init.lua       # Bootstrap: Loads core modules & plugin manager
 │
-├── lua/                     # Modularized Lua configurations
+├── lua/           # Modularized Lua configurations
+│   ├── interfaces/
+│   │   ├── lsp.lua        # LSP configuration contract
+│   │   ├── plugin.lua     # Plugin initialization pattern
+│   │   ├── snippet.lua    # Snippet format specification
+│   │   └── env.lua        # Environment detection interface
+│   │
 │   ├── core/                # Essential behavior and editor DNA
 │   │   ├── autocmds.lua     # Filetype triggers, session handlers
 │   │   ├── keymaps.lua      # Leader-based bindings, modal mappings
 │   │   ├── options.lua      # Editor flags (scrolloff, relativenumber, etc.)
-│   │   └── lsp/            # Language Server Protocol ecosystem
+│   │   └── lsp/             # Language Server Protocol ecosystem
 │   │       ├── init.lua     # LSP bootstrap (capabilities, handlers)
 │   │       ├── mason.lua    # LSP/DAP/Linter/Formatter installations
 │   │       ├── null-ls.lua  # Bridge for non-LSP code tools
@@ -34,9 +40,9 @@ let's generate its filetree structure & confirm it.
 │   │   ├── gitsigns.lua     # Git gutter integration
 │   │   ├── dap.lua          # Debug Adapter Protocol setup
 │   │   ├── neotree.lua      # File explorer customization
-│   │   ├── omnisharp.lua
-│   │   ├── dap.lua
-│   └── ui/                  # Visual presentation layer
+│   │   ├── omnisharp.lua    # CSharp language helper 
+│   │   ├── dap.lua          # Debuger Adapter Protocol
+│   └── ui/                 # Visual presentation layer
 │       ├── statusline.lua    # lualine/nvim-navic integration
 │       └── highlights.lua    # Custom syntax colors
 │
@@ -47,16 +53,39 @@ let's generate its filetree structure & confirm it.
 │   └── ftplugin/            # Filetype-specific overrides
 │
 ├── ftplugin/                # Language-aware editor rules
-│   ├── cs.lua       # C# coding conventions
-│   ├── python.lua   # Python indentation/runtime
-│   └── sql.lua      # SQL formatting presets
+│   ├── languages/
+│   │   ├── cs.lua       # C# coding conventions
+│   │   ├── python.lua   # Python indentation/runtime
+│   │   ├── sql.lua      # SQL formatting presets
+│   │   ├── ts.lua       # TypeScript presets
+│   │   ├── bash.lua     # Bash Script presets
+│   │   ├── c.lua        # C presets 
+│   │   ├── 
+│   │   ├── 
+│   │   └── lua.lua
+│   │
+│   └── framework/
+│       ├── ANCore
+│       ├── Keras
+│       ├── MVC
+│       ├── PyTorch
+│       ├── React
+│       ├── 
+│       ├── 
+│       ├── 
+│       └── 
 │
 ├── snippets/                # Code templates
 │   ├── csharp/      # C# class/interface snippets
 │   ├── python/      # Python pytest/async templates
-│   └── sql/         # Common query patterns
+│   ├── sql/         # Common query patterns, stored procedures
+│   ├── ts/
+│   ├── bash/
+│   ├── c/
+│   └── 
 │
 ├── spell/                   # Custom dictionaries
-│   └── en.utf-8.add        # Project-specific terms
+│   ├── fa.utf-8.add         # Project-specific terms
+│   └── en.utf-8.add         
 │
 └── .editorconfig            # Cross-IDE style constraints
