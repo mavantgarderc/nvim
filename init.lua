@@ -63,3 +63,6 @@ pcall(require, "core.sessionss")   -- Auto session restore/save
 -- ============================================================================
 -- 🔹 System initialized. Time to craft something brilliant.
 -- ============================================================================
+
+-- opts.rocks.hererocks = false
+-- opts.rocks.enabled = false

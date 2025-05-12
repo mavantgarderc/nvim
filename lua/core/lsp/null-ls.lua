@@ -20,17 +20,36 @@ local sources = {
   null_ls.builtins.formatting.sqlfluff,                                   -- SQL
 
   -- ** Diagnostics & Linting Sources **
-  null_ls.builtins.diagnostics.flake8,     -- Python
-  null_ls.builtins.diagnostics.eslint,     -- JS/TS
-  null_ls.builtins.diagnostics.shellcheck, -- Bash
-  null_ls.builtins.diagnostics.markdownlint, -- Markdown
+  null_ls.builtins.diagnostics.flake8,        -- Python
+  null_ls.builtins.diagnostics.eslint,        -- JS/TS
+  null_ls.builtins.diagnostics.shellcheck,    -- Bash
+  null_ls.builtins.diagnostics.markdownlint,  -- Markdown
 
   -- ** Code Actions Sources **
-  null_ls.builtins.code_actions.gitsigns,  -- Git hunks
+  null_ls.builtins.code_actions.gitsigns,     -- Git hunks
 }
 
 -- ============================================================================
--- Null-ls Setup with Custom On-Attach for Formatting on Save
+-- Mason-Null-LS Integration: Ensures Tool Installation & Auto-Registration
+-- ============================================================================
+
+require("mason-null-ls").setup({
+  ensure_installed = {
+    "black",
+    "prettier",
+    "stylua",
+    "sqlfluff",
+    "flake8",
+    "eslint_d",
+    "shellcheck",
+    "markdownlint",
+  },
+  automatic_installation = true,
+  handlers = {}, -- optional: use to override specific tool setup if needed
+})
+
+-- ============================================================================
+-- Null-ls Setup with On-Attach for Autoformatting on Save
 -- ============================================================================
 
 null_ls.setup({
@@ -38,12 +57,8 @@ null_ls.setup({
 
   -- Auto-formatting setup: run formatting on save if supported by the client
   on_attach = function(client, bufnr)
-    -- Check if client supports formatting method
     if client.supports_method("textDocument/formatting") then
-      -- Clear any existing autocommands for formatting
       vim.api.nvim_clear_autocmds({ group = "LspFormatting", buffer = bufnr })
-
-      -- Set up BufWritePre autocommand for formatting on save
       vim.api.nvim_create_autocmd("BufWritePre", {
         group = vim.api.nvim_create_augroup("LspFormatting", { clear = true }),
         buffer = bufnr,

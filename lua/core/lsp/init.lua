@@ -13,7 +13,7 @@ local lspconfig = require("lspconfig")
 local servers = {
   "ts_ls", "pyright", "lua_ls",
   "bashls", "html", "cssls",
-  "gopls", "rust_analyzer", "omnisharp",
+  "omnisharp",
   "clangd", "jsonls", "taplo", "yamlls",
 }
 

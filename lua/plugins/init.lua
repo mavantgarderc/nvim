@@ -112,6 +112,29 @@ require("lazy").setup({
       "nvim-treesitter/nvim-treesitter",
     },
   },
+  { -- mason-null-ls
+  "jay-babu/mason-null-ls.nvim",
+  dependencies = {
+    "williamboman/mason.nvim",
+    "nvimtools/none-ls.nvim", -- a.k.a. null-ls
+  },
+  config = function()
+    require("mason-null-ls").setup({
+      ensure_installed = {
+        "black",
+        "prettier",
+        "stylua",
+        "sqlfluff",
+        "flake8",
+        "eslint_d",
+        "shellcheck",
+        "markdownlint",
+      },
+      automatic_installation = true,
+      handlers = {}, -- optional custom handlers
+    })
+  end,
+  },
 
   -- Debugging
   {

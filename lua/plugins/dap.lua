@@ -38,23 +38,23 @@ dap.configurations.python = {
   },
 }
 
--- C/C++ debug adapter (lldb-vscode)
-dap.adapters.cpp = {
-  type = "executable",
-  command = "lldb-vscode",
-  name = "lldb",
-}
+-- -- C/C++ debug adapter (lldb-vscode)
+-- dap.adapters.cpp = {
+--   type = "executable",
+--   command = "lldb-vscode",
+--   name = "lldb",
+-- }
 
-dap.configurations.cpp = {
-  {
-    name = "Launch C++ Program",
-    type = "cpp",
-    request = "launch",
-    program = "${file}",
-    cwd = "${workspaceFolder}",
-    stopOnEntry = false,
-  },
-}
+-- dap.configurations.cpp = {
+--   {
+--     name = "Launch C++ Program",
+--     type = "cpp",
+--     request = "launch",
+--     program = "${file}",
+--     cwd = "${workspaceFolder}",
+--     stopOnEntry = false,
+--   },
+-- }
 
 -- Keymaps for debugging
 vim.keymap.set("n", "<F5>", dap.continue, { desc = "Start/Continue Debugging" })
