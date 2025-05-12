@@ -25,6 +25,12 @@ require("lazy").setup({
   { "nvim-lua/plenary.nvim", lazy = true },
   { "nvim-tree/nvim-web-devicons", lazy = true },
 
+  -- Mini Icons
+  {
+    "echasnovski/mini.nvim",
+    version = "*",  -- You can specify a version if needed
+  },
+
   -- Fuzzy Finder: Telescope
   {
     "nvim-telescope/telescope.nvim",
