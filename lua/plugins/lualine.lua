@@ -3,8 +3,8 @@
 -- ============================================================================
 -- Status line for Neovim, highly customizable and fast
 -- ============================================================================
-
-require("lualine").setup({
+local lualine = pcall(require, "lualine")
+lualine.setup({
   options = {
     icons_enabled = true,
     theme = 'gruvbox',  -- Change this to your desired theme

@@ -4,7 +4,7 @@
 -- C# language support with Omnisharp for Neovim (LSP and IDE-like features)
 -- ============================================================================
 
-local lspconfig = require("lspconfig")
+local lspconfig = pcall(require, "lspconfig")
 
 -- Omnisharp setup for C#
 lspconfig.omnisharp.setup({

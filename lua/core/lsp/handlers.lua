@@ -11,7 +11,8 @@ local M = {}
 -- Enhanced LSP Capabilities for nvim-cmp Integration
 -- ============================================================================
 -- This adds enhanced LSP client capabilities, including nvim-cmp integration.
-M.capabilities = require("cmp_nvim_lsp").default_capabilities()
+local cmp_nvim_lsp = pcall(require, "cmp_nvim_lsp")
+M.capabilities = cmp_nvim_lsp.default_capabilities()
 
 -- ============================================================================
 -- Global `on_attach` Function for All LSP Clients

@@ -4,10 +4,10 @@
 -- Initializes LSP servers configured via mason-lspconfig and lspconfig
 -- ============================================================================
 
-require("mason")
+-- local mason = pcall(require, "mason")
 
-local handlers = require("core.lsp.handlers")
-local lspconfig = require("lspconfig")
+local handlers = pcall(require, "core.lsp.handlers")
+local lspconfig = pcall(require, "lspconfig")
 
 -- List your LSP servers
 local servers = {

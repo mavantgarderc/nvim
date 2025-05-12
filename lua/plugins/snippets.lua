@@ -4,9 +4,10 @@
 -- Snippet engine for Neovim with support for VSCode-style snippets
 -- ============================================================================
 
-local luasnip = require("luasnip")
+local luasnip = pcall(require, "luasnip")
+local luasnipcode = pcall(require, "luasnip.loaders.from_vscode")
 
-require("luasnip.loaders.from_vscode").lazy_load() -- Load from friendly-snippets
+luasnipcode.lazy_load() -- Load from friendly-snippets
 
 luasnip.config.set_config({
   history = true,

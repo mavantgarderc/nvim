@@ -34,25 +34,25 @@ vim.opt.rtp:prepend(lazypath)
 -- LOAD CORE MODULES -----------------------------------------------------------
 -- Load editor behavior, keybindings, and other essential DNA
 -- ----------------------------------------------------------------------------
-require("core.options")    -- Editor settings (number, scrolloff, etc.)
-require("core.keymaps")    -- Leader bindings, mode mappings
-require("core.autocmds")   -- Auto commands & filetype triggers
-require("core.commands")   -- Custom :Commands for workflows
+pcall(require, "core.options")    -- Editor settings (number, scrolloff, etc.)
+pcall(require, "core.keymaps")    -- Leader bindings, mode mappings
+pcall(require, "core.autocmds")   -- Auto commands & filetype triggers
+pcall(require, "core.commands")   -- Custom :Commands for workflows
 
 -- 3. --------------------------------------------------------------------------
 -- PLUGIN INITIALIZATION -------------------------------------------------------
 -- This uses Lazy.nvim for performance-aware lazy-loading of all plugins
 -- Plugins are declared modularly in `lua/plugins/init.lua`
 -- ----------------------------------------------------------------------------
-require("plugins.init")    -- Plugin declarations & lazy loading config
+pcall(require, "plugins.init")    -- Plugin declarations & lazy loading config
 
 -- 4. --------------------------------------------------------------------------
 -- UI + STATUSLINE + THEMES ---------------------------------------------------
 -- Separately scoped for presentation logic
 -- ----------------------------------------------------------------------------
-require("ui.statusline")
-require("ui.highlights")
-require("ui.themes")
+pcall(require, "ui.statusline")
+pcall(require, "ui.highlights")
+pcall(require, "ui.themes")
 
 -- 5. --------------------------------------------------------------------------
 -- OPTIONAL: Telemetry & Session Resumption (User-dependent)
@@ -63,6 +63,3 @@ pcall(require, "core.sessionss")   -- Auto session restore/save
 -- ============================================================================
 -- 🔹 System initialized. Time to craft something brilliant.
 -- ============================================================================
-
--- opts.rocks.hererocks = false
--- opts.rocks.enabled = false

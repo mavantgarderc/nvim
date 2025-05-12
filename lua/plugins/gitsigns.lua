@@ -4,7 +4,7 @@
 -- Git integration in the sign column: Git diffs, blame, and actions
 -- ============================================================================
 
-local gitsigns = require("gitsigns")
+local gitsigns = pcall(require, "gitsigns")
 
 gitsigns.setup({
   signs = {

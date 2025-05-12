@@ -4,10 +4,10 @@
 -- Autocompletion setup for Neovim with nvim-cmp, luasnip, treesitter, and signature help
 -- ============================================================================
 
-local cmp = require("cmp")
-local luasnip = require("luasnip")
-local lspcmp = require("cmp_nvim_lsp")
-local lspkind = require("lspkind")
+local cmp = pcall(require, "cmp")
+local luasnip = pcall(require, "luasnip")
+local lspcmp = pcall(require, "cmp_nvim_lsp")
+local lspkind = pcall(require, "lspkind")
 
 -- Setup nvim-cmp
 cmp.setup({

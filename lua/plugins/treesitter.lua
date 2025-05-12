@@ -3,8 +3,8 @@
 -- ============================================================================
 -- Modern parsing engine for syntax, folding, and intelligent navigation
 -- ============================================================================
-
-require("nvim-treesitter.configs").setup({
+local treeconfig = pcall(require, "nvim-treesitter.configs")
+treeconfig.setup({
   -- Languages to ensure are installed
   ensure_installed = {
     "lua", "vim", "vimdoc",

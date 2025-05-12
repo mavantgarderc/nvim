@@ -3,8 +3,8 @@
 -- ============================================================================
 -- Customize the status line and navigation using lualine and nvim-navic.
 -- ============================================================================
-
-require("lualine").setup({
+local line = pcall(require, "lualine")
+line.setup({
   options = {
     icons_enabled = true,
     theme = "tokyonight",
@@ -24,72 +24,74 @@ require("lualine").setup({
 })
 
 
--- -- Initialize lualine (statusline plugin)
--- require("lualine").setup({
---   options = {
---     theme = "gruvbox",  -- Choose your theme for the status line
---     section_separators = {"", ""},  -- Set separators between sections
---     component_separators = {"", ""},  -- Set separators within sections
---   },
---   sections = {
---     -- Left section
---     lualine_a = {"mode"},  -- Show current mode (e.g., Normal, Insert)
---     lualine_b = {"branch"},  -- Show Git branch
---     lualine_c = {"filename"},  -- Show the current file name
---     lualine_x = {
---       "filetype",  -- Show file type (e.g., python, lua)
---       "diagnostics",  -- Show LSP diagnostics (e.g., errors, warnings)
---       "encoding",  -- Show file encoding (e.g., UTF-8)
---     },
---     lualine_y = {"progress"},  -- Show progress (line/total lines)
---     lualine_z = {"location"},  -- Show current line and column number
---   },
---   extensions = {"fugitive", "neo-tree"},  -- Enable extensions (e.g., Git, file explorer)
--- })
+-- Initialize lualine (statusline plugin)
+local lualine = pcall(require, "lualine")
+lualine.setup({
+  options = {
+    theme = "gruvbox",  -- Choose your theme for the status line
+    section_separators = {"", ""},  -- Set separators between sections
+    component_separators = {"", ""},  -- Set separators within sections
+  },
+  sections = {
+    -- Left section
+    lualine_a = {"mode"},  -- Show current mode (e.g., Normal, Insert)
+    lualine_b = {"branch"},  -- Show Git branch
+    lualine_c = {"filename"},  -- Show the current file name
+    lualine_x = {
+      "filetype",  -- Show file type (e.g., python, lua)
+      "diagnostics",  -- Show LSP diagnostics (e.g., errors, warnings)
+      "encoding",  -- Show file encoding (e.g., UTF-8)
+    },
+    lualine_y = {"progress"},  -- Show progress (line/total lines)
+    lualine_z = {"location"},  -- Show current line and column number
+  },
+  extensions = {"fugitive", "neo-tree"},  -- Enable extensions (e.g., Git, file explorer)
+})
 
--- -- Initialize nvim-navic (for LSP navigation)
--- require("nvim-navic").setup({
---   separator = " > ",  -- Separator between navigation levels
---   depth_limit = 3,    -- Limit the depth of navigation context
---   icons = {
---     File = "",
---     Module = "",
---     Namespace = "",
---     Package = "",
---     Class = "ﴯ",
---     Method = "",
---     Property = "",
---     Field = "",
---     Constructor = "",
---     Enum = "",
---     Interface = "ﰮ",
---     Function = "",
---     Variable = "",
---     Constant = "",
---     String = "",
---     Number = "",
---     Boolean = "⊨",
---     Array = "",
---     Object = "",
---     Key = "",
---     Null = "NULL",
---     EnumMember = "",
---     Struct = "",
---     Event = "",
---     Operator = "",
---     TypeParameter = "",
---   },
--- })
+-- Initialize nvim-navic (for LSP navigation)
+local nvim_navic = pcall(require, "nvim-navic")
+nvim_navic.setup({
+  separator = " > ",  -- Separator between navigation levels
+  depth_limit = 3,    -- Limit the depth of navigation context
+  icons = {
+    File = "",
+    Module = "",
+    Namespace = "",
+    Package = "",
+    Class = "ﴯ",
+    Method = "",
+    Property = "",
+    Field = "",
+    Constructor = "",
+    Enum = "",
+    Interface = "ﰮ",
+    Function = "",
+    Variable = "",
+    Constant = "",
+    String = "",
+    Number = "",
+    Boolean = "⊨",
+    Array = "",
+    Object = "",
+    Key = "",
+    Null = "NULL",
+    EnumMember = "",
+    Struct = "",
+    Event = "",
+    Operator = "",
+    TypeParameter = "",
+  },
+})
 
--- -- Keybinding to toggle the statusline
--- vim.keymap.set("n", "<leader>ss", function()
---   require("lualine").toggle()  -- Toggle the statusline visibility
--- end, { desc = "Toggle Statusline" })
+-- Keybinding to toggle the statusline
+vim.keymap.set("n", "<leader>ss", function()
+  lualine.toggle()  -- Toggle the statusline visibility
+end, { desc = "Toggle Statusline" })
 
--- -- ============================================================================
--- -- Statusline initialized
--- -- ============================================================================
+-- ============================================================================
+-- Statusline initialized
+-- ============================================================================
 
--- -- ============================================================================
--- -- Statusline Configuration — ui/statusline.lua
--- -- ============================================================================
+-- ============================================================================
+-- Statusline Configuration — ui/statusline.lua
+-- ============================================================================

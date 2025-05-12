@@ -35,7 +35,7 @@ end, { desc = "Toggle spell checking" })
 -- ============================================================================
 -- :InspectSyntax — Debug Treesitter syntax groups at cursor
 api.nvim_create_user_command("InspectSyntax", function()
-  local ts_utils = require("nvim-treesitter.ts_utils")
+  local ts_utils = pcall(require, "nvim-treesitter.ts_utils")
   local node = ts_utils.get_node_at_cursor()
   if node then
     print("🧬 Syntax Node: " .. node:type())

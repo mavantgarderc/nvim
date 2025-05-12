@@ -18,9 +18,8 @@ vim.opt.rtp:prepend(lazypath)
 -- ============================================================================
 -- Plugin Definitions
 -- ============================================================================
-
 require("lazy").setup({
-
+  
   -- Core Enhancements
   { "nvim-lua/plenary.nvim", lazy = true },
   { "nvim-tree/nvim-web-devicons", lazy = true },
@@ -36,21 +35,21 @@ require("lazy").setup({
     "nvim-telescope/telescope.nvim",
     cmd = "Telescope",
     dependencies = { "nvim-lua/plenary.nvim" },
-    config = function() require("plugins.telescope") end,
+    config = function() pcall(require, "plugins.telescope") end,
   },
 
   -- Syntax Highlighting & Parsing
   {
     "nvim-treesitter/nvim-treesitter",
     build = ":TSUpdate",
-    config = function() require("plugins.treesitter") end,
+    config = function() pcall(require, "plugins.treesitter") end,
   },
 
   -- Git Integration
   {
     "lewis6991/gitsigns.nvim",
     event = { "BufReadPre", "BufNewFile" },
-    config = function() require("plugins.gitsigns") end,
+    config = function() pcall(require, "plugins.gitsigns") end,
   },
 
   -- File Explorer
@@ -58,13 +57,13 @@ require("lazy").setup({
     "nvim-neo-tree/neo-tree.nvim",
     branch = "v3.x",
     dependencies = { "MunifTanjim/nui.nvim" },
-    config = function() require("plugins.neotree") end,
+    config = function() pcall(require, "plugins.neotree") end,
   },
 
   -- LSP, Autocompletion, Linting
   { -- LSP Config
     "neovim/nvim-lspconfig",
-    config = function() require("core.lsp.init") end,
+    config = function() pcall(require, "core.lsp.init") end,
   },
   { -- Mason
     "williamboman/mason.nvim",
@@ -75,6 +74,7 @@ require("lazy").setup({
       end)
     end,
     config = function()
+      -- local mason = pcall(require, "mason")
       require("mason").setup({
         ui = {
           border = "rounded",
@@ -91,6 +91,8 @@ require("lazy").setup({
     "williamboman/mason-lspconfig.nvim",
     dependencies = { "williamboman/mason.nvim" },
     config = function()
+      -- local masonlspconfig = pcall(require, "mason-lspconfig")
+      -- masonlspconfig.setup({
       require("mason-lspconfig").setup({
         ensure_installed = {
           "ts_ls", "pyright", "lua_ls", "clangd", "bashls",
@@ -98,20 +100,21 @@ require("lazy").setup({
         },
         automatic_installation = true,
       })
-
       -- Load your custom LSP configuration handler
-      require("core.lsp.mason")
+      pcall(require, "core.lsp.mason")
     end,
   },
   { -- null-ls
     "jose-elias-alvarez/null-ls.nvim",
-    config = function() require("core.lsp.null-ls") end,
+    config = function() 
+      require("core.lsp.null-ls") 
+    end,
   },
   { -- LSP Saga
     "nvimdev/lspsaga.nvim",
     event = "LspAttach",
     config = function()
-      require("plugins.lspsaga")
+      pcall(require, "plugins.lspsaga")
     end,
     dependencies = {
       "nvim-tree/nvim-web-devicons",
@@ -145,27 +148,17 @@ require("lazy").setup({
   -- Debugging
   {
     "mfussenegger/nvim-dap",
-    config = function() require("plugins.dap") end,
+    config = function() 
+      pcall(require, "plugins.dap") 
+    end,
   },
 
   -- Keymap Discovery
   {
     "folke/which-key.nvim",
     event = "VeryLazy",
-    config = function() require("plugins.whichkey") end,
-  },
-
-  -- UI Enhancements
-  {
-    "nvim-lualine/lualine.nvim",
-    config = function() require("ui.statusline") end,
-  },
-  {
-    "folke/tokyonight.nvim",
-    lazy = false,
-    priority = 1000,
-    config = function()
-      vim.cmd("colorscheme tokyonight-night")
+    config = function() 
+      pcall(require, "plugins.whichkey") 
     end,
   },
 
@@ -181,7 +174,9 @@ require("lazy").setup({
     "dccsillag/magma-nvim", -- Jupyter-style cells
     ft = { "python", "r", "julia" },
     build = ":UpdateRemotePlugins",
-    config = function() require("plugins.notebook") end,
+    config = function() 
+      pcall(require, "plugins.notebook") 
+    end,
   },
 
   -- Snippet Engine
@@ -189,7 +184,9 @@ require("lazy").setup({
     "L3MON4D3/LuaSnip",
     build = "make install_jsregexp",
     dependencies = { "rafamadriz/friendly-snippets" },
-    config = function() require("plugins.snippets") end,
+    config = function() 
+      pcall(require, "plugins.snippets") 
+    end,
   },
 
   -- LuaSnip completion source for cmp
@@ -199,38 +196,70 @@ require("lazy").setup({
   },
 
   -- Completion Engine
-  {
-    "hrsh7th/nvim-cmp",
-    event = "InsertEnter",
-    dependencies = {
-      "hrsh7th/cmp-nvim-lsp",          -- LSP completion
-      "hrsh7th/cmp-buffer",            -- Buffer completion
-      "hrsh7th/cmp-path",              -- Filesystem paths
-      "hrsh7th/cmp-cmdline",           -- Command-line completion
-      "L3MON4D3/LuaSnip",              -- Snippet engine
-      "saadparwaiz1/cmp_luasnip",      -- Snippet completions
-      "rafamadriz/friendly-snippets", -- Community snippets
-    },
-    config = function()
-      require("plugins.cmp")  -- optional: modular cmp config
-    end,
+{
+  "hrsh7th/nvim-cmp",
+  event = "InsertEnter",
+  dependencies = {
+    "hrsh7th/cmp-nvim-lsp",            -- LSP completion
+    "hrsh7th/cmp-buffer",              -- Buffer completion
+    "hrsh7th/cmp-path",                -- Filesystem paths
+    "hrsh7th/cmp-cmdline",             -- Command-line completion
+    "hrsh7th/cmp-nvim-lsp-signature-help", -- Signature help completion
+    "L3MON4D3/LuaSnip",                -- Snippet engine
+    "saadparwaiz1/cmp_luasnip",        -- Snippet completions
+    "rafamadriz/friendly-snippets",   -- Community snippets
   },
+  config = function()
+    pcall(require, "plugins.cmp")  -- optional: modular cmp config
+  end,
+},
 
-  -- LSP Signature Help completion
+-- LSP Signature Help completion
   {
     "hrsh7th/cmp-nvim-lsp-signature-help",
     lazy = true,
   },
 
-  -- themes
+  -- auto session manager
   {
-    {
-      "ellisonleao/gruvbox.nvim", priority = 1000 , config = true
-    },
+    "rmagatti/auto-session",
+    cmd = { "SessionSave", "SessionRestore" },
+    config = function()
+      local auto_session = pcall(require, "auto-session")
+      auto_session.setup({
+        log_level = "info",
+        auto_session_enable_last_session = false,
+      })
+    end,
+  },
 
+  -- UI Enhancements
+  {
+    "nvim-lualine/lualine.nvim",
+    config = function() 
+      pcall(require, "ui.statusline") 
+    end,
+  },
+  -- themes
+  { 
+    {-- gruvbox
+      "ellisonleao/gruvbox.nvim",
+      lazy = false,
+      priority = 1000 , 
+      config = function()
+        vim.cmd("colorscheme gruvbox")
+      end,
+    },
+    -- { -- tokyonight
+    --   "folke/tokyonight.nvim",
+    --   lazy = false,
+    --   priority = 1000,
+    --   config = function()
+    --     vim.cmd("colorscheme tokyonight-night")
+    --   end,
+    -- },
   },
 })
-
 
 -- ============================================================================
 -- Lazy plugin ecosystem initialized

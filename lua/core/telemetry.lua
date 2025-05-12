@@ -35,7 +35,8 @@ end
 
 -- ============================================================================
 -- Lazy.nvim Plugin Load Timing (for Lazy plugin manager)
-require("lazy").setup({
+local lazy = pcall(require, "lazy")
+lazy.setup({
   install = {
     -- Example for logging plugin load times
     {

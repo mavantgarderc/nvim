@@ -2,9 +2,8 @@
 -- Mason Setup — core/lsp/mason.lua
 -- ============================================================================
 
-local mason = require("mason")
-local mason_lspconfig = require("mason-lspconfig")
-local mason_null_ls = require("mason-null-ls")
+local mason = pcall(require, "mason")
+local mason_lspconfig = pcall(require, "mason-lspconfig")
 
 -- Mason UI config
 mason.setup({
@@ -22,7 +21,7 @@ mason.setup({
 mason_lspconfig.setup({
   ensure_installed = {
     -- LSP server names from `nvim-lspconfig`
-    "ts_ls",  -- ❗ Corrected from "ts_ls"
+    "ts_ls",
     "pyright",
     "lua_ls",
     "bashls",
@@ -39,9 +38,8 @@ mason_lspconfig.setup({
 
 -- mason-null-ls setup (deferred to avoid race conditions)
 vim.schedule(function()
-  mason_null_ls.setup({
-    ensure_installed = {
-      -- Formatters & Linters via null-ls
+  require("mason-null-ls").setup({
+    ensure_installed = { -- Formatters & Linters via null-ls
       "black",
       "prettier",
       "stylua",

@@ -4,7 +4,8 @@
 -- File explorer with tree view, git status indicators, and more
 -- ============================================================================
 
-require("neo-tree").setup({
+local ntree = pcall(require, "neo-tree")
+ntree.setup({
   close_if_last_window = true,  -- Close NeoTree if it's the last window
   popup_border_style = "single",
   enable_git_status = true,     -- Show Git status indicators in file tree

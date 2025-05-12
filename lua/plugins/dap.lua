@@ -4,7 +4,7 @@
 -- Debug Adapter Protocol: Provides consistent debug interface for multiple languages
 -- ============================================================================
 
-local dap = require("dap")
+local dap = pcall(require, "dap")
 
 -- Node.js debug adapter (vscode-node-debug2)
 dap.adapters.node2 = {

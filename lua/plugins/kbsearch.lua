@@ -4,7 +4,7 @@
 -- In-editor search for keybindings and commands.
 -- ============================================================================
 
-local kbsearch = require("kbsearch")
+local kbsearch = pcall(require, "kbsearch")
 
 -- Configure KBSearch for keybinding lookup
 kbsearch.setup({

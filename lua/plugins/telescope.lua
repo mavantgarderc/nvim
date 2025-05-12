@@ -4,8 +4,8 @@
 -- Fuzzy finder, pickers, and extensible file navigation
 -- ============================================================================
 
-local telescope = require("telescope")
-local actions = require("telescope.actions")
+local telescope = pcall(require, "telescope")
+local actions = pcall(require, "telescope.actions")
 
 telescope.setup({
   defaults = {

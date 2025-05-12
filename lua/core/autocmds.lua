@@ -72,13 +72,13 @@ api.nvim_create_autocmd("TermOpen", {
 -- LSP FORMAT ON SAVE (to be configured per-client) ---------------------------
 -- ▸ This is a placeholder. Actual logic is registered from `core/lsp/init.lua`
 -- ============================================================================
--- vim.api.nvim_create_autocmd("BufWritePre", {
---   group = lsp_group,
---   pattern = "*",
---   callback = function()
---     vim.lsp.buf.format({ async = true })
---   end,
--- })
+vim.api.nvim_create_autocmd("BufWritePre", {
+  group = lsp_group,
+  pattern = "*",
+  callback = function()
+    vim.lsp.buf.format({ async = true })
+  end,
+})
 
 -- ============================================================================
 -- UX POLISH — HIGHLIGHT ON YANK ----------------------------------------------

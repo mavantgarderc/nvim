@@ -4,7 +4,8 @@
 -- UI enhancements for LSP (code actions, rename, outline, diagnostics, etc.)
 -- ============================================================================
 
-require("lspsaga").setup({
+local lspsaga = pcall(require, "lspsaga")
+lspsaga.setup({
   ui = {
     border = "single",
     code_action = "💡",

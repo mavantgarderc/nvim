@@ -4,7 +4,7 @@
 -- Visualize project dependencies in a graphical format.
 -- ============================================================================
 
-local depgraph = require("depgraph")
+local depgraph = pcall(require, "depgraph")
 
 -- Configure the depgraph plugin
 depgraph.setup({

@@ -4,7 +4,7 @@
 -- Language Server Protocol setup for multiple languages
 -- ============================================================================
 
-local lspconfig = require("lspconfig")
+local lspconfig = pcall(require, "lspconfig")
 
 -- Setup for C#
 lspconfig.omnisharp.setup({
@@ -14,7 +14,7 @@ lspconfig.omnisharp.setup({
     FormattingOptions = {
       EnableEditorConfigSupport = true,
       EnableRangeFormatting = true,
-      TabSize = 4,
+      TabSize = 2,
       InsertSpaces = true,
     },
   },

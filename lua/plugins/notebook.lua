@@ -5,7 +5,8 @@
 -- ============================================================================
 
 -- Plugin setup
-require("notebook").setup({
+local notebook = pcall(require, "notebook")
+notebook.setup({
   -- Enable or disable the notebook interface
   enabled = true,
 
@@ -43,12 +44,12 @@ require("notebook").setup({
 
 -- Keybinding to run the current cell
 vim.keymap.set("n", "<leader>r", function()
-  require("notebook").run_cell()
+  notebook.run_cell()
 end, { desc = "Run current cell" })
 
 -- Keybinding to toggle output of the current cell
 vim.keymap.set("n", "<leader>t", function()
-  require("notebook").toggle_cell_output()
+  notebook.toggle_cell_output()
 end, { desc = "Toggle cell output" })
 
 -- ============================================================================
