@@ -50,7 +50,7 @@ let's generate its filetree structure & confirm it. Lazy.nvim is the plugin mana
 │   │   ├── telescope.lua    # Fuzzy finder workflows
 │   │   ├── treesitter.lua   # Syntax parsing & textobjects
 │   │   ├── gitsigns.lua     # Git gutter integration
-│   │   ├── dap.lua          # Debug Adapter Protocol setup
+│   │   ├── 
 │   │   ├── neotree.lua      # File explorer customization
 │   │   ├── omnisharp.lua    # CSharp language helper 
 │   │   ├── whichkey.lua     # Keymap guide & discovery (Strategic)
