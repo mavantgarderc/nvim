@@ -1,5 +1,10 @@
 return{
-    -- themes
+    -- ui
+        -- status line
+    "nvim-lualine/lualine.nvim",
+    -- dashboard
+    "goolord/alpha-nvim",
+        -- themes
     "catppuccin/nvim",
     "folke/tokyonight.nvim",
     "ellisonleao/gruvbox.nvim", 
@@ -7,22 +12,28 @@ return{
     "navarasu/onedark.nvim",
     "EdenEast/nightfox.nvim",
 
-    -- nvim plugins
-    "nvim-lualine/lualine.nvim",
-    "nvim-neo-tree/neo-tree.nvim",
-    "nvim-telescope/telescope.nvim",
-    "nvim-telescope/telescope-ui-select.nvim",
-    "MunifTanjim/nui.nvim",
-    "nvim-treesitter/nvim-treesitter",
+    -- ==================================================
 
-    -- lsp
-    "williamboman/mason.nvim",
-    "williamboman/mason-lspconfig.nvim",
+-- mason, lsp, null-ls
+        -- mason
+    "mason-org/mason.nvim",
+        -- mason-lsp
+    "mason-org/mason-lspconfig.nvim",
+        -- nvim-lsp
     "neovim/nvim-lspconfig",
-    
-    -- none-ls
+        -- none-ls
     "nvimtools/none-ls.nvim",
 
-    -- Dashboard
-    "goolord/alpha-nvim",
+-- ==================================================
+
+    -- nvim plugins
+
+        -- filetree
+    "MunifTanjim/nui.nvim",
+    "nvim-treesitter/nvim-treesitter",
+    "nvim-neo-tree/neo-tree.nvim",
+        -- telescope
+    "nvim-telescope/telescope.nvim",
+    "nvim-telescope/telescope-ui-select.nvim",
+    
 }
