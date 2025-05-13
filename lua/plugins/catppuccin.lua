@@ -3,6 +3,7 @@ return{
     name = "catppuccin", 
     priority = 1000,
     config = function()
-        vim.cmd.colorscheme "catppuccin"
+    local mocha = require("catppuccin.palettes").get_palette "mocha"
+        vim.cmd.colorscheme("mocha")
     end
 }

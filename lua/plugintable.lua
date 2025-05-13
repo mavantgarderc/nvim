@@ -4,5 +4,4 @@ return{
     "nvim-neo-tree/neo-tree.nvim",
     "nvim-telescope/telescope.nvim", 
     "nvim-treesitter/nvim-treesitter",
-
 }
