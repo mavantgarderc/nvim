@@ -1,5 +1,3 @@
--- thememanager
--- require("core.thememanager").setup()
 -- bootstrap lazy
 require("core.bootstrap")
 -- vim-options
@@ -8,3 +6,7 @@ require("core.options")
 require("lazy").setup("plugins")
 -- after
 -- require("after")
+
+
+-- Set a default global colorscheme
+require("core.thememanager").setup()

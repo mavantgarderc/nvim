@@ -5,13 +5,21 @@ return{
   -- dashboard
   "goolord/alpha-nvim",
   -- themes
-  "catppuccin/nvim",
-  "folke/tokyonight.nvim",
-  "ellisonleao/gruvbox.nvim",
-  "rose-pine/neovim",
-  "navarasu/onedark.nvim",
-  "EdenEast/nightfox.nvim",
-
+  {
+    "catppuccin/nvim",
+    "folke/tokyonight.nvim",
+    "ellisonleao/gruvbox.nvim",
+    "ellisonleao/gruvbox.nvim",
+    "rose-pine/neovim",
+    "navarasu/onedark.nvim",
+    "EdenEast/nightfox.nvim",
+    "themercorp/themer.lua",
+    'shaunsingh/nord.nvim',
+    "MordechaiHadad/nvim-papadark",
+    "Mofiqul/dracula.nvim",
+    "NTBBloodbath/doom-one.nvim",
+    "neanias/everforest-nvim",
+  },
   -- ==================================================
 
   -- === mason, lsp, null-ls ===
