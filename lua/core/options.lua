@@ -1,3 +1,7 @@
+vim.cmd("let g:loaded_ruby_provider = 0")
+vim.cmd("let g:loaded_perl_provider = 0")
+
+-- ===
 vim.cmd("set expandtab")
 vim.cmd("set tabstop=4")
 vim.cmd("set softtabstop=4")
@@ -27,5 +31,6 @@ vim.g.mapleader = " "
 vim.g.maplocalleader = "\\"
 vim.opt.smartindent = true
 vim.keymap.set('n', "<leader>pv", vim.cmd.Ex)
+
 -- fat cursors... thick one....
 -- vim.opt.guicursor = ""

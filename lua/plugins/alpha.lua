@@ -42,37 +42,36 @@ return {
       "++++     +++   ++++    +++++++++++     ++++             ++++",
       "++++     +++   ++++      +++++++       ++++             ++++",
       "                           +++                              ",
-}
-
--- Set footer
-local lazy_stats = require("lazy").stats()
-dashboard.section.footer.val = function()
-local log = _G.nvim_bootstrap_log or "Ready to code 🚀"
-  return {
-  "Five hundred doors, and forty there are;",
-  "I ween, in Valhall's walls;",
-  "Eight hundred fighters; through one door fare;",
-  "When to war with the wolf they go.",
-  " ",
-  "                                  - Odin, the Allfather",
-  "                                  - The Lay of Grimnir",
-  " ",
-  "             Plugins loaded: " .. lazy_stats.loaded .. " / " .. lazy_stats.count,
-  "           " .. log,
+    }
+  
+  -- Set footer
+  local lazy_stats = require("lazy").stats()
+  dashboard.section.footer.val = function()
+  local log = _G.nvim_bootstrap_log or "Ready to code 🚀"
+    return {
+    "Five hundred doors, and forty there are;",
+    "I ween, in Valhall's walls;",
+    "Eight hundred fighters; through one door fare;",
+    "When to war with the wolf they go.",
+    " ",
+    "                                  - Odin, the Allfather",
+    "                                  - The Lay of Grimnir",
+    " ",
+    "             Plugins loaded: " .. lazy_stats.loaded .. " / " .. lazy_stats.count,
+    "           " .. log,
+    }
+  end
+  
+  dashboard.section.footer.opts = {
+    position = "center",
+    hl = "Comment",
   }
-end
-
-dashboard.section.footer.opts = {
-  position = "center",
-  hl = "Comment",
-}
-
-require("alpha").setup(dashboard.opts)
--- Send config to alpha
-alpha.setup(dashboard.opts)
--- Disable folding on alpha buffer
-vim.cmd([[
-  autocmd FileType alpha setlocal nofoldenable
-    ]])
-  end,
+  
+  -- Send config to alpha
+  alpha.setup(dashboard.opts)
+  -- Disable folding on alpha buffer
+  vim.cmd([[
+    autocmd FileType alpha setlocal nofoldenable
+      ]])
+    end
 }

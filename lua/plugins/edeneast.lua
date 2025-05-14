@@ -1,4 +1,3 @@
--- return{
---      "EdenEast/nightfox.nvim" 
--- } 
-return{}
+return{
+     "EdenEast/nightfox.nvim" 
+} 

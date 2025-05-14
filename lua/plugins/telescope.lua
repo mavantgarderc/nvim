@@ -6,14 +6,5 @@ return{
             "nvim-lua/plenary.nvim"
         },
     },
-    {
-        "nvim-telescope/telescope-ui-select.nvim",
-        config = function()
-            extensions = {
-                ["ui-select"] = {
-                    require("telescope.themes").get_dropdown{}
-                }
-            }
-        end
-    },
+    "nvim-telescope/telescope-ui-select.nvim",
 }

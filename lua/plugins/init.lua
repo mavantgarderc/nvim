@@ -1,5 +1,5 @@
 return{
-  -- ui
+  -- === ui ===
   -- status line
   "nvim-lualine/lualine.nvim",
   -- dashboard
@@ -8,19 +8,13 @@ return{
   "catppuccin/nvim",
   "folke/tokyonight.nvim",
   "ellisonleao/gruvbox.nvim",
-  {
-    "rose-pine/neovim",
-    as = "rose-pine",
-    config = function()
-      vim.cmd("colorscheme rose-pine")
-    end
-  },
+  "rose-pine/neovim",
   "navarasu/onedark.nvim",
   "EdenEast/nightfox.nvim",
 
   -- ==================================================
 
-  -- mason, lsp, null-ls
+  -- === mason, lsp, null-ls ===
   -- mason
   "mason-org/mason.nvim",
   -- mason-lsp
@@ -32,8 +26,7 @@ return{
 
   -- ==================================================
 
-  -- nvim plugins
-
+  -- === nvim plugins ===
   -- filetree
   "MunifTanjim/nui.nvim",
   "nvim-treesitter/nvim-treesitter",
@@ -46,6 +39,6 @@ return{
   "ThePrimeagen/harpoon",
   -- undotree
   "mbbill/undotree",
-  -- fugitive
+  -- fugitive (git integration)
   "tpope/vim-fugitive",
 }
