@@ -45,42 +45,4 @@ return{
             extensions = { "fugitive" }
         })
     end
-    -- Keybinding to toggle the statusline
-    vim.keymap.set("n", "<leader>ss", function()
-        require("lualine").toggle()  -- Toggle the statusline visibility
-    end, { desc = "Toggle Statusline" })
-
-    -- Initialize nvim-navic (for LSP navigation)
-    require("nvim-navic").setup({
-    separator = " > ",  -- Separator between navigation levels
-    depth_limit = 3,    -- Limit the depth of navigation context
-    icons = {
-        File = "",
-        Module = "",
-        Namespace = "",
-        Package = "",
-        Class = "ﴯ",
-        Method = "",
-        Property = "",
-        Field = "",
-        Constructor = "",
-        Enum = "",
-        Interface = "ﰮ",
-        Function = "",
-        Variable = "",
-        Constant = "",
-        String = "",
-        Number = "",
-        Boolean = "⊨",
-        Array = "",
-        Object = "",
-        Key = "",
-        Null = "NULL",
-        EnumMember = "",
-        Struct = "",
-        Event = "",
-        Operator = "",
-        TypeParameter = "",
-    },
-    })
 }

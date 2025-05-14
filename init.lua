@@ -5,8 +5,6 @@ require("core.options")
 -- plugins
 require("lazy").setup("plugins")
 -- after
--- require("after")
-
 
 -- Set a default global colorscheme
-require("core.thememanager").setup()
+require("after.plugin.colors").setup()
