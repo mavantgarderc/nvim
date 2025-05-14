@@ -88,3 +88,16 @@ function M.setup(user_config)
 end
 
 return M
+
+
+-- local theme_by_filetype = {
+--   lua      = "tokyonight",
+--   python   = "gruvbox",
+--   markdown = "rose-pine",
+--   html     = "catppuccin",
+--   css      = "catppuccin",
+--   javascript = "onedark",
+--   typescript = "onedark",
+--   json     = "carbonfox",
+--   default  = "default", -- fallback theme
+-- }
