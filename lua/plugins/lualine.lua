@@ -6,7 +6,7 @@ return{
     config = function()
         require("lualine").setup({
         options = {
-            theme = 'tokyonight-night'
+            theme = pcall(require, "core.thememanager")
         }
     })
     end
