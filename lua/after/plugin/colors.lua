@@ -5,11 +5,15 @@ local config = {
     default_theme = 'default',
     mappings = {
         -- python == py
-        python = 'catppuccin-mocha',
-        lua = 'nightfox',
-        javascript = 'tokyonight-night',
-        markdown = 'gruvbox',
-        text = 'papercolor',
+        py = "catppuccin",
+        lua = "nightfox",
+        js = "tokyonight-night",
+        ts = "tokyonight-storm",
+        md = "gruvbox",
+        txt = "papercolor",
+        netrw = "carbonfox",
+        lazy = "carbonfox",
+        cs = "kanagawa",
     },
     use_filetype = true,
     debug = true -- Set to true for diagnostic messages

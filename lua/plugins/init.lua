@@ -19,27 +19,36 @@ return{
     "Mofiqul/dracula.nvim",
     "NTBBloodbath/doom-one.nvim",
     "neanias/everforest-nvim",
+    "marko-cerovac/material.nvim",
+    "rebelot/kanagawa.nvim",
+    "nyoom-engineering/oxocarbon.nvim",
   },
   -- ==================================================
-
-  -- === mason, lsp, null-ls ===
-  -- mason
-  "mason-org/mason.nvim",
-  -- mason-lsp
-  "mason-org/mason-lspconfig.nvim",
-  -- nvim-lsp
-  "neovim/nvim-lspconfig",
-  -- none-ls
-  "nvimtools/none-ls.nvim",
-
+  -- === LSP ===
+  {
+  "VonHeikemen/lsp-zero.nvim",
+  dependencies = {
+      -- LSP Support
+      "neovim/nvim-lspconfig",
+      "williamboman/mason.nvim",
+      "williamboman/mason-lspconfig.nvim",
+      -- Autocompletion
+      "hrsh7th/nvim-cmp",
+      "hrsh7th/cmp-buffer",
+      "hrsh7th/cmp_luasnip",
+      "hrsh7th/cmp-nvim-lsp",
+      "hrsh7th/cmp-nvim-lua",
+      "saadparwaiz1/cmp_luasnip",
+      -- Snippets
+      "L3MON4D3/LuaSnip",
+      "rafamadriz/friendly-snippets",
+  }},
   -- ==================================================
-
   -- === nvim plugins ===
   -- filetree
   "MunifTanjim/nui.nvim",
   "nvim-treesitter/nvim-treesitter",
   "nvim-treesitter/playground",
-  -- "nvim-neo-tree/neo-tree.nvim",
   -- telescope
   "nvim-telescope/telescope.nvim",
   "nvim-telescope/telescope-ui-select.nvim",
@@ -49,4 +58,6 @@ return{
   "mbbill/undotree",
   -- fugitive (git integration)
   "tpope/vim-fugitive",
+  -- tmux integration
+  "christoomey/vim-tmux-navigator",
 }
