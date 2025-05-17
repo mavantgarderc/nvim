@@ -7,4 +7,7 @@ require("lazy").setup("plugins")
 -- after
 
 -- Set a default global colorscheme
-require("after.plugin.colors").setup()
+-- require("after.plugin.colors").setup()
+vim.cmd.colorscheme("kanagawa")
+
+
