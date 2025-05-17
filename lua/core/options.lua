@@ -2,7 +2,8 @@ local opt = vim.opt
 local g = vim.g
 local cmd = vim.cmd
 local keymap = vim.keymap
--- -- GLOBAL VARIABLES ---------
+
+
 g.mapleader = " "
 g.maplocalleader = "\\"
 opt.smartindent = true
@@ -18,6 +19,19 @@ cmd("set shiftwidth=4")
 opt.number = true
 opt.relativenumber = true
 opt.expandtab = true    -- Convert tabs to spaces
+
+vim.schedule(function()    -- OS-Nvim clipboard sync
+    vim.o.clipboard = "unnamedplus"
+end)
+
+
+vim.o.showmode = false -- don't show the mode (shown in lualine)
+
+vim.o.cursorline = true -- show which line cursor is on
+
+vim.o.list = true -- display whitespaces
+vim.opt.listchars = { tab = "» ", trail = "·", nbsp = "␣" }
+
 
 opt.wrap = false
 opt.swapfile = false
@@ -39,3 +53,5 @@ opt.updatetime = 50
 
 opt.splitright = true        -- Vertical splits open to the right
 opt.splitbelow = true        -- Horizontal splits open below
+
+

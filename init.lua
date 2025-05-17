@@ -2,6 +2,8 @@
 require("core.bootstrap")
 -- vim-options
 require("core.options")
+-- keymaps
+require("core.keymaps")
 -- plugins
 require("lazy").setup("plugins")
 -- after
@@ -9,5 +11,3 @@ require("lazy").setup("plugins")
 -- Set a default global colorscheme
 -- require("after.plugin.colors").setup()
 vim.cmd.colorscheme("kanagawa")
-
-

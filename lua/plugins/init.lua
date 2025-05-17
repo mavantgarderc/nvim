@@ -42,6 +42,8 @@ return{
       -- Snippets
       "L3MON4D3/LuaSnip",
       "rafamadriz/friendly-snippets",
+      -- indent automation; no config needed
+      "NMAC427/guess-indent.nvim",
   }},
   -- ==================================================
   -- === nvim plugins ===
@@ -50,8 +52,24 @@ return{
   "nvim-treesitter/nvim-treesitter",
   "nvim-treesitter/playground",
   -- telescope
-  "nvim-telescope/telescope.nvim",
-  "nvim-telescope/telescope-ui-select.nvim",
+  {
+      "nvim-telescope/telescope.nvim",
+      event = 'VimEnter',
+      dependencies = {
+          'nvim-lua/plenary.nvim',
+          {
+              'nvim-telescope/telescope-fzf-native.nvim',
+              build = 'make',
+              cond = function()
+                  return vim.fn.executable 'make' == 1
+              end,
+          },
+          { 'nvim-telescope/telescope-ui-select.nvim' },
+
+          -- Useful for getting pretty icons, but requires a Nerd Font.
+          { 'nvim-tree/nvim-web-devicons', enabled = vim.g.have_nerd_font },
+      }
+  },
   -- harpoon
   "ThePrimeagen/harpoon",
   -- undotree
@@ -60,4 +78,6 @@ return{
   "tpope/vim-fugitive",
   -- tmux integration
   "christoomey/vim-tmux-navigator",
+  -- which-key; to show pending keybinds
+  "folke/which-key.nvim",
 }
