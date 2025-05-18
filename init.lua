@@ -1,14 +1,13 @@
--- bootstrap lazy
+-- Core Directory
 require("core.bootstrap")
--- vim-options
 require("core.options")
--- keymaps
 require("core.keymaps")
--- plugins
+
+-- Plugins Directory
 require("lazy").setup("plugins")
--- after
+
+-- After Directory
 require("after.plugin")
 
--- Set a default global colorscheme
--- require("after.plugin.colors").setup()
-vim.cmd.colorscheme("catppuccin")
+require("after.plugin.colors").setup()
+--vim.cmd.colorscheme("kanagawa-dragon")

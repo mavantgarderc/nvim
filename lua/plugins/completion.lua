@@ -1,4 +1,5 @@
-return{
+return
+{
     -- cmp-nvim-lsp
     "hrsh7th/cmp-nvim-lsp",
     -- luasnip engine

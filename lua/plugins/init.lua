@@ -13,7 +13,6 @@ return{
     "navarasu/onedark.nvim",
     "EdenEast/nightfox.nvim",
     'shaunsingh/nord.nvim',
-    "Mofiqul/dracula.nvim",
     "NTBBloodbath/doom-one.nvim",
     "neanias/everforest-nvim",
     "marko-cerovac/material.nvim",
