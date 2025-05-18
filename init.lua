@@ -7,7 +7,8 @@ require("core.keymaps")
 -- plugins
 require("lazy").setup("plugins")
 -- after
+require("after.plugin")
 
 -- Set a default global colorscheme
 -- require("after.plugin.colors").setup()
-vim.cmd.colorscheme("kanagawa")
+vim.cmd.colorscheme("catppuccin")

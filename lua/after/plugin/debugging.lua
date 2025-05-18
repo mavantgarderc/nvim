@@ -1,9 +1,9 @@
 config = function()
     local dap = require("dap")
     local dapui = require("dapui")
-    
+
     vim.keymap.set("n", "<leader>dt", dap.toggle_breakpoint, {})
-    vim.keymap.set("n", "<leader>dc", dap.continue, {})3
+    vim.keymap.set("n", "<leader>dc", dap.continue, {})
 
     dap.listeners.before.attach.dapui_config = function()
     dapui.open()

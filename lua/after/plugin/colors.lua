@@ -90,14 +90,6 @@ local M = {}
 --         end
 --     end)
 -- end
-
-local ok = false
-if ok then
-    vim.cmd.colorscheme("nightfox")
-else
-    vim.cmd.colorscheme("gruvbox")
-end
-
 return M
 
 
