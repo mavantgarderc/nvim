@@ -49,7 +49,7 @@ local config = {
     default_theme = 'oxocarbon',
     -- python == py
     mappings = {
-        -- nvim
+        -- nvim, project files & rc files
         alpha = "kanagawa-dragon",
         netrw = "kanagawa-dragon",
         lazy = "kanagawa-dragon",
@@ -58,6 +58,10 @@ local config = {
         mason = "kanagawa-dragon",
         toml = "kanagawa-dragon",
         sln = "kangawa-dragon",
+        hyprlang = "kanagawa-dragon",
+        zsh = "Kanagawa-dragon",
+        sh = "Kanagawa-dragon",
+        tmux = "Kanagawa-dragon",
         -- markup files
         md = "catppuccin",
         xml = "rose-pine",
