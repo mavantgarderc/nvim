@@ -5,3 +5,7 @@ asal = True
 if asal:
     c=a*b
     print(c)
+
+name = "asal"
+name.capitalize()
+print(name)

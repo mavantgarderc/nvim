@@ -9,5 +9,4 @@ require("lazy").setup("plugins")
 -- After Directory
 require("after.plugin")
 
-require("after.plugin.colors").setup()
---vim.cmd.colorscheme("kanagawa-dragon")
+--vim.cmd.colorscheme("oxocarbon")
