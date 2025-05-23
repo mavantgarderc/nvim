@@ -94,7 +94,7 @@ let's generate its filetree structure & confirm it. Lazy.nvim is the plugin mana
 │
 ├── spell/                   # Custom dictionaries
 │   ├── fa.utf-8.add         # Project-specific terms
-│   └── en.utf-8.add         
+│   └── en.utf-8.add
 │
 └── .editorconfig            # Cross-IDE style constraints
 
