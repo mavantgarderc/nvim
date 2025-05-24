@@ -146,8 +146,6 @@
 
 -- lua/after/plugins/lsp.lua
 
-local lsp = require("lsp-zero")
-
 -- Reserve a space in the gutter
 vim.opt.signcolumn = 'yes'
 
@@ -163,19 +161,64 @@ lspconfig_defaults.capabilities = vim.tbl_deep_extend(
 vim.api.nvim_create_autocmd('LspAttach', {
     desc = 'LSP actions',
     callback = function(event)
-        local opts = {buffer = event.buf}
-        vim.keymap.set('n', 'K', '<cmd>lua vim.lsp.buf.hover()<cr>', opts)
-        vim.keymap.set('n', 'gd', '<cmd>lua vim.lsp.buf.definition()<cr>', opts)
-        vim.keymap.set('n', 'gD', '<cmd>lua vim.lsp.buf.declaration()<cr>', opts)
-        vim.keymap.set('n', 'gi', '<cmd>lua vim.lsp.buf.implementation()<cr>', opts)
-        vim.keymap.set('n', 'go', '<cmd>lua vim.lsp.buf.type_definition()<cr>', opts)
-        vim.keymap.set('n', 'gr', '<cmd>lua vim.lsp.buf.references()<cr>', opts)
-        vim.keymap.set('n', 'gs', '<cmd>lua vim.lsp.buf.signature_help()<cr>', opts)
-        vim.keymap.set('n', '<F2>', '<cmd>lua vim.lsp.buf.rename()<cr>', opts)
-        vim.keymap.set({'n', 'x'}, '<F3>', '<cmd>lua vim.lsp.buf.format({async = true})<cr>', opts)
-        vim.keymap.set('n', '<F4>', '<cmd>lua vim.lsp.buf.code_action()<cr>', opts)
+        local opts = { buffer = event.buf }
+        local map = vim.keymap.set
+        -- definition in the same buffer
+        map('n', 'K', '<cmd>lua vim.lsp.buf.hover()<cr>', opts)
+        -- go to definition in the same buffer
+        -- jump to the typ eof the word under cursor
+        map('n', 'gd', '<cmd>lua vim.lsp.buf.definition()<cr>', opts)
+        map('n', 'grd', require("telescope.builtin").lsp_definitions, opts)
+        -- go to declaration
+        map('n', 'gD', '<cmd>lua vim.lsp.buf.declaration()<cr>', opts)
+        -- go to declaration
+        map('n', 'gi', '<cmd>lua vim.lsp.buf.implementation()<cr>', opts)
+        map('n', 'gri', require("telescope.builtin").lsp_implementations, opts)
+        -- <?> jump to definition
+        map('n', 'go', '<cmd>lua vim.lsp.buf.type_definition()<cr>', opts)
+        -- list of references in the current buffer
+        map('n', 'gr', '<cmd>lua vim.lsp.buf.references()<cr>', opts)
+        -- map('n', 'grr', require("telescope.builtin").lsp_reference, opts)
+        -- done la-copy-pasta <?>
+        map('n', 'gs', '<cmd>lua vim.lsp.buf.signature_help()<cr>', opts)
+        -- rename all in the current buffer
+        map('n', 'grn', '<cmd>lua vim.lsp.buf.rename()<cr>', opts)
+        -- code action
+        map({ 'n', 'x' }, 'gra', '<cmd>lua vim.lsp.buf.code_action()<cr>', opts)
+        -- <?> done la-copy-pasta
+        map({ 'n', 'x' }, '<F3>', '<cmd>lua vim.lsp.buf.format({async = true})<cr>', opts)
+        -- fuzzy find all the symbols in nyour current doc
+        map('n', 'gO', require("telescope.builtin").lsp_document_symbols, opts)
     end,
 })
+
+-- diagnostics config
+vim.diagnostic.config {
+    severity_sort = true,
+    float = { border = 'rounded', source = 'if_many' },
+    underline = { severity = vim.diagnostic.severity.ERROR },
+    signs = vim.g.have_nerd_font and {
+        text = {
+            [vim.diagnostic.severity.ERROR] = '󰅚 ',
+            [vim.diagnostic.severity.WARN] = '󰀪 ',
+            [vim.diagnostic.severity.INFO] = '󰋽 ',
+            [vim.diagnostic.severity.HINT] = '󰌶 ',
+        },
+    } or {},
+    virtual_text = {
+        source = 'if_many',
+        spacing = 2,
+        format = function(diagnostic)
+            local diagnostic_message = {
+                [vim.diagnostic.severity.ERROR] = diagnostic.message,
+                [vim.diagnostic.severity.WARN] = diagnostic.message,
+                [vim.diagnostic.severity.INFO] = diagnostic.message,
+                [vim.diagnostic.severity.HINT] = diagnostic.message,
+            }
+            return diagnostic_message[diagnostic.severity]
+        end,
+    },
+}
 
 -- Mason & LSP configuration
 require('mason').setup()

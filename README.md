@@ -1,10 +1,3 @@
-This is my nvim configuration directory filetree. 
-Make a full documentation & generate all codes in this filetree. You are a developer.
-These are your tech your tech stack:
-- 10 years of experience in ASP.NET Core 
-  - 10 years of ML Engineering
-  - You use Neovim for everything; self configured.
-
 I want to have the neatest & most beginner friendly  way of organizing. Highly informative. 
 let's generate its filetree structure & confirm it. Lazy.nvim is the plugin manager. 
 
@@ -50,7 +43,6 @@ let's generate its filetree structure & confirm it. Lazy.nvim is the plugin mana
 │   │   ├── telescope.lua    # Fuzzy finder workflows
 │   │   ├── treesitter.lua   # Syntax parsing & textobjects
 │   │   ├── gitsigns.lua     # Git gutter integration
-│   │   ├── 
 │   │   ├── neotree.lua      # File explorer customization
 │   │   ├── omnisharp.lua    # CSharp language helper 
 │   │   ├── whichkey.lua     # Keymap guide & discovery (Strategic)
@@ -85,17 +77,15 @@ let's generate its filetree structure & confirm it. Lazy.nvim is the plugin mana
 │       ├── PyTorch
 │       └── React
 │
-├── snippets/                # Code templates
-│   ├── csharp/      # C# class/interface snippets
-│   ├── python/      # Python pytest/async templates
-│   ├── sql/         # Common query patterns, stored procedures
+├── snippets/     # Code templates
+│   ├── csharp/          # C# class/interface snippets
+│   ├── python/          # Python pytest/async templates
+│   ├── sql/             # Common query patterns, stored procedures
 │   ├── ts/
 │   └── bash/
 │
 ├── spell/                   # Custom dictionaries
-│   ├── fa.utf-8.add         # Project-specific terms
+│   ├── fa.utf-8.add 
 │   └── en.utf-8.add
 │
 └── .editorconfig            # Cross-IDE style constraints
-
-give me your todo list & plan before you start to research
