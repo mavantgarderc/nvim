@@ -1,5 +1,5 @@
 require("after.plugin.cmp")
-require("after.plugin.colors")
+--require("after.plugin.colors")
 require("after.plugin.debugging")
 require("after.plugin.fugitive")
 require("after.plugin.harpoon")

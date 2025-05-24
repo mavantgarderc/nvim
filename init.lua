@@ -9,4 +9,6 @@ require("lazy").setup("plugins")
 -- After Directory
 require("after.plugin")
 
---vim.cmd.colorscheme("oxocarbon")
+-- Colors
+--require("colors")
+vim.cmd.colorscheme("terafox")
