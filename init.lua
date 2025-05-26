@@ -11,5 +11,5 @@ require("lazy").setup("plugins")
 require("after.plugin")
 
 -- Colors
---require("colors")
-vim.cmd.colorscheme("gruvbox")
+require("colors")
+--vim.cmd.colorscheme("gruvbox")
