@@ -71,7 +71,7 @@ let's generate its filetree structure & confirm it. Lazy.nvim is the plugin mana
 │   │   └── lua.lua        # Lua script presets
 │   │
 │   └── framework/
-│       ├── dotnet
+│       ├── dotnetcore
 │       ├── Keras
 │       ├── MVC
 │       ├── PyTorch

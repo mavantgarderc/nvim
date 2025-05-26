@@ -76,12 +76,15 @@ return{
     "mbbill/undotree",
     -- fugitive (git integration)
     "tpope/vim-fugitive",
+    "lewis6991/gitsigns.nvim",
+    "kdheepak/lazygit.nvim",
     -- tmux integration
     "christoomey/vim-tmux-navigator",
     -- which-key; to show pending keybinds
     "folke/which-key.nvim",
+    -- nice-ass comments
     {
-        "folke/todo-comments.nvim", 
+        "folke/todo-comments.nvim",
         event = "VimEnter",
         dependencies = {
             "nvim-lua/plenary.nvim"

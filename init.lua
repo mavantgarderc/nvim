@@ -11,4 +11,4 @@ require("after.plugin")
 
 -- Colors
 --require("colors")
-vim.cmd.colorscheme("terafox")
+vim.cmd.colorscheme("gruvbox")
