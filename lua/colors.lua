@@ -39,6 +39,7 @@ local filetype_themes = {
     alpha    = "kanagawa-dragon",
     netrw    = "kanagawa-dragon",
     lazy     = "kanagawa-dragon",
+    help     = "kanagawa-dragon",
     lua      = "kanagawa-dragon",
     fugitive = "kanagawa-dragon",
     mason    = "kanagawa-dragon",
