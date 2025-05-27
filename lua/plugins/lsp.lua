@@ -24,7 +24,9 @@ return {
             require("mason-lspconfig").setup({
                 ensure_installed = {
                     'lua_ls',
-                    -- 'ts_ls', 'pyright', 'omnisharp'
+                    'ts_ls',
+                    'pyright',
+                    'omnisharp',
                 },
                 automatic_installation = true,
                 handlers = {
