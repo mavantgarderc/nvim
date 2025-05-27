@@ -89,7 +89,7 @@ vim.api.nvim_create_autocmd("FileType", {
 
 vim.api.nvim_create_autocmd("BufEnter" or "FileType", {
   callback = function(args)
-    local ft = vim.api.nvim_buf_get_option(args.buf, "filetype")
+    local ft = vim.api.nvim_buf_get_option(args.buf, "FileType")
     local theme = filetype_themes[ft]
     if theme then
       load_theme(theme)

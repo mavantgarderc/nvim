@@ -18,18 +18,20 @@ return{
     -- === LSP ===
     {
         "VonHeikemen/lsp-zero.nvim",
+        branch = "v3.x",
         dependencies = {
-            -- LSP Support
+            -- LSP Core
             "neovim/nvim-lspconfig",
             "williamboman/mason.nvim",
             "williamboman/mason-lspconfig.nvim",
-            -- Autocompletion
+            -- Autocompletion Core
             "hrsh7th/nvim-cmp",
             "hrsh7th/cmp-buffer",
             "hrsh7th/cmp_luasnip",
             "hrsh7th/cmp-nvim-lsp",
             "hrsh7th/cmp-nvim-lua",
             "saadparwaiz1/cmp_luasnip",
+            -- Dev Enhancements
             {
             "folke/lazydev.nvim",
                 ft = 'lua',
@@ -39,14 +41,23 @@ return{
                     },
                 },
             },
+            -- Utilities
+            -- indent automation; no config needed
+            "NMAC427/guess-indent.nvim",
             -- Snippets
             "L3MON4D3/LuaSnip",
             "rafamadriz/friendly-snippets",
-            -- indent automation; no config needed
-            "NMAC427/guess-indent.nvim",
-        }},
+        }
+    },
+    -- ==================================================
+    -- Git Integration
+    "tpope/vim-fugitive",
+    "lewis6991/gitsigns.nvim",
+    "kdheepak/lazygit.nvim",
     -- ==================================================
     -- === nvim plugins ===
+    -- buffer list
+    "EL-MASTOR/bufferlist.nvim",
     -- filetree
     "MunifTanjim/nui.nvim",
     "nvim-treesitter/nvim-treesitter",
@@ -74,10 +85,6 @@ return{
     "ThePrimeagen/harpoon",
     -- undotree
     "mbbill/undotree",
-    -- fugitive (git integration)
-    "tpope/vim-fugitive",
-    "lewis6991/gitsigns.nvim",
-    "kdheepak/lazygit.nvim",
     -- tmux integration
     "christoomey/vim-tmux-navigator",
     -- which-key; to show pending keybinds

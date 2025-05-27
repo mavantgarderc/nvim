@@ -1,8 +1,15 @@
+-- lazygit
+vim.keymap.set("n", "<leader>lg", function()
+    vim.cmd("LazyGit")
+end)
+--vim.keymap.set("n", "<leader>lg", "<cmd>LazyGit<CR>", desc == "LazyGit")
+
 -- fugitive
 vim.keymap.set("n", "<leader>gs", vim.cmd.Git)
 
 -- git signs
-local gitsigns = require('gitsigns').setup()
+--local gitsigns = require('gitsigns').setup()
+local gitsigns = require('gitsigns')
 local function map(mode, l, r, opts)
     opts = opts or {}
     opts.buffer = bufnr
@@ -40,7 +47,7 @@ end)
 
 --map('n', '<leader>hS', gitsigns.stage_buffer)
 --map('n', '<leader>hR', gitsigns.reset_buffer)
---map('n', '<leader>ph', gitsigns.preview_hunk)
+map('n', '<leader>ph', gitsigns.preview_hunk)
 --map('n', '<leader>hi', gitsigns.preview_hunk_inline)
 
 map('n', '<leader>hb', function()
