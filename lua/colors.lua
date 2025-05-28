@@ -87,18 +87,6 @@ vim.api.nvim_create_autocmd("FileType", {
   callback = set_theme_by_filetype,
 })
 
-vim.api.nvim_create_autocmd("BufEnter" or "FileType", {
-  callback = function(args)
-    local ft = vim.api.nvim_buf_get_option(args.buf, "FileType")
-    local theme = filetype_themes[ft]
-    if theme then
-      load_theme(theme)
-    end
-  end,
-})
-
-
-
 
 -- === User Commands ===
 -- :SetTheme <name>
@@ -182,16 +170,25 @@ vim.keymap.set("n", "<leader>ts", function()
     M.select_theme()
 end, { desc = "Select Theme" })
 
--- -- === Apply themes to already loaded buffers ===
--- for _, buf in ipairs(vim.api.nvim_list_bufs()) do
---   if vim.api.nvim_buf_is_loaded(buf) then
---     local ft = vim.api.nvim_buf_get_option(buf, "filetype")
---     local theme = filetype_themes[ft]
---     if theme then
---       load_theme(theme)
---       -- break  -- stop after applying the first valid one
---     end
---   end
--- end
+-- === Apply themes to already loaded buffers ===
+vim.api.nvim_create_autocmd("BufEnter" or "filetype", {
+  callback = function(args)
+    local ft = vim.api.nvim_buf_get_option(args.buf, "filetype")
+    local theme = filetype_themes[ft]
+    if theme then
+      load_theme(theme)
+    end
+  end,
+})
+for _, buf in ipairs(vim.api.nvim_list_bufs()) do
+    if vim.api.nvim_buf_is_loaded(buf) then
+        local ft = vim.api.nvim_buf_get_option(buf, "filetype")
+        local theme = filetype_themes[ft]
+        if theme then
+            load_theme(theme)
+            -- break  -- stop after applying the first valid one
+        end
+    end
+end
 
 return M

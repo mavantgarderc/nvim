@@ -55,6 +55,7 @@ opt.splitright = true        -- Vertical splits open to the right
 opt.splitbelow = true        -- Horizontal splits open below
 
 -- =============================================================================
+
 -- LazyGit
 -- transparency of floating window
 vim.g.lazygit_floating_window_winblend = 0

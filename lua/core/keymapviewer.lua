@@ -39,11 +39,11 @@ local function show_keymaps_with_functions()
 
   for _, mode in ipairs(modes) do
     local keymaps = vim.api.nvim_get_keymap(mode)
-    
+
     if #keymaps > 0 then
       table.insert(lines, string.format("🅝 %s MODE", string.upper(mode)))
       table.insert(lines, string.rep("─", split_width - 1))
-      
+
       for _, keymap in ipairs(keymaps) do
         local action = keymap.desc or ""
         local func_ref = ""

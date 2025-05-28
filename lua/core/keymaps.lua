@@ -8,11 +8,16 @@ map("n", "k", "v:count == 0 ? 'gk' : 'k'", { expr = true, silent = true })
 -- Clear search highlight
 map("n", "<Esc>", "<cmd>nohlsearch<CR>", opts)
 
--- Faster window navigation
+-- splits navigation
 map("n", "<C-h>", "<C-w>h", opts)
 map("n", "<C-j>", "<C-w>j", opts)
 map("n", "<C-k>", "<C-w>k", opts)
 map("n", "<C-l>", "<C-w>l", opts)
+-- Tmux Navigation
+map("n", "<C-k>", "<cmd>cnext<CR>zz")
+map("n", "<C-j>", "<cmd>cprevCR>zz")
+map("n", "<leader>k", "<cmd>lnext<CR>zz")
+map("n", "<leader>j", "<cmd>lprev<CR>zz")
 
 -- Resize splits with arrows
 map("n", "<C-Up>", "<cmd>resize -2<CR>", opts)
@@ -46,22 +51,9 @@ map("x", "<leader>p", "\"_dp")
 
 -- tmux, previous session...
 -- change your project
-map("n", "<C-f>", "<cmd>silent !tmux neww tmux sessionizer<CR>")
-
--- quick fix navigation
--- ????
-map("n", "<C-k>", "<cmd>cnext<CR>zz")
-map("n", "<C-j>", "<cmd>cprevCR>zz")
-map("n", "<leader>k", "<cmd>lnext<CR>zz")
-map("n", "<leader>j", "<cmd>lprev<CR>zz")
+map("n", "<C-f>", "<cmd>silent !tmux new tmux sessionizer<CR>")
 
 -- the cursor on a word, change the word in entire file
 map("n", "<leader>s", ":%s/\\<<C-r><C-w>>//>/<C-r><C-w>/gI<Left><Left>")
 -- make a file, make it executable
 map("n", "<leader>x", "<cmd>!chmod +x %<CR>", { silent = true })
-
--- vim-tmux-navigator
---map("n", "<C-h>", ":wincmd h<CR>")
---map("n", "<C-j>", ":wincmd j<CR>")
---map("n", "<C-k>", ":wincmd k<CR>")
---kmap("n", "<C-l>", ":wincmd l<CR>")
