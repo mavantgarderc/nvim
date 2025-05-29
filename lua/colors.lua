@@ -150,17 +150,34 @@ function M.cycle_next_theme()
 end
 
 -- === Manual Select via vim.ui.select() ===
+-- function M.select_theme()
+--   vim.ui.select(M.flattened_theme_list, {
+--     prompt = "Select a theme:",
+--   }, function(choice)
+--     if choice then
+--       load_theme(choice)
+--       vim.notify("Theme: " .. choice, vim.log.levels.INFO)
+--     end
+--   end)
+--   -- Force normal mode after UI opens
+--   vim.schedule(function()
+--     vim.cmd("stopinsert")
+--   end)
+-- end
 function M.select_theme()
-  vim.ui.select(M.flattened_theme_list, {
-    prompt = "Select a theme:",
-  }, function(choice)
-    if choice then
-      load_theme(choice)
-      vim.notify("Theme: " .. choice, vim.log.levels.INFO)
-    end
-  end)
+  require("telescope.builtin").colorscheme({
+    enable_preview = true,
+    initial_mode = "normal",
+    layout_config = {
+      width = 0.6,   -- 60% of screen width
+      height = 0.6,  -- 60% of screen height
+    },
+  })
 end
 
+vim.keymap.set("n", "<leader>ts", function()
+  M.select_theme()
+end, { desc = "Select theme" })
 -- Theme cycling and selection
 vim.keymap.set("n", "<leader>tn", function()
     M.cycle_next_theme()
@@ -168,7 +185,9 @@ end, { desc = "Next Theme" })
 
 vim.keymap.set("n", "<leader>ts", function()
     M.select_theme()
-end, { desc = "Select Theme" })
+end, { desc = "select theme" })
+
+--vim.keymap.set("n", "<leader><leader>", "<cmd>Telescope buffers sort_mru=lastused=true initial_mode=normal<CR>", opts)
 
 -- === Apply themes to already loaded buffers ===
 vim.api.nvim_create_autocmd("BufEnter" or "filetype", {

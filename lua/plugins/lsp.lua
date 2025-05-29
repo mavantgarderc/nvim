@@ -24,9 +24,6 @@ return {
             require("mason-lspconfig").setup({
                 ensure_installed = {
                     'lua_ls',
-                    'ts_ls',
-                    'pyright',
-                    'omnisharp',
                 },
                 automatic_installation = true,
                 handlers = {
@@ -63,15 +60,15 @@ return {
                     -- code action
                     map({ 'n', 'x' }, 'gra', '<cmd>lua vim.lsp.buf.code_action()<cr>', opts)
                     -- <?> done la-copy-pasta
-                    map({ "n", "x" }, "<F3>", function()
-                        -- 1. vim.lsp.buf.format({ async = true })
-                        vim.lsp.buf.format({
-                            async = true,
-                            filter = function(client)
-                                return client.name ~= "ts_ls"
-                            end,
-                        })
-                    end)
+                    -- map({ "n", "x" }, "<F3>", function()
+                    --     -- 1. vim.lsp.buf.format({ async = true })
+                    --     vim.lsp.buf.format({
+                    --         async = true,
+                    --         filter = function(client)
+                    --             return client.name ~= "ts_ls"
+                    --         end,
+                    --     })
+                    -- end)
                     -- fuzzy find all the symbols in your current doc
                     map('n', 'gO', require("telescope.builtin").lsp_document_symbols, opts)
                 end,
@@ -107,6 +104,7 @@ return {
                 sources = {
                     { name = "nvim_lsp" },
                     { name = "luasnip" },
+                    { name = "csharpier"},
                 },
                 snippet = {
                     expand = function(args)
@@ -144,9 +142,7 @@ return {
             null_ls.setup({
                 sources = {
                     null_ls.builtins.formatting.stylua,
-                    null_ls.builtins.formatting.black,
-                    null_ls.builtins.formatting.isort,
-                    null_ls.builtins.formatting.prettier,
+                    null_ls.builtins.formatting.csharpier,
                 },
             })
 
