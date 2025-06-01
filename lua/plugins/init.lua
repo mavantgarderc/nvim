@@ -56,8 +56,6 @@ return{
     "kdheepak/lazygit.nvim",
     -- ==================================================
     -- === nvim plugins ===
-    -- buffer list
-    "EL-MASTOR/bufferlist.nvim",
     -- filetree
     "MunifTanjim/nui.nvim",
     "nvim-treesitter/nvim-treesitter",
