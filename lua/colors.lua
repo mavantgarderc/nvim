@@ -33,6 +33,42 @@ M.theme_map = {
         "kanagawa-wave",      -- sql
         "kanagawa-dragon",    -- nvim section
     },
+    darkblue = {
+        "darkblue",
+    },
+    desert = {
+        "desert",
+    },
+    evening = {
+        "evening",
+    },
+    habamax = {
+        "habamax",
+    },
+    kohler = {
+        "kohler",
+    },
+    slate = {
+        "slate",
+    },
+    sorbet = {
+        "sorbet",
+    },
+    torte = {
+        "torte",
+    },
+    unokai = {
+        "unokai",
+    },
+    vim = {
+        "vim",
+    },
+    wildcharm = {
+        "wildcharm",
+    },
+    zaibatsu = {
+        "zaibatsu",
+    },
 }
 
 M.filetype_themes = {
