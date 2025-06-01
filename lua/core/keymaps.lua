@@ -2,12 +2,15 @@
 /=================================\=============================================================================
 |===  LOCAL VARIABLE MAPPINGS  ===|
 \=================================/ ]]
-local map = vim.keymap.set
 local opts = { noremap = true, silent = true }
+
+local map = vim.keymap.set
 local cmd = vim.cmd
 local fn = vim.fn
 local g = vim.g
-
+local bo = vim.bo
+local trim = vim.trim
+local api = vim.api
 --[[
 /===========================\===================================================================================
 |===  KEYBOARD MAPPINGS  ===|
@@ -56,7 +59,25 @@ map("n", "<C-k>", ":TmuxNavigateUp<CR>", opts)
 map("n", "<C-l>", ":TmuxNavigateRight<CR>", opts)
 
 -- Buffers
-map("n", "<Leader>c", "<cmd>bd<CR>", opts) -- close current
+map("n", "<leader>bl", "<cmd>ls<CR>", opts) -- buffer list
+
+map("n", "<leader>bt", function() -- show buffer filetype
+  print("Filetype: " .. bo.filetype)
+end, opts)
+
+map("n", "<leader>bb", function() -- buffer full path
+  local buf = api.nvim_get_current_buf()
+  local name = api.nvim_buf_get_name(buf)
+  print("Buffer name: " .. name)
+end, opts)
+
+map("n", "<leader>bn", "<cmd>bnext<CR>", opts) -- next buffer
+map("n", "<leader>bp", "<cmd>bprevious<CR>", opts) -- prev buffer
+
+map("n", "<Leader>bd", "<cmd>bd<CR>", opts) -- close current
+
+
+--map("n", "<leader>b", "<cmd>b<CR>", opts)
 
 --[[
 /======================\========================================================================================
@@ -102,6 +123,11 @@ map("n", "<A-k>", "mzyyP`zk", { desc = "Duplicate line up" })
 \======================/ ]]
 map({ "n", "i" }, "<A-S-j>", "<Plug>(VM-Add-Cursor-Down)", opts)
 map({ "n", "i" }, "<A-S-k>", "<Plug>(VM-Add-Cursor-Up)", opts)
+
+--[[
+/====================\==========================================================================================
+|===  Commenting  ===|
+\====================/ ]]
 
 --[[
 /===================\===========================================================================================

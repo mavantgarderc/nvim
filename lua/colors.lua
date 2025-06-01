@@ -178,14 +178,10 @@ end
 map("n", "<leader>ts", function()
     M.select_theme()
 end, { desc = "Select theme" })
--- Theme cycling and selection
+
 map("n", "<leader>tn", function()
     M.cycle_next_theme()
 end, { desc = "Next Theme" })
-
-map("n", "<leader>ts", function()
-    M.select_theme()
-end, { desc = "select theme" })
 
 -- === Apply themes to already loaded buffers ===
 api.nvim_create_autocmd("BufEnter" or "filetype", {
