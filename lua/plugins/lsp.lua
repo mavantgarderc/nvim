@@ -23,7 +23,7 @@ return {
             require("mason").setup()
             require("mason-lspconfig").setup({
                 ensure_installed = {
-                    'lua_ls',
+                    "lua_ls",
                 },
                 automatic_installation = true,
                 handlers = {
@@ -37,28 +37,28 @@ return {
                     local opts = { buffer = event.buf }
                     local map = vim.keymap.set
                     -- definition in the same buffer
-                    map('n', 'K', '<cmd>lua vim.lsp.buf.hover()<cr>', opts)
+                    map("n", "K", "<cmd>lua vim.lsp.buf.hover()<cr>", opts)
                     -- go to definition in the same buffer
                     -- jump to the typ eof the word under cursor
-                    map('n', 'gd', '<cmd>lua vim.lsp.buf.definition()<cr>', opts)
-                    map('n', 'grd', require("telescope.builtin").lsp_definitions, opts)
+                    map("n", "gd", "<cmd>lua vim.lsp.buf.definition()<cr>", opts)
+                    map("n", "grd", require("telescope.builtin").lsp_definitions, opts)
                     -- map('n', 'grd', require("telescope.builtin").definitions, opts)
                     -- go to declaration
-                    map('n', 'gD', '<cmd>lua vim.lsp.buf.declaration()<cr>', opts)
+                    map("n", "gD", "<cmd>lua vim.lsp.buf.declaration()<cr>", opts)
                     -- go to declaration
-                    map('n', 'gi', '<cmd>lua vim.lsp.buf.implementation()<cr>', opts)
-                    map('n', 'gri', require("telescope.builtin").lsp_implementations, opts)
+                    map("n", "gi", "<cmd>lua vim.lsp.buf.implementation()<cr>", opts)
+                    map("n", "gri", require("telescope.builtin").lsp_implementations, opts)
                     -- <?> jump to definition
-                    map('n', 'go', '<cmd>lua vim.lsp.buf.type_definition()<cr>', opts)
+                    map("n", "go", "<cmd>lua vim.lsp.buf.type_definition()<cr>", opts)
                     -- list of references in the current buffer
                     -- map('n', 'grr', '<cmd>lua vim.lsp.buf.references()<cr>', opts)
                     -- map('n', 'grr', require("telescope.builtin").lsp_reference, opts)
                     -- done la-copy-pasta <?>
-                    map('n', 'gs', '<cmd>lua vim.lsp.buf.signature_help()<cr>', opts)
+                    map("n", "gs", "<cmd>lua vim.lsp.buf.signature_help()<cr>", opts)
                     -- rename all in the current buffer
-                    map('n', 'grn', '<cmd>lua vim.lsp.buf.rename()<cr>', opts)
+                    map("n", "grn", "<cmd>lua vim.lsp.buf.rename()<cr>", opts)
                     -- code action
-                    map({ 'n', 'x' }, 'gra', '<cmd>lua vim.lsp.buf.code_action()<cr>', opts)
+                    map({ "n", "x" }, "gra", "<cmd>lua vim.lsp.buf.code_action()<cr>", opts)
                     -- <?> done la-copy-pasta
                     -- map({ "n", "x" }, "<F3>", function()
                     --     -- 1. vim.lsp.buf.format({ async = true })
@@ -69,8 +69,9 @@ return {
                     --         end,
                     --     })
                     -- end)
+
                     -- fuzzy find all the symbols in your current doc
-                    map('n', 'gO', require("telescope.builtin").lsp_document_symbols, opts)
+                    map("n", "gO", require("telescope.builtin").lsp_document_symbols, opts)
                 end,
             })
 
@@ -104,7 +105,7 @@ return {
                 sources = {
                     { name = "nvim_lsp" },
                     { name = "luasnip" },
-                    { name = "csharpier"},
+                    { name = "omnisharp" },
                 },
                 snippet = {
                     expand = function(args)

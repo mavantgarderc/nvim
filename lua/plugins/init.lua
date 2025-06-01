@@ -87,6 +87,7 @@ return{
     "mbbill/undotree",
     -- tmux integration
     "christoomey/vim-tmux-navigator",
+
     -- which-key; to show pending keybinds
     "folke/which-key.nvim",
     -- nice-ass comments
@@ -97,5 +98,8 @@ return{
             "nvim-lua/plenary.nvim"
         },
         opts = { signs = false }
-    }
+    },
+    -- keymaps of vscode
+    "mg979/vim-visual-multi",
+
 }

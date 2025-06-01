@@ -2,7 +2,7 @@
 require("core.bootstrap")
 require("core.options")
 require("core.keymaps")
---require("core.keymapviewer")
+require("core.keymapviewer")
 
 -- Plugins Directory
 require("lazy").setup("plugins")
@@ -12,5 +12,4 @@ require("after.plugin")
 
 -- Colors
 require("colors")
-vim.cmd.colorscheme("gruvbox")
-
+--vim.cmd.colorscheme("gruvbox")
