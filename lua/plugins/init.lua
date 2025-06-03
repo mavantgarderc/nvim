@@ -99,5 +99,4 @@ return{
     },
     -- keymaps of vscode
     "mg979/vim-visual-multi",
-
 }

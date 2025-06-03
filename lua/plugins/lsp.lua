@@ -20,6 +20,8 @@ return {
             local g = vim.g
             local map = vim.keymap.set
             local api = vim.api
+            local fn = vim.fn
+            local buf = vim.lsp.buf
 
             vim.opt.signcolumn = "yes"
 
@@ -92,18 +94,22 @@ return {
                 severity_sort = true,
                 float = { border = "rounded", source = "if_many" },
                 underline = { severity = diagnostic.severity.ERROR },
-                signs = g.have_nerd_font and {
-                    text = {
-                        [vim.diagnostic.severity.ERROR] = "󰅚 ",
-                        [vim.diagnostic.severity.WARN] = "󰀪 ",
-                        [vim.diagnostic.severity.INFO] = "󰋽 ",
-                        [vim.diagnostic.severity.HINT] = "󰌶 ",
-                    },
-                } or {},
+                signs = g.have_nerd_font
+                        and {
+                            text = {
+                                [vim.diagnostic.severity.ERROR] = "󰅚 ",
+                                [vim.diagnostic.severity.WARN] = "󰀪 ",
+                                [vim.diagnostic.severity.INFO] = "󰋽 ",
+                                [vim.diagnostic.severity.HINT] = "󰌶 ",
+                            },
+                        }
+                    or {},
                 virtual_text = {
                     source = "if_many",
                     spacing = 2,
-                    format = function(diagnostic) return diagnostic.message end,
+                    format = function(diagnostic)
+                        return diagnostic.message
+                    end,
                 },
             })
 
@@ -118,7 +124,9 @@ return {
                     { name = "omnisharp" },
                 },
                 snippet = {
-                    expand = function(args) luasnip.lsp_expand(args.body) end,
+                    expand = function(args)
+                        luasnip.lsp_expand(args.body)
+                    end,
                 },
                 window = {
                     completion = cmp.config.window.bordered(),
@@ -148,10 +156,19 @@ return {
             -- Manual overrides for specific LSPs (optional, can remove if relying fully on lsp-zero handlers)
             local capabilities = require("cmp_nvim_lsp").default_capabilities()
             local lspconfig = require("lspconfig")
+
             lspconfig.lua_ls.setup({ capabilities = capabilities })
             lspconfig.ts_ls.setup({ capabilities = capabilities })
             lspconfig.pyright.setup({ capabilities = capabilities })
-            lspconfig.omnisharp.setup({ capabilities = capabilities })
+            lspconfig.omnisharp.setup({
+                cmd = {
+                    "omnisharp",
+                    "--languageserver",
+                    "--hostPID",
+                    tostring(fn.getpid()),
+                },
+                capabilities = capabilities,
+            })
 
             -- null-ls setup for formatting
             local null_ls = require("null-ls")
@@ -163,10 +180,12 @@ return {
             })
 
             -- Format keymap
-            vim.keymap.set("n", "<leader>gf", function()
-                vim.lsp.buf.format({
+            map("n", "<leader>gf", function()
+                buf.format({
                     async = true,
-                    filter = function(client) return client.name ~= "ts_ls" end,
+                    filter = function(client)
+                        return client.name ~= "ts_ls"
+                    end,
                 })
             end, { desc = "Format with LSP/none-ls" })
 
