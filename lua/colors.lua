@@ -88,6 +88,7 @@ M.filetype_themes = {
     zsh      = "kanagawa-dragon",
     sh       = "kanagawa-dragon",
     csv      = "kanagawa-dragon",
+    kdl      = "kanagawa-dragon",
     -- markup files, containers, etc.
     md    = "catppuccin-frappe",
     tex   = "catppuccin-mocha",

@@ -83,8 +83,9 @@ return{
     "ThePrimeagen/harpoon",
     -- undotree
     "mbbill/undotree",
-    -- tmux integration
+    -- terminal multiplexer navigations
     "christoomey/vim-tmux-navigator",
+    "swaits/zellij-nav.nvim",
 
     -- which-key; to show pending keybinds
     "folke/which-key.nvim",

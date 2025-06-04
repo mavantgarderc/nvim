@@ -53,10 +53,16 @@ map({ "n", "v", "i" }, "<F24>", "0", opts)
 |===  PANES | BUFFERS ===|
 \========================/ ]]
 -- Panes
+-- tmux
 map("n", "<C-h>", ":TmuxNavigateLeft<CR>", opts)
 map("n", "<C-j>", ":TmuxNavigateDown<CR>", opts)
 map("n", "<C-k>", ":TmuxNavigateUp<CR>", opts)
 map("n", "<C-l>", ":TmuxNavigateRight<CR>", opts)
+-- zellij
+map("n", "<C-h>", "<cmd>ZellijNavigateLeftTab<cr>", { silent = true, desc = "navigate left or tab" })
+map("n", "<C-j>", "<cmd>ZellijNavigateDown<cr>",    { silent = true, desc = "navigate down" })
+map("n", "<C-k>", "<cmd>ZellijNavigateUp<cr>",      { silent = true, desc = "navigate up" })
+map("n", "<C-l>", "<cmd>ZellijNavigateRightTab<cr>",{ silent = true, desc = "navigate right or tab" })
 
 -- Buffers
 map("n", "<leader>bl", "<cmd>ls<CR>", opts) -- buffer list
