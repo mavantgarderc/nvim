@@ -55,6 +55,17 @@ return{
     "lewis6991/gitsigns.nvim",
     "kdheepak/lazygit.nvim",
     -- ==================================================
+    -- === Obsidian Integration ===
+    {
+        "epwalsh/obsidian.nvim",
+        version = "*",
+        lazy = true,
+        ft = "markdown",
+        dependencies = {
+            "nvim-lua/plenary.nvim",
+        },
+    },
+    -- ==================================================
     -- === nvim plugins ===
     -- filetree
     "MunifTanjim/nui.nvim",

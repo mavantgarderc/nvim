@@ -54,15 +54,15 @@ map({ "n", "v", "i" }, "<F24>", "0", opts)
 \========================/ ]]
 -- Panes
 -- tmux
-map("n", "<C-h>", ":TmuxNavigateLeft<CR>", opts)
-map("n", "<C-j>", ":TmuxNavigateDown<CR>", opts)
-map("n", "<C-k>", ":TmuxNavigateUp<CR>", opts)
-map("n", "<C-l>", ":TmuxNavigateRight<CR>", opts)
+map("n", "<A-h>", ":TmuxNavigateLeft<CR>", opts)
+map("n", "<A-j>", ":TmuxNavigateDown<CR>", opts)
+map("n", "<A-k>", ":TmuxNavigateUp<CR>", opts)
+map("n", "<A-l>", ":TmuxNavigateRight<CR>", opts)
 -- zellij
-map("n", "<C-h>", "<cmd>ZellijNavigateLeftTab<cr>", { silent = true, desc = "navigate left or tab" })
-map("n", "<C-j>", "<cmd>ZellijNavigateDown<cr>",    { silent = true, desc = "navigate down" })
-map("n", "<C-k>", "<cmd>ZellijNavigateUp<cr>",      { silent = true, desc = "navigate up" })
-map("n", "<C-l>", "<cmd>ZellijNavigateRightTab<cr>",{ silent = true, desc = "navigate right or tab" })
+map("n", "<A-h>", "<cmd>ZellijNavigateLeftTab<cr>", { silent = true, desc = "navigate left or tab" })
+map("n", "<A-j>", "<cmd>ZellijNavigateDown<cr>",    { silent = true, desc = "navigate down" })
+map("n", "<A-k>", "<cmd>ZellijNavigateUp<cr>",      { silent = true, desc = "navigate up" })
+map("n", "<A-l>", "<cmd>ZellijNavigateRightTab<cr>",{ silent = true, desc = "navigate right or tab" })
 
 -- Buffers
 map("n", "<leader>bl", "<cmd>ls<CR>", opts) -- buffer list
@@ -91,6 +91,7 @@ map("n", "<Leader>bd", "<cmd>bd<CR>", opts) -- close current
 \======================/ ]]
 -- normalize pasting
 map("x", "<leader>p", '"_dp')
+
 -- replace the cursor under word, in entire buffer
 map("n", "<leader>s", ":%s/\\<<C-r><C-w>>//>/<C-r><C-w>/gI<Left><Left>")
 
