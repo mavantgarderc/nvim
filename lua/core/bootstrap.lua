@@ -1,6 +1,5 @@
 local M = {}
 
--- Bootstrap lazy.nvim
 local lazypath = vim.fn.stdpath("data") .. "/lazy/lazy.nvim"
 local uv = vim.uv
 local loop = vim.loop

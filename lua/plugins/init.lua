@@ -51,9 +51,7 @@ return{
     },
     -- ==================================================
     -- Git Integration
-    "tpope/vim-fugitive",
     "lewis6991/gitsigns.nvim",
-    "kdheepak/lazygit.nvim",
     -- ==================================================
     -- === Obsidian Integration ===
     {

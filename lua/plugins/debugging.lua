@@ -1,10 +1,7 @@
 return {
-    -- Debug Adapter Protocol (DAP) core
     "mfussenegger/nvim-dap",
     dependencies = {
-        -- Debug UI
         "rcarriga/nvim-dap-ui",
-        -- Required by dap-ui
         "nvim-neotest/nvim-nio",
     },
 
@@ -18,7 +15,6 @@ return {
         map("n", "<leader>dt", dap.toggle_breakpoint, { desc = "DAP: Toggle Breakpoint" })
         map("n", "<leader>dc", dap.continue, { desc = "DAP: Continue" })
 
-        -- Auto-open/close dapui with DAP events
         dap.listeners.before.attach.dapui_config = function()
             dapui.open()
         end
