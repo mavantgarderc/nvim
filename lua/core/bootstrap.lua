@@ -23,4 +23,5 @@ if not (uv or loop).fs_stat(lazypath) then
     end
 end
 opt.rtp:prepend(lazypath)
+
 return M

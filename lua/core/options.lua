@@ -19,7 +19,7 @@ cmd("set tabstop=4")
 cmd("set softtabstop=4")
 cmd("set shiftwidth=4")
 opt.number = true
-opt.relativenumber = true
+--opt.relativenumber = true
 opt.expandtab = true    -- Convert tabs to spaces
 
 schedule(function()    -- OS-Nvim clipboard sync
@@ -51,7 +51,7 @@ opt.isfname:append("@-@")
 
 opt.updatetime = 50
 -- fat cursors... thick one....
--- opt.guicursor = ""
+--opt.guicursor = ""
 
 opt.splitright = true        -- Vertical splits open to the right
 opt.splitbelow = true        -- Horizontal splits open below
