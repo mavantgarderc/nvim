@@ -41,102 +41,122 @@ map({ "n", "v", "i" }, "<Select>", "$", opts)
 -- F11: Treesitter highlight floater
 -- F12: LSP Go to Definition
 -- === F-SHIFT Key ===
+-- F13:
+-- F14:
+-- F15:
+-- F16:
+-- F17:
+-- F18:
+-- F19:
+-- F20:
+-- F21:
+-- F22:
+-- F23:
+-- F24:
 
-map({ "n", "v", "i" }, "<F01>", ":help<CR>",
-    { desc = "Help",
-        noremap = true,
-        silent = true })
+map({ "n", "v", "i" }, "<F1>", ":help<CR>", {
+	desc = "Help",
+	noremap = true,
+	silent = true,
+})
 
-map({ "n", "v", "i" }, "<F02>", function()
-  if lsp and lsp.buf and lsp.buf.rename then
-    lsp.buf.rename()
-  else
-    notify("LSP rename not available")
-  end
-end, { desc = "LSP Rename",
-        noremap = true, silent = true })
+map({ "n", "v", "i" }, "<F2>", function()
+	if lsp and lsp.buf and lsp.buf.rename then
+		lsp.buf.rename()
+	else
+		notify("LSP rename not available")
+	end
+end, {
+	desc = "LSP Rename",
+	noremap = true,
+	silent = true,
+})
 
-map({ "n", "v", "i" }, "<F03>", function()
-  if lsp and lsp.buf and lsp.buf.format then
-    lsp.buf.format()
-  else
-    notify("LSP format not available")
-  end
-end, { desc = "LSP format buffer/selection",
-        noremap = true,
-        silent = true })
+map({ "n", "v", "i" }, "<F3>", function()
+	if lsp and lsp.buf and lsp.buf.format then
+		lsp.buf.format()
+	else
+		notify("LSP format not available")
+	end
+end, {
+	desc = "LSP format buffer/selection",
+	noremap = true,
+	silent = true,
+})
 
-map({ "n", "v", "i" }, "<F04>", function()
-  if lsp and lsp.buf and lsp.buf.code_action then
-    lsp.buf.code_action()
-  else
-    notify("LSP code action not available")
-  end
-end, { desc = "LSP Code Action",
-        noremap = true,
-        silent = true })
+map({ "n", "v", "i" }, "<F4>", function()
+	if lsp and lsp.buf and lsp.buf.code_action then
+		lsp.buf.code_action()
+	else
+		notify("LSP code action not available")
+	end
+end, {
+	desc = "LSP Code Action",
+	noremap = true,
+	silent = true,
+})
 
-map({ "n", "v", "i" }, "<F5>", "<Cmd>TSPlaygroundToggle<CR>",
-    { desc = "Tree-sitter Playground",
-        noremap = true,
-        silent = true })
+map({ "n", "v", "i" }, "<F5>", ":TSPlaygroundToggle<CR>", {
+	desc = "Tree-sitter Playground",
+	noremap = true,
+	silent = true,
+})
 
 map({ "n", "v", "i" }, "<F6>", function()
-  if diagnostics and diagnostics.config then
-    local current = diagnostics.config().virtual_text
-    diagnostics.config({ virtual_text = not current })
-    notify("LSP virtual text " .. (not current and "enabled" or "disabled"))
-  else
-    notify("vim.diagnostic is not available in this session", log.levels.ERROR)
-  end
-end, { desc = "Toggle LSP Diagnostics Virtual Text",
-        noremap = true,
-        silent = true })
+	if diagnostics and diagnostics.config then
+		local current = diagnostics.config().virtual_text
+		diagnostics.config({ virtual_text = not current })
+		notify("LSP virtual text " .. (not current and "enabled" or "disabled"))
+	else
+		notify("vim.diagnostic is not available in this session", log.levels.ERROR)
+	end
+end, {
+	desc = "Toggle LSP Diagnostics Virtual Text",
+	noremap = true,
+	silent = true,
+})
 
-map({ "n", "v", "i" }, "<F7>", "<Cmd>setlocal spell! spelllang=en_us<CR>",
-    { desc = "Toggle Spellcheck",
-        noremap = true,
-        silent = true })
+map({ "n", "v", "i" }, "<F7>", ":setlocal spell! spelllang=en_us<CR>", {
+	desc = "Toggle Spellcheck",
+	noremap = true,
+	silent = true,
+})
 
-map({ "n", "v", "i" }, "<F8>", "<Cmd>Telescope live_grep<CR>",
-    { desc = "Project Search (Telescope)",
-        noremap = true,
-        silent = true })
+map({ "n", "v", "i" }, "<F8>", ":Telescope live_grep<CR>", {
+	desc = "Project Search (Telescope)",
+	noremap = true,
+	silent = true,
+})
 
-map({ "n", "v", "i" }, "<F9>", function()
-  cmd("LspRestart")
-end, { desc = "Restart LSP",
-        noremap = true,
-        silent = true })
+map({ "n", "v", "i" }, "<F9>", function() cmd("LspRestart") end, {
+	desc = "Restart LSP",
+	noremap = true,
+	silent = true,
+})
 
-map({ "n", "v", "i" }, "<F10>", function()
-  o.relativenumber = not o.relativenumber
-end, { desc = "Toggle Relative Line Numbers",
-        noremap = true,
-        silent = true })
+map({ "n", "v", "i" }, "<F10>", function() wo.relativenumber = not wo.relativenumber end, {
+	desc = "Toggle Relative Line Numbers",
+	noremap = true,
+	silent = true,
+})
 
-map({ "n", "v", "i" }, "<F11>", "<Cmd>TSHighlightCapturesUnderCursor<CR>",
-    { desc = "Highlight under cursor",
-        noremap = true,
-        silent = true })
+map({ "n", "v", "i" }, "<F11>", ":TSHighlightCapturesUnderCursor<CR>", {
+	desc = "Highlight under cursor",
+	noremap = true,
+	silent = true,
+})
 
 map({ "n", "v", "i" }, "<F12>", function()
-  if lsp and lsp.buf and lsp.buf.definition then
-    lsp.buf.definition()
-  else
-    notify("LSP definition not available")
-  end
-end, { desc = "Go to Definition",
-        noremap = true,
-        silent = true })
-
--- F13–F24: Reserved for future use; mapped to <Nop> (no-op, easy to customize later)
-for i = 13, 24 do
-  map({ "n", "v", "i" }, "<F" .. i .. ">", "<Nop>",
-        { desc = "Reserved",
-            noremap = true,
-            silent = true })
-end
+	if lsp and lsp.buf and lsp.buf.definition then
+		lsp.buf.definition()
+	else
+		notify("LSP definition not available")
+	end
+end, {
+	desc = "Go to Definition",
+	noremap = true,
+	silent = true,
+})
 
 -- map({ "n", "v", "i" }, "<F24>", "0", opts)
 
@@ -146,42 +166,40 @@ end
 \========================/ ]]
 -- === Panes ===
 -- nvim
-map("n", "<A-h>", ":tabprevious<CR>")
-map("n", "<A-l>", ":tabnext<CR>")
-map("n", "<A-k>", ":tabmove +1<CR>")
-map("n", "<A-j>", ":tabmove -1<CR>")
+map("n", "<C-h>", ":tabprevious<CR>")
+map("n", "<C-l>", ":tabnext<CR>")
+map("n", "<C-k>", ":tabmove +1<CR>")
+map("n", "<C-j>", ":tabmove -1<CR>")
 -- tmux
-map("n", "<A-h>", ":TmuxNavigateLeft<CR>", opts)
-map("n", "<A-j>", ":TmuxNavigateDown<CR>", opts)
-map("n", "<A-k>", ":TmuxNavigateUp<CR>", opts)
-map("n", "<A-l>", ":TmuxNavigateRight<CR>", opts)
+--map("n", "<A-h>", ":TmuxNavigateLeft<CR>", opts)
+--map("n", "<A-j>", ":TmuxNavigateDown<CR>", opts)
+--map("n", "<A-k>", ":TmuxNavigateUp<CR>", opts)
+--map("n", "<A-l>", ":TmuxNavigateRight<CR>", opts)
 -- zellij
-map( "n", "<A-h>", "<cmd>ZellijNavigateLeftTab<cr>",
-    { silent = true, desc = "navigate left or tab" }
-)
-map("n", "<A-j>", "<cmd>ZellijNavigateDown<cr>", { silent = true, desc = "navigate down" })
-map("n", "<A-k>", "<cmd>ZellijNavigateUp<cr>", { silent = true, desc = "navigate up" })
-map( "n", "<A-l>", "<cmd>ZellijNavigateRightTab<cr>", { silent = true, desc = "navigate right or tab" })
+map("n", "<A-h>", ":ZellijNavigateLeftTab<cr>", { silent = true, desc = "navigate left or tab" })
+map("n", "<A-j>", ":ZellijNavigateDown<cr>", { silent = true, desc = "navigate down" })
+map("n", "<A-k>", ":ZellijNavigateUp<cr>", { silent = true, desc = "navigate up" })
+map("n", "<A-l>", ":ZellijNavigateRightTab<cr>", { silent = true, desc = "navigate right or tab" })
 
 -- === Buffers ===
---map("n", "<leader>b", "<cmd>b<CR>", opts)
+--map("n", "<leader>b", ":b<CR>", opts)
 
-map("n", "<leader>bl", "<cmd>ls<CR>", opts) -- buffer list
+map("n", "<leader>bl", ":ls<CR>", opts) -- buffer list
 
 map("n", "<leader>bt", function() -- show buffer filetype
-    print("Filetype: " .. bo.filetype)
+	print("Filetype: " .. bo.filetype)
 end, opts)
 
 map("n", "<leader>bb", function() -- buffer full path
-    local buf = api.nvim_get_current_buf()
-    local name = api.nvim_buf_get_name(buf)
-    print("Buffer name: " .. name)
+	local buf = api.nvim_get_current_buf()
+	local name = api.nvim_buf_get_name(buf)
+	print("Buffer name: " .. name)
 end, opts)
 
-map("n", "<leader>bn", "<cmd>bnext<CR>", opts) -- next buffer
-map("n", "<leader>bp", "<cmd>bprevious<CR>", opts) -- prev buffer
+map("n", "<leader>bn", ":bnext<CR>", opts) -- next buffer
+map("n", "<leader>bp", ":bprevious<CR>", opts) -- prev buffer
 
-map("n", "<Leader>bd", "<cmd>bd<CR>", opts) -- close current
+map("n", "<Leader>bd", ":bd<CR>", opts) -- close current
 
 --[[
 /======================\========================================================================================
@@ -191,13 +209,13 @@ map("n", "<Leader>bd", "<cmd>bd<CR>", opts) -- close current
 map("x", "<leader>p", '"_dp')
 
 -- replace the cursor under word, in entire buffer
-map("n", "<leader>s", ":%s/\\<<C-r><C-w>>//>/<C-r><C-w>/gI<Left><Left>")
+map("n", "<leader>s", ":%s/\\<<C-r><C-w>>\\>//gI<Left><Left>")
 
 -- add execution permission
-map("n", "<leader>x", "<cmd>!chmod +x %<CR>", { silent = true })
+map("n", "<leader>x", ":!chmod +x %<CR>", { silent = true })
 
 -- source current file
-map("n", "<leader>o", "<cmd>source %<CR>")
+map("n", "<leader>o", ":source %<CR>")
 
 --[[
 /===================\===========================================================================================
@@ -222,6 +240,11 @@ map("n", "<C-u>", "<C-u>zz")
 map("n", "<C-A-j>", "mzyyp`zj", { desc = "Duplicate line down" })
 map("n", "<C-A-k>", "mzyyP`zk", { desc = "Duplicate line up" })
 
+-- searching
+map("n", "n", "nzzzv")
+map("n", "N", "Nzzzv")
+map("n", "<Esc>", ":nohlsearch<CR>", opts)
+
 --[[
 /======================\========================================================================================
 |===  Multi-Cursor  ===|
@@ -233,13 +256,3 @@ map({ "n", "i" }, "<A-S-k>", "<Plug>(VM-Add-Cursor-Up)", opts)
 /====================\==========================================================================================
 |===  Commenting  ===|
 \====================/ ]]
-
---[[
-/===================\===========================================================================================
-|===  SEARCHING  ===|
-\===================/ ]]
--- cycle through searched
-map("n", "n", "nzzzv")
-map("n", "N", "Nzzzv")
--- Clear search highlight
-map("n", "<Esc>", "<cmd>nohlsearch<CR>", opts)
