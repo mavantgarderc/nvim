@@ -133,7 +133,9 @@ end, { desc = "Go to Definition",
 -- F13–F24: Reserved for future use; mapped to <Nop> (no-op, easy to customize later)
 for i = 13, 24 do
   map({ "n", "v", "i" }, "<F" .. i .. ">", "<Nop>",
-        { desc = "Reserved", noremap = true, silent = true })
+        { desc = "Reserved",
+            noremap = true,
+            silent = true })
 end
 
 -- map({ "n", "v", "i" }, "<F24>", "0", opts)

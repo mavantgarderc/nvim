@@ -4,4 +4,3 @@ return {
         { "<leader>u", "<cmd>UndotreeToggle<CR>", desc = "Toggle Undotree" },
     },
 }
-
