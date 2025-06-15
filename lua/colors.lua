@@ -62,7 +62,7 @@ M.filetype_themes = {
     csv      = "kanagawa-dragon",
     conf     = "kanagawa-dragon",
     kdl      = "kanagawa-dragon",
-    -- markup files, containers, etc.
+
     md    = "catppuccin-frappe",
     tex   = "catppuccin-mocha",
     xml   = "rose-pine",
@@ -70,7 +70,7 @@ M.filetype_themes = {
     jsonc = "rose-pine-moon",
     html  = "tokyonight",
     css   = "tokyonight",
-    -- source files
+
     python      = "kanagawa-wave",
     sql         = "kanagawa-wave",
     cs          = "gruvbox",
