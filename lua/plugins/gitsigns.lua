@@ -9,7 +9,7 @@ return {
                 signcolumn = true, -- Show git signs in the sign column
                 numhl     = true,  -- Color the line numbers for changed lines
                 linehl    = false, -- Don't highlight the entire line (set true if you want)
-                word_diff = true,  -- Enable word-level diff highlights
+                word_diff = false,  -- Enable word-level diff highlights
                 signs = {
                     add          = {hl = 'GitSignsAdd',          text = '│', numhl='GitSignsAddNr',    linehl='GitSignsAddLn'},
                     change       = {hl = 'GitSignsChange',       text = '│', numhl='GitSignsChangeNr', linehl='GitSignsChangeLn'},

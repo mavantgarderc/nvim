@@ -3,8 +3,8 @@ local M = {}
 M.theme_map = {
     tokyonight = {
         "tokyonight",
-        "tokyonight-moon",   -- html, css
-        "tokyonight-night",  -- json, jsonc
+        "tokyonight-moon",    -- html, css
+        "tokyonight-night",   -- json, jsonc
     },
     catppuccin = {
         "catppuccin-frappe",   -- md
@@ -16,9 +16,6 @@ M.theme_map = {
         "rose-pine-moon",
         "rose-pine-main",
     },
-    gruvbox = {
-        "gruvbox",            -- cs
-    },
     carbonfox = {
         "nightfox",           -- py
         "duskfox",            -- ts
@@ -26,49 +23,24 @@ M.theme_map = {
         "terafox",
         "carbonfox",
     },
-    oxocarbon = {
-        "oxocarbon",
-    },
     kanagawa = {
         "kanagawa-wave",      -- sql
         "kanagawa-dragon",    -- nvim section
     },
-    darkblue = {
-        "darkblue",
-    },
-    desert = {
-        "desert",
-    },
-    evening = {
-        "evening",
-    },
-    habamax = {
-        "habamax",
-    },
-    kohler = {
-        "kohler",
-    },
-    slate = {
-        "slate",
-    },
-    sorbet = {
-        "sorbet",
-    },
-    torte = {
-        "torte",
-    },
-    unokai = {
-        "unokai",
-    },
-    vim = {
-        "vim",
-    },
-    wildcharm = {
-        "wildcharm",
-    },
-    zaibatsu = {
-        "zaibatsu",
-    },
+    gruvbox = { "gruvbox"      },  -- cs
+    oxocarbon = { "oxocarbon", },
+    darkblue  = { "darkblue",  },
+    desert    = { "desert",    },
+    evening   = { "evening",   },
+    habamax   = { "habamax",   },
+    kohler    = { "kohler",    },
+    slate     = { "slate",     },
+    sorbet    = { "sorbet",    },
+    torte     = { "torte",     },
+    unokai    = { "unokai",    },
+    vim       = { "vim",       },
+    wildcharm = { "wildcharm", },
+    zaibatsu  = { "zaibatsu",  },
 }
 
 M.filetype_themes = {

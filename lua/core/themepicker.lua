@@ -19,26 +19,6 @@ local function load_theme(theme_name)
     end
 end
 
--- === Apply themes to already loaded buffers ===
-api.nvim_create_autocmd("BufEnter", {
-    callback = function(args)
-        local ft = api.nvim_buf_get_option(args.buf, "filetype")
-        local theme = config.filetype_themes[ft]
-        if theme then
-            load_theme(theme)
-        end
-    end,
-})
-for _, buf in ipairs(api.nvim_list_bufs()) do
-    if api.nvim_buf_is_loaded(buf) then
-        local ft = api.nvim_buf_get_option(buf, "filetype")
-        local theme = config.filetype_themes[ft]
-        if theme then
-            load_theme(theme)
-        end
-    end
-end
-
 -- === Auto-set Theme Based on Filetype ===
 local function set_theme_by_filetype()
     local ft = bo.filetype
@@ -51,41 +31,7 @@ api.nvim_create_autocmd("FileType", {
     callback = set_theme_by_filetype,
 })
 
--- === Internal State for Theme Cycling ===
-M.current_theme_index = 1
-
-M.flattened_theme_list = (function()
-    local list = {}
-    for _, variants in pairs(config.theme_map) do
-        list_extend(list, variants)
-    end
-    return list
-end)()
-
--- === Cycle to Next Theme ===
-function M.cycle_next_theme()
-    M.current_theme_index = M.current_theme_index + 1
-    if M.current_theme_index > #M.flattened_theme_list then
-        M.current_theme_index = 1
-    end
-    local theme = M.flattened_theme_list[M.current_theme_index]
-    load_theme(theme)
-    notify("Theme: " .. theme, log.levels.INFO, { title = "Theme Cycler" })
-end
-
 -- === User Commands ===
--- Manual Select via vim.ui.select()
-function M.select_theme()
-    require("telescope.builtin").colorscheme({
-        enable_preview = true,
-        initial_mode = "normal",
-        layout_config = {
-            width = 0.6,   -- 60% of screen width
-            height = 0.6,  -- 60% of screen height
-        },
-    })
-end
-
 -- :SetTheme <name>
 api.nvim_create_user_command("TT", function(opts)
     load_theme(opts.args)
@@ -124,7 +70,40 @@ api.nvim_create_user_command("PT", function()
 
 end, {})
 
--- === Keymaps ===
+-- === Internal State for Theme Cycling ===
+M.current_theme_index = 1
+
+M.flattened_theme_list = (function()
+    local list = {}
+    for _, variants in pairs(config.theme_map) do
+        list_extend(list, variants)
+    end
+    return list
+end)()
+
+-- === Cycle to Next Theme ===
+function M.cycle_next_theme()
+    M.current_theme_index = M.current_theme_index + 1
+    if M.current_theme_index > #M.flattened_theme_list then
+        M.current_theme_index = 1
+    end
+    local theme = M.flattened_theme_list[M.current_theme_index]
+    load_theme(theme)
+    notify("Theme: " .. theme, log.levels.INFO, { title = "Theme Cycler" })
+end
+
+-- === Manual Select via vim.ui.select() ===
+function M.select_theme()
+    require("telescope.builtin").colorscheme({
+        enable_preview = true,
+        initial_mode = "normal",
+        layout_config = {
+            width = 0.6,   -- 60% of screen width
+            height = 0.6,  -- 60% of screen height
+        },
+    })
+end
+
 map("n", "<leader>ts", function()
     M.select_theme()
 end, { desc = "Select theme" })
@@ -133,5 +112,24 @@ map("n", "<leader>tn", function()
     M.cycle_next_theme()
 end, { desc = "Next Theme" })
 
+-- === Apply themes to already loaded buffers ===
+api.nvim_create_autocmd("BufEnter", {
+    callback = function(args)
+        local ft = api.nvim_buf_get_option(args.buf, "filetype")
+        local theme = config.filetype_themes[ft]
+        if theme then
+            load_theme(theme)
+        end
+    end,
+})
+for _, buf in ipairs(api.nvim_list_bufs()) do
+    if api.nvim_buf_is_loaded(buf) then
+        local ft = api.nvim_buf_get_option(buf, "filetype")
+        local theme = config.filetype_themes[ft]
+        if theme then
+            load_theme(theme)
+        end
+    end
+end
 
 return M
