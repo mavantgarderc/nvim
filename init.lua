@@ -1,8 +1,8 @@
 -- Core Directory
 require("core.healthcheck")
 require("core.bootstrap")
-require("core.keymaps")
 require("core.options")
+require("core.keymaps")
 
 -- Plugins Directory
 require("lazy").setup("plugins")
