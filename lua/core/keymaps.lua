@@ -28,6 +28,25 @@ local opts = {
 And for them whom following Grimnir's path, The Allfather
 obliged be armored by 100% layout seiðr... ]]
 
+map("i", "<C-b>", "<ESC>^i", { desc = "move beginning of line" })
+map("i", "<C-e>", "<End>", { desc = "move end of line" })
+map("i", "<C-h>", "<Left>", { desc = "move left" })
+map("i", "<C-l>", "<Right>", { desc = "move right" })
+map("i", "<C-j>", "<Down>", { desc = "move down" })
+map("i", "<C-k>", "<Up>", { desc = "move up" })
+
+map("n", "<C-h>", "<C-w>h", { desc = "switch window left" })
+map("n", "<C-l>", "<C-w>l", { desc = "switch window right" })
+map("n", "<C-j>", "<C-w>j", { desc = "switch window down" })
+map("n", "<C-k>", "<C-w>k", { desc = "switch window up" })
+
+map("n", "<Esc>", "<cmd>noh<CR>", { desc = "general clear highlights" })
+
+-- Comment
+map("n", "<leader>/", "gcc", { desc = "toggle comment", remap = true })
+map("v", "<leader>/", "gc", { desc = "toggle comment", remap = true })
+
+
 map({ "n", "v", "i" }, "<Find>", "0", opts)
 map({ "n", "v", "i" }, "<Select>", "$", opts)
 
@@ -304,3 +323,19 @@ map("n", "<Esc>", ":nohlsearch<CR>", opts)
 \======================/ ]]
 map({ "n", "i" }, "<A-S-j>", "<Plug>(VM-Add-Cursor-Down)", opts)
 map({ "n", "i" }, "<A-S-k>", "<Plug>(VM-Add-Cursor-Up)", opts)
+
+--[[
+/===============\===============================================================================================
+|=== Plugins ===|
+\===============/ ]]
+
+-- telescope
+map("n", "<leader>fw", ":Telescope live_grep<CR>", { desc = "telescope live grep" })
+map("n", "<leader>fb", ":Telescope buffers<CR>", { desc = "telescope find buffers" })
+map("n", "<leader>fh", ":Telescope help_tags<CR>", { desc = "telescope help page" })
+map("n", "<leader>ma", ":Telescope marks<CR>", { desc = "telescope find marks" })
+map("n", "<leader>fo", ":Telescope oldfiles<CR>", { desc = "telescope find oldfiles" })
+map("n", "<leader>fz", ":Telescope current_buffer_fuzzy_find<CR>", { desc = "telescope find in current buffer" })
+map("n", "<leader>cm", ":Telescope git_commits<CR>", { desc = "telescope git commits" })
+map("n", "<leader>gt", ":Telescope git_status<CR>", { desc = "telescope git status" })
+map("n", "<leader>pt", ":Telescope terms<CR>", { desc = "telescope pick hidden term" })
