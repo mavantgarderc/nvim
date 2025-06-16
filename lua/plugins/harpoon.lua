@@ -10,7 +10,7 @@ return {
 
     local map = vim.keymap.set
 
-    map("n", "<leader>a", function() harpoon:list():append() end, { desc = "Harpoon: Add File" })
+    map("n", "<leader>a", function() harpoon:list():add() end, { desc = "Harpoon: Add File" })
     map("n", "<C-e>", function() harpoon.ui:toggle_quick_menu(harpoon:list()) end, { desc = "Harpoon: Toggle Menu" })
 
     map("n", "<C-h>", function() harpoon:list():select(1) end, { desc = "Harpoon: Nav 1" })

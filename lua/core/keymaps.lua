@@ -14,6 +14,7 @@ local notify = vim.notify
 local diagnostics = vim.diagnostic
 local o = vim.o
 local log = vim.log
+local wo = vim.wo
 
 local opts = {
     noremap = true,
@@ -21,18 +22,14 @@ local opts = {
 }
 
 --[[
-/===========================\
-|===  KEYBOARD MAPPINGS  ===|
-\===========================/ ]]
+/================\=============================================================================================
+|===  BASICS  ===|
+\===============/ ]]
 --[[
 And for them whom following Grimnir's path, The Allfather
 obliged be armored by 100% layout seiðr... ]]
 
---[[
-/========================\======================================================================================
-|===  PANES | BUFFERS ===|
-\========================/ ]]
-
+-- Insert Mode Movement
 map("i", "<C-b>", "<ESC>^i", { desc = "move beginning of line" })
 map("i", "<C-e>", "<End>", { desc = "move end of line" })
 map("i", "<C-h>", "<Left>", { desc = "move left" })
@@ -40,70 +37,10 @@ map("i", "<C-l>", "<Right>", { desc = "move right" })
 map("i", "<C-j>", "<Down>", { desc = "move down" })
 map("i", "<C-k>", "<Up>", { desc = "move up" })
 
--- === Comment ===
+-- Comments
 map("n", "<leader>/", "gcc", { desc = "toggle comment", remap = true })
 map("v", "<leader>/", "gc", { desc = "toggle comment", remap = true })
 
-map({ "n", "v", "i" }, "<Find>", "0", opts)
-map({ "n", "v", "i" }, "<Select>", "$", opts)
-
--- === Panes ===
--- nvim
-map("n", "<leader>h", "<C-w>h", { desc = "switch window left" })
-map("n", "<leader>l", "<C-w>l", { desc = "switch window right" })
-map("n", "<leader>j", "<C-w>j", { desc = "switch window down" })
-map("n", "<leader>k", "<C-w>k", { desc = "switch window up" })
--- Resize Nvim Panes (windows)
-map("n", "<C-A-h>", ":vertical resize -5<CR>", { desc = "Decrease window width" })
-map("n", "<C-A-l>", ":vertical resize +5<CR>", { desc = "Increase window width" })
-map("n", "<C-A-j>", ":resize -5<CR>", { desc = "Decrease window height" })
-map("n", "<C-A-k>", ":resize +5<CR>", { desc = "Increase window height" })
--- zellij
-map("n", "<A-h>", ":ZellijNavigateLeftTab<cr>", { silent = true, desc = "navigate left or tab" })
-map("n", "<A-j>", ":ZellijNavigateDown<cr>", { silent = true, desc = "navigate down" })
-map("n", "<A-k>", ":ZellijNavigateUp<cr>", { silent = true, desc = "navigate up" })
-map("n", "<A-l>", ":ZellijNavigateRightTab<cr>", { silent = true, desc = "navigate right or tab" })
-
--- === Buffers ===
---map("n", "<leader>b", ":b<CR>", opts)
-
-map("n", "<leader>bl", ":ls<CR>", opts) -- buffer list
-
-map("n", "<leader>bt", function() -- show buffer filetype
-    print("Filetype: " .. bo.filetype)
-end, opts)
-
-map("n", "<leader>bb", function() -- buffer full path
-    local buf = api.nvim_get_current_buf()
-    local name = api.nvim_buf_get_name(buf)
-    print("Buffer name: " .. name)
-end, opts)
-
-map("n", "<leader>bn", ":bnext<CR>", opts) -- next buffer
-map("n", "<leader>bp", ":bprevious<CR>", opts) -- prev buffer
-
-map("n", "<Leader>bd", ":bd<CR>", opts) -- close current
-
---[[
-/======================\========================================================================================
-|===  FILE ACTIONS  ===|
-\======================/ ]]
--- normalize pasting
-map("x", "<leader>p", '"_dp')
-
--- replace the cursor under word, in entire buffer
-map("n", "<leader>s", ":%s/\\<<C-r><C-w>>\\>//gI<Left><Left>")
-
--- add execution permission
-map("n", "<leader>x", ":!chmod +x %<CR>", { silent = true })
-
--- source current file
-map("n", "<leader>o", ":so %<CR>")
-
---[[
-/===================\===========================================================================================
-|===  MOVEMENTS  ===|
-\===================/ ]]
 -- stand-still cursor while merging lines
 map("n", "J", "mzJ`z")
 
@@ -112,6 +49,8 @@ map("v", "J", ":m '>+1<CR>gv=gv")
 map("v", "K", ":m '<-2<CR>gv=gv")
 
 -- Better vertical movement with wrapped lines
+map({ "n", "v", "i" }, "<Find>", "0", opts)
+map({ "n", "v", "i" }, "<Select>", "$", opts)
 map("n", "j", "v:count == 0 ? 'gj' : 'j'", { expr = true, silent = true })
 map("n", "k", "v:count == 0 ? 'gk' : 'k'", { expr = true, silent = true })
 
@@ -129,28 +68,54 @@ map("n", "N", "Nzzzv")
 map("n", "<Esc>", ":nohlsearch<CR>", opts)
 --map("n", "<Esc>", ":noh<CR>", opts)
 
---[[
-/======================\========================================================================================
-|===  Multi-Cursor  ===|
-\======================/ ]]
+-- Multi-Cursor
 map({ "n", "i" }, "<A-S-j>", "<Plug>(VM-Add-Cursor-Down)", opts)
 map({ "n", "i" }, "<A-S-k>", "<Plug>(VM-Add-Cursor-Up)", opts)
 
 --[[
-/===============\===============================================================================================
-|=== Plugins ===|
-\===============/ ]]
+/========================\======================================================================================
+|===  PANES | BUFFERS ===|
+\========================/ ]]
+-- === NVIM ===
+-- Buffers
+map("n", "<leader>bl", ":ls<CR>", opts)
+map("n", "<leader>bt", function() print("Filetype: " .. bo.filetype) end, opts)
+map("n", "<leader>bb", function() print(api.nvim_buf_get_name(api.nvim_get_current_buf())) end, opts)
+map("n", "<leader>bn", ":bnext<CR>", opts)
+map("n", "<leader>bp", ":bprevious<CR>", opts)
+map("n", "<Leader>bd", ":bd<CR>", opts)
+-- Panes
+map("n", "<leader>h", "<C-w>h", { desc = "switch window left" })
+map("n", "<leader>l", "<C-w>l", { desc = "switch window right" })
+map("n", "<leader>j", "<C-w>j", { desc = "switch window down" })
+map("n", "<leader>k", "<C-w>k", { desc = "switch window up" })
+-- Resize Panes
+map("n", "<C-A-h>", ":vertical resize -5<CR>", { desc = "Decrease window width" })
+map("n", "<C-A-l>", ":vertical resize +5<CR>", { desc = "Increase window width" })
+map("n", "<C-A-j>", ":resize -5<CR>", { desc = "Decrease window height" })
+map("n", "<C-A-k>", ":resize +5<CR>", { desc = "Increase window height" })
 
--- telescope
-map("n", "<leader>fw", ":Telescope live_grep<CR>", { desc = "telescope live grep" })
-map("n", "<leader>fb", ":Telescope buffers<CR>", { desc = "telescope find buffers" })
-map("n", "<leader>fh", ":Telescope help_tags<CR>", { desc = "telescope help page" })
-map("n", "<leader>ma", ":Telescope marks<CR>", { desc = "telescope find marks" })
-map("n", "<leader>fo", ":Telescope oldfiles<CR>", { desc = "telescope find oldfiles" })
-map("n", "<leader>fz", ":Telescope current_buffer_fuzzy_find<CR>", { desc = "telescope find in current buffer" })
-map("n", "<leader>cm", ":Telescope git_commits<CR>", { desc = "telescope git commits" })
-map("n", "<leader>gt", ":Telescope git_status<CR>", { desc = "telescope git status" })
-map("n", "<leader>pt", ":Telescope terms<CR>", { desc = "telescope pick hidden term" })
+-- === Terminal Multiplexer ===
+map("n", "<A-h>", ":ZellijNavigateLeftTab<cr>", { silent = true, desc = "navigate left or tab" })
+map("n", "<A-j>", ":ZellijNavigateDown<cr>", { silent = true, desc = "navigate down" })
+map("n", "<A-k>", ":ZellijNavigateUp<cr>", { silent = true, desc = "navigate up" })
+map("n", "<A-l>", ":ZellijNavigateRightTab<cr>", { silent = true, desc = "navigate right or tab" })
+
+--[[
+/======================\========================================================================================
+|===  FILE ACTIONS  ===|
+\======================/ ]]
+-- normalize pasting
+map("x", "<leader>p", '"_dp')
+
+-- replace the cursor under word, in entire buffer
+map("n", "<leader>s", ":%s/\\<<C-r><C-w>>\\>//gI<Left><Left>")
+
+-- add execution permission
+map("n", "<leader>x", ":!chmod +x %<CR>", { silent = true })
+
+-- source current file
+map("n", "<leader>o", ":so %<CR>")
 
 --[[
 /==============\================================================================================================

@@ -15,8 +15,8 @@ return {
 
             telescope.setup({
                 defaults = {
-                    prompt_prefix = " ",
-                    selection_caret = " ",
+                    prompt_prefix = "   ",
+                    selection_caret = "   ",
                     path_display = { "smart" },
                     mappings = {
                         i = {
@@ -75,7 +75,6 @@ return {
                         sort_lastused = true,
                         initial_mode = "normal",
                     },
-                    -- Add other picker customizations here
                 },
                 extensions = {
                     ["ui-select"] = require("telescope.themes").get_dropdown(),
@@ -89,59 +88,33 @@ return {
             local keymap_opts = { noremap = true, silent = true }
 
             map("n", "<leader>pf", builtin.find_files, { desc = "[P]roject [F]iles" })
+
             map("n", "<C-p>", builtin.git_files, { desc = "[G]it [F]iles" })
 
-            map(
-                "n",
-                "<leader>ps",
-                function() builtin.grep_string({ search = fn.input("Grep > ") }) end,
-                { desc = "[P]roject [S]earch string" }
-            )
+            map( "n", "<leader>ps", function()
+                builtin.grep_string({ search = fn.input("Grep > ") })
+            end, { desc = "[P]roject [S]earch string" })
 
-            map(
-                "n",
-                "<leader><leader>",
-                function()
-                    builtin.buffers({
-                        sort_mru = true,
-                        sort_lastused = true,
-                        initial_mode = "normal",
-                    })
-                end,
-                { desc = "[ ] Find existing buffers" }
-            )
+            map( "n", "<leader><leader>", function()
+                builtin.buffers({
+                    sort_mru = true,
+                    sort_lastused = true,
+                    initial_mode = "normal", })
+            end, { desc = "[ ] Find existing buffers" })
 
-            map(
-                "n",
-                "<leader>/",
-                function()
-                    builtin.current_buffer_fuzzy_find(require("telescope.themes").get_dropdown({
-                        winblend = 10,
-                        previewer = false,
-                    }))
-                end,
-                { desc = "[/] Search in buffer" }
-            )
+            map( "n", "<leader>/", function()
+                builtin.current_buffer_fuzzy_find(require("telescope.themes").get_dropdown({ winblend = 10, previewer = false, }))
+            end, { desc = "[/] Search in buffer" })
 
-            map(
-                "n",
-                "<leader>s/",
-                function()
-                    builtin.live_grep({
-                        prompt_title = "Live Grep in Open Files",
-                    })
-                end,
-                { desc = "[S]earch [/] in open files" }
-            )
+            map( "n", "<leader>s/", function()
+                builtin.live_grep({ prompt_title = "Live Grep in Open Files", })
+            end, { desc = "[S]earch [/] in open files" })
 
-            map(
-                "n",
-                "<leader>sn",
-                function() builtin.find_files({ cwd = fn.stdpath("config") }) end,
-                { desc = "[S]earch [N]eovim files" }
-            )
+            map( "n", "<leader>sn", function()
+                builtin.find_files({ cwd = fn.stdpath("config") })
+            end, { desc = "[S]earch [N]eovim files" })
 
-            -- Optional extra keymaps (uncomment to enable)
+            -- -- Optional extra keymaps (uncomment to enable)
             -- map("n", "<leader>sh", builtin.help_tags, { desc = "[S]earch [H]elp" })
             -- map("n", "<leader>sk", builtin.keymaps, { desc = "[S]earch [K]eymaps" })
             -- map("n", "<leader>sf", builtin.find_files, { desc = "[S]earch [F]iles" })
