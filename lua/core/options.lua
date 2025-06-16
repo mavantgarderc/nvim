@@ -20,6 +20,8 @@ cmd("set softtabstop=4")
 cmd("set shiftwidth=4")
 opt.number = true
 --opt.relativenumber = true
+opt.numberwidth = 2
+
 opt.expandtab = true    -- Convert tabs to spaces
 
 schedule(function()    -- OS-Nvim clipboard sync

@@ -34,12 +34,12 @@ map({ "n", "v", "i" }, "<Select>", "$", opts)
 -- === ===  ===  === ===
 -- === === F Key === ===
 -- === ===  ===  === ===
--- F01, n: Help
+-- F01, n:
 --      i:
---      v:
+--      v: Help
 -- F02, n: LSP Rename
---      i: // // //
---      v: // // //
+--      i: LSP Rename
+--      v: LSP Rename
 -- F03, n: LSP Format
 --      i:
 --      v:
