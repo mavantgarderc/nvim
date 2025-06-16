@@ -1,4 +1,6 @@
 return{
+    -- === Optimizer
+    "lewis6991/impatient.nvim",
     -- === ui ===
     -- status line
     "nvim-lualine/lualine.nvim",
@@ -49,6 +51,8 @@ return{
             "rafamadriz/friendly-snippets",
         }
     },
+    -- Pair Character Completion
+    "windwp/nvim-autopairs",
     -- ==================================================
     -- Git Integration
     "lewis6991/gitsigns.nvim",
