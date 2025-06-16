@@ -9,10 +9,10 @@ Rebuild of my Vim setup on Nvim from scratch; nothing more...
 
 - [x] `.editorconfig`: Cross-IDE style constraints
 
-- [ ] Explore Out-Of-The-Box Configs:
-  - NvChad
-  - Kickstart
-  - LunarVim
+- [x] Explore Out-Of-The-Box Configs' Ideas:
+  - ~~NvChad~~
+  - ~~Kickstart~~
+  - ~~LunarVim~~
 
 - [ ] `telemetry.lua`: Monitoring neovim
 

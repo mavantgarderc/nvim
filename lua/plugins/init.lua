@@ -1,4 +1,7 @@
-return{
+return {
+    -- ==================================================
+    -- Git Integration
+    "lewis6991/gitsigns.nvim",
     -- === Optimizer
     "lewis6991/impatient.nvim",
     -- === ui ===
@@ -35,11 +38,11 @@ return{
             "saadparwaiz1/cmp_luasnip",
             -- Dev Enhancements
             {
-            "folke/lazydev.nvim",
-                ft = 'lua',
+                "folke/lazydev.nvim",
+                ft = "lua",
                 opt = {
                     library = {
-                        { path = '${3rd}/luv/library', words = { 'vim%.uv' } },
+                        { path = "${3rd}/luv/library", words = { "vim%.uv" } },
                     },
                 },
             },
@@ -49,13 +52,10 @@ return{
             -- Snippets
             "L3MON4D3/LuaSnip",
             "rafamadriz/friendly-snippets",
-        }
+        },
     },
     -- Pair Character Completion
     "windwp/nvim-autopairs",
-    -- ==================================================
-    -- Git Integration
-    "lewis6991/gitsigns.nvim",
     -- ==================================================
     -- === Obsidian Integration ===
     {
@@ -67,6 +67,10 @@ return{
             "nvim-lua/plenary.nvim",
         },
     },
+    -- {
+    --     "renerocksai/telekasten.nvim",
+    --     dependencies = { "nvim-telescope/telescope.nvim" },
+    -- },
     -- ==================================================
     -- === nvim plugins ===
     -- filetree
@@ -76,21 +80,19 @@ return{
     -- telescope
     {
         "nvim-telescope/telescope.nvim",
-        event = 'VimEnter',
+        event = "VimEnter",
         dependencies = {
-            'nvim-lua/plenary.nvim',
+            "nvim-lua/plenary.nvim",
             {
-                'nvim-telescope/telescope-fzf-native.nvim',
-                build = 'make',
-                cond = function()
-                    return vim.fn.executable 'make' == 1
-                end,
+                "nvim-telescope/telescope-fzf-native.nvim",
+                build = "make",
+                cond = function() return vim.fn.executable("make") == 1 end,
             },
-            { 'nvim-telescope/telescope-ui-select.nvim' },
+            { "nvim-telescope/telescope-ui-select.nvim" },
 
             -- Useful for getting pretty icons, but requires a Nerd Font.
-            { 'nvim-tree/nvim-web-devicons', enabled = vim.g.have_nerd_font }
-        }
+            { "nvim-tree/nvim-web-devicons", enabled = vim.g.have_nerd_font },
+        },
     },
     -- harpoon
     "ThePrimeagen/harpoon",
@@ -107,9 +109,9 @@ return{
         "folke/todo-comments.nvim",
         event = "VimEnter",
         dependencies = {
-            "nvim-lua/plenary.nvim"
+            "nvim-lua/plenary.nvim",
         },
-        opts = { signs = false }
+        opts = { signs = false },
     },
     -- keymaps of vscode
     "mg979/vim-visual-multi",
