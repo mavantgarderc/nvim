@@ -4,15 +4,20 @@ return {
         "nvim-tree/nvim-web-devicons",
     },
     config = function()
-        local hide_in_width = function() return vim.fn.winwidth(0) > 80 end
+        local fn = vim.fn
+        local bo = vim.bo
+        local api = vim.api
+        local map = vim.keymap.set
+
+        local hide_in_width = function() return fn.winwidth(0) > 80 end
 
         local diagnostics = {
             "diagnostics",
             sources = { "nvim_diagnostic" },
             sections = { "error", "warn" },
-            symbols = { error = " ", warn = " " },
+            symbols = { error = "󰯈 ", warn = " " },
             colored = false,
-            update_in_insert = false,
+            update_in_insert = true,
             always_visible = true,
         }
 
@@ -21,19 +26,6 @@ return {
             colored = false,
             symbols = { added = " ", modified = " ", removed = " " },
             cond = hide_in_width,
-        }
-
-        -- local mode = {
-        --     "mode",
-        --     fmt = function(str)
-        --         return "-- " .. str .. " --"
-        --     end,
-        -- }
-
-        local filetype = {
-            "filetype",
-            icons_enabled = false,
-            icon = nil,
         }
 
         local branch = {
@@ -49,17 +41,25 @@ return {
         }
 
         local progress = function()
-            --local chars = { "_", "▁", "▂", "▃", "▄", "▅", "▆", "▇", "█" }
-            --local chars = { "▱▱", "▰▱", "▰▰" }
-            local chars = { "⡀ ", "⡄ ", "⡆ ", "⡇ ", "⡇⡀", "⡇⡄", "⡇⡆", "⡇⡇",}
-            local current_line = vim.fn.line(".")
-            local total_lines = vim.fn.line("$")
+            local chars = {
+                "⡀   ", "⡀⡀  ", "⡀⡀⡀ ", "⡀⡀⡀⡀",
+                "⡄⡀⡀⡀", "⡄⡄⡀⡀", "⡄⡄⡄⡀", "⡄⡄⡄⡄",
+                "⡆⡄⡄⡄", "⡆⡆⡄⡄", "⡆⡆⡆⡄", "⡆⡆⡆⡆",
+                "⡇⡆⡆⡆", "⡇⡇⡆⡆", "⡇⡇⡇⡆", "⡇⡇⡇⡇",
+            }
+            local current_line = fn.line(".")
+            local total_lines = fn.line("$")
             local index = math.ceil((current_line / total_lines) * #chars)
-            return chars[index]
-
+            return chars[index] or chars[#chars]
         end
 
-        local spaces = function() return "spaces: " .. vim.api.nvim_buf_get_option(0, "shiftwidth") end
+        local show_filetype_text = true
+        local filetype = function()
+            local ft = bo.filetype
+            if ft == "" then return "" end
+            local icon, _ = require("nvim-web-devicons").get_icon_by_filetype(ft, { default = true })
+            return show_filetype_text and (icon .. " " .. ft) or icon
+        end
 
         require("lualine").setup({
             options = {
@@ -101,5 +101,10 @@ return {
             winbar = {},
             inactive_winbar = {},
         })
+
+        map("n", "<leader>tf", function()
+            show_filetype_text = not show_filetype_text
+            require("lualine").refresh()
+        end, { desc = "Toggle filetype text" })
     end,
 }

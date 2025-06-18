@@ -50,7 +50,6 @@ M.filetype_themes = {
     lazy     = "kanagawa-dragon",
     help     = "kanagawa-dragon",
     lua      = "kanagawa-dragon",
-    fugitive = "kanagawa-dragon",
     mason    = "kanagawa-dragon",
     tmux     = "kanagawa-dragon",
     toml     = "kanagawa-dragon",
