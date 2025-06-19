@@ -57,8 +57,6 @@ opt.signcolumn = "yes"    -- Always show sign column (LSP, Git, etc.)
 opt.isfname:append("@-@")
 
 opt.updatetime = 50
--- fat cursors... thick one....
---opt.guicursor = ""
 
 opt.splitright = true        -- Vertical splits open to the right
 opt.splitbelow = true        -- Horizontal splits open below
