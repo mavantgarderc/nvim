@@ -14,8 +14,6 @@ Rebuild of my Vim setup on Nvim from scratch; nothing more...
   - ~~Kickstart~~
   - ~~LunarVim~~
 
-- [ ] `telemetry.lua`: Monitoring neovim
-
 - [ ] `depgraph.lua`: Visualize project dependency graphs
 
 - [ ] `vault.lua`: API key & credential loader (via env/gpg/file)

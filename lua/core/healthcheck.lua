@@ -1,21 +1,23 @@
--- copied from kickstart.nvim & add some
 local M = {}
 
--- Check Neovim version
+local ver = vim.version()
+local fn = vim.fn
+local cmd = vim.cmd
+local api = vim.api
+local g = vim.g
+
 local function check_version()
-  local ver = vim.version()
-  if not vim.version.ge then
+  if not ver.ge then
     return false, "Neovim out of date (pre-0.10)"
   end
-  return vim.version.ge(ver, {0, 10, 0}),
+  return ver.ge(ver, {0, 10, 0}),
          string.format("Neovim version: %d.%d.%d", ver.major, ver.minor, ver.patch)
 end
 
--- Check external dependencies
 local function check_external_reqs()
   local results = {}
   for _, exe in ipairs {"git", "make", "unzip", "rg"} do
-    local ok = vim.fn.executable(exe) == 1
+    local ok = fn.executable(exe) == 1
     table.insert(results, {
       ok = ok,
       message = ok and ("Found executable: "..exe) or ("Missing executable: "..exe)
@@ -24,25 +26,19 @@ local function check_external_reqs()
   return results
 end
 
--- Check if plugin is installed
 local function plugin_installed(name)
-  local lazy_path = vim.fn.stdpath("data") .. "/lazy/" .. name
-  return vim.fn.isdirectory(lazy_path) == 1
+  local lazy_path = fn.stdpath("data") .. "/lazy/" .. name
+  return fn.isdirectory(lazy_path) == 1
 end
 
--- Check config load
 local function config_check()
-  local ok, err = pcall(vim.cmd, "source $MYVIMRC")
+  local ok, err = pcall(cmd, "source $MYVIMRC")
   return ok, ok and "Config loads successfully" or ("Config error: "..tostring(err))
 end
 
--- Combined health check
 function M.check()
-  -- Kickstart-style checks
   local version_ok, version_msg = check_version()
   local external_reqs = check_external_reqs()
-
-  -- User config checks
   local config_ok, config_msg = config_check()
   local critical_plugins = {"nvim-treesitter", "nvim-lspconfig", "plenary.nvim", "lazy.nvim"}
   local missing_plugins = {}
@@ -53,7 +49,6 @@ function M.check()
     end
   end
 
-  -- Format results
   local results = {
     {header = "=== SYSTEM & DEPENDENCIES ==="},
     {ok = version_ok, message = version_msg},
@@ -80,10 +75,8 @@ function M.check()
   return results
 end
 
--- Run healthcheck and display results
 function M.run()
   local results = M.check()
-
   print("=== NVIM CONFIG HEALTH CHECK ===")
   for _, item in ipairs(results) do
     if item.header then
@@ -95,34 +88,29 @@ function M.run()
   print("\n=== CHECK COMPLETE ===")
 end
 
--- Create commands
-if not vim.g.loaded_core_healthcheck then
-  vim.api.nvim_create_user_command("Himp", M.run, {desc = "Run config health check"})
+if not g.loaded_core_healthcheck then
+  api.nvim_create_user_command("Himp", M.run, {desc = "Run config health check"})
 
-  vim.api.nvim_create_user_command("CheckhealthConfig", function()
-    -- Display in quickfix window
+  api.nvim_create_user_command("CheckhealthConfig", function()
     local results = M.check()
     local qf_list = {}
-
     for _, item in ipairs(results) do
       if item.header then
         table.insert(qf_list, {
           text = item.header,
-          type = "I" -- Info
+          type = "I"
         })
       else
         table.insert(qf_list, {
           text = item.message,
-          type = item.ok and "I" or "E" -- Info/Error
+          type = item.ok and "I" or "E"
         })
       end
     end
-
-    vim.fn.setqflist(qf_list)
-    vim.cmd("copen")
+    fn.setqflist(qf_list)
+    cmd("copen")
   end, {desc = "Detailed config health check"})
-
-  vim.g.loaded_core_healthcheck = true
+  g.loaded_core_healthcheck = true
 end
 
 return M
