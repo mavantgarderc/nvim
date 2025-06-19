@@ -9,7 +9,6 @@ local env = vim.env
 g.mapleader = " "
 g.maplocalleader = "\\"
 opt.smartindent = true
-keymap.set('n', "<leader>pv", cmd.Ex)
 
 g.loaded_node_provider = 0
 g.loaded_python3_provider = 0
@@ -63,23 +62,3 @@ opt.updatetime = 50
 
 opt.splitright = true        -- Vertical splits open to the right
 opt.splitbelow = true        -- Horizontal splits open below
-
--- =============================================================================
-
--- LazyGit
--- transparency of floating window
-g.lazygit_floating_window_winblend = 0
--- scaling factor for floating window
-g.lazygit_floating_window_scaling_factor = 0.9
--- customize lazygit popup window border characters
-g.lazygit_floating_window_border_chars = {'╭','─', '╮', '│', '╯','─', '╰', '│'}
--- use plenary.nvim to manage floating window if available
-g.lazygit_floating_window_use_plenary = 0
--- fallback to 0 if neovim-remote is not installed
-g.lazygit_use_neovim_remote = 1
--- config file path is evaluated if this value is 1
-g.lazygit_use_custom_config_file_path = 0
--- custom config file path (you can use {} instead of '')
-g.lazygit_config_file_path = ''
--- optional function callback when exiting lazygit (useful for example to refresh some UI elements after lazy git has made some changes)
-g.lazygit_on_exit_callback = nil
