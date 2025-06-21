@@ -15,6 +15,7 @@ map("i", "<C-h>", "<Left>", { desc = "move left" })
 map("i", "<C-l>", "<Right>", { desc = "move right" })
 map("i", "<C-j>", "<Down>", { desc = "move down" })
 map("i", "<C-k>", "<Up>", { desc = "move up" })
+map("i", "<C-k>", "<Up>", { desc = "move up" })
 
 -- Comments
 map("n", "<leader>/", "gcc", { desc = "toggle comment", remap = true })
