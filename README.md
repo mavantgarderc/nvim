@@ -18,8 +18,7 @@ This structures allow the user to read the config modules, as a reference study.
 
 I'll appreciate any recommendations if you do by [gmail](manihabibinava@gmail.com).
 
-> F-Keys
-> They are available for OGs, but not a good idea to take the habbit (for sake of zen).
+> F-Keys are available for OGs, but not a good idea to take the habbit (for sake of zen).
 
 ## To Do
 - [x] `themepicker.lua` & `colors.lua`: Selecting & changing theme & filetype logic + related keymaps
