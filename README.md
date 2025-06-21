@@ -1,6 +1,18 @@
+And for them whom following Grimnir's path, The Allfather
+obliged be armored by 100% layout seiðr...
+
 # Neovim Configuration
 Rebuild of my Vim setup on Nvim from scratch; nothing more...
-(& ofcourse a lil' bit of modernization...)
+& ofcourse a lil' bit of modernization... or more :)
+
+In case of keymaps, you'll see three types:
+1. Plugin related keymaps, located in `lua/plugins/{plugin_config_file}`
+2. Nvim keymaps located in `lua/core/keymaps/`, categorized:
+  - Customs
+  - Native Re-implementations
+This structures allow the user to read the config modules, as a reference study.
+
+I'll appreciate any recommendations if you do by [gmail](manihabibinava@gmail.com).
 
 ## To Do
 - [x] `themepicker.lua` & `colors.lua`: Selecting & changing theme & filetype logic + related keymaps
@@ -16,8 +28,8 @@ Rebuild of my Vim setup on Nvim from scratch; nothing more...
 
 - [ ] `depgraph.lua`: Visualize project dependency graphs
 
-- [ ] `vault.lua`: API key & credential loader (via env/gpg/file)
+- [ ] `vault.lua`: API key & credential loader (via `env`/`gpg`/file)
 
 - [ ] `macros.lua`: Named, parameterized macros definition
 
-- [ ] `sessionizer.lua`: Session save/restore logic
+- [ ] `sessionizer.lua`: Session save/resurrect logic

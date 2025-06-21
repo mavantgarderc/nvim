@@ -1,7 +1,3 @@
---[[
-And for them whom following Grimnir's path, The Allfather
-obliged be armored by 100% layout seiðr... ]]
-
 -- Core Directory
 require("core.healthcheck")
 require("core.bootstrap")
