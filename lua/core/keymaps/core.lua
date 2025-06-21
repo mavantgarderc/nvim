@@ -1,11 +1,10 @@
 local map = vim.keymap.set
 local opts = { noremap = true, silent = true, }
-local cmd = vim.cmd
 
 -- netrw
-map('n', "<leader>pv", cmd.Ex)
+map("n", "<leader>pv", ":Ex<CR>")
 
--- Paste
+-- OS-Integrated Paste from Clipboard
 map("n", "<leader>p", "\"_dP", opts)
 
 -- Movement
@@ -51,7 +50,6 @@ map("n", "<C-A-k>", "mzyyP`zk", { desc = "Duplicate line up" })
 map("n", "n", "nzzzv")
 map("n", "N", "Nzzzv")
 map("n", "<Esc>", ":nohlsearch<CR>", opts)
---map("n", "<Esc>", ":noh<CR>", opts)
 
 -- Multi-Cursor
 map({ "n", "i" }, "<A-S-j>", "<Plug>(VM-Add-Cursor-Down)", opts)
