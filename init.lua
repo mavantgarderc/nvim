@@ -4,7 +4,7 @@ obliged be armored by 100% layout seiðr... ]]
 
 -- Core Directory
 require("core.healthcheck")
-require("core.lazy")
+require("core.bootstrap")
 require("core.options")
 -- Keymaps
 require("core.keymaps.buffer")
