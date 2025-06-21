@@ -3,7 +3,7 @@ require("core.healthcheck")
 require("core.bootstrap")
 require("core.options")
 -- Keymaps
-require("core.keymaps.buffer")
+require("core.keymaps.frames")
 require("core.keymaps.core")
 require("core.keymaps.fileactions")
 require("core.keymaps.visualkeys")
