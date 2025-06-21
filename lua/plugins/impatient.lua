@@ -1,6 +1,6 @@
 return {
     "lewis6991/impatient.nvim",
-    priority = 1000, -- Ensures early loading
+    priority = 1000,
     config = function()
         vim.g.impatient = {
             enable_profile = 1,
@@ -46,7 +46,6 @@ return {
             local buf = vim.api.nvim_create_buf(false, true)
             vim.api.nvim_buf_set_name(buf, "impatient-stats")
 
-            -- Add header
             local lines = {
                 "IMPATIENT.NVIM MODULE STATISTICS",
                 "=================================",
@@ -56,7 +55,6 @@ return {
                 "Module Name" .. string.rep(" ", 45) .. "Load Time (ms)",
             }
 
-            -- Add module data sorted by load time
             local sorted_modules = {}
             for name, time in pairs(stats.modules) do
                 table.insert(sorted_modules, { name = name, time = time })

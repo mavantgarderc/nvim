@@ -1,22 +1,16 @@
 return {
     {
-        -- Main completion engine
         "hrsh7th/nvim-cmp",
         dependencies = {
-            -- LSP completion source
             "hrsh7th/cmp-nvim-lsp",
-            -- Snippet engine
             "L3MON4D3/LuaSnip",
-            -- Completion source for snippets
             "saadparwaiz1/cmp_luasnip",
-            -- Predefined snippets
             "rafamadriz/friendly-snippets",
         },
         config = function()
             local cmp = require("cmp")
             local luasnip = require("luasnip")
 
-            -- Load VSCode-style snippets lazily
             require("luasnip.loaders.from_vscode").lazy_load()
 
             cmp.setup({

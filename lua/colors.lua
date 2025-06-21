@@ -27,7 +27,7 @@ M.theme_map = {
         "kanagawa-wave",      -- sql
         "kanagawa-dragon",    -- nvim section
     },
-    gruvbox = { "gruvbox"      },  -- cs
+    gruvbox   = { "gruvbox"      },  -- cs
     oxocarbon = { "oxocarbon", },
     darkblue  = { "darkblue",  },
     desert    = { "desert",    },
@@ -44,7 +44,6 @@ M.theme_map = {
 }
 
 M.filetype_themes = {
-    -- nvim, project files & rc files
     alpha    = "kanagawa-dragon",
     netrw    = "kanagawa-dragon",
     lazy     = "kanagawa-dragon",

@@ -4,7 +4,7 @@ local opts = { noremap = true, silent = true, }
 -- netrw
 map("n", "<leader>pv", ":Ex<CR>")
 
--- OS-Integrated Paste from Clipboard
+-- Paste from OS-Integrated Clipboard
 map("n", "<leader>p", "\"_dP", opts)
 
 -- Movement
@@ -17,7 +17,7 @@ map("n", "gg", "ggzt")
 map("n", "<C-b>", "<C-b>zt") -- top    pg up
 map("n", "<C-u>", "<C-u>zz") -- half   pg up
 map("n", "<C-d>", "<C-d>zz") -- half   pg dn
-map("n", "<C-f>", "<C-f>zb") -- bottom pg dn
+map("n", "<C-f>", "<C-f>zb") -- bot    pg dn
 map("n", "G", "Gzb")
 
 

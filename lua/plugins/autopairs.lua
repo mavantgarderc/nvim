@@ -7,7 +7,6 @@ return {
     local Rule = require("nvim-autopairs.rule")
     local cond = require("nvim-autopairs.conds")
 
-    -- Basic setup
     autopairs.setup({
       check_ts = true,
       enable_check_bracket_line = false,
@@ -24,18 +23,15 @@ return {
         :with_pair(cond.not_after_regex("%w"))
         :with_pair(cond.not_before_regex("%w")),
 
-      -- Force pair spaces inside brackets: {| } -> { | }
       Rule(" ", " ")
         :with_pair(function(opts)
           return vim.tbl_contains({ "(", "[", "{" }, opts.prev_char:sub(-1, -1))
         end),
 
-      -- LaTeX math mode: $$ with cursor inside
       Rule("$", "$", "tex")
         :with_move(cond.after_text("$"))
     })
 
-    -- ===== Advanced HTML/JSX Tag Handling =====
     autopairs.add_rules({
       Rule("<!--", "-->", "html"):only_cr(),
       Rule("<", ">", { "html", "typescriptreact", "javascriptreact" })
@@ -47,14 +43,12 @@ return {
     })
 
     -- ===== CMP Integration =====
-    -- Auto-close pairs when selecting completion items
     local cmp_ok, cmp = pcall(require, "cmp")
     if cmp_ok then
       cmp.event:on("confirm_done", require("nvim-autopairs.completion.cmp").on_confirm_done())
     end
 
     -- ===== Custom Mappings =====
-    -- Fast-wrap visual selection with brackets
     vim.keymap.set("x", "<leader>w", function()
       require("nvim-autopairs").fast_wrap()
     end, { desc = "Wrap selection with brackets" })

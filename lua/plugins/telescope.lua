@@ -81,10 +81,8 @@ return {
                 },
             })
 
-            -- Load extensions
             telescope.load_extension("ui-select")
 
-            -- Keymaps
             local keymap_opts = { noremap = true, silent = true }
 
             map("n", "<leader>pf", builtin.find_files, { desc = "[P]roject [F]iles" })
@@ -114,7 +112,7 @@ return {
                 builtin.find_files({ cwd = fn.stdpath("config") })
             end, { desc = "[S]earch [N]eovim files" })
 
-            -- -- Optional extra keymaps (uncomment to enable)
+            -- Optional extra keymaps (uncomment to enable)
             -- map("n", "<leader>sh", builtin.help_tags, { desc = "[S]earch [H]elp" })
             -- map("n", "<leader>sk", builtin.keymaps, { desc = "[S]earch [K]eymaps" })
             -- map("n", "<leader>sf", builtin.find_files, { desc = "[S]earch [F]iles" })

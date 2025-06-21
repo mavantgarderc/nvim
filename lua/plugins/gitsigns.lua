@@ -16,11 +16,6 @@ return {
                     delete       = {hl = 'GitSignsDelete', text = '_', numhl='GitSignsDeleteNr', linehl='GitSignsDeleteLn'},
                     topdelete    = {hl = 'GitSignsDelete', text = '‾', numhl='GitSignsDeleteNr', linehl='GitSignsDeleteLn'},
                     changedelete = {hl = 'GitSignsChange', text = '~', numhl='GitSignsChangeNr', linehl='GitSignsChangeLn'},
-                    --add          = { hl = "GitSignsAdd",    text = " ", numhl = "GitSignsAddNr",    linehl = "GitSignsAddLn"    },
-                    --change       = { hl = "GitSignsChange", text = " ", numhl = "GitSignsChangeNr", linehl = "GitSignsChangeLn" },
-                    --delete       = { hl = "GitSignsDelete", text = " ", numhl = "GitSignsDeleteNr", linehl = "GitSignsDeleteLn" },
-                    --topdelete    = { hl = "GitSignsDelete", text = "󱅁 ", numhl = "GitSignsDeleteNr", linehl = "GitSignsDeleteLn" },
-                    --changedelete = { hl = "GitSignsChange", text = "󰍷 ", numhl = "GitSignsChangeNr", linehl = "GitSignsChangeLn" },
                 },
                 watch_gitdir = {
                     interval = 1000,
@@ -47,7 +42,6 @@ return {
                 vim.keymap.set(mode, l, r, opts)
             end
 
-            -- Gitsigns navigation
             map("n", "]c", function()
                 if wo.diff then
                     cmd.normal({ "]c", bang = true })
@@ -64,7 +58,6 @@ return {
                 end
             end, { desc = "Prev hunk" })
 
-            -- Actions
             map("n", "<leader>tb", gitsigns.toggle_current_line_blame)
             map("v", "<leader>hs", function()
                 gitsigns.stage_hunk({ fn.line("."), fn.line("v") })
@@ -77,7 +70,6 @@ return {
                 gitsigns.blame_line({ full = true })
             end, { desc = "Blame line (full)" })
 
-            -- Fugitive-like features using Neovim terminal
             map("n", "<leader>gs", function()
                 cmd("tabnew | term git status")
             end, { desc = "Git Status (tab)" })

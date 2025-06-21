@@ -1,4 +1,3 @@
-
 return {
   "ThePrimeagen/harpoon",
   branch = "harpoon2",
@@ -18,5 +17,5 @@ return {
     map("n", "<C-n>", function() harpoon:list():select(3) end, { desc = "Harpoon: Nav 3" })
     map("n", "<C-s>", function() harpoon:list():select(4) end, { desc = "Harpoon: Nav 4" })
   end,
-}
 
+}
