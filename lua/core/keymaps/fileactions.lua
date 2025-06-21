@@ -10,4 +10,4 @@ map("n", "<leader>s", ":%s/\\<<C-r><C-w>>\\>//gI<Left><Left>")
 map("n", "<leader>x", ":!chmod +x %<CR>", { silent = true })
 
 -- source current file
-map("n", "<leader>o", ":so %<CR>", { silent = true })
+map("n", "<leader>o", ":w<CR>:so %<CR>")
