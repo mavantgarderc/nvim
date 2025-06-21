@@ -8,18 +8,29 @@ map('n', "<leader>pv", cmd.Ex)
 -- Paste
 map("n", "<leader>p", "\"_dP", opts)
 
--- Insert Mode Movement
-map("i", "<C-b>", "<ESC>^i", { desc = "move beginning of line" })
-map("i", "<C-e>", "<End>", { desc = "move end of line" })
-map("i", "<C-h>", "<Left>", { desc = "move left" })
-map("i", "<C-l>", "<Right>", { desc = "move right" })
-map("i", "<C-j>", "<Down>", { desc = "move down" })
-map("i", "<C-k>", "<Up>", { desc = "move up" })
-map("i", "<C-k>", "<Up>", { desc = "move up" })
+-- Movement
+map({ "n", "v", "i" }, "<Find>", "0")
+map({ "n", "v", "i" }, "<Select>", "$")
+map("n", "j", "v:count == 0 ? 'gj' : 'j'", { expr = true, silent = true })
+map("n", "k", "v:count == 0 ? 'gk' : 'k'", { expr = true, silent = true })
+
+map("i", "<C-b>", "<ESC>^i")
+map("i", "<C-e>", "<End>")
+map("i", "<C-h>", "<Left>")
+map("i", "<C-l>", "<Right>" )
+map("i", "<C-j>", "<Down>" )
+map("i", "<C-k>", "<Up>")
+map("i", "<C-w>", "<C-w>") -- delete word before cursor
+map("i", "<C-u>", "<C-u>") -- delete line before cursor
+map("i", "<C-t>", "<C-t>") -- indent forward
+map("i", "<C-d>", "<C-d>") -- indent backward
+map("i", "<C-n>", "<C-n>") -- suggest next
+map("i", "<C-p>", "<C-p>") -- suggest prev
+map("i", "<C-x><C-l>", "<C-x><C-l>") -- open suggestion drop
 
 -- Comments
-map("n", "<leader>/", "gcc", { desc = "toggle comment", remap = true })
-map("v", "<leader>/", "gc", { desc = "toggle comment", remap = true })
+map("n", "<leader>/", "gcc", { remap = true })
+map("v", "<leader>/", "gc", { remap = true })
 
 -- stand-still cursor while merging lines
 map("n", "J", "mzJ`z")
@@ -27,12 +38,6 @@ map("n", "J", "mzJ`z")
 -- move selected lines vertically
 map("v", "J", ":m '>+1<CR>gv=gv")
 map("v", "K", ":m '<-2<CR>gv=gv")
-
--- Better vertical movement with wrapped lines
-map({ "n", "v", "i" }, "<Find>", "0", opts)
-map({ "n", "v", "i" }, "<Select>", "$", opts)
-map("n", "j", "v:count == 0 ? 'gj' : 'j'", { expr = true, silent = true })
-map("n", "k", "v:count == 0 ? 'gk' : 'k'", { expr = true, silent = true })
 
 -- half page jumpings
 map("n", "<C-d>", "<C-d>zz")
