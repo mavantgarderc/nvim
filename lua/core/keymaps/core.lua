@@ -5,6 +5,9 @@ local cmd = vim.cmd
 -- netrw
 map('n', "<leader>pv", cmd.Ex)
 
+-- Paste
+map("n", "<leader>p", "\"_dP", opts)
+
 -- Insert Mode Movement
 map("i", "<C-b>", "<ESC>^i", { desc = "move beginning of line" })
 map("i", "<C-e>", "<End>", { desc = "move end of line" })
