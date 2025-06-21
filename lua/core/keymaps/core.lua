@@ -43,8 +43,7 @@ map("n", "<C-d>", "<C-d>zz")
 map("n", "<C-u>", "<C-u>zz")
 
 -- duplicate lines
-map("n", "<C-A-j>", "mzyyp`zj", { desc = "Duplicate line down" })
-map("n", "<C-A-k>", "mzyyP`zk", { desc = "Duplicate line up" })
+map("n", "<C-A-S-k>", "mzyyP`zk")
 
 -- searching
 map("n", "n", "nzzzv")
@@ -53,4 +52,4 @@ map("n", "<Esc>", ":nohlsearch<CR>", opts)
 
 -- Multi-Cursor
 map({ "n", "i" }, "<A-S-j>", "<Plug>(VM-Add-Cursor-Down)", opts)
-map({ "n", "i" }, "<A-S-k>", "<Plug>(VM-Add-Cursor-Up)", opts)
+map({ "n", "i" }, "<A-S-k>", "<Plug>(VM-Add-Cursor-Up)",   opts)
