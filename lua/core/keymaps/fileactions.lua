@@ -10,8 +10,8 @@ map("n", "<leader>s", ":%s/\\<<C-r><C-w>>\\>//gI<Left><Left>")
 map("n", "<leader>x", ":!chmod +x %<CR>", { silent = true })
 map("n", "<leader>X", ":!chmod -x %<CR>", { silent = true })
 
--- source current file
+-- write & source current file
 map("n", "<leader>oo", ":wa<CR>:so %<CR>")
 
 -- Quit
-map("n", "<leader>o<leader>O", ":wa<CR>:qa")
+map("n", "<leader>o<leader>o", ":wa<CR>:qa")

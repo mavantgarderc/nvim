@@ -31,12 +31,12 @@ map("n", "<leader>J", "<C-w>J", { desc = "Move Window to Down"})
 map("n", "<leader>K", "<C-w>K", { desc = "Move Window to Up"})
 
 map("n", "<leader>T", "<C-w>T") -- move current pane to a new tab
-map("n", "<leader>r", "<C-w>r") -- rotate windows clockwise
 
-map("n", "<leader>sph<CR>", ":sp") -- split current window horizontally
-map("n", "<leader>spv<CR>", ":vs") -- split current window vertically
+--map("n", "<leader>r", "<C-w>r") -- rotate windows clockwise
 
--- Resize Panes
+map("n", "<leader>sph", ":sp<CR>") -- split current window horizontally
+map("n", "<leader>spv", ":vs<CR>") -- split current window vertically
+
 map("n", "<C-A-h>", ":vertical resize -1<CR>", opts )
 map("n", "<C-A-l>", ":vertical resize +1<CR>", opts )
 map("n", "<C-A-j>", ":resize -1<CR>",          opts )
