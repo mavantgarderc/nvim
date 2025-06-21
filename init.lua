@@ -12,5 +12,5 @@ require("core.keymaps.visualkeys")
 require("lazy").setup("plugins")
 
 -- require("core.themepicker")
-vim.cmd.colorscheme("kanagawa")
+vim.cmd.colorscheme("kanagawa-dragon")
 --vim.cmd.colorscheme("retrobox")

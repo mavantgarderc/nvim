@@ -12,13 +12,13 @@ Keymaps are modularized to help the user engage; good for memorization.
 You'll see three types:
 1. Plugin related keymaps, located in `lua/plugins/{plugin_config_file}`
 2. Nvim keymaps located in `lua/core/keymaps/`, categorized:
-  - Customs
-  - Native Re-implementations
+    - Customs
+    - Native Re-implementations
 This structures allow the user to read the config modules, as a reference study.
 
 I'll appreciate any recommendations if you do by [gmail](manihabibinava@gmail.com).
 
-> [!NOTE] F-Keys
+> F-Keys
 > They are available for OGs, but not a good idea to take the habbit (for sake of zen).
 
 ## To Do
