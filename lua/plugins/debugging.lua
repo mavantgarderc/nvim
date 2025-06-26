@@ -64,22 +64,29 @@ return {
                 command = "/usr/bin/netcoredbg",
                 args = {'--interpreter=vscode'}
             }
+
             dap.configurations.cs = {
                 {
                     type = 'coreclr',
                     name = 'Launch - .NET Core',
                     request = 'launch',
-                    console = "iintegratedTerminal",
+                    console = "integratedTerminal", -- Fixed typo: was "iintegratedTerminal"
                     program = function()
+                        -- Build project if user confirms
                         if fn.confirm('Should I recompile first?', '&yes\n&no', 2) == 1 then
-                            g.dotnet_build_project()
+                            print("Building project...")
+                            fn.system('dotnet build')
                         end
-                        return g.dotnet_get_dll_path()
+
+                        -- Find DLL automatically or prompt user
+                        local dll_path = fn.glob('**/bin/Debug/**/*.dll')
+                        if dll_path == '' then
+                            dll_path = fn.input('Path to dll: ', fn.getcwd() .. '/bin/Debug/', 'file')
+                        end
+                        return dll_path
                     end,
                 },
-
             }
-
             -- JS/TS
             -- dap.adapters["pwa-node"] = {
             --     type = "server",
