@@ -12,6 +12,8 @@ return {
             local map = vim.keymap.set
             local fn = vim.fn
             local g = vim.g
+            local notify = vim.notify
+            local log = vim.log
 
             dapui.setup()
             dap.listeners.before.attach.dapui_config = function()
@@ -42,8 +44,19 @@ return {
             map('n', '<Leader>dr', dap.repl.open)
             map('n', '<Leader>du', dapui.toggle)
 
+
             -- Python
-            require('dap-python').setup('~/.virtualenvs/debugpy/bin/python')
+            local debugpy_path = fn.expand('~/.virtualenvs/debugpy/bin/python')
+            if fn.executable(debugpy_path) == 1 then
+                require('dap-python').setup(debugpy_path)
+            else
+                notify(
+                    "debugpy not installed. Create with:\n" ..
+                    "python3 -m venv ~/.virtualenvs/debugpy\n" ..
+                    "~/.virtualenvs/debugpy/bin/python -m pip install debugpy",
+                    log.levels.WARN
+                )
+            end
 
             -- C#
             dap.adapters.coreclr = {
@@ -58,7 +71,7 @@ return {
                     request = 'launch',
                     console = "iintegratedTerminal",
                     program = function()
-                        if vim.fn.confirm('Should I recompile first?', '&yes\n&no', 2) == 1 then
+                        if fn.confirm('Should I recompile first?', '&yes\n&no', 2) == 1 then
                             g.dotnet_build_project()
                         end
                         return g.dotnet_get_dll_path()
