@@ -4,13 +4,14 @@ return {
         dependencies = {
             "rcarriga/nvim-dap-ui",
             "mfussenegger/nvim-dap-python",
-            "nvim-neotest/nvim-nio",  -- Add this missing dependency
+            "nvim-neotest/nvim-nio",
         },
         config = function()
             local dap = require('dap')
             local dapui = require('dapui')
             local map = vim.keymap.set
             local fn = vim.fn
+            local g = vim.g
 
             dapui.setup()
             dap.listeners.before.attach.dapui_config = function()
@@ -47,7 +48,7 @@ return {
             -- C#
             dap.adapters.coreclr = {
                 type = 'executable',
-                command = '$HOME/.local/netcoredbg/netcoredbg',
+                command = "/usr/bin/netcoredbg",
                 args = {'--interpreter=vscode'}
             }
             dap.configurations.cs = {
@@ -55,10 +56,15 @@ return {
                     type = 'coreclr',
                     name = 'Launch - .NET Core',
                     request = 'launch',
+                    console = "iintegratedTerminal",
                     program = function()
-                        return fn.input('Path to dll: ', fn.getcwd() .. '/bin/Debug/', 'file')
+                        if vim.fn.confirm('Should I recompile first?', '&yes\n&no', 2) == 1 then
+                            g.dotnet_build_project()
+                        end
+                        return g.dotnet_get_dll_path()
                     end,
                 },
+
             }
 
             -- JS/TS

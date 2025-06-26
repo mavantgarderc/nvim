@@ -22,7 +22,6 @@ return {
             local api = vim.api
             local fn = vim.fn
             local buf = vim.lsp.buf
-
             vim.opt.signcolumn = "yes"
 
             require("mason").setup()
