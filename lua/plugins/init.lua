@@ -1,5 +1,8 @@
 return {
     -- ==================================================
+    -- Oil file explorer
+    "stevearc/oil.nvim",
+    -- ==================================================
     -- Git Integration
     "lewis6991/gitsigns.nvim",
     -- === Optimizer

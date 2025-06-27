@@ -6,6 +6,10 @@ local keymap = vim.keymap
 local schedule = vim.schedule
 local env = vim.env
 
+-- Disable netrw
+g.loaded_netrw = 1
+g.loaded_netrwPlugin = 1
+
 g.mapleader = " "
 g.maplocalleader = "\\"
 opt.smartindent = true

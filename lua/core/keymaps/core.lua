@@ -2,7 +2,9 @@ local map = vim.keymap.set
 local opts = { noremap = true, silent = true, }
 
 -- netrw
-map("n", "<leader>pv", ":Ex<CR>")
+-- map("n", "<leader>pv", ":Ex<CR>")
+-- Oil
+map("n", "<leader>pv", ":Oil<CR>")
 
 -- Paste from OS-Integrated Clipboard
 map("n", "<leader>p", "\"_dP", opts)
