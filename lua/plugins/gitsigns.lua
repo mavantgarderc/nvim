@@ -22,17 +22,6 @@ return {
                     interval = 1000,
                     follow_files = true,
                 },
-                sign_priority = 6,
-                update_debounce = 300,
-                status_formatter = nil,
-                max_file_length = 40000,
-                preview_config = {
-                    border = "single",
-                    style = "minimal",
-                    relative = "cursor",
-                    row = 0,
-                    col = 1,
-                },
                 _refresh_staged_on_update = true,
                 _threaded_diff = true,
             })

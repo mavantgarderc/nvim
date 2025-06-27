@@ -57,6 +57,7 @@ return {
 
         oil.setup({
             default_file_explorer = true,
+            show_hidden = true,
 
             columns = { "icon" },
 
@@ -111,7 +112,7 @@ return {
             use_default_keymaps = true,
 
             view_options = {
-                show_hidden = false,
+                show_hidden = true,
                 is_hidden_file = function(name, _)
                     return startswith(name, ".")
                 end,
@@ -225,4 +226,3 @@ return {
 
     vim.keymap.set("n", "<leader>ok", "<CMD>OilCheatsheet<CR>", { desc = "Open Oil Cheatsheet" })
 }
-
