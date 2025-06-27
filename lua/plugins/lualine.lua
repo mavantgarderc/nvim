@@ -2,7 +2,9 @@ return {
     "nvim-lualine/lualine.nvim",
     dependencies = {
         "nvim-tree/nvim-web-devicons",
+        "lewis6991/gitsigns.nvim",
     },
+    event = 'VeryLazy',
     config = function()
         local fn = vim.fn
         local bo = vim.bo
@@ -15,7 +17,7 @@ return {
             "diagnostics",
             sources = { "nvim_diagnostic" },
             sections = { "error", "warn" },
-            symbols = { error = "󰯈 ", warn = " " },
+            symbols = { error = "󰯈 ", warn = " " },
             colored = false,
             update_in_insert = true,
             always_visible = true,
@@ -24,7 +26,7 @@ return {
         local diff = {
             "diff",
             colored = false,
-            symbols = { added = " ", modified = " ", removed = " " },
+            symbols = { added = " ", modified = " ", removed = " " },
             cond = hide_in_width,
         }
 
@@ -33,6 +35,16 @@ return {
             icons_enabled = true,
             --icon = "",
             icon = "󰝨",
+            cond = function()
+                return fn.executable('git') == 1 and
+                       (fn.isdirectory('.git') == 1 or fn.system('git rev-parse --git-dir 2>/dev/null'):match('%.git'))
+            end,
+            fmt = function(str)
+                if str == '' or str == nil then
+                    return ''
+                end
+                return str
+            end
         }
 
         local location = {
@@ -83,46 +95,48 @@ return {
             return show_filetype_text and (icon .. " " .. ft) or icon
         end
 
-        require("lualine").setup({
-            options = {
-                icons_enabled = true,
-                theme = "auto",
-                component_separators = { left = "", right = "" },
-                section_separators = { left = "", right = "" },
-                disabled_filetypes = {
-                    statusline = { "alpha", "dashboard", "NvimTree", "Outline" },
-                    winbar = {},
+        vim.defer_fn(function()
+            require("lualine").setup({
+                options = {
+                    icons_enabled = true,
+                    theme = "auto",
+                    component_separators = { left = "", right = "" },
+                    section_separators = { left = "", right = "" },
+                    disabled_filetypes = {
+                        statusline = { "alpha", "dashboard", "NvimTree", "Outline" },
+                        winbar = {},
+                    },
+                    ignore_focus = {},
+                    always_divide_middle = true,
+                    always_show_tabline = true,
+                    globalstatus = false,
+                    refresh = {
+                        statusline = 100,
+                        tabline = 100,
+                        winbar = 100,
+                    },
                 },
-                ignore_focus = {},
-                always_divide_middle = true,
-                always_show_tabline = true,
-                globalstatus = false,
-                refresh = {
-                    statusline = 100,
-                    tabline = 100,
-                    winbar = 100,
+                sections = {
+                    lualine_a = { branch, diagnostics },
+                    lualine_b = {},
+                    lualine_c = {},
+                    lualine_x = { diff, filetype },
+                    lualine_y = { location },
+                    lualine_z = { progress },
                 },
-            },
-            sections = {
-                lualine_a = { branch, diagnostics },
-                lualine_b = {},
-                lualine_c = {},
-                lualine_x = { diff, filetype },
-                lualine_y = { location },
-                lualine_z = { progress },
-            },
-            inactive_sections = {
-                lualine_a = {},
-                lualine_b = {},
-                lualine_c = { "filename" },
-                lualine_x = { "location" },
-                lualine_y = {},
-                lualine_z = {},
-            },
-            tabline = {},
-            winbar = {},
-            inactive_winbar = {},
-        })
+                inactive_sections = {
+                    lualine_a = {},
+                    lualine_b = {},
+                    lualine_c = { "filename" },
+                    lualine_x = { "location" },
+                    lualine_y = {},
+                    lualine_z = { progress },
+                },
+                tabline = {},
+                winbar = {},
+                inactive_winbar = {},
+            })
+        end, 50)
 
         map("n", "<leader>tf", function()
             show_filetype_text = not show_filetype_text
