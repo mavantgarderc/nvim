@@ -1,3 +1,4 @@
+vim.loader.enable()
 -- Core Directory
 require("core.healthcheck")
 require("core.bootstrap")

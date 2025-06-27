@@ -17,7 +17,7 @@ return {
             "diagnostics",
             sources = { "nvim_diagnostic" },
             sections = { "error", "warn" },
-            symbols = { error = "󰯈 ", warn = " " },
+            symbols = { error = "󰯈 ", warn = " " },
             colored = false,
             update_in_insert = true,
             always_visible = true,
@@ -26,7 +26,7 @@ return {
         local diff = {
             "diff",
             colored = false,
-            symbols = { added = " ", modified = " ", removed = " " },
+            symbols = { added = " ", modified = " ", removed = " " },
             cond = hide_in_width,
         }
 
@@ -87,7 +87,7 @@ return {
             return chars[index] or chars[#chars]
         end
 
-        local show_filetype_text = true
+        local show_filetype_text = false
         local filetype = function()
             local ft = bo.filetype
             if ft == "" then return "" end
@@ -141,6 +141,6 @@ return {
         map("n", "<leader>tf", function()
             show_filetype_text = not show_filetype_text
             require("lualine").refresh()
-        end, { desc = "Toggle filetype text" })
+        end, { silent = true })
     end,
 }
