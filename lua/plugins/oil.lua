@@ -8,18 +8,18 @@ return {
     config = function()
         local oil = require("oil")
         local Path = require("plenary.path")
-        local startswith = vim.startswith
-        local bo = vim.bo
+        local map = vim.keymap.set
+        local fn = vim.fn
+        local api = vim.api
+        local cmd = vim.cmd
         local notify = vim.notify
         local ui = vim.ui
         local log = vim.log
-        local map = vim.keymap.set
-        local fn = vim.fn
-        local cmd = vim.cmd
-        local api = vim.api
+        local bo = vim.bo
+        local startswith = vim.startswith
 
+        -- Create user command for Oil cheatsheet
         api.nvim_create_user_command("OilCheatsheet", function()
-            -- yeah... noob-shit bruh...
             local lines = {
                 "📁 Oil.nvim Keymap Cheatsheet",
                 "--------------------------------------",
@@ -55,6 +55,7 @@ return {
             cmd("normal! gg")
         end, { desc = "Open Oil Keymap Cheatsheet" })
 
+        -- Setup Oil
         oil.setup({
             default_file_explorer = true,
             show_hidden = true,
@@ -70,11 +71,13 @@ return {
                 wrap = false,
                 signcolumn = "no",
                 cursorcolumn = false,
+                cursorline = false,
                 foldcolumn = "0",
                 spell = false,
                 list = false,
-                conceallevel = 3,
-                concealcursor = "nvic",
+                conceallevel = 0,
+                concealcursor = "",
+                winblend = fn.has("nvim-0.10") == 1 and 10 or nil,
             },
 
             delete_to_trash = true,
@@ -113,12 +116,8 @@ return {
 
             view_options = {
                 show_hidden = true,
-                is_hidden_file = function(name, _)
-                    return startswith(name, ".")
-                end,
-                is_always_hidden = function(_, _)
-                    return false
-                end,
+                is_hidden_file = function(name, _) return startswith(name, ".") end,
+                is_always_hidden = function(_, _) return false end,
                 natural_order = true,
                 sort = {
                     { "type", "asc" },
@@ -131,7 +130,7 @@ return {
                 max_width = 0,
                 max_height = 0,
                 border = "rounded",
-                win_options = { winblend = 0 },
+                win_options = fn.has("nvim-0.10") == 1 and { winblend = 10 } or {},
                 preview_split = "auto",
                 override = function(conf) return conf end,
             },
@@ -142,8 +141,8 @@ return {
                 max_height = 0.9,
                 min_height = { 5, 0.1 },
                 border = "rounded",
-                win_options = { winblend = 0 },
-                update_on_cursor_moved = true,
+                win_options = fn.has("nvim-0.10") == 1 and { winblend = 10 } or {},
+                update_on_cursor_moved = false,
             },
 
             progress = {
@@ -153,7 +152,7 @@ return {
                 min_height = { 5, 0.1 },
                 border = "rounded",
                 minimized_border = "none",
-                win_options = { winblend = 0 },
+                win_options = fn.has("nvim-0.10") == 1 and { winblend = 10 } or {},
             },
 
             ssh = {
@@ -161,16 +160,18 @@ return {
             },
         })
 
+        -- Oil commands + mappings
         map("n", "<leader>fo", "<CMD>Oil<CR>", { desc = "Open parent directory in Oil" })
 
         map("n", "<leader>fO", function()
-            require("oil").open_float()
+            oil.open_float()
         end, { desc = "Open Oil in floating window" })
 
         map("n", "<leader>fc", function()
-            require("oil").open(fn.getcwd())
+            oil.open(fn.getcwd())
         end, { desc = "Open Oil in current working directory" })
 
+        -- Sidebar toggle
         local oil_sidebar_win = nil
         map("n", "<leader>e", function()
             if oil_sidebar_win and api.nvim_win_is_valid(oil_sidebar_win) then
@@ -180,16 +181,16 @@ return {
                 cmd("vsplit")
                 cmd("wincmd h")
                 cmd("vertical resize 30")
-                require("oil").open()
+                oil.open()
                 oil_sidebar_win = api.nvim_get_current_win()
             end
         end, { desc = "Toggle Oil sidebar" })
 
+        -- New file
         map("n", "<leader>nf", function()
             if bo.filetype ~= "oil" then
                 return notify("Not in oil buffer", log.levels.WARN)
             end
-
             ui.input({ prompt = "New file name: " }, function(input)
                 if input then
                     local dir = oil.get_current_dir()
@@ -199,11 +200,11 @@ return {
             end)
         end, { desc = "Create new file in Oil" })
 
+        -- New directory
         map("n", "<leader>nd", function()
             if bo.filetype ~= "oil" then
                 return notify("Not in oil buffer", log.levels.WARN)
             end
-
             ui.input({ prompt = "New directory name: " }, function(input)
                 if input then
                     local dir = oil.get_current_dir()
@@ -214,15 +215,18 @@ return {
             end)
         end, { desc = "Create new directory in Oil" })
 
+        -- Open Oil if starting in directory
         api.nvim_create_autocmd("VimEnter", {
             callback = function()
                 local arg = fn.argv(0)
                 if arg ~= "" and fn.isdirectory(arg) == 1 then
-                    require("oil").open()
+                    oil.open()
                 end
             end,
         })
-    end,
 
-    vim.keymap.set("n", "<leader>ok", "<CMD>OilCheatsheet<CR>", { desc = "Open Oil Cheatsheet" })
+        -- Cheatsheet mapping (moved here)
+        map("n", "<leader>ok", "<CMD>OilCheatsheet<CR>", { desc = "Open Oil Cheatsheet" })
+    end,
 }
+

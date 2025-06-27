@@ -41,9 +41,8 @@ end)
 o.showmode = false -- don't show the mode (shown in lualine)
 
 o.cursorline = false -- show which line cursor is on
-vim.opt.guicursor = ""
-vim.o.guicursor = "n-v-c:block,i-ci-ve:block,r-cr:block,o:block"
-
+-- opt.guicursor = ""
+vim.opt.guicursor = "n-v-c:block-Cursor/lCursor,i-ci-ve:ver25-Cursor/lCursor,r-cr:hor20-Cursor/lCursor"
 
 o.list = true -- display whitespaces
 
