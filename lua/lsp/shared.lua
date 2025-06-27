@@ -5,6 +5,7 @@ local api = vim.api
 local buf = vim.lsp.buf
 local diagnostic = vim.diagnostic
 local g = vim.g
+local fn = vim.fn
 
 function M.setup_keymaps()
     api.nvim_create_autocmd("LspAttach", {
@@ -107,12 +108,21 @@ function M.setup_null_ls()
     local null_ls = require("null-ls")
     local sources = {}
 
-    if vim.fn.executable("stylua") == 1 then
+    if fn.executable("stylua") == 1 then
         table.insert(sources, null_ls.builtins.formatting.stylua)
     end
 
-    if vim.fn.executable("csharpier") == 1 then
+    if fn.executable("csharpier") == 1 then
         table.insert(sources, null_ls.builtins.formatting.csharpier)
+    end
+
+    if fn.executable("sql-formatter") == 1 then
+        table.insert(sources, null_ls.builtins.formatting.sql_formatter)
+    end
+
+    if fn.executable("sqlfluff") == 1 then
+        table.insert(sources, null_ls.builtins.formatting.sqlfluff)
+        table.insert(sources, null_ls.builtins.diagnostics.sqlfluff)
     end
 
     null_ls.setup({

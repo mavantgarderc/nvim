@@ -34,6 +34,8 @@ return {
                     "html",
                     "cssls",
                     "texlab",
+                    "sqlls",
+                    "sqls",
                 },
                 automatic_installation = true,
                 handlers = {
@@ -46,6 +48,8 @@ return {
                 ensure_installed = {
                     "stylua",
                     "csharpier",
+                    "sql-formatter",
+                    "sqlfluff",
                 },
                 auto_update = false,
                 run_on_start = true,
@@ -72,6 +76,7 @@ return {
             require("lsp.servers.html").setup(capabilities)
             require("lsp.servers.css").setup(capabilities)
             require("lsp.servers.latex").setup(capabilities)
+            require("lsp.servers.sql").setup(capabilities)
 
             shared_config.setup_null_ls()
 
