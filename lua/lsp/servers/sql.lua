@@ -1,6 +1,5 @@
 local M = {}
 
-local opts = { buffer = bufnr, silent = true }
 local map = vim.keymap.set
 local lsp = vim.lsp
 local cmd = vim.cmd
@@ -75,13 +74,14 @@ function M.setup(capabilities)
         },
         filetypes = { "sql", "mysql" },
         on_attach = function(client, bufnr)
-            map("n", "<leader>se", "<cmd>SqlsExecuteQuery<CR>", opts)
-            map("v", "<leader>se", "<cmd>SqlsExecuteQuery<CR>", opts)
-            map("n", "<leader>sr", "<cmd>SqlsExecuteQueryVertical<CR>", opts)
-            map("v", "<leader>sr", "<cmd>SqlsExecuteQueryVertical<CR>", opts)
-            map("n", "<leader>st", "<cmd>SqlsShowTables<CR>", opts)
-            map("n", "<leader>sd", "<cmd>SqlsShowDatabases<CR>", opts)
-            map("n", "<leader>sc", "<cmd>SqlsShowConnections<CR>", opts)
+            local opts = { buffer = bufnr, silent = true }
+            map("n", "<leader>se", ":SqlsExecuteQuery<CR>", opts)
+            map("v", "<leader>se", ":SqlsExecuteQuery<CR>", opts)
+            map("n", "<leader>sr", ":SqlsExecuteQueryVertical<CR>", opts)
+            map("v", "<leader>sr", ":SqlsExecuteQueryVertical<CR>", opts)
+            map("n", "<leader>st", ":SqlsShowTables<CR>", opts)
+            map("n", "<leader>sd", ":SqlsShowDatabases<CR>", opts)
+            map("n", "<leader>sc", ":SqlsShowConnections<CR>", opts)
         end,
     })
 
