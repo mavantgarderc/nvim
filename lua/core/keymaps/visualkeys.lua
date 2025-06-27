@@ -79,15 +79,28 @@ local log = vim.log
 local lsp = vim.lsp
 local notify = vim.notify
 local diagnostics = vim.diagnostic
+local cmd = vim.cmd
+
+vim.api.nvim_create_autocmd("FileType", {
+    pattern = "markdown",
+    callback = function()
+        map("i", "<F1>", "# ", { buffer = true, noremap = true})
+        map("i", "<F2>", "## ", { buffer = true, noremap = true})
+        map("i", "<F3>", "### ", { buffer = true, noremap = true})
+        map("i", "<F4>", "#### ", { buffer = true, noremap = true})
+        map("i", "<F5>", "##### ", { buffer = true, noremap = true})
+        map("i", "<F6>", "###### ", { buffer = true, noremap = true})
+    end
+})
 
 
-map({ "n", "v", "i" }, "<F1>", ":help<CR>", {
+map({ "n", "v"}, "<F1>", ":help<CR>", {
     desc = "Help",
     noremap = true,
     silent = true,
 })
 
-map({ "n", "v", "i" }, "<F2>", function()
+map({ "n", "v",}, "<F2>", function()
     if lsp and lsp.buf and lsp.buf.rename then
         lsp.buf.rename()
     else
@@ -99,7 +112,7 @@ end, {
     silent = true,
 })
 
-map({ "n", "v", "i" }, "<F3>", function()
+map({ "n", "v"}, "<F3>", function()
     if lsp and lsp.buf and lsp.buf.format then
         lsp.buf.format()
     else
@@ -111,7 +124,7 @@ end, {
     silent = true,
 })
 
-map({ "n", "v", "i" }, "<F4>", function()
+map({ "n", "v"}, "<F4>", function()
     if lsp and lsp.buf and lsp.buf.code_action then
         lsp.buf.code_action()
     else
@@ -123,13 +136,13 @@ end, {
     silent = true,
 })
 
-map({ "n", "v", "i" }, "<F5>", ":TSPlaygroundToggle<CR>", {
+map({ "n", "v"}, "<F5>", ":TSPlaygroundToggle<CR>", {
     desc = "Tree-sitter Playground",
     noremap = true,
     silent = true,
 })
 
-map({ "n", "v", "i" }, "<F6>", function()
+map({ "n", "v"}, "<F6>", function()
     if diagnostics and diagnostics.config then
         local current = diagnostics.config().virtual_text
         diagnostics.config({ virtual_text = not current })
