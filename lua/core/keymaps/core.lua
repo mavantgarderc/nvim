@@ -16,12 +16,11 @@ map("n", "j", "v:count == 0 ? 'gj' : 'j'", { expr = true, silent = true })
 map("n", "k", "v:count == 0 ? 'gk' : 'k'", { expr = true, silent = true })
 
 map("n", "gg", "ggzt")
-map("n", "<C-b>", "<C-b>zt") -- top    pg up
-map("n", "<C-u>", "<C-u>zz") -- half   pg up
-map("n", "<C-d>", "<C-d>zz") -- half   pg dn
-map("n", "<C-f>", "<C-f>zb") -- bot    pg dn
+map("n", "<C-b>", "<C-b>zt") -- top  pg up
+map("n", "<C-u>", "<C-u>zz") -- half pg up
+map("n", "<C-d>", "<C-d>zz") -- half pg dn
+map("n", "<C-f>", "<C-f>zb") -- bot  pg dn
 map("n", "G", "Gzb")
-
 
 map("i", "<C-b>", "<ESC>^i")
 map("i", "<C-h>", "<Left>")
