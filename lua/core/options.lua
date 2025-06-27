@@ -52,7 +52,7 @@ opt.incsearch = true   -- Highlight all matches
 
 opt.termguicolors = true  -- enable 24-bit RGB colors
 
-opt.scrolloff = 7
+opt.scrolloff = 3
 opt.signcolumn = "yes"    -- Always show sign column (LSP, Git, etc.)
 opt.isfname:append("@-@")
 
