@@ -45,7 +45,8 @@ M.theme_map = {
 
 M.filetype_themes = {
     alpha    = "kanagawa-dragon",
-    netrw    = "kanagawa-dragon",
+    -- netrw    = "kanagawa-dragon",
+    oil      = "kanagawa-dragon",
     lazy     = "kanagawa-dragon",
     help     = "kanagawa-dragon",
     lua      = "kanagawa-dragon",

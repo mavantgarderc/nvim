@@ -60,7 +60,7 @@ return {
     -- Pair Character Completion
     "windwp/nvim-autopairs",
     -- ==================================================
-    -- === Obsidian Integration ===
+    -- -- === Obsidian Integration ===
     {
         "epwalsh/obsidian.nvim",
         version = "*",
@@ -70,10 +70,10 @@ return {
             "nvim-lua/plenary.nvim",
         },
     },
-    -- {
-    --     "renerocksai/telekasten.nvim",
-    --     dependencies = { "nvim-telescope/telescope.nvim" },
-    -- },
+    {
+        "renerocksai/telekasten.nvim",
+        dependencies = { "nvim-telescope/telescope.nvim" },
+    },
     -- ==================================================
     -- === nvim plugins ===
     -- filetree

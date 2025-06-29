@@ -24,13 +24,11 @@ return {
                 },
             })
 
-            -- Helper: map keys
             local function map(mode, lhs, rhs, opts)
                 opts = opts or {}
                 vim.keymap.set(mode, lhs, rhs, opts)
             end
 
-            -- Helper: run if in git repo
             local function in_git_repo()
                 local git_dir = vim.fn.system("git rev-parse --git-dir 2>/dev/null")
                 return vim.v.shell_error == 0 and git_dir:match("%.git")
@@ -44,7 +42,6 @@ return {
                 end
             end
 
-            -- Navigation
             map("n", "]c", function()
                 if vim.wo.diff then
                     vim.cmd.normal { args = { "]c" }, bang = true }
@@ -61,7 +58,6 @@ return {
                 end
             end, { desc = "Prev hunk" })
 
-            -- Hunk actions
             map("n", "<leader>hs", gitsigns.stage_hunk, { desc = "Stage hunk" })
             map("n", "<leader>hr", gitsigns.reset_hunk, { desc = "Reset hunk" })
             map("n", "<leader>hS", gitsigns.stage_buffer, { desc = "Stage buffer" })
@@ -73,11 +69,9 @@ return {
                 gitsigns.blame_line({ full = true })
             end, { desc = "Blame line (full)" })
 
-            -- Toggle options
             map("n", "<leader>tb", gitsigns.toggle_current_line_blame, { desc = "Toggle blame line" })
             map("n", "<leader>td", gitsigns.toggle_deleted, { desc = "Toggle deleted" })
 
-            -- Visual mode actions
             map("v", "<leader>hs", function()
                 local s, e = vim.fn.line("v"), vim.fn.line(".")
                 gitsigns.stage_hunk({ math.min(s, e), math.max(s, e) })
@@ -88,10 +82,8 @@ return {
                 gitsigns.reset_hunk({ math.min(s, e), math.max(s, e) })
             end, { desc = "Reset hunk (visual)" })
 
-            -- Text object
             map({ "o", "x" }, "ih", ":<C-U>Gitsigns select_hunk<CR>", { desc = "Select hunk" })
 
-            -- Git commands (in terminal tab)
             map("n", "<leader>gs", function() git_term("git status") end, { desc = "Git status" })
             map("n", "<leader>gc", function() git_term("git commit") end, { desc = "Git commit" })
             map("n", "<leader>gb", function() git_term("git branch --sort=-committerdate") end, { desc = "Git branches" })
@@ -99,7 +91,6 @@ return {
             map("n", "<leader>gP", function() git_term("git pull") end, { desc = "Git pull" })
             map("n", "<leader>gf", function() git_term("git fetch") end, { desc = "Git fetch" })
 
-            -- Git log
             map("n", "<leader>gl", function()
                 if not in_git_repo() then
                     return vim.notify("Not in a git repository", vim.log.levels.WARN)
@@ -110,7 +101,6 @@ return {
                 vim.cmd("tabnew | term " .. cmd)
             end, { desc = "Git log (file)" })
 
-            -- Git checkout
             map("n", "<leader>gB", function()
                 if not in_git_repo() then
                     return vim.notify("Not in a git repository", vim.log.levels.WARN)
@@ -122,7 +112,6 @@ return {
                 end)
             end, { desc = "Git checkout (branch)" })
 
-            -- Git diff with branch
             map("n", "<leader>gd", function()
                 if not in_git_repo() then
                     return vim.notify("Not in a git repository", vim.log.levels.WARN)

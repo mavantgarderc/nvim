@@ -1,4 +1,5 @@
 vim.loader.enable()
+
 -- Core Directory
 require("core.healthcheck")
 require("core.bootstrap")
@@ -8,10 +9,11 @@ require("core.keymaps.frames")
 require("core.keymaps.core")
 require("core.keymaps.fileactions")
 require("core.keymaps.visualkeys")
+require("core.keymaps.telescope")
 
 -- Plugins Directory
 require("lazy").setup("plugins")
 
--- require("core.themepicker")
-vim.cmd.colorscheme("kanagawa-dragon")
---vim.cmd.colorscheme("retrobox")
+require("core.themepicker")
+-- vim.cmd.colorscheme("kanagawa-dragon")
+-- vim.cmd.colorscheme("retrobox")

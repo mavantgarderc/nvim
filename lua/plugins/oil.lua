@@ -18,10 +18,9 @@ return {
         local bo = vim.bo
         local startswith = vim.startswith
 
-        -- Create user command for Oil cheatsheet
         api.nvim_create_user_command("OilCheatsheet", function()
             local lines = {
-                "📁 Oil.nvim Keymap Cheatsheet",
+                "##### Oil.nvim Keymap Cheatsheet #####",
                 "--------------------------------------",
                 " <CR>     → Open file/directory",
                 " <C-s>    → Open in vertical split",
@@ -55,12 +54,13 @@ return {
             cmd("normal! gg")
         end, { desc = "Open Oil Keymap Cheatsheet" })
 
-        -- Setup Oil
         oil.setup({
             default_file_explorer = true,
             show_hidden = true,
 
-            columns = { "icon" },
+            columns = {
+                "icon",
+            },
 
             buf_options = {
                 buflisted = false,
@@ -69,9 +69,9 @@ return {
 
             win_options = {
                 wrap = false,
-                signcolumn = "no",
+                signcolumn = "yes",
                 cursorcolumn = false,
-                cursorline = false,
+                cursorline = true,
                 foldcolumn = "0",
                 spell = false,
                 list = false,
@@ -94,31 +94,31 @@ return {
             watch_for_changes = false,
 
             keymaps = {
-                ["g?"] = "actions.show_help",
-                ["<CR>"] = "actions.select",
+                ["g?"]    = "actions.show_help",
+                ["<CR>"]  = "actions.select",
                 ["<C-s>"] = { "actions.select", opts = { vertical = true } },
                 ["<C-x>"] = { "actions.select", opts = { horizontal = true } },
                 ["<C-t>"] = { "actions.select", opts = { tab = true } },
                 ["<C-p>"] = "actions.preview",
                 ["<C-c>"] = "actions.close",
                 ["<C-l>"] = "actions.refresh",
-                ["-"] = "actions.parent",
-                ["_"] = "actions.open_cwd",
-                ["`"] = "actions.cd",
-                ["~"] = { "actions.cd", opts = { scope = "tab" } },
-                ["gs"] = "actions.change_sort",
-                ["gx"] = "actions.open_external",
-                ["g."] = "actions.toggle_hidden",
-                ["g\\"] = "actions.toggle_trash",
+                ["-"]     = "actions.parent",
+                ["_"]     = "actions.open_cwd",
+                ["`"]     = "actions.cd",
+                ["~"]     = { "actions.cd", opts = { scope = "tab" } },
+                ["gs"]    = "actions.change_sort",
+                ["gx"]    = "actions.open_external",
+                ["g."]    = "actions.toggle_hidden",
+                ["g\\"]   = "actions.toggle_trash",
             },
 
             use_default_keymaps = true,
 
             view_options = {
-                show_hidden = true,
-                is_hidden_file = function(name, _) return startswith(name, ".") end,
+                show_hidden      = true,
+                is_hidden_file   = function(name, _) return startswith(name, ".") end,
                 is_always_hidden = function(_, _) return false end,
-                natural_order = true,
+                natural_order    = false,
                 sort = {
                     { "type", "asc" },
                     { "name", "asc" },
@@ -126,30 +126,30 @@ return {
             },
 
             float = {
-                padding = 2,
-                max_width = 0,
-                max_height = 0,
-                border = "rounded",
-                win_options = fn.has("nvim-0.10") == 1 and { winblend = 10 } or {},
+                padding       = 2,
+                max_width     = 0,
+                max_height    = 0,
+                border        = "rounded",
+                win_options   = fn.has("nvim-0.10") == 1 and { winblend = 10 } or {},
                 preview_split = "auto",
-                override = function(conf) return conf end,
+                override      = function(conf) return conf end,
             },
 
             preview = {
-                max_width = 0.9,
-                min_width = { 40, 0.4 },
-                max_height = 0.9,
-                min_height = { 5, 0.1 },
-                border = "rounded",
-                win_options = fn.has("nvim-0.10") == 1 and { winblend = 10 } or {},
+                max_width              = 0.9,
+                min_width              = { 40, 0.4 },
+                max_height             = 0.9,
+                min_height             = { 5, 0.1 },
+                border                 = "rounded",
+                win_options            = fn.has("nvim-0.10") == 1 and { winblend = 10 } or {},
                 update_on_cursor_moved = false,
             },
 
             progress = {
-                max_width = 0.9,
-                min_width = { 40, 0.4 },
+                max_width  = 0.9,
+                min_width  = { 40, 0.4 },
                 max_height = { 10, 0.9 },
-                min_height = { 5, 0.1 },
+                min_height = {  5, 0.1 },
                 border = "rounded",
                 minimized_border = "none",
                 win_options = fn.has("nvim-0.10") == 1 and { winblend = 10 } or {},
@@ -160,7 +160,6 @@ return {
             },
         })
 
-        -- Oil commands + mappings
         map("n", "<leader>fo", "<CMD>Oil<CR>", { desc = "Open parent directory in Oil" })
 
         map("n", "<leader>fO", function()
@@ -171,7 +170,6 @@ return {
             oil.open(fn.getcwd())
         end, { desc = "Open Oil in current working directory" })
 
-        -- Sidebar toggle
         local oil_sidebar_win = nil
         map("n", "<leader>e", function()
             if oil_sidebar_win and api.nvim_win_is_valid(oil_sidebar_win) then
@@ -179,14 +177,13 @@ return {
                 oil_sidebar_win = nil
             else
                 cmd("vsplit")
-                cmd("wincmd h")
+                cmd("wincmd l")
                 cmd("vertical resize 30")
                 oil.open()
                 oil_sidebar_win = api.nvim_get_current_win()
             end
         end, { desc = "Toggle Oil sidebar" })
 
-        -- New file
         map("n", "<leader>nf", function()
             if bo.filetype ~= "oil" then
                 return notify("Not in oil buffer", log.levels.WARN)
@@ -200,7 +197,6 @@ return {
             end)
         end, { desc = "Create new file in Oil" })
 
-        -- New directory
         map("n", "<leader>nd", function()
             if bo.filetype ~= "oil" then
                 return notify("Not in oil buffer", log.levels.WARN)
@@ -215,7 +211,6 @@ return {
             end)
         end, { desc = "Create new directory in Oil" })
 
-        -- Open Oil if starting in directory
         api.nvim_create_autocmd("VimEnter", {
             callback = function()
                 local arg = fn.argv(0)
@@ -225,8 +220,6 @@ return {
             end,
         })
 
-        -- Cheatsheet mapping (moved here)
         map("n", "<leader>ok", "<CMD>OilCheatsheet<CR>", { desc = "Open Oil Cheatsheet" })
     end,
 }
-

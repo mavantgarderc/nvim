@@ -52,6 +52,7 @@ return {
             padding = 0,
         }
 
+
         local progress = function()
             -- local chars = {
             --     "⡀   ", "⡀⡀  ", "⡀⡀⡀ ", "⡀⡀⡀⡀",
@@ -84,7 +85,8 @@ return {
             local current_line = fn.line(".")
             local total_lines = fn.line("$")
             local index = math.ceil((current_line / total_lines) * #chars)
-            return chars[index] or chars[#chars]
+            -- return chars[index] or chars[#chars]
+            return chars[index]
         end
 
         local show_filetype_text = false
@@ -111,9 +113,9 @@ return {
                     always_show_tabline = true,
                     globalstatus = false,
                     refresh = {
-                        statusline = 100,
-                        tabline = 100,
-                        winbar = 100,
+                        statusline = 1000,
+                        tabline = 1000,
+                        winbar = 1000,
                     },
                 },
                 sections = {
