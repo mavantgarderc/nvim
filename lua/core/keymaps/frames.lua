@@ -2,8 +2,6 @@ local map = vim.keymap.set
 local api = vim.api
 local bo = vim.bo
 local opts = { noremap = true, silent = true, }
-local g = vim.g
-local opt = vim.opt
 local env = vim.env
 
 -- === === ===  ===  === === ===
@@ -12,6 +10,8 @@ local env = vim.env
 
 -- === === === Tabs === === ===
 map("n", "<leader>on", ":on<CR>", opts) -- close all except the current
+map("n", "<leader>gt", "gt", opts)
+map("n", "<leader>gT", "gT", opts)
 
 -- === === === Buffers === === ===
 map("n", "<leader>bt", function() print("Filetype: " .. bo.filetype)                       end, opts)
@@ -43,6 +43,11 @@ map("n", "<C-A-h>", ":vertical resize -1<CR>", opts )
 map("n", "<C-A-l>", ":vertical resize +1<CR>", opts )
 map("n", "<C-A-j>", ":resize -1<CR>",          opts )
 map("n", "<C-A-k>", ":resize +1<CR>",          opts )
+map("n", "<C-A-S-H>", ":vertical resize -5<CR>", opts )
+map("n", "<C-A-S-L>", ":vertical resize +5<CR>", opts )
+map("n", "<C-A-S-J>", ":resize -5<CR>",          opts )
+map("n", "<C-A-S-K>", ":resize +5<CR>",          opts )
+
 
 -- === === ===  ===  === === ===
 -- === Terminal Multiplexer  ===
