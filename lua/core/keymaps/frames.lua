@@ -1,8 +1,8 @@
 local map = vim.keymap.set
 local api = vim.api
 local bo = vim.bo
-local opts = { noremap = true, silent = true, }
 local env = vim.env
+local opts = { noremap = true, silent = true, }
 
 -- === === ===  ===  === === ===
 -- === === ===  NVIM === === ===
@@ -76,7 +76,6 @@ local function setup_multiplexer_keymaps()
     map("n", "<A-j>", ":NavigateDown<CR>",  opts)
     map("n", "<A-k>", ":NavigateUp<CR>",    opts)
     map("n", "<A-l>", ":NavigateRight<CR>", opts)
-    print("Multiplexer detected: " .. multiplexer .. " - Keymaps activated")
   end
 end
 setup_multiplexer_keymaps()

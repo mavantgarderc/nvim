@@ -25,7 +25,7 @@ return {
 
       Rule(" ", " ")
         :with_pair(function(opts)
-          return vim.tbl_contains({ "(", "[", "{" }, opts.prev_char:sub(-1, -1))
+          return vim.tbl_contains({ "(", "[", "{", "<" }, opts.prev_char:sub(-1, -1))
         end),
 
       Rule("$", "$", "tex")
@@ -47,17 +47,5 @@ return {
     if cmp_ok then
       cmp.event:on("confirm_done", require("nvim-autopairs.completion.cmp").on_confirm_done())
     end
-
-    -- ===== Custom Mappings =====
-    vim.keymap.set("x", "<leader>w", function()
-      require("nvim-autopairs").fast_wrap()
-    end, { desc = "Wrap selection with brackets" })
-
-    -- Toggle autopairs
-    vim.keymap.set("n", "<leader>tp", function()
-      local ap = require("nvim-autopairs")
-      ap.state.disabled = not ap.state.disabled
-      print("Autopairs " .. (ap.state.disabled and "disabled" or "enabled"))
-    end, { desc = "Toggle autopairs" })
   end
 }
