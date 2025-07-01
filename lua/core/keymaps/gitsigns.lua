@@ -1,0 +1,113 @@
+local M = {}
+
+local function map(mode, lhs, rhs, opts)
+    opts = opts or {}
+    vim.keymap.set(mode, lhs, rhs, opts)
+end
+local v = vim.v
+local cmd = vim.cmd
+local log = vim.log
+local notify = vim.notify
+local wo = vim.wo
+local fn = vim.fn
+local ui = vim.ui
+
+
+local function in_git_repo()
+    local git_dir = fn.system("git rev-parse --git-dir 2>/dev/null")
+    return v.shell_error == 0 and git_dir:match("%.git")
+end
+
+local function git_term(cmd_str)
+    if in_git_repo() then cmd("tabnew | term " .. cmd_str)
+    else notify("Not in a git repository", log.levels.WARN)
+    end
+end
+
+function M.setup()
+    local gitsigns = require("gitsigns")
+
+    map("n", "]c", function()
+        if wo.diff then cmd.normal { args = { "]c" }, bang = true }
+        else gitsigns.nav_hunk("next")
+        end end, { desc = "Next hunk" })
+
+    map("n", "[c", function()
+        if wo.diff then
+            cmd.normal { args = { "[c" }, bang = true }
+        else
+            gitsigns.nav_hunk("prev")
+        end
+    end, { desc = "Prev hunk" })
+
+    map("n", "<leader>hs", gitsigns.stage_hunk, { desc = "Stage hunk" })
+    map("n", "<leader>hr", gitsigns.reset_hunk, { desc = "Reset hunk" })
+    map("n", "<leader>hS", gitsigns.stage_buffer, { desc = "Stage buffer" })
+    map("n", "<leader>hu", gitsigns.undo_stage_hunk, { desc = "Undo stage hunk" })
+    map("n", "<leader>hR", gitsigns.reset_buffer, { desc = "Reset buffer" })
+    map("n", "<leader>hp", gitsigns.preview_hunk, { desc = "Preview hunk" })
+    map("n", "<leader>hi", gitsigns.preview_hunk_inline, { desc = "Inline preview" })
+    map("n", "<leader>hb", function()
+        gitsigns.blame_line({ full = true })
+    end, { desc = "Blame line (full)" })
+
+    map("n", "<leader>tb", gitsigns.toggle_current_line_blame, { desc = "Toggle blame line" })
+    map("n", "<leader>td", gitsigns.toggle_deleted, { desc = "Toggle deleted" })
+
+    map("v", "<leader>hs", function()
+        local s, e = fn.line("v"), fn.line(".")
+        gitsigns.stage_hunk({ math.min(s, e), math.max(s, e) })
+    end, { desc = "Stage hunk (visual)" })
+
+    map("v", "<leader>hr", function()
+        local s, e = fn.line("v"), fn.line(".")
+        gitsigns.reset_hunk({ math.min(s, e), math.max(s, e) })
+    end, { desc = "Reset hunk (visual)" })
+
+    map({ "o", "x" }, "ih", ":<C-U>Gitsigns select_hunk<CR>", { desc = "Select hunk" })
+
+    map("n", "<leader>gs", function() git_term("git status") end, { desc = "Git status" })
+    map("n", "<leader>gc", function() git_term("git commit") end, { desc = "Git commit" })
+    map("n", "<leader>gb", function() git_term("git branch --sort=-committerdate") end, { desc = "Git branches" })
+    map("n", "<leader>gp", function() git_term("git push") end, { desc = "Git push" })
+    map("n", "<leader>gP", function() git_term("git pull") end, { desc = "Git pull" })
+    map("n", "<leader>gf", function() git_term("git fetch") end, { desc = "Git fetch" })
+
+    map("n", "<leader>gl", function()
+        if not in_git_repo() then
+            return notify("Not in a git repository", log.levels.WARN)
+        end
+        local filepath = fn.expand("%")
+        local log_cmd = filepath ~= "" and ("git log --oneline -- " .. fn.shellescape(filepath))
+                                     or "git log --oneline"
+        cmd("tabnew | term " .. log_cmd)
+    end, { desc = "Git log (file)" })
+
+    map("n", "<leader>gB", function()
+        if not in_git_repo() then
+            return notify("Not in a git repository", log.levels.WARN)
+        end
+        ui.input({ prompt = "Branch to checkout: " }, function(input)
+            if input and input ~= "" then
+                git_term("git checkout " .. fn.shellescape(input))
+            end
+        end)
+    end, { desc = "Git checkout (branch)" })
+
+    map("n", "<leader>gd", function()
+        if not in_git_repo() then
+            return notify("Not in a git repository", log.levels.WARN)
+        end
+        ui.input({ prompt = "Diff with branch: " }, function(input)
+            if input and input ~= "" then
+                local filepath = fn.expand("%")
+                local diff_cmd = filepath ~= ""
+                    and ("git diff " .. fn.shellescape(input) .. " -- " .. fn.shellescape(filepath))
+                    or ("git diff " .. fn.shellescape(input))
+                cmd("tabnew | term " .. diff_cmd)
+            end
+        end)
+    end, { desc = "Git diff (branch)" })
+end
+
+return M

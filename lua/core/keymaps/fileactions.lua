@@ -19,9 +19,9 @@ map("n", "<leader>oo", function()
     cmd("write")
     if bo.filetype == "lua" then
         cmd("source %")
-        notify("  ", log.levels.INFO)
+        notify(" 󱓎 ", log.levels.INFO)
     else
-        notify("  ", log.levels.INFO)
+        notify(" 󱓎 ", log.levels.INFO)
     end
 end, { desc = "Save; & source if Lua" })
 
