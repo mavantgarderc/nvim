@@ -6,6 +6,7 @@ return {
     local autopairs = require("nvim-autopairs")
     local Rule = require("nvim-autopairs.rule")
     local cond = require("nvim-autopairs.conds")
+    local tbl_contains = vim.tbl_contains
 
     autopairs.setup({
       check_ts = true,
@@ -25,7 +26,7 @@ return {
 
       Rule(" ", " ")
         :with_pair(function(opts)
-          return vim.tbl_contains({ "(", "[", "{", "<" }, opts.prev_char:sub(-1, -1))
+          return tbl_contains({ "(", "[", "{", "<" }, opts.prev_char:sub(-1, -1))
         end),
 
       Rule("$", "$", "tex")
