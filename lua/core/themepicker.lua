@@ -1,3 +1,4 @@
+
 local M = {}
 local config = require("colors")
 
@@ -67,7 +68,9 @@ local function get_flattened_themes()
         flattened_themes = {}
         for _, variants in pairs(config.theme_map) do
             for _, theme in ipairs(variants) do
-                if is_theme_available(theme) then table.insert(flattened_themes, theme) end
+                if is_theme_available(theme) then
+                    table.insert(flattened_themes, theme)
+                end
             end
         end
     end
@@ -78,7 +81,9 @@ end
 local function set_theme_by_filetype(buf)
     local ft = api.nvim_buf_get_option(buf or 0, "filetype")
     local theme = config.filetype_themes[ft]
-    if theme and is_theme_available(theme) then debounced_theme_switch(theme, 50) end
+    if theme and is_theme_available(theme) then
+        debounced_theme_switch(theme, 50)
+    end
 end
 
 -- === Autocmds ===
@@ -92,7 +97,9 @@ api.nvim_create_autocmd("FileType", {
 api.nvim_create_autocmd("BufEnter", {
     group = theme_augroup,
     callback = function(args)
-        if api.nvim_buf_get_option(args.buf, "buflisted") then set_theme_by_filetype(args.buf) end
+        if api.nvim_buf_get_option(args.buf, "buflisted") then
+            set_theme_by_filetype(args.buf)
+        end
     end,
 })
 
@@ -108,7 +115,9 @@ local function add_to_history(theme_name)
         end
     end
     table.insert(theme_history, 1, theme_name)
-    if #theme_history > max_history then table.remove(theme_history, max_history + 1) end
+    if #theme_history > max_history then
+        table.remove(theme_history, max_history + 1)
+    end
 end
 
 -- === Theme Preview Command ===
@@ -129,11 +138,8 @@ api.nvim_create_user_command("PT", function(opts)
             return
         end
         local theme = themes[preview_index]
-        notify(
-            "Previewing: " .. theme .. " (" .. preview_index .. "/" .. #themes .. ")",
-            log.levels.INFO,
-            { title = "Theme Preview" }
-        )
+        notify("Previewing: " .. theme .. " (" .. preview_index .. "/" .. #themes .. ")",
+            log.levels.INFO, { title = "Theme Preview" })
         load_theme(theme, true)
         preview_index = preview_index + 1
         defer_fn(preview_next, delay)
@@ -142,12 +148,12 @@ api.nvim_create_user_command("PT", function(opts)
     preview_next()
 end, {
     nargs = "?",
-    desc = "Preview all themes (optional delay in ms)",
+    desc = "Preview all themes (optional delay in ms)"
 })
 
 -- === Fixed Theme Selector ===
 function M.select_theme()
-    require("telescope.builtin").colorscheme({
+    require("thorizontalelescope.builtin").colorscheme({
         enable_preview = true,
         initial_mode = "normal",
         layout_strategy = "horizontal",
@@ -188,11 +194,8 @@ function M.cycle_next_theme()
     local theme = themes[M.current_theme_index]
     load_theme(theme)
     add_to_history(theme)
-    notify(
-        "Theme: " .. theme .. " (" .. M.current_theme_index .. "/" .. #themes .. ")",
-        log.levels.INFO,
-        { title = "Theme Cycler" }
-    )
+    notify("Theme: " .. theme .. " (" .. M.current_theme_index .. "/" .. #themes .. ")",
+        log.levels.INFO, { title = "Theme Cycler" })
 end
 
 function M.previous_theme()
@@ -217,7 +220,7 @@ api.nvim_create_user_command("TT", function(opts)
 end, {
     nargs = 1,
     complete = function() return get_flattened_themes() end,
-    desc = "Set theme by name",
+    desc = "Set theme by name"
 })
 
 api.nvim_create_user_command("TR", function()

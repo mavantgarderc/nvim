@@ -15,11 +15,9 @@ return {
 
         mappings = {
             ["<leader>go"] = {
-                action = function()
-                    return require("obsidian").util.gf_passthrough()
-                end,
+                action = function() return require("obsidian").util.gf_passthrough() end,
                 opts = { noremap = false, expr = true, buffer = true },
-            }
-        }
-    }
+            },
+        },
+    },
 }

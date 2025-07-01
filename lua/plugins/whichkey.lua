@@ -4,6 +4,7 @@ return {
     config = function()
         local status_ok, which_key = pcall(require, "which-key")
         if not status_ok then return end
+        local g = vim.g
 
         local setup = {
             delay = 0,
@@ -36,8 +37,8 @@ return {
                 breadcrumb = "»",
                 separator = "➜",
                 group = "+",
-                mappings = vim.g.have_nerd_font,
-                keys = vim.g.have_nerd_font and {} or {
+                mappings = g.have_nerd_font,
+                keys = g.have_nerd_font and {} or {
                 },
             },
             win = {

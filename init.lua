@@ -18,5 +18,5 @@ require("core.keymaps.telescope")
 require("lazy").setup("plugins")
 
 --require("core.themepicker")
-vim.cmd.colorscheme("kanagawa-dragon")
--- vim.cmd.colorscheme("retrobox")
+--vim.cmd.colorscheme("kanagawa-dragon")
+vim.cmd.colorscheme("slate")
