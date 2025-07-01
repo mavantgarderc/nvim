@@ -86,9 +86,6 @@ map({ "n", "v"}, "<F4>", function()
     end
 end, { desc = "LSP Code Action", noremap = true, silent = true, })
 
-map("n", "<F5>", ":TSPlaygroundToggle<CR>",
-    { desc = "Tree-sitter Playground", noremap = true, silent = true, })
-
 map("n", "<F6>", function()
     if diagnostics and diagnostics.config then
         local current = diagnostics.config().virtual_text
@@ -112,9 +109,6 @@ map("i", "<F10>",
     function() wo.relativenumber = not wo.relativenumber end,
     { desc = "Toggle Relative Line Numbers", noremap = true, silent = true, })
 
-map("n", "<F11>", ":TSHighlightCapturesUnderCursor<CR>",
-    { desc = "Highlight under cursor", noremap = true, silent = true, })
-
 map("n", "<F12>", function()
     if lsp and lsp.buf and lsp.buf.definition then
         lsp.buf.definition()
@@ -122,3 +116,9 @@ map("n", "<F12>", function()
         notify("LSP definition not available")
     end
 end, { desc = "Go to Definition", noremap = true, silent = true, })
+
+map("n", "<F23>", ":TSHighlightCapturesUnderCursor<CR>",
+    { desc = "Highlight under cursor", noremap = true, silent = true, })
+
+map("n", "<F17>", ":TSPlaygroundToggle<CR>",
+    { desc = "Tree-sitter Playground", noremap = true, silent = true, })
