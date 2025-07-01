@@ -7,8 +7,8 @@ local log = vim.log
 -- normalize pasting
 map("x", "<leader>p", '"_dp')
 
--- replace the cursor under word, in entire buffer
-map("n", "<leader>s", ":%s/\\<<C-r><C-w>>\\>//gI<Left><Left>")
+-- replace the cursor under word in buffer, interactively
+map("n", "<leader>s", ":%s/<C-r><C-w>//gc<Left><Left><Left>")
 
 -- execution permission
 map("n", "<leader>x", ":!chmod +x %<CR>", { silent = true })
