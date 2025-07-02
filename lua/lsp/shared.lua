@@ -12,28 +12,23 @@ function M.setup_keymaps()
         desc = "LSP actions",
         callback = function(event)
             local opts = { buffer = event.buf }
-            map("n", "K", "<cmd>lua vim.lsp.buf.hover()<cr>", opts)
-            map("n", "gd", "<cmd>lua vim.lsp.buf.definition()<cr>", opts)
+            map("n", "K", ":lua vim.lsp.buf.hover()<cr>", opts)
+            map("n", "gd", ":lua vim.lsp.buf.definition()<cr>", opts)
             map("n", "grd", require("telescope.builtin").lsp_definitions, opts)
             -- map('n', 'grd', require("telescope.builtin").definitions, opts)
-            map("n", "gD", "<cmd>lua vim.lsp.buf.declaration()<cr>", opts)
-            map("n", "gi", "<cmd>lua vim.lsp.buf.implementation()<cr>", opts)
+            map("n", "gD", ":lua vim.lsp.buf.declaration()<cr>", opts)
+            map("n", "gi", ":lua vim.lsp.buf.implementation()<cr>", opts)
             map("n", "gri", require("telescope.builtin").lsp_implementations, opts)
-            map("n", "go", "<cmd>lua vim.lsp.buf.type_definition()<cr>", opts)
-            -- map('n', 'grr', '<cmd>lua vim.lsp.buf.references()<cr>', opts)
+            map("n", "go", ":lua vim.lsp.buf.type_definition()<cr>", opts)
+            -- map('n', 'grr', ':lua vim.lsp.buf.references()<cr>', opts)
             -- map('n', 'grr', require("telescope.builtin").lsp_reference, opts)
-            -- done la-copy-pasta <?>
-            map("n", "gs", "<cmd>lua vim.lsp.buf.signature_help()<cr>", opts)
-            map("n", "grn", "<cmd>lua vim.lsp.buf.rename()<cr>", opts)
-            map({ "n", "x" }, "gra", "<cmd>lua vim.lsp.buf.code_action()<cr>", opts)
-            -- <?> done la-copy-pasta
+            map("n", "gs", ":lua vim.lsp.buf.signature_help()<cr>", opts)
+            map("n", "grn", ":lua vim.lsp.buf.rename()<cr>", opts)
+            map({ "n", "x" }, "gra", ":lua vim.lsp.buf.code_action()<cr>", opts)
             -- map({ "n", "x" }, "<F3>", function()
-            --     -- 1. vim.lsp.buf.format({ async = true })
             --     vim.lsp.buf.format({
             --         async = true,
-            --         filter = function(client)
-            --             return client.name ~= "ts_ls"
-            --         end,
+            --         filter = function(client) return client.name ~= "ts_ls" end,
             --     })
             -- end)
             map("n", "gO", require("telescope.builtin").lsp_document_symbols, opts)
@@ -48,10 +43,10 @@ function M.setup_diagnostics()
         underline = { severity = diagnostic.severity.ERROR },
         signs = g.have_nerd_font and {
             text = {
-                [vim.diagnostic.severity.ERROR] = "󰅚 ",
-                [vim.diagnostic.severity.WARN] = "󰀪 ",
-                [vim.diagnostic.severity.INFO] = "󰋽 ",
-                [vim.diagnostic.severity.HINT] = "󰌶 ",
+                [diagnostic.severity.ERROR] = "󰅚 ",
+                [diagnostic.severity.WARN]  = "󰀪 ",
+                [diagnostic.severity.INFO]  = "󰋽 ",
+                [diagnostic.severity.HINT]  = "󰌶 ",
             },
         } or {},
         virtual_text = {
@@ -83,19 +78,13 @@ function M.setup_completion(cmp, luasnip)
             ["<C-p>"] = cmp.mapping.scroll_docs(-4),
             ["<C-n>"] = cmp.mapping.scroll_docs(4),
             ["<C-f>"] = cmp.mapping(function(fallback)
-                if luasnip.locally_jumpable(1) then
-                    luasnip.jump(1)
-                else
-                    fallback()
-                end
-            end, { "i", "s" }),
+                if luasnip.locally_jumpable(1) then luasnip.jump(1)
+                else fallback()
+                end end, { "i", "s" }),
             ["<C-b>"] = cmp.mapping(function(fallback)
-                if luasnip.locally_jumpable(-1) then
-                    luasnip.jump(-1)
-                else
-                    fallback()
-                end
-            end, { "i", "s" }),
+                if luasnip.locally_jumpable(-1) then luasnip.jump(-1)
+                else fallback()
+                end end, { "i", "s" }),
         }),
     })
 end

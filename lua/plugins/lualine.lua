@@ -19,7 +19,7 @@ return {
             sections = { "error", "warn" },
             symbols = { error = "󰯈 ", warn = " " },
             colored = false,
-            update_in_insert = true,
+            update_in_insert = false,
             always_visible = true,
         }
 
@@ -111,9 +111,9 @@ return {
                         always_show_tabline = true,
                         globalstatus = false,
                         refresh = {
-                            statusline = 1000,
-                            tabline = 1000,
-                            winbar = 1000,
+                            statusline = 5000,
+                            tabline = 5000,
+                            winbar = 5000,
                         },
                     },
                     sections = {
