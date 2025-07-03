@@ -82,6 +82,7 @@ return {
             })
 
             telescope.load_extension("ui-select")
+            require("core.keymaps.telescope")
         end,
     },
 }
