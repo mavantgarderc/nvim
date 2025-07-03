@@ -33,7 +33,9 @@ return {
         local branch = {
             "branch",
             icons_enabled = true,
+            --icon = " ",
             --icon = "",
+            --icon = " ",
             icon = "󰝨",
             cond = function()
                 return fn.executable("git") == 1
