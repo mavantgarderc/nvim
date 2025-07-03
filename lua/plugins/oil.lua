@@ -1,3 +1,4 @@
+
 return {
     "stevearc/oil.nvim",
     dependencies = {
@@ -7,16 +8,10 @@ return {
 
     config = function()
         local oil = require("oil")
-        local Path = require("plenary.path")
-        local map = vim.keymap.set
         local fn = vim.fn
         local api = vim.api
         local cmd = vim.cmd
-        local notify = vim.notify
-        local ui = vim.ui
-        local log = vim.log
         local bo = vim.bo
-        local startswith = vim.startswith
 
         api.nvim_create_user_command("OilCheatsheet", function()
             local lines = {
@@ -29,19 +24,22 @@ return {
                 " <C-p>    → Preview file",
                 " <C-c>    → Close Oil buffer",
                 " <C-l>    → Refresh",
-                " -        → Go to parent directory",
-                " _        → Open cwd",
-                " `        → cd to dir",
-                " ~        → tcd to dir (tab)",
+                " '-'      → Go to parent directory",
+                " '_'      → Open cwd",
+                " '`'      → cd to dir",
+                " '~'      → tcd to dir (tab)",
                 " gs       → Change sort",
                 " gx       → Open with system app",
                 " g.       → Toggle dotfiles",
                 " g\\      → Toggle trash mode",
+                " gh       → Toggle dotfiles (alt)",
+                " gp       → Reopen Oil at current path",
+                " q        → Close Oil",
                 "",
-                " <leader>e    → Toggle sidebar",
-                " <leader>nf   → New file in Oil",
-                " <leader>nd   → New directory in Oil",
-                " <leader>pv   → Open Oil file explorer",
+                " <leader>e     → Toggle sidebar",
+                " <leader>nf    → New file in Oil",
+                " <leader>nd    → New directory in Oil",
+                " <leader>pv    → Open Oil file explorer",
             }
 
             cmd("new")
@@ -60,6 +58,14 @@ return {
 
             columns = {
                 "icon",
+                -- "permissions",
+                -- "size",
+                -- "mtime",
+            },
+
+            sort = {
+                { "type", "asc" },
+                { "name", "asc" },
             },
 
             buf_options = {
@@ -70,7 +76,6 @@ return {
             win_options = {
                 wrap = false,
                 signcolumn = "yes",
-                cursorcolumn = false,
                 cursorline = true,
                 foldcolumn = "0",
                 spell = false,
@@ -91,7 +96,7 @@ return {
             },
 
             constrain_cursor = "editable",
-            watch_for_changes = false,
+            watch_for_changes = fn.has("nvim-0.10") == 1,
 
             keymaps = {
                 ["g?"]    = "actions.show_help",
@@ -110,15 +115,18 @@ return {
                 ["gx"]    = "actions.open_external",
                 ["g."]    = "actions.toggle_hidden",
                 ["g\\"]   = "actions.toggle_trash",
+                ["gh"]    = "actions.toggle_hidden",
+                ["q"]     = "actions.close",
+                ["gp"]    = function() oil.open(fn.expand("%:p:h")) end,
             },
 
             use_default_keymaps = true,
 
             view_options = {
-                show_hidden      = true,
-                is_hidden_file   = function(name, _) return startswith(name, ".") end,
-                is_always_hidden = function(_, _) return false end,
-                natural_order    = false,
+                show_hidden = true,
+                is_hidden_file = function(name, _) return name:sub(1, 1) == "." end,
+                is_always_hidden = function() return false end,
+                natural_order = false,
                 sort = {
                     { "type", "asc" },
                     { "name", "asc" },
@@ -126,32 +134,20 @@ return {
             },
 
             float = {
-                padding       = 2,
-                max_width     = 0,
-                max_height    = 0,
-                border        = "rounded",
-                win_options   = fn.has("nvim-0.10") == 1 and { winblend = 10 } or {},
+                padding = 2,
+                border = "rounded",
                 preview_split = "auto",
-                override      = function(conf) return conf end,
+                win_options = fn.has("nvim-0.10") == 1 and { winblend = 10 } or {},
+                override = function(conf) return conf end,
             },
 
             preview = {
-                max_width              = 0.9,
-                min_width              = { 40, 0.4 },
-                max_height             = 0.9,
-                min_height             = { 5, 0.1 },
-                border                 = "rounded",
-                win_options            = fn.has("nvim-0.10") == 1 and { winblend = 10 } or {},
-                update_on_cursor_moved = false,
+                border = "rounded",
+                win_options = fn.has("nvim-0.10") == 1 and { winblend = 10 } or {},
             },
 
             progress = {
-                max_width  = 0.9,
-                min_width  = { 40, 0.4 },
-                max_height = { 10, 0.9 },
-                min_height = {  5, 0.1 },
                 border = "rounded",
-                minimized_border = "none",
                 win_options = fn.has("nvim-0.10") == 1 and { winblend = 10 } or {},
             },
 
@@ -159,6 +155,17 @@ return {
                 border = "rounded",
             },
         })
+
+        api.nvim_create_autocmd("VimEnter", {
+            callback = function()
+                local arg = fn.argv(0)
+                if arg ~= "" and fn.isdirectory(arg) == 1 then
+                    oil.open()
+                end
+            end,
+        })
+
         require("core.keymaps.oil").setup()
     end,
 }
+
