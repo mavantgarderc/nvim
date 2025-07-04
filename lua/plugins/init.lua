@@ -118,4 +118,6 @@ return {
     },
     -- keymaps of vscode
     "mg979/vim-visual-multi",
+    -- Flash
+    "folke/flash.nvim",
 }
