@@ -18,6 +18,8 @@ return {
         local api = vim.api
         local defer_fn = vim.defer_fn
         local schedule_wrap = vim.schedule_wrap
+        local notify = vim.notify
+        local log = vim.log
 
         local hide_in_width = function() return fn.winwidth(0) > 80 end
 
@@ -221,12 +223,16 @@ return {
         end
 
         local function get_file_info()
+            -- local encoding = bo.fileencoding ~= "" and bo.fileencoding or o.encoding
+            -- local format = bo.fileformat
+            -- local filetype = bo.filetype ~= "" and bo.filetype or "no ft"
+            -- local format_icon = format == "unix" and "LF" or (format == "dos" and "CRLF" or format)
+            -- return string.format("%s | %s | %s", filetype, encoding, format_icon)
             local encoding = bo.fileencoding ~= "" and bo.fileencoding or o.encoding
             local format = bo.fileformat
             local filetype = bo.filetype ~= "" and bo.filetype or "no ft"
-
             local format_icon = format == "unix" and "LF" or (format == "dos" and "CRLF" or format)
-            return string.format("%s | %s | %s", filetype, encoding, format_icon)
+            return string.format("%s", filetype)
         end
 
         local function get_indent_info()
@@ -275,7 +281,7 @@ return {
                 end
 
                 return ""
-            end, 2000) -- cache: 2 sec
+            end, 200) -- cache: 0.2 sec
         end
 
         local function has_lsp()
@@ -316,58 +322,7 @@ return {
             local colorscheme = g.colors_name or "default"
 
             local theme_map = {
-                ["tokyonight"]           = "tokyonight",
-                ["tokyonight-night"]     = "tokyonight",
-                ["tokyonight-storm"]     = "tokyonight",
-                ["tokyonight-day"]       = "tokyonight",
-                ["tokyonight-moon"]      = "tokyonight",
-                ["catppuccin"]           = "catppuccin",
-                ["catppuccin-latte"]     = "catppuccin",
-                ["catppuccin-frappe"]    = "catppuccin",
-                ["catppuccin-macchiato"] = "catppuccin",
-                ["catppuccin-mocha"]     = "catppuccin",
-                ["gruvbox"]              = "gruvbox",
-                ["gruvbox-material"]     = "gruvbox-material",
-                ["nord"]                 = "nord",
-                ["onedark"]              = "onedark",
-                ["onelight"]             = "onelight",
-                ["dracula"]              = "dracula",
-                ["kanagawa"]             = "kanagawa",
-                ["material"]             = "material",
-                ["palenight"]            = "palenight",
-                ["nightfox"]             = "nightfox",
-                ["dayfox"]               = "dayfox",
-                ["dawnfox"]              = "dawnfox",
-                ["duskfox"]              = "duskfox",
-                ["nordfox"]              = "nordfox",
-                ["terafox"]              = "terafox",
-                ["carbonfox"]            = "carbonfox",
-                ["solarized"]            = "solarized_dark",
-                ["solarized8"]           = "solarized_dark",
-                ["solarized8_dark"]      = "solarized_dark",
-                ["solarized8_light"]     = "solarized_light",
-                ["rose-pine"]            = "rose-pine",
-                ["rose-pine-main"]       = "rose-pine",
-                ["rose-pine-moon"]       = "rose-pine",
-                ["rose-pine-dawn"]       = "rose-pine",
-                ["nightfly"]             = "nightfly",
-                ["moonfly"]              = "moonfly",
-                ["oxocarbon"]            = "oxocarbon",
-                ["github_dark"]          = "github_dark",
-                ["github_light"]         = "github_light",
-                ["everforest"]           = "everforest",
-                ["sonokai"]              = "sonokai",
-                ["edge"]                 = "edge",
-                ["ayu"]                  = "ayu",
-                ["iceberg"]              = "iceberg",
-                ["jellybeans"]           = "jellybeans",
-                ["molokai"]              = "molokai",
-                ["srcery"]               = "srcery",
-                ["tender"]               = "tender",
-                ["base16"]               = "base16",
-                ["horizon"]              = "horizon",
-                ["modus"]                = "modus",
-                ["melange"]              = "melange",
+                require("colors")
             }
 
             local mapped_theme = theme_map[colorscheme:lower()]
@@ -414,21 +369,14 @@ return {
                 lualine_a = { branch },
                 lualine_b = { diagnostics },
                 lualine_c = {
-                    "filename",
                     { get_navic_breadcrumbs, cond = has_navic,  },
                     { get_current_symbol,    cond = has_symbol, },
                 },
                 lualine_x = {
-                    { get_lsp_clients, cond     = has_lsp,            },
-                    { get_python_env, cond      = has_python_env,     },
-                    { get_dotnet_project, cond  = has_dotnet_project, },
-                    { get_test_status, cond     = has_test_running,   },
-                    { get_debug_status, cond    = has_debug_session,  },
-                    { get_database_status, cond = is_sql_file,        },
                     diff,
                     filetype,
                 },
-                lualine_y = { get_indent_info, location, },
+                lualine_y = { location, },
                 lualine_z = { progress },
             },
             inactive_sections = {
@@ -440,17 +388,28 @@ return {
                 lualine_z = { progress },
             },
             tabline = {
-                lualine_a = { get_cwd, },
-                lualine_b = {},
-                lualine_c = {},
+                lualine_a = { "tabs" },
+                lualine_b = { get_cwd },
+                lualine_c = { "filename" },
                 lualine_x = {},
-                lualine_y = { get_file_info, },
-                lualine_z = { "tabs" }
+                lualine_y = {
+                    --[[get_indent_info]]
+                    { get_lsp_clients,     cond = has_lsp,            },
+                    { get_python_env,      cond = has_python_env,     },
+                    { get_dotnet_project,  cond = has_dotnet_project, },
+                    { get_test_status,     cond = has_test_running,   },
+                    { get_debug_status,    cond = has_debug_session,  },
+                    { get_database_status, cond = is_sql_file,        },
+                    get_file_info,
+                    },
+                lualine_z = {}
             },
             winbar = {},
             inactive_winbar = {},
         })
 
+        -- === === === === ===
+        -- MAPPINGS & AUTO-CMDs
         local group = api.nvim_create_augroup("LualineRefresh", { clear = true })
         api.nvim_create_autocmd({
             "LspAttach", "LspDetach" }, {
@@ -471,7 +430,7 @@ return {
                     require("lualine").setup({
                         options = {
                             icons_enabled = true,
-                            theme = new_theme,
+                            theme = get_lualine_theme(),
                             component_separators = { left = "", right = "" },
                             section_separators   = { left = "", right = "" },
                             disabled_filetypes   = {
@@ -483,33 +442,23 @@ return {
                             always_show_tabline  = true,
                             globalstatus         = false,
                             refresh = {
-                                statusline = 1000,
-                                tabline    = 1000,
-                                winbar     = 1000,
+                                statusline = 5000,
+                                tabline    = 5000,
+                                winbar     = 5000,
                             },
                         },
                         sections = {
                             lualine_a = { branch },
                             lualine_b = { diagnostics },
                             lualine_c = {
-                                "filename",
-                                { get_navic_breadcrumbs, cond = has_navic, },
-                                { get_current_symbol, cond = has_symbol, },
+                                { get_navic_breadcrumbs, cond = has_navic,  },
+                                { get_current_symbol,    cond = has_symbol, },
                             },
                             lualine_x = {
-                                { get_lsp_clients, cond     = has_lsp,            },
-                                { get_python_env, cond      = has_python_env,     },
-                                { get_dotnet_project, cond  = has_dotnet_project, },
-                                { get_test_status, cond     = has_test_running,   },
-                                { get_debug_status, cond    = has_debug_session,  },
-                                { get_database_status, cond = is_sql_file,        },
                                 diff,
                                 filetype,
                             },
-                            lualine_y = {
-                                get_indent_info,
-                                location,
-                            },
+                            lualine_y = { location, },
                             lualine_z = { progress },
                         },
                         inactive_sections = {
@@ -521,12 +470,21 @@ return {
                             lualine_z = { progress },
                         },
                         tabline = {
-                            lualine_a = { get_cwd, },
-                            lualine_b = {},
-                            lualine_c = {},
+                            lualine_a = { "tabs" },
+                            lualine_b = { get_cwd },
+                            lualine_c = { "filename" },
                             lualine_x = {},
-                            lualine_y = { get_file_info, },
-                            lualine_z = { "tabs" }
+                            lualine_y = {
+                                --[[get_indent_info]]
+                                { get_lsp_clients,     cond = has_lsp,            },
+                                { get_python_env,      cond = has_python_env,     },
+                                { get_dotnet_project,  cond = has_dotnet_project, },
+                                { get_test_status,     cond = has_test_running,   },
+                                { get_debug_status,    cond = has_debug_session,  },
+                                { get_database_status, cond = is_sql_file,        },
+                                get_file_info,
+                            },
+                            lualine_z = {}
                         },
                         winbar = {},
                         inactive_winbar = {},
@@ -538,7 +496,7 @@ return {
 
         local timer = loop.new_timer()
         if timer then
-            timer:start(60000, 60000, vim.schedule_wrap(function()
+            timer:start(60000, 60000, schedule_wrap(function()
                 cache.test_status  = { value = "", last_update = 0 }
                 cache.debug_status = { value = "", last_update = 0 }
 
@@ -556,11 +514,11 @@ return {
         map("n", "<leader>tt", function()
             local new_theme = get_lualine_theme()
             local current_colorscheme = g.colors_name or "default"
-            vim.notify("Scheme: " .. current_colorscheme .. " → Lualine: " .. new_theme, vim.log.levels.INFO)
+            notify("Scheme: " .. current_colorscheme .. " → Lualine: " .. new_theme, log.levels.INFO)
             require("lualine").setup({
                 options = {
                     icons_enabled = true,
-                    theme = new_theme,
+                    theme = get_lualine_theme(),
                     component_separators = { left = "", right = "" },
                     section_separators   = { left = "", right = "" },
                     disabled_filetypes   = {
@@ -581,24 +539,14 @@ return {
                     lualine_a = { branch },
                     lualine_b = { diagnostics },
                     lualine_c = {
-                        "filename",
-                        { get_navic_breadcrumbs, cond = has_navic, },
-                        { get_current_symbol, cond = has_symbol, },
+                        { get_navic_breadcrumbs, cond = has_navic,  },
+                        { get_current_symbol,    cond = has_symbol, },
                     },
                     lualine_x = {
-                        { get_lsp_clients, cond     = has_lsp,            },
-                        { get_python_env, cond      = has_python_env,     },
-                        { get_dotnet_project, cond  = has_dotnet_project, },
-                        { get_test_status, cond     = has_test_running,   },
-                        { get_debug_status, cond    = has_debug_session,  },
-                        { get_database_status, cond = is_sql_file,        },
                         diff,
                         filetype,
                     },
-                    lualine_y = {
-                        get_indent_info,
-                        location,
-                    },
+                    lualine_y = { location, },
                     lualine_z = { progress },
                 },
                 inactive_sections = {
@@ -610,15 +558,24 @@ return {
                     lualine_z = { progress },
                 },
                 tabline = {
-                    lualine_a = { get_cwd, },
-                    lualine_b = {},
-                    lualine_c = {},
+                    lualine_a = { "tabs" },
+                    lualine_b = { get_cwd },
+                    lualine_c = { "filename" },
                     lualine_x = {},
-                    lualine_y = { get_file_info, },
-                    lualine_z = { "tabs" }
+                    lualine_y = {
+                        --[[get_indent_info]]
+                        { get_lsp_clients,     cond = has_lsp,            },
+                        { get_python_env,      cond = has_python_env,     },
+                        { get_dotnet_project,  cond = has_dotnet_project, },
+                        { get_test_status,     cond = has_test_running,   },
+                        { get_debug_status,    cond = has_debug_session,  },
+                        { get_database_status, cond = is_sql_file,        },
+                        get_file_info,
+                    },
+                    lualine_z = {}
                 },
                 winbar = {},
-                inactive_winbar = {},
+                inactive_winbar = {}
             })
             require("lualine").refresh()
         end, { silent = true })
