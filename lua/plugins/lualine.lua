@@ -11,7 +11,6 @@ return {
         local loop = vim.loop
         local lsp = vim.lsp
         local v = vim.v
-        local o = vim.o
         local g = vim.g
         local bo = vim.bo
         local treesitter = vim.treesitter
@@ -35,7 +34,7 @@ return {
 
         local diff = {
             "diff",
-            colored = false,
+            colored = true,
             symbols = { added = " ", modified = " ", removed = " " },
             cond = hide_in_width,
         }
@@ -47,7 +46,8 @@ return {
             icon = "󰝨",
             cond = function()
                 return fn.executable("git") == 1
-                    and (fn.isdirectory(".git") == 1 or fn.system("git rev-parse --git-dir 2>/dev/null"):match("%.git"))
+                    and (fn.isdirectory(".git") == 1 or
+                    fn.system("git rev-parse --git-dir 2>/dev/null"):match("%.git"))
             end,
             fmt = function(str)
                 if str == "" or str == nil then return "" end
@@ -61,33 +61,9 @@ return {
         }
 
         local progress = function()
-            -- local chars = {
-            --     "⡀   ", "⡀⡀  ", "⡀⡀⡀ ", "⡀⡀⡀⡀",
-            --     "⡄⡀⡀⡀", "⡄⡄⡀⡀", "⡄⡄⡄⡀", "⡄⡄⡄⡄",
-            --     "⡆⡄⡄⡄", "⡆⡆⡄⡄", "⡆⡆⡆⡄", "⡆⡆⡆⡆",
-            --     "⡇⡆⡆⡆", "⡇⡇⡆⡆", "⡇⡇⡇⡆", "⡇⡇⡇⡇",
-            -- }
             local chars = {
-                "",
-                "",
-                "",
-                "",
-                "",
-                "",
-                "",
-                "",
-                "",
-                "",
-                "",
-                "",
-                "",
-                "",
-                "",
-                "",
-                "",
-                "",
-                "",
-                "",
+                "", "", "", "", "", "", "", "", "", "",
+                "", "", "", "", "", "", "", "", "", "",
             }
             local current_line = fn.line(".")
             local total_lines = fn.line("$")
@@ -122,7 +98,6 @@ return {
                 cached.last_update = now
                 cache[key] = cached
             end
-
             return cached.value
         end
 
@@ -223,28 +198,8 @@ return {
         end
 
         local function get_file_info()
-            -- local encoding = bo.fileencoding ~= "" and bo.fileencoding or o.encoding
-            -- local format = bo.fileformat
-            -- local filetype = bo.filetype ~= "" and bo.filetype or "no ft"
-            -- local format_icon = format == "unix" and "LF" or (format == "dos" and "CRLF" or format)
-            -- return string.format("%s | %s | %s", filetype, encoding, format_icon)
-            local encoding = bo.fileencoding ~= "" and bo.fileencoding or o.encoding
-            local format = bo.fileformat
-            local filetype = bo.filetype ~= "" and bo.filetype or "no ft"
-            local format_icon = format == "unix" and "LF" or (format == "dos" and "CRLF" or format)
-            return string.format("%s", filetype)
-        end
-
-        local function get_indent_info()
-            local expandtab = bo.expandtab
-            local tabstop = bo.tabstop
-            local shiftwidth = bo.shiftwidth
-
-            if expandtab then
-                return "␣" .. shiftwidth
-            else
-                return "󰌒 " .. tabstop
-            end
+            local get_type = bo.filetype ~= "" and bo.filetype or "no ft"
+            return string.format("%s", get_type)
         end
 
         local function get_navic_breadcrumbs()
@@ -279,30 +234,16 @@ return {
                     end
                     function_node = function_node:parent()
                 end
-
                 return ""
             end, 200) -- cache: 0.2 sec
         end
 
-        local function has_lsp()
-            return #lsp.get_clients({ bufnr = 0 }) > 0
-        end
-
-        local function has_python_env()
-            return get_python_env() ~= ""
-        end
-
-        local function has_dotnet_project()
-            return get_dotnet_project() ~= ""
-        end
-
-        local function has_test_running()
-            return get_test_status() ~= ""
-        end
-
-        local function has_debug_session()
-            return get_debug_status() ~= ""
-        end
+        local function has_lsp()            return #lsp.get_clients({ bufnr = 0 }) > 0 end
+        local function has_python_env()     return get_python_env() ~= "" end
+        local function has_dotnet_project() return get_dotnet_project() ~= "" end
+        local function has_test_running()   return get_test_status() ~= "" end
+        local function has_debug_session()  return get_debug_status() ~= "" end
+        local function has_symbol()         return get_current_symbol() ~= "" end
 
         local function is_sql_file()
             local ft = bo.filetype
@@ -314,38 +255,25 @@ return {
             return ok and navic.is_available()
         end
 
-        local function has_symbol()
-            return get_current_symbol() ~= ""
-        end
 
         local function get_lualine_theme()
             local colorscheme = g.colors_name or "default"
-
-            local theme_map = {
-                require("colors")
-            }
-
+            local theme_map = { require("colors") }
             local mapped_theme = theme_map[colorscheme:lower()]
+
             if mapped_theme then
-                local success = pcall(function()
-                    require("lualine.themes." .. mapped_theme)
-                end)
-                if success then
-                    return mapped_theme
-                end
+                local success = pcall(function() require("lualine.themes." .. mapped_theme) end)
+                if success then return mapped_theme end
             end
 
-            local success = pcall(function()
-                require("lualine.themes." .. colorscheme)
-            end)
-            if success then
-                return colorscheme
-            end
+            local success = pcall(function() require("lualine.themes." .. colorscheme) end)
+
+            if success then return colorscheme end
 
             return "auto"
         end
 
-        require("lualine").setup({
+        local lualine_opts = {
             options = {
                 icons_enabled = true,
                 theme = get_lualine_theme(),
@@ -369,14 +297,11 @@ return {
                 lualine_a = { branch },
                 lualine_b = { diagnostics },
                 lualine_c = {
-                    { get_navic_breadcrumbs, cond = has_navic,  },
-                    { get_current_symbol,    cond = has_symbol, },
+                    { get_navic_breadcrumbs, cond = has_navic },
+                    { get_current_symbol,    cond = has_symbol },
                 },
-                lualine_x = {
-                    diff,
-                    filetype,
-                },
-                lualine_y = { location, },
+                lualine_x = { diff, filetype },
+                lualine_y = { location },
                 lualine_z = { progress },
             },
             inactive_sections = {
@@ -393,26 +318,26 @@ return {
                 lualine_c = { "filename" },
                 lualine_x = {},
                 lualine_y = {
-                    --[[get_indent_info]]
-                    { get_lsp_clients,     cond = has_lsp,            },
-                    { get_python_env,      cond = has_python_env,     },
-                    { get_dotnet_project,  cond = has_dotnet_project, },
-                    { get_test_status,     cond = has_test_running,   },
-                    { get_debug_status,    cond = has_debug_session,  },
-                    { get_database_status, cond = is_sql_file,        },
+                    { get_lsp_clients,     cond = has_lsp },
+                    { get_python_env,      cond = has_python_env },
+                    { get_dotnet_project,  cond = has_dotnet_project },
+                    { get_test_status,     cond = has_test_running },
+                    { get_debug_status,    cond = has_debug_session },
+                    { get_database_status, cond = is_sql_file },
                     get_file_info,
-                    },
-                lualine_z = {}
+                },
+                lualine_z = {},
             },
             winbar = {},
             inactive_winbar = {},
-        })
+        }
 
-        -- === === === === ===
-        -- MAPPINGS & AUTO-CMDs
+        require("lualine").setup(lualine_opts)
+
+        -- === AUTO-CMDS ===
         local group = api.nvim_create_augroup("LualineRefresh", { clear = true })
-        api.nvim_create_autocmd({
-            "LspAttach", "LspDetach" }, {
+
+        api.nvim_create_autocmd({ "LspAttach", "LspDetach" }, {
             group = group,
             callback = function()
                 cache.lsp_clients = { value = "", last_update = 0 }
@@ -426,69 +351,8 @@ return {
             group = group,
             callback = function()
                 defer_fn(function()
-                    local new_theme = get_lualine_theme()
-                    require("lualine").setup({
-                        options = {
-                            icons_enabled = true,
-                            theme = get_lualine_theme(),
-                            component_separators = { left = "", right = "" },
-                            section_separators   = { left = "", right = "" },
-                            disabled_filetypes   = {
-                                statusline = { "alpha", "dashboard", "lazy", "TelescopePrompt" },
-                                winbar = {},
-                            },
-                            ignore_focus = {},
-                            always_divide_middle = true,
-                            always_show_tabline  = true,
-                            globalstatus         = false,
-                            refresh = {
-                                statusline = 5000,
-                                tabline    = 5000,
-                                winbar     = 5000,
-                            },
-                        },
-                        sections = {
-                            lualine_a = { branch },
-                            lualine_b = { diagnostics },
-                            lualine_c = {
-                                { get_navic_breadcrumbs, cond = has_navic,  },
-                                { get_current_symbol,    cond = has_symbol, },
-                            },
-                            lualine_x = {
-                                diff,
-                                filetype,
-                            },
-                            lualine_y = { location, },
-                            lualine_z = { progress },
-                        },
-                        inactive_sections = {
-                            lualine_a = {},
-                            lualine_b = {},
-                            lualine_c = { "filename" },
-                            lualine_x = { "location" },
-                            lualine_y = {},
-                            lualine_z = { progress },
-                        },
-                        tabline = {
-                            lualine_a = { "tabs" },
-                            lualine_b = { get_cwd },
-                            lualine_c = { "filename" },
-                            lualine_x = {},
-                            lualine_y = {
-                                --[[get_indent_info]]
-                                { get_lsp_clients,     cond = has_lsp,            },
-                                { get_python_env,      cond = has_python_env,     },
-                                { get_dotnet_project,  cond = has_dotnet_project, },
-                                { get_test_status,     cond = has_test_running,   },
-                                { get_debug_status,    cond = has_debug_session,  },
-                                { get_database_status, cond = is_sql_file,        },
-                                get_file_info,
-                            },
-                            lualine_z = {}
-                        },
-                        winbar = {},
-                        inactive_winbar = {},
-                    })
+                    lualine_opts.options.theme = get_lualine_theme()
+                    require("lualine").setup(lualine_opts)
                     require("lualine").refresh()
                 end, 100)
             end,
@@ -506,6 +370,7 @@ return {
             end))
         end
 
+        -- === KEYMAPS ===
         map("n", "<leader>tf", function()
             show_filetype_text = not show_filetype_text
             require("lualine").refresh()
@@ -515,68 +380,8 @@ return {
             local new_theme = get_lualine_theme()
             local current_colorscheme = g.colors_name or "default"
             notify("Scheme: " .. current_colorscheme .. " → Lualine: " .. new_theme, log.levels.INFO)
-            require("lualine").setup({
-                options = {
-                    icons_enabled = true,
-                    theme = get_lualine_theme(),
-                    component_separators = { left = "", right = "" },
-                    section_separators   = { left = "", right = "" },
-                    disabled_filetypes   = {
-                        statusline = { "alpha", "dashboard", "lazy", "TelescopePrompt" },
-                        winbar = {},
-                    },
-                    ignore_focus = {},
-                    always_divide_middle = true,
-                    always_show_tabline  = true,
-                    globalstatus         = false,
-                    refresh = {
-                        statusline = 5000,
-                        tabline    = 5000,
-                        winbar     = 5000,
-                    },
-                },
-                sections = {
-                    lualine_a = { branch },
-                    lualine_b = { diagnostics },
-                    lualine_c = {
-                        { get_navic_breadcrumbs, cond = has_navic,  },
-                        { get_current_symbol,    cond = has_symbol, },
-                    },
-                    lualine_x = {
-                        diff,
-                        filetype,
-                    },
-                    lualine_y = { location, },
-                    lualine_z = { progress },
-                },
-                inactive_sections = {
-                    lualine_a = {},
-                    lualine_b = {},
-                    lualine_c = { "filename" },
-                    lualine_x = { "location" },
-                    lualine_y = {},
-                    lualine_z = { progress },
-                },
-                tabline = {
-                    lualine_a = { "tabs" },
-                    lualine_b = { get_cwd },
-                    lualine_c = { "filename" },
-                    lualine_x = {},
-                    lualine_y = {
-                        --[[get_indent_info]]
-                        { get_lsp_clients,     cond = has_lsp,            },
-                        { get_python_env,      cond = has_python_env,     },
-                        { get_dotnet_project,  cond = has_dotnet_project, },
-                        { get_test_status,     cond = has_test_running,   },
-                        { get_debug_status,    cond = has_debug_session,  },
-                        { get_database_status, cond = is_sql_file,        },
-                        get_file_info,
-                    },
-                    lualine_z = {}
-                },
-                winbar = {},
-                inactive_winbar = {}
-            })
+            lualine_opts.options.theme = new_theme
+            require("lualine").setup(lualine_opts)
             require("lualine").refresh()
         end, { silent = true })
     end,
