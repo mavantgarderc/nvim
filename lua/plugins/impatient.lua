@@ -2,24 +2,31 @@ return {
     "lewis6991/impatient.nvim",
     priority = 1000,
     config = function()
-        vim.g.impatient = {
+        local g = vim.g
+        local fn = vim.fn
+        local api = vim.api
+        local log = vim.log
+        local notify = vim.notify
+        local bo = vim.bo
+
+        g.impatient = {
             enable_profile = 1,
             cache_size = 1000,
             cache_persist = 1,
-            cache_path = vim.fn.stdpath("cache") .. "/impatient",
+            cache_path = fn.stdpath("cache") .. "/impatient",
             debug = 0,
         }
 
         local status_ok, impatient = pcall(require, "impatient")
         if not status_ok then
-            vim.notify("impatient.nvim failed to load", vim.log.levels.ERROR)
+            notify("impatient.nvim failed to load", log.levels.ERROR)
             return
         end
 
-        vim.api.nvim_create_user_command("ShowStartupStats", function()
+        api.nvim_create_user_command("ShowStartupStats", function()
             local stats = impatient.get_stats()
             if not stats then
-                vim.notify("Startup statistics not available", vim.log.levels.WARN)
+                notify("Startup statistics not available", log.levels.WARN)
                 return
             end
 
@@ -30,21 +37,21 @@ return {
                 stats.cached_modules
             )
 
-            vim.notify(msg, vim.log.levels.INFO, {
+            notify(msg, log.levels.INFO, {
                 title = "impatient.nvim",
                 timeout = 5000,
             })
         end, {})
 
-        vim.api.nvim_create_user_command("ShowModuleStats", function()
+        api.nvim_create_user_command("ShowModuleStats", function()
             local stats = impatient.get_stats()
             if not stats then
-                vim.notify("Module statistics not available", vim.log.levels.WARN)
+                notify("Module statistics not available", log.levels.WARN)
                 return
             end
 
-            local buf = vim.api.nvim_create_buf(false, true)
-            vim.api.nvim_buf_set_name(buf, "impatient-stats")
+            local buf = api.nvim_create_buf(false, true)
+            api.nvim_buf_set_name(buf, "impatient-stats")
 
             local lines = {
                 "IMPATIENT.NVIM MODULE STATISTICS",
@@ -68,11 +75,11 @@ return {
                 table.insert(lines, mod.name .. padding .. formatted_time)
             end
 
-            vim.api.nvim_buf_set_lines(buf, 0, -1, false, lines)
+            api.nvim_buf_set_lines(buf, 0, -1, false, lines)
 
-            vim.api.nvim_command("vsplit | buffer " .. buf)
-            vim.bo[buf].modifiable = false
-            vim.bo[buf].filetype = "impatient-stats"
+            api.nvim_command("vsplit | buffer " .. buf)
+            bo[buf].modifiable = false
+            bo[buf].filetype = "impatient-stats"
         end, {})
     end,
 }

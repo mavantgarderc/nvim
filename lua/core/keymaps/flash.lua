@@ -1,4 +1,3 @@
--- lua/core/keymaps/flash.lua
 local keymap = vim.keymap.set
 
 -- Basic navigation
