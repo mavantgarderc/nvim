@@ -1,4 +1,3 @@
-
 return {
     "stevearc/oil.nvim",
     dependencies = {
@@ -168,4 +167,3 @@ return {
         require("core.keymaps.oil").setup()
     end,
 }
-

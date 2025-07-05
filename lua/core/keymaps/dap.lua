@@ -1,20 +1,34 @@
-local dap = require('dap')
-local dapui = require('dapui')
-local fn = vim.fn
-local map = vim.keymap.set
+local keymap = vim.keymap.set
+local dap = require("dap")
+local dapui = require("dapui")
 
-map("n", "<F5>", dap.continue)
-map("n", "<F10>", dap.step_over)
-map("n", "<F11>", dap.step_into)
-map("n", "<F12>", dap.step_out)
+-- Basic debugging
+keymap("n", "<F5>", dap.continue, { desc = "Continue debugging" })
+keymap("n", "<F10>", dap.step_over, { desc = "Step over" })
+keymap("n", "<F11>", dap.step_into, { desc = "Step into" })
+keymap("n", "<F12>", dap.step_out, { desc = "Step out" })
 
-map("n", "<leader>b", dap.toggle_breakpoint)
-map("n", "<leader>B", function()
-    dap.set_breakpoint(fn.input("Breakpoint condition: "))
-end)
-map("n", "<leader>lp", function()
-    dap.set_breakpoint(nil, nil, fn.input("Log point message: "))
-end)
+-- Breakpoints
+keymap("n", "<leader>b", dap.toggle_breakpoint, { desc = "Toggle breakpoint" })
+keymap(
+    "n",
+    "<leader>B",
+    function() dap.set_breakpoint(vim.fn.input("Breakpoint condition: ")) end,
+    { desc = "Set conditional breakpoint" }
+)
+keymap(
+    "n",
+    "<leader>lp",
+    function() dap.set_breakpoint(nil, nil, vim.fn.input("Log point message: ")) end,
+    { desc = "Set log point" }
+)
 
-map("n", "<Leader>dr", dap.repl.open)
-map("n", "<Leader>du", dapui.toggle)
+-- DAP UI and utilities
+keymap("n", "<leader>dr", dap.repl.open, { desc = "Open DAP REPL" })
+keymap("n", "<leader>dl", dap.run_last, { desc = "Run last debug session" })
+keymap("n", "<leader>du", dapui.toggle, { desc = "Toggle DAP UI" })
+
+-- Python specific debugging
+keymap("n", "<leader>dn", function() require("dap-python").test_method() end, { desc = "Debug Python test method" })
+keymap("n", "<leader>df", function() require("dap-python").test_class() end, { desc = "Debug Python test class" })
+keymap("v", "<leader>ds", function() require("dap-python").debug_selection() end, { desc = "Debug Python selection" })
