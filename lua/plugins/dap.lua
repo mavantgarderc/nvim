@@ -9,11 +9,10 @@ return {
         config = function()
             local dap = require('dap')
             local dapui = require('dapui')
-            local map = vim.keymap.set
             local fn = vim.fn
-            local g = vim.g
             local notify = vim.notify
             local log = vim.log
+            local v = vim.v
 
             dapui.setup()
             dap.listeners.before.attach.dapui_config = function()
@@ -29,21 +28,8 @@ return {
                 dapui.close()
             end
 
-            map('n', '<F5>', dap.continue)
-            map('n', '<F10>', dap.step_over)
-            map('n', '<F11>', dap.step_into)
-            map('n', '<F12>', dap.step_out)
-
-            map('n', '<Leader>b', dap.toggle_breakpoint)
-            map('n', '<Leader>B', function()
-                dap.set_breakpoint(fn.input('Breakpoint condition: '))
-            end)
-            map('n', '<Leader>lp', function()
-                dap.set_breakpoint(nil, nil, fn.input('Log point message: '))
-            end)
-            map('n', '<Leader>dr', dap.repl.open)
-            map('n', '<Leader>du', dapui.toggle)
-
+            -- Load DAP keymaps
+            require('core.keymaps.dap')
 
             -- Python
             local debugpy_path = fn.expand('~/.virtualenvs/debugpy/bin/python')
@@ -96,7 +82,7 @@ return {
             local function build_dotnet_project()
                 print("Building .NET project...")
                 local result = fn.system('dotnet build 2>&1')
-                local exit_code = vim.v.shell_error
+                local exit_code = v.shell_error
 
                 if exit_code == 0 then
                     print("Build successful")
