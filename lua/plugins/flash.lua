@@ -1,3 +1,8 @@
+local fn = vim.fn
+local v = vim.v
+local api = vim.api
+local opt = vim.opt
+
 return {
   "folke/flash.nvim",
   event = "VeryLazy",
@@ -62,7 +67,7 @@ return {
     modes = {
       -- Regular search mode
       search = {
-        enabled = true,
+        enabled = false,
         highlight = { backdrop = false },
         jump = { history = true, register = true, nohlsearch = true },
         search = {
@@ -77,14 +82,14 @@ return {
       char = {
         enabled = true,
         config = function(opts)
-          opts.autohide = opts.autohide == nil and (vim.fn.mode(true):find("no") and vim.v.operator == "y")
+          opts.autohide = opts.autohide == nil and (fn.mode(true):find("no") and v.operator == "y")
           opts.jump_labels = opts.jump_labels == nil and false
         end,
         autohide = false,
         jump_labels = false,
         multi_line = true,
         label = { exclude = "hjkliardc" },
-        keys = { "f", "F", "t", "T", ";" },
+        keys = { "T" },
         char_actions = function(motion)
           return {
             [";"] = "next",
@@ -144,31 +149,27 @@ return {
     require("flash").setup(opts)
 
     -- Set up custom highlight groups
-    vim.api.nvim_set_hl(0, "FlashMatch", { bg = "#ff9900", fg = "#000000", bold = true })
-    vim.api.nvim_set_hl(0, "FlashCurrent", { bg = "#ff0000", fg = "#ffffff", bold = true })
-    vim.api.nvim_set_hl(0, "FlashBackdrop", { fg = "#545c7e" })
-    vim.api.nvim_set_hl(0, "FlashLabel", { bg = "#ff007c", fg = "#ffffff", bold = true })
-    vim.api.nvim_set_hl(0, "FlashPromptIcon", { fg = "#ff9900" })
+    -- api.nvim_set_hl(0, "FlashMatch", { bg = "#ff9900", fg = "#000000", bold = true })
+    -- api.nvim_set_hl(0, "FlashCurrent", { bg = "#ff0000", fg = "#ffffff", bold = true })
+    -- api.nvim_set_hl(0, "FlashBackdrop", { fg = "#545c7e" })
+    -- api.nvim_set_hl(0, "FlashLabel", { bg = "#ff007c", fg = "#ffffff", bold = true })
+    -- api.nvim_set_hl(0, "FlashPromptIcon", { fg = "#ff9900" })
 
     -- Set up cursor autocmds
-    vim.api.nvim_create_autocmd("User", {
+    api.nvim_create_autocmd("User", {
       pattern = "FlashPromptPre",
       callback = function()
-        vim.opt.guicursor = "n:block-FlashCursor"
+        opt.guicursor = "n:block-FlashCursor"
       end,
     })
 
-    vim.api.nvim_create_autocmd("User", {
+    api.nvim_create_autocmd("User", {
       pattern = "FlashPromptPost",
       callback = function()
-        vim.opt.guicursor = "n:block"
+        opt.guicursor = "n:block"
       end,
     })
 
-    -- Load keymaps
     require("core.keymaps.flash")
-
-    -- Set up which-key integration
-    setup_flash_which_key()
   end,
 }
