@@ -7,16 +7,21 @@ local notify = vim.notify
 local ui = vim.ui
 local log = vim.log
 local bo = vim.bo
+local map = vim.keymap.set
 
 local M = {}
 
 M.setup = function()
-    local map = vim.keymap.set
-
     -- Basic keymaps
-    map("n", "<leader>fo", "<CMD>Oil<CR>", { desc = "Open parent directory in Oil" })
-    map("n", "<leader>fO", function() oil.open_float() end, { desc = "Open Oil in floating window" })
-    map("n", "<leader>fc", function() oil.open(fn.getcwd()) end, { desc = "Open Oil in cwd" })
+    map("n", "<leader>fo", ":Oil<CR>", { desc = "Open parent directory in Oil" })
+
+    map("n", "<leader>fO", function()
+        oil.open_float()
+    end, { desc = "Open Oil in floating window" })
+
+    map("n", "<leader>fc", function()
+        oil.open(fn.getcwd())
+    end, { desc = "Open Oil in cwd" })
 
     -- Toggle sidebar (tracks window)
     local oil_sidebar_win = nil
@@ -61,8 +66,7 @@ M.setup = function()
     end, { desc = "Create new directory in Oil" })
 
     -- Cheatsheet
-    map("n", "<leader>ok", "<CMD>OilCheatsheet<CR>", { desc = "Open Oil Cheatsheet" })
+    map("n", "<leader>ok", ":OilCheatsheet<CR>", { desc = "Open Oil Cheatsheet" })
 end
 
 return M
-

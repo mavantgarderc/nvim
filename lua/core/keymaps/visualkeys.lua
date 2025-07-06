@@ -40,14 +40,14 @@
 --      v:
 -- map({ "n", "v", "i" }, "<F24>", "0", opts)
 
+local wo = vim.wo
 local map = vim.keymap.set
 local log = vim.log
 local lsp = vim.lsp
-local notify = vim.notify
-local diagnostics = vim.diagnostic
 local cmd = vim.cmd
 local api = vim.api
-local wo = vim.wo
+local notify = vim.notify
+local diagnostics = vim.diagnostic
 
 api.nvim_create_autocmd("FileType", {
     pattern = "markdown",

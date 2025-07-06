@@ -1,34 +1,35 @@
+local g = vim.g
+
 return {
-    {
         "mg979/vim-visual-multi",
         branch = "master",
         init = function()
             -- Disable default mappings to avoid conflicts
-            vim.g.VM_default_mappings = 0
+            g.VM_default_mappings = 0
 
             -- Theme and appearance
-            vim.g.VM_theme = "iceblue"
-            vim.g.VM_highlight_matches = "underline"
+            g.VM_theme = "iceblue"
+            g.VM_highlight_matches = "underline"
 
             -- Behavior settings
-            vim.g.VM_live_editing = 1 -- Enable live editing
-            vim.g.VM_silent_exit = 1 -- Don't show exit message
-            vim.g.VM_show_warnings = 1 -- Show warnings
-            vim.g.VM_case_setting = "smart" -- Smart case matching
-            vim.g.VM_use_first_cursor_in_line = 0 -- Don't use first cursor in line
-            vim.g.VM_skip_shorter_lines = 0 -- Don't skip shorter lines
-            vim.g.VM_extend_matches = 0 -- Don't extend matches automatically
-            vim.g.VM_reselect_first = 1 -- Reselect first match
+            g.VM_live_editing = 1 -- Enable live editing
+            g.VM_silent_exit = 1 -- Don't show exit message
+            g.VM_show_warnings = 1 -- Show warnings
+            g.VM_case_setting = "smart" -- Smart case matching
+            g.VM_use_first_cursor_in_line = 0 -- Don't use first cursor in line
+            g.VM_skip_shorter_lines = 0 -- Don't skip shorter lines
+            g.VM_extend_matches = 0 -- Don't extend matches automatically
+            g.VM_reselect_first = 1 -- Reselect first match
 
             -- Performance settings
-            vim.g.VM_max_find = 1000 -- Maximum number of matches to find
-            vim.g.VM_max_matches = 1000 -- Maximum number of matches to highlight
+            g.VM_max_find = 1000 -- Maximum number of matches to find
+            g.VM_max_matches = 1000 -- Maximum number of matches to highlight
 
             -- Insert mode settings
-            vim.g.VM_insert_special_keys = { "c-v", "c-a", "c-e", "c-u", "c-w", "c-r", "c-h", "c-k" }
+            g.VM_insert_special_keys = { "c-v", "c-a", "c-e", "c-u", "c-w", "c-r", "c-h", "c-k" }
 
             -- Custom mappings - these will be set in the keymaps file
-            vim.g.VM_maps = {
+            g.VM_maps = {
                 -- Basic cursor operations
                 ["Find Under"] = "<C-n>",
                 ["Find Subword Under"] = "<C-n>",
@@ -129,8 +130,6 @@ return {
                 ["Split Regions"] = "\\<CR>",
             }
 
-            -- Load vim-visual-multi keymaps
             require("core.keymaps.vim-visual-multi")
         end,
-    },
-}
+    }

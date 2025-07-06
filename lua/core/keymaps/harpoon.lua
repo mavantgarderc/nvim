@@ -1,8 +1,8 @@
 local M = {}
+local map = vim.keymap.set
 
 function M.setup()
     local harpoon = require("harpoon")
-    local map = vim.keymap.set
 
     map("n", "<leader>a", function() harpoon:list():add() end, { desc = "Harpoon: Add File" })
 

@@ -28,7 +28,6 @@ return {
                 dapui.close()
             end
 
-            -- Load DAP keymaps
             require('core.keymaps.dap')
 
             -- Python
@@ -71,7 +70,7 @@ return {
                                 end
                             end
                         end
-                        return dll_files[1] -- Return first match
+                        return dll_files[1] -- return first match
                     end
                 end
 
