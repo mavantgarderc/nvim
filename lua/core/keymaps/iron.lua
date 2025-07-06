@@ -1,6 +1,6 @@
-local keymap = vim.keymap.set
+local map = vim.keymap.set
 
-keymap('n', '<space>rs', '<cmd>IronRepl<cr>', { desc = "Start Iron REPL" })
-keymap('n', '<space>rr', '<cmd>IronRestart<cr>', { desc = "Restart Iron REPL" })
-keymap('n', '<space>rf', '<cmd>IronFocus<cr>', { desc = "Focus Iron REPL" })
-keymap('n', '<space>rh', '<cmd>IronHide<cr>', { desc = "Hide Iron REPL" })
+map("n", "<leader>rs", ":IronRepl<CR>", { desc = "Start Iron REPL" })
+map("n", "<leader>rr", ":IronRestart<CR>", { desc = "Restart Iron REPL" })
+map("n", "<leader>rf", ":IronFocus<CR>", { desc = "Focus Iron REPL" })
+map("n", "<leader>rh", ":IronHide<CR>", { desc = "Hide Iron REPL" })
