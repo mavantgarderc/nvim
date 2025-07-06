@@ -4,6 +4,7 @@ return {
     config = function()
         local status_ok, which_key = pcall(require, "which-key")
         if not status_ok then return end
+
         local g = vim.g
         local setup = {
             delay = 0,
@@ -29,8 +30,8 @@ return {
             },
             key_labels = {
                 ["<space>"] = "SPC",
-                ["<cr>"] = "RET",
-                ["<tab>"] = "TAB",
+                ["<CR>"] = "RET",
+                ["<TAB>"] = "TAB",
             },
             icons = {
                 breadcrumb = "»",
@@ -61,8 +62,8 @@ return {
                 v = { "j", "k" },
             },
             keys = {
-                scroll_down = "<c-d>",
-                scroll_up = "<c-u>",
+                scroll_down = "<C-d>",
+                scroll_up = "<C-u>",
             },
         }
         local group_specs = {

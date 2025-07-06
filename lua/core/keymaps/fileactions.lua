@@ -1,18 +1,23 @@
+local bo = vim.bo
+local fn = vim.fn
+local log = vim.log
+local api = vim.api
 local map = vim.keymap.set
 local cmd = vim.cmd
-local bo = vim.bo
 local notify = vim.notify
-local log = vim.log
 
--- normalize pasting
-map("x", "<leader>p", '"_dp')
+-- normalized pasting
+map("n", "<leader>p", "\"_dp")
 
--- replace the cursor under word in buffer, interactively
-map("n", "<leader>s", ":%s/<C-r><C-w>//gc<Left><Left><Left>")
+-- interactive replace word under the cursor
+map("n", "<leader>x", function()
+    local word = fn.expand("<cword>")
+    if word == "" then print("No word under cursor") return end
+    api.nvim_feedkeys( ":%s/" .. fn.escape(word, "/\\") .. "//gc" .. string.rep(api.nvim_replace_termcodes("<Left>", true, false, true), 3), "n", false)
+end, { desc = "Replace word under cursor interactively" })
 
 -- execution permission
-map("n", "<leader>x", ":!chmod +x %<CR>", { silent = true })
-map("n", "<leader>X", ":!chmod -x %<CR>", { silent = true })
+map("n", "<leader>X", ":!chmod +x %<CR>", { silent = true })
 
 -- write & source current file
 map("n", "<leader>oo", function()
@@ -25,5 +30,5 @@ map("n", "<leader>oo", function()
     end
 end, { desc = "Save; & source if Lua" })
 
--- Quit
+-- Quit; confirmation needed
 map("n", "<leader>o<leader>o", ":wa<CR>:qa")
