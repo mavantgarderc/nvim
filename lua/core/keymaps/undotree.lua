@@ -2,6 +2,7 @@ local cmd = vim.cmd
 local fn = vim.fn
 local api = vim.api
 local map = vim.keymap.set
+local o = vim.o
 
 map("n", "<leader>u", cmd.UndotreeToggle, { desc = "Toggle undotree" })
 
@@ -55,7 +56,7 @@ local function setup_undotree_buffer_keymaps()
 end
 
 -- Auto-command to set up buffer-specific keymaps for undotree
-vim.api.nvim_create_autocmd("BufEnter", {
+api.nvim_create_autocmd("BufEnter", {
     pattern = "*",
     callback = setup_undotree_buffer_keymaps,
     desc = "Setup undotree buffer keymaps",
@@ -64,10 +65,10 @@ vim.api.nvim_create_autocmd("BufEnter", {
 -- Function to show undo tree statistics
 local function show_undo_stats()
     local stats = {
-        undolevels = vim.o.undolevels,
-        undoreload = vim.o.undoreload,
-        undofile = vim.o.undofile,
-        undodir = vim.o.undodir,
+        undolevels = o.undolevels,
+        undoreload = o.undoreload,
+        undofile   = o.undofile,
+        undodir    = o.undodir,
     }
 
     print("Undo Configuration:")
@@ -76,7 +77,7 @@ local function show_undo_stats()
     print("  Undo file: " .. tostring(stats.undofile))
     print("  Undo dir: " .. stats.undodir)
 
-    if vim.fn.has("persistent_undo") == 1 then
+    if fn.has("persistent_undo") == 1 then
         print("  Persistent undo: enabled")
     else
         print("  Persistent undo: disabled")
