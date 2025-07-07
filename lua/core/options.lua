@@ -1,10 +1,7 @@
 local opt = vim.opt
 local g = vim.g
 local o = vim.o
-local cmd = vim.cmd
-local keymap = vim.keymap
 local schedule = vim.schedule
-local env = vim.env
 
 -- Disable netrw
 g.loaded_netrw = 1
@@ -42,7 +39,7 @@ o.showmode = false -- don't show the mode (shown in lualine)
 
 o.cursorline = false -- show which line cursor is on
 -- opt.guicursor = ""
-vim.opt.guicursor = "n-v-c:block-Cursor/lCursor,i-ci-ve:ver25-Cursor/lCursor,r-cr:hor20-Cursor/lCursor"
+opt.guicursor = "n-v-c:block-Cursor/lCursor,i-ci-ve:ver25-Cursor/lCursor,r-cr:hor20-Cursor/lCursor"
 
 o.list = true -- display whitespaces
 
