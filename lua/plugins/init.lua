@@ -14,6 +14,7 @@ return {
     "goolord/alpha-nvim",
     -- themes
     {
+        "RRethy/base16-nvim",
         "catppuccin/nvim",
         "folke/tokyonight.nvim",
         "ellisonleao/gruvbox.nvim",
