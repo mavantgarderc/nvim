@@ -1,15 +1,10 @@
 local map = vim.keymap.set
-local api = vim.api
-local g = vim.g
 
--- "o" mode is: execute, then go back to insert mode
--- "x" mode is: activated only in visual mode
-
-map({ "n", "x", "o" }, "ff", function() -- jump
+map({ "n", "x", "o" }, "ff", function()
     require("flash").jump()
 end, { desc = "Flash jump" })
 
-map({ "n", "x", "o" }, "<M-s>", function() -- treesitter jump
+map({ "n", "x", "o" }, "<M-s>", function()
     require("flash").treesitter()
 end, { desc = "Flash treesitter" })
 
@@ -17,11 +12,14 @@ map("x", "R", function()
     require("flash").treesitter_search()
 end, { desc = "Treesitter search" })
 
-map({ "n", "x", "o" }, "fl", function() -- Line jumping
-    require("flash").jump({ search = { mode = "search", max_length = 0 }, label = { after = { 0, 0 } }, pattern = "^" })
+map({ "n", "x", "o" }, "fl", function()
+    require("flash").jump({
+        search = { mode = "search", max_length = 0 },
+        label = { after = { 0, 0 } },
+        pattern = "^" })
 end, { desc = "Flash to line" })
 
-map({ "n", "x", "o" }, "<leader>fe", function() -- end of the line jumping
+map({ "n", "x", "o" }, "<leader>fe", function()
     require("flash").jump({
         pattern = "$", search = { mode = "search", max_length = 0 }, label = { after = { 0, 0 } }, })
 end, { desc = "Flash line end" })
@@ -33,131 +31,206 @@ map({ "n", "x", "o" }, "T", function()
         before = true, inclusive = false, })
 end, { desc = "Flash T" })
 
-map({ "n", "x", "o" }, "za", function() -- Fuzzy search
+map({ "n", "x", "o" }, "zg", function()
     require("flash").jump({ search = { mode = "fuzzy" }, label = { after = { 0, 0 } }, })
 end, { desc = "Flash fuzzy search" })
 
-map({ "n", "x", "o" }, ";;", function() -- Continue last search
+map({ "n", "x", "o" }, ";;", function()
     require("flash").jump({ continue = true })
 end, { desc = "Continue flash" })
 
-map("n", "<leader>fz", function()
-    require("flash").jump({ search = { mode = "fuzzy" }, label = { after = { 0, 0 } }, })
-end, { desc = "Flash fuzzy" })
-
-map({ "n", "x", "o" }, "<leader>fp", function() -- Special characters jumping
-    require("flash").jump({
-        pattern = "[{(.!?/@#$%^&*)}]",
-        search = { mode = "search" }, label = { after = { 0, 0 } }, })
-end, { desc = "Flash punctuation" })
-
--- map({ "n", "x", "o" }, "<leader>fc", function() -- class keywords jump
---     require("flash").jump({
---         pattern = "\\<\\(class\\|method\\|def\\|function\\|private\\|public\\|protected\\|internal\\|sealed\\|sealed\\|struct\\|interface\\|enum\\|proc\\)\\>",
---         search = { mode = "search" }, label = { after = { 0, 0 } }, })
--- end, { desc = "Flash to classes, methods, etc." })
-
-map({ "n", "x", "o" }, "<leader>fv", function() -- variable jumps
-    require("flash").jump({
-        pattern = "\\<\\(var\\|let\\|const\\|local\\|global\\|int\\|string\\)\\>",
-        search = { mode = "search" }, label = { after = { 0, 0 } }, })
-end, { desc = "Flash variables" })
-
-map({ "n", "x", "o" }, "<leader>fi", function() -- conditional statements jumps
-    require("flash").jump({
-        pattern = "\\<\\(if\\|else\\|elif\\|unless\\)\\>",
-        search = { mode = "search" }, label = { after = { 0, 0 } }, })
-end, { desc = "Flash conditionals" })
-
-map({ "n", "x", "o" }, "<leader>fo", function() -- iteration statements jumps
-    require("flash").jump({
-        pattern = "\\<\\(for\\|foreach\\|while\\|do\\|loop\\|repeat\\)\\>",
-        search = { mode = "search" }, label = { after = { 0, 0 } }, })
-end, { desc = "Flash loops" })
+-- === === === === === === === === === === === === === === === === === === === === === === === === === === === === === ===
 
 local categories = {
+    -- <leader>fv
+    variable = {
+        keywords = {
+            "var", "let", "const",
+            "local", "global", "int",
+            "string", "float", "double",
+            "bool", "boolean", "char",
+            "byte", "short", "long",
+            "auto", "static", "extern",
+            "register", "volatile", "mutable",
+            "final", "readonly",
+        },
+        hl_group = "FlashVariable",
+    },
+    -- <leader>fc
     class = {
-        keywords = {"class", "struct", "interface", "enum", "proc"},
-        hl_group = "FlashClass"
+        keywords = {
+            "class", "struct", "interface",
+            "enum", "union", "trait",
+            "protocol", "namespace", "module",
+            "package", "type", "typedef",
+            "using", "alias", "record",
+            "data", "newtype",
+        },
+        hl_group = "FlashClass",
     },
+    -- <leader>fm
     method = {
-        keywords = {"method", "def", "function"},
-        hl_group = "FlashMethod"
+        keywords = {
+            "function", "def", "method",
+            "func", "fn", "proc",
+            "sub", "routine", "lambda",
+            "arrow", "async", "await",
+            "yield", "generator", "constructor",
+            "destructor", "operator", "macro",
+        },
+        hl_group = "FlashMethod",
     },
+    -- <leader>fa
     access = {
-        keywords = {"private", "public", "protected", "internal"},
-        hl_group = "FlashAccess"
+        keywords = {
+            "private", "public", "protected",
+            "internal", "package", "export",
+            "import", "from", "as",
+            "default", "static", "abstract",
+            "virtual", "override", "final",
+            "sealed", "partial",
+        },
+        hl_group = "FlashAccess",
     },
-    modifier = {
-        keywords = {"sealed"},
-        hl_group = "FlashModifier"
-    }
+    -- <leader>fl
+    conditionals = {
+        keywords = {
+            "if", "else", "elif",
+            "elseif", "unless", "when",
+            "case", "switch", "match",
+            "guard", "try", "catch",
+            "except", "finally", "rescue",
+            "ensure", "raise", "throw",
+            "assert",
+        },
+        hl_group = "FlashConditionals",
+    },
+    -- <leader>fi
+    iterators = {
+        keywords = {
+            "for", "foreach", "while",
+            "do", "loop", "repeat",
+            "until", "continue", "break",
+            "next", "redo", "retry",
+            "goto", "return", "exit",
+            "yield", "each", "map",
+            "filter", "reduce",
+        },
+        hl_group = "FlashIterators",
+    },
+    -- <leader>fo
+    operators = {
+        keywords = {
+            "and", "or", "not",
+            "AND", "OR", "NOT",
+            "in", "is", "typeof",
+            "instanceof", "new", "delete",
+            "sizeof", "alignof", "decltype",
+            "typeid", "const_cast", "static_cast",
+            "dynamic_cast", "reinterpret_cast",
+        },
+        hl_group = "FlashOperators",
+    },
+    -- <leader>fk
+    constants = {
+        keywords = {
+            "true", "false", "null",
+            "nil", "none", "undefined",
+            "void", "this", "self",
+            "super", "base", "parent",
+            "prototype", "__proto__", "constructor",
+            "typeof",
+        },
+        hl_group = "FlashConstants",
+    },
+    -- <leader>ft
+    comments = {
+        keywords = {
+            "TODO", "FIXME", "NOTE",
+            "HACK", "XXX", "BUG",
+            "DEPRECATED", "REVIEW", "OPTIMIZE",
+            "WARNING", "IMPORTANT", "QUESTION",
+            "IDEA", "REFACTOR",
+        },
+        hl_group = "FlashComments",
+    },
 }
 
+-- === === === === === === === === === === === === === === === === === === === === === === === === === === === === === ===
+
+local function create_pattern(keywords)
+  return "\\<\\(" .. table.concat(keywords, "\\|") .. "\\)\\>"
+end
+
+map({ "n", "x", "o" }, "<leader>fv", function()
+  require("flash").jump({
+    pattern = create_pattern(categories.variable.keywords),
+    search = { mode = "search" },
+    label = { after = { 0, 0 } },
+    highlight = { groups = { match = "FlashVariable" } }
+}) end, { desc = "Flash variables" })
+
 map({ "n", "x", "o" }, "<leader>fc", function()
-    require("flash").jump({
-        patterns = patterns,
-        search = { mode = "search" },
-        label = { after = { 0, 0 } },
-    })
-end, { desc = "Flash to classes, methods, etc." })
+  require("flash").jump({
+    pattern = create_pattern(categories.class.keywords),
+    search = { mode = "search" },
+    label = { after = { 0, 0 } },
+    highlight = { groups = { match = "FlashClass" } }
+}) end, { desc = "Flash classes" })
 
+map({ "n", "x", "o" }, "<leader>fm", function()
+  require("flash").jump({
+    pattern = create_pattern(categories.method.keywords),
+    search = { mode = "search" },
+    label = { after = { 0, 0 } },
+    highlight = { groups = { match = "FlashMethod" } }
+}) end, { desc = "Flash methods" })
 
+map({ "n", "x", "o" }, "<leader>fa", function()
+  require("flash").jump({
+    pattern = create_pattern(categories.access.keywords),
+    search = { mode = "search" },
+    label = { after = { 0, 0 } },
+    highlight = { groups = { match = "FlashAccess" } }
+}) end, { desc = "Flash access modifiers" })
 
+map({ "n", "x", "o" }, "<leader>fl", function()
+  require("flash").jump({
+    pattern = create_pattern(categories.conditionals.keywords),
+    search = { mode = "search" },
+    label = { after = { 0, 0 } },
+    highlight = { groups = { match = "FlashConditionals" } }
+}) end, { desc = "Flash conditionals" })
 
+map({ "n", "x", "o" }, "<leader>fi", function()
+  require("flash").jump({
+    pattern = create_pattern(categories.iterators.keywords),
+    search = { mode = "search" },
+    label = { after = { 0, 0 } },
+    highlight = { groups = { match = "FlashIterators" } }
+}) end, { desc = "Flash loops/iterators" })
 
-local function get_hl_color(group, attr)
-  local hl = api.nvim_get_hl(0, { name = group })
-  return hl[attr] and string.format("#%06x", hl[attr]) or nil
-end
+map({ "n", "x", "o" }, "<leader>fo", function()
+  require("flash").jump({
+    pattern = create_pattern(categories.operators.keywords),
+    search = { mode = "search" },
+    label = { after = { 0, 0 } },
+    highlight = { groups = { match = "FlashOperators" } }
+  })
+end, { desc = "Flash operators" })
 
-local function setup_flash_highlights()
-  local function get_hl_color(group, attr)
-    local hl = vim.api.nvim_get_hl(0, { name = group })
-    return hl[attr] and string.format("#%06x", hl[attr]) or nil
-  end
+map({ "n", "x", "o" }, "<leader>fk", function()
+  require("flash").jump({
+    pattern = create_pattern(categories.constants.keywords),
+    search = { mode = "search" },
+    label = { after = { 0, 0 } },
+    highlight = { groups = { match = "FlashConstants" } }
+}) end, { desc = "Flash constants" })
 
-  -- Get theme-dependent colors
-  local search_bg  = get_hl_color("Search", "bg") or get_hl_color("IncSearch", "bg") or "#ff9900"
-  local search_fg  = get_hl_color("Search", "fg") or get_hl_color("IncSearch", "fg") or "#000000"
-  local error_bg   = get_hl_color("ErrorMsg", "bg") or get_hl_color("DiagnosticError", "fg") or "#ff0000"
-  local error_fg   = get_hl_color("ErrorMsg", "fg") or "#ffffff"
-  local comment_fg = get_hl_color("Comment", "fg") or "#545c7e"
-  local visual_bg  = get_hl_color("Visual", "bg") or get_hl_color("CursorLine", "bg") or "#ff007c"
-  local visual_fg  = get_hl_color("Visual", "fg") or "#ffffff"
-  local keyword_fg = get_hl_color("Keyword", "fg") or get_hl_color("Function", "fg") or "#ff9900"
-
-  -- Set Flash highlights
-  vim.api.nvim_set_hl(0, "FlashMatch",      { bg = search_bg, fg = search_fg, bold = true })
-  vim.api.nvim_set_hl(0, "FlashCurrent",    { bg = error_bg,  fg = error_fg,  bold = true })
-  vim.api.nvim_set_hl(0, "FlashBackdrop",   { fg = comment_fg })
-  vim.api.nvim_set_hl(0, "FlashLabel",      { bg = visual_bg, fg = visual_fg, bold = true })
-  vim.api.nvim_set_hl(0, "FlashPromptIcon", { fg = keyword_fg })
-end
-
--- Apply highlights on startup
-setup_flash_highlights()
-
--- Reapply when colorscheme changes
-vim.api.nvim_create_autocmd("ColorScheme", {
-  pattern = "*",
-  callback = setup_flash_highlights
-})
-local patterns = {}
-for _, cat in pairs(categories) do
-    table.insert(patterns, {
-        pattern = "\\<\\(" .. table.concat(cat.keywords, "\\|") .. "\\)\\>",
-        hl_group = cat.hl_group
-    })
-end
-api.nvim_create_autocmd("ColorScheme", {
-    pattern = "*",
-    callback = function()
-        api.nvim_set_hl(0, "FlashClass", { link = "Type" })
-        api.nvim_set_hl(0, "FlashMethod", { link = "Function" })
-        api.nvim_set_hl(0, "FlashAccess", { link = "StorageClass" })
-        api.nvim_set_hl(0, "FlashModifier", { link = "Keyword" })
-    end
-})
-
-api.nvim_exec_autocmds("ColorScheme", { pattern = g.colors_name or "default" })
+map({ "n", "x", "o" }, "<leader>ft", function()
+  require("flash").jump({
+    pattern = create_pattern(categories.comments.keywords),
+    search = { mode = "search" },
+    label = { after = { 0, 0 } },
+    highlight = { groups = { match = "FlashComments" } }
+}) end, { desc = "Flash comment tags" })
