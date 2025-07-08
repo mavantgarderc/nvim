@@ -57,7 +57,7 @@ map("n", "N", "Nzzzv")
 map("n", "<Esc>", ":nohlsearch<CR>", opts)
 
 -- duplicate lines
-map("n", "<C-A-S-k>", "mzyyP`zk")
+map("n", "<C-A-S-p>", "mzyyP`zk")
 
 -- Multi-Cursor
 map("n", "<A-S-j>", "<Plug>(VM-Add-Cursor-Down)", opts)

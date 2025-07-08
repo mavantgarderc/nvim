@@ -8,9 +8,7 @@ require("core.options")
 -- Keymaps
 require("core.keymaps.core")
 require("core.keymaps.fileactions")
-require("core.keymaps.folds")
-require("core.keymaps.frames")
-require("core.keymaps.markings")
+require("core.keymaps.navigations")
 require("core.keymaps.visualkeys")
 
 -- Plugins Directory

@@ -21,14 +21,14 @@ map("n", "<leader>X", ":!chmod +x %<CR>", { silent = true })
 
 -- write & source current file
 map("n", "<leader>oo", function()
-    cmd("write")
+    cmd("wall")
     if bo.filetype == "lua" then
         cmd("source %")
         notify(" 󱓎 ", log.levels.INFO)
     else
         notify(" 󱓎 ", log.levels.INFO)
     end
-end, { desc = "Save; & source if Lua" })
+end, { desc = "Save all; & source if Lua" })
 
 -- Quit; confirmation needed
 map("n", "<leader>o<leader>o", ":wa<CR>:qa")

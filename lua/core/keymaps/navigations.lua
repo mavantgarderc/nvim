@@ -1,11 +1,213 @@
 local map = vim.keymap.set
-local opts = { noremap = true, silent = true }
-local tbl_extend = vim.tbl_extend
-local cmd = vim.cmd
-local notify = vim.notify
-local fn = vim.fn
-local log = vim.log
 local api = vim.api
+local bo = vim.bo
+local env = vim.env
+local opt = vim.opt
+local notify = vim.notify
+local cmd = vim.cmd
+local fn = vim.fn
+local v = vim.v
+local tbl_extend = vim.tbl_extend
+local log = vim.log
+local opts = { noremap = true, silent = true, }
+
+-- === === ===  ===  === === ===
+-- === === ===  NVIM === === ===
+-- === === ===  ===  === === ===
+
+-- === === === Tabs === === ===
+map("n", "<leader>on", ":tabonly<CR>", opts)
+map("n", "<leader>gt", "gt", opts)
+map("n", "<leader>gT", "gT", opts)
+
+-- === === === Buffers === === ===
+map("n", "<leader>bb", function() print(api.nvim_buf_get_name(api.nvim_get_current_buf())) end, opts)
+map("n", "<leader>bl", ":ls<CR>",        opts)
+map("n", "<leader>bn", ":bnext<CR>",     opts)
+map("n", "<leader>bp", ":bprevious<CR>", opts)
+map("n", "<leader>bd", ":bd<CR>",        opts)
+
+-- === === === Panes === === ===
+map("n", "<leader>h", "<C-w>h", opts) -- Switch Window Left
+map("n", "<leader>l", "<C-w>l", opts) -- Switch Window Right
+map("n", "<leader>j", "<C-w>j", opts) -- Switch Window Down
+map("n", "<leader>k", "<C-w>k", opts) -- Switch Window Up
+
+map("n", "<leader>H", "<C-w>H", opts) -- Move Window to Left
+map("n", "<leader>L", "<C-w>L", opts) -- Move Window to Right
+map("n", "<leader>J", "<C-w>J", opts) -- Move Window to Down
+map("n", "<leader>K", "<C-w>K", opts) -- Move Window to Up
+
+map("n", "<leader>T", "<C-w>T", opts) -- move current pane to a new tab
+
+--map("n", "<leader>r", "<C-w>r") -- rotate windows clockwise
+
+map("n", "<leader>sph", ":sp<CR>", opts) -- split current window horizontally
+map("n", "<leader>spv", ":vs<CR>", opts) -- split current window vertically
+
+map("n", "<C-A-h>", ":vertical resize -1<CR>", opts )
+map("n", "<C-A-l>", ":vertical resize +1<CR>", opts )
+map("n", "<C-A-j>", ":resize -1<CR>",          opts )
+map("n", "<C-A-k>", ":resize +1<CR>",          opts )
+map("n", "<C-A-S-H>", ":vertical resize -5<CR>", opts )
+map("n", "<C-A-S-L>", ":vertical resize +5<CR>", opts )
+map("n", "<C-A-S-J>", ":resize -5<CR>",          opts )
+map("n", "<C-A-S-K>", ":resize +5<CR>",          opts )
+
+-- === === ===  ===  === === ===
+-- === Terminal Multiplexer  ===
+-- === === ===  ===  === === ===
+local function setup_multiplexer_keymaps()
+  local function detect_multiplexer()
+    if env.TMUX then
+      return "tmux"
+    end
+    if env.ZELLIJ then
+      return "zellij"
+    end
+    local term = env.TERM or ""
+    if term:match("screen") then
+      return "screen"
+    elseif term:match("tmux") then
+      return "tmux"
+    end
+
+    return nil
+  end
+
+  local multiplexer = detect_multiplexer()
+  if multiplexer then
+    map("n", "<A-h>", ":NavigateLeft<CR>",  opts)
+    map("n", "<A-j>", ":NavigateDown<CR>",  opts)
+    map("n", "<A-k>", ":NavigateUp<CR>",    opts)
+    map("n", "<A-l>", ":NavigateRight<CR>", opts)
+  end
+end
+setup_multiplexer_keymaps()
+
+-- === === ===  ===
+-- === Foldings ===
+-- === === ===  ===
+-- Basic folding
+map("n", "zf", "zf", { desc = "Create fold" })
+map("v", "zf", "zf", { desc = "Create fold from selection" })
+map("n", "zd", "zd", { desc = "Delete fold under cursor" })
+map("n", "zD", "zD", { desc = "Delete all folds in current line" })
+map("n", "zE", "zE", { desc = "Eliminate all folds" })
+
+-- Opening folds
+map("n", "zo", "zo", { desc = "Open fold under cursor" })
+map("n", "zO", "zO", { desc = "Open all folds under cursor" })
+map("n", "zc", "zc", { desc = "Close fold under cursor" })
+map("n", "zC", "zC", { desc = "Close all folds under cursor" })
+map("n", "za", "za", { desc = "Toggle fold under cursor" })
+map("n", "zA", "zA", { desc = "Toggle all folds under cursor" })
+
+-- Global fold operations
+map("n", "zr", "zr", { desc = "Reduce fold level (open one level)" })
+map("n", "zR", "zR", { desc = "Open all folds" })
+map("n", "zm", "zm", { desc = "Fold more (close one level)" })
+map("n", "zM", "zM", { desc = "Close all folds" })
+
+-- Fold navigation
+map("n", "zj", "zj", { desc = "Move to next fold" })
+map("n", "zk", "zk", { desc = "Move to previous fold" })
+map("n", "[z", "[z", { desc = "Move to start of current fold" })
+map("n", "]z", "]z", { desc = "Move to end of current fold" })
+
+-- Fold view operations
+map("n", "zv", "zv", { desc = "View cursor line (open folds)" })
+map("n", "zx", "zx", { desc = "Update folds" })
+map("n", "zX", "zX", { desc = "Undo manually opened/closed folds" })
+
+-- Fold level operations
+map("n", "z1", function() opt.foldlevel = 1 end, { desc = "Set fold level to 1" })
+map("n", "z2", function() opt.foldlevel = 2 end, { desc = "Set fold level to 2" })
+map("n", "z3", function() opt.foldlevel = 3 end, { desc = "Set fold level to 3" })
+map("n", "z4", function() opt.foldlevel = 4 end, { desc = "Set fold level to 4" })
+map("n", "z5", function() opt.foldlevel = 5 end, { desc = "Set fold level to 5" })
+map("n", "z6", function() opt.foldlevel = 6 end, { desc = "Set fold level to 6" })
+map("n", "z7", function() opt.foldlevel = 7 end, { desc = "Set fold level to 7" })
+map("n", "z8", function() opt.foldlevel = 8 end, { desc = "Set fold level to 8" })
+map("n", "z9", function() opt.foldlevel = 9 end, { desc = "Set fold level to 9" })
+map("n", "z0", function() opt.foldlevel = 0 end, { desc = "Set fold level to 0" })
+
+-- Leader-based fold operations for easier access
+map("n", "<leader>zf", "zf", { desc = "Create fold" })
+map("v", "<leader>zf", "zf", { desc = "Create fold from selection" })
+map("n", "<leader>zd", "zd", { desc = "Delete fold under cursor" })
+map("n", "<leader>zD", "zD", { desc = "Delete all folds in current line" })
+map("n", "<leader>zE", "zE", { desc = "Eliminate all folds" })
+
+-- Quick fold level adjustments
+map("n", "<leader>z+", "zr", { desc = "Reduce fold level (open one level)" })
+map("n", "<leader>z-", "zm", { desc = "Fold more (close one level)" })
+map("n", "<leader>zR", "zR", { desc = "Open all folds" })
+map("n", "<leader>zM", "zM", { desc = "Close all folds" })
+
+-- Fold method switching
+map("n", "<leader>zmi", function() opt.foldmethod = "indent" end, { desc = "Set fold method to indent" })
+map("n", "<leader>zms", function() opt.foldmethod = "syntax" end, { desc = "Set fold method to syntax" })
+map("n", "<leader>zmm", function() opt.foldmethod = "manual" end, { desc = "Set fold method to manual" })
+map("n", "<leader>zme", function() opt.foldmethod = "expr" end, { desc = "Set fold method to expr" })
+map("n", "<leader>zmk", function() opt.foldmethod = "marker" end, { desc = "Set fold method to marker" })
+map("n", "<leader>zmd", function() opt.foldmethod = "diff" end, { desc = "Set fold method to diff" })
+
+-- Toggle fold column
+map("n", "<leader>zfc", function()
+  local current = opt.foldcolumn:get()
+  if current == "0" then
+    opt.foldcolumn = "4"
+    notify("Fold column enabled")
+  else
+    opt.foldcolumn = "0"
+    notify("Fold column disabled")
+  end
+end, { desc = "Toggle fold column" })
+
+-- Show fold info
+map("n", "<leader>zfi", function()
+  local foldlevel  = opt.foldlevel:get()
+  local foldmethod = opt.foldmethod:get()
+  local foldcolumn = opt.foldcolumn:get()
+  local foldenable = opt.foldenable:get()
+
+  local info = string.format(
+    "Fold Info:\n• Method: %s\n• Level: %d\n• Column: %s\n• Enabled: %s",
+    foldmethod, foldlevel, foldcolumn, foldenable and "Yes" or "No"
+  )
+  notify(info)
+end, { desc = "Show fold info" })
+
+-- Toggle folding on/off
+map("n", "<leader>zt", function()
+  opt.foldenable = not opt.foldenable:get()
+  local status = opt.foldenable:get() and "enabled" or "disabled"
+  notify("Folding " .. status)
+end, { desc = "Toggle folding" })
+
+-- Fold all functions (for programming languages)
+map("n", "<leader>zff", function()
+  cmd("normal! zE")  -- Clear existing folds
+  cmd("g/^\\s*function\\|^\\s*def\\|^\\s*class/,/^}/fold")
+end, { desc = "Fold all functions" })
+
+-- Fold all comments
+map("n", "<leader>zcc", function()
+  cmd("normal! zE")  -- Clear existing folds
+  cmd("g/^\\s*\\/\\*\\|^\\s*\\/\\/\\|^\\s*#\\|^\\s*\"/,/\\*\\/\\|$/fold")
+end, { desc = "Fold all comments" })
+
+-- Save and restore fold state
+map("n", "<leader>zs", function()
+  cmd("mkview")
+  notify("Fold state saved")
+end, { desc = "Save fold state" })
+
+map("n", "<leader>zl", function()
+  cmd("loadview")
+  notify("Fold state loaded")
+end, { desc = "Load fold state" })
 
 -- Set marks (default: m{a-zA-Z})
 -- m{a-z} - file-local marks
@@ -200,3 +402,5 @@ api.nvim_create_autocmd("VimLeave", {
   callback = function() -- autosave by nvim
   end,
 })
+
+

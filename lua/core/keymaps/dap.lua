@@ -10,13 +10,13 @@ map("n", "<F11>", dap.step_into, { desc = "Step into"          })
 map("n", "<F12>", dap.step_out,  { desc = "Step out"           })
 
 -- Breakpoints
-map("n", "<leader>b", dap.toggle_breakpoint, { desc = "Toggle breakpoint" })
+map("n", "<leader>db", dap.toggle_breakpoint, { desc = "Toggle breakpoint" })
 
-map( "n", "<leader>B", function()
+map( "n", "<leader>dB", function()
     dap.set_breakpoint(fn.input("Breakpoint condition: "))
 end, { desc = "Set conditional breakpoint" })
 
-map( "n", "<leader>lp", function()
+map( "n", "<leader>dl", function()
     dap.set_breakpoint(nil, nil, fn.input("Log point message: "))
 end, { desc = "Set log point" })
 
