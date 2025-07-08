@@ -6,16 +6,16 @@ local o = vim.o
 
 map("n", "<leader>u", cmd.UndotreeToggle, { desc = "Toggle undotree" })
 
-map("n", "<leader>ut", cmd.UndotreeToggle, { desc = "Toggle undotree" })
-map("n", "<leader>uf", cmd.UndotreeFocus, { desc = "Focus undotree window" })
-map("n", "<leader>us", cmd.UndotreeShow, { desc = "Show undotree" })
-map("n", "<leader>uh", cmd.UndotreeHide, { desc = "Hide undotree" })
+map("n", "<leader>ut", cmd.UndotreeToggle, { desc = "Toggle undotree"       })
+map("n", "<leader>uf", cmd.UndotreeFocus,  { desc = "Focus undotree window" })
+map("n", "<leader>us", cmd.UndotreeShow,   { desc = "Show undotree"         })
+map("n", "<leader>uh", cmd.UndotreeHide,   { desc = "Hide undotree"         })
 
-map("n", "U", "<C-r>", { desc = "Redo" })
-map("n", "<C-z>", "u", { desc = "Undo" })
+map("n", "U",     "<C-r>", { desc = "Redo" })
+map("n", "<C-z>", "u",     { desc = "Undo" })
 map("n", "<C-y>", "<C-r>", { desc = "Redo" })
 
-map("v", "<C-z>", "<Esc>u", { desc = "Undo" })
+map("v", "<C-z>", "<Esc>u",     { desc = "Undo" })
 map("v", "<C-y>", "<Esc><C-r>", { desc = "Redo" })
 
 map("i", ",", ",<C-g>u", { desc = "Undo breakpoint" })
