@@ -1,6 +1,6 @@
 local map = vim.keymap.set
 
-map({ "n", "x", "o" }, "ff", function()
+map({ "n", "x", "o" }, "fjf", function()
     require("flash").jump()
 end, { desc = "Flash jump" })
 
@@ -8,30 +8,15 @@ map({ "n", "x", "o" }, "<M-s>", function()
     require("flash").treesitter()
 end, { desc = "Flash treesitter" })
 
-map("x", "R", function()
-    require("flash").treesitter_search()
-end, { desc = "Treesitter search" })
-
-map({ "n", "x", "o" }, "fl", function()
-    require("flash").jump({
-        search = { mode = "search", max_length = 0 },
-        label = { after = { 0, 0 } },
-        pattern = "^" })
+map({ "n", "x", "o" }, "fjl", function()
+    require("flash").jump({ search = { mode = "search", max_length = 0 }, label = { after = { 0, 0 } }, pattern = "^" })
 end, { desc = "Flash to line" })
 
-map({ "n", "x", "o" }, "<leader>fe", function()
-    require("flash").jump({
-        pattern = "$", search = { mode = "search", max_length = 0 }, label = { after = { 0, 0 } }, })
+map({ "n", "x", "o" }, "<leader>fje", function()
+    require("flash").jump({ pattern = "$", search = { mode = "search", max_length = 0 }, label = { after = { 0, 0 } }, })
 end, { desc = "Flash line end" })
 
-map({ "n", "x", "o" }, "T", function()
-    require("flash").jump({
-        search = { mode = "search", max_length = 1, forward = false },
-        label  = { after = { 0, 0 } }, pattern = "\\v.{-}\\zs.",
-        before = true, inclusive = false, })
-end, { desc = "Flash T" })
-
-map({ "n", "x", "o" }, "zg", function()
+map({ "n", "x", "o" }, "fjz", function()
     require("flash").jump({ search = { mode = "fuzzy" }, label = { after = { 0, 0 } }, })
 end, { desc = "Flash fuzzy search" })
 
@@ -42,7 +27,7 @@ end, { desc = "Continue flash" })
 -- === === === === === === === === === === === === === === === === === === === === === === === === === === === === === ===
 
 local categories = {
-    -- <leader>fv
+    -- <leader>fcv
     variable = {
         keywords = {
             "var", "let", "const",
@@ -56,7 +41,7 @@ local categories = {
         },
         hl_group = "FlashVariable",
     },
-    -- <leader>fc
+    -- <leader>fcc
     class = {
         keywords = {
             "class", "struct", "interface",
@@ -68,7 +53,7 @@ local categories = {
         },
         hl_group = "FlashClass",
     },
-    -- <leader>fm
+    -- <leader>fcm
     method = {
         keywords = {
             "function", "def", "method",
@@ -80,7 +65,7 @@ local categories = {
         },
         hl_group = "FlashMethod",
     },
-    -- <leader>fa
+    -- <leader>fca
     access = {
         keywords = {
             "private", "public", "protected",
@@ -92,7 +77,7 @@ local categories = {
         },
         hl_group = "FlashAccess",
     },
-    -- <leader>fl
+    -- <leader>fcl
     conditionals = {
         keywords = {
             "if", "else", "elif",
@@ -105,7 +90,7 @@ local categories = {
         },
         hl_group = "FlashConditionals",
     },
-    -- <leader>fi
+    -- <leader>fci
     iterators = {
         keywords = {
             "for", "foreach", "while",
@@ -118,7 +103,7 @@ local categories = {
         },
         hl_group = "FlashIterators",
     },
-    -- <leader>fo
+    -- <leader>fco
     operators = {
         keywords = {
             "and", "or", "not",
@@ -131,7 +116,7 @@ local categories = {
         },
         hl_group = "FlashOperators",
     },
-    -- <leader>fk
+    -- <leader>fck
     constants = {
         keywords = {
             "true", "false", "null",
@@ -143,7 +128,7 @@ local categories = {
         },
         hl_group = "FlashConstants",
     },
-    -- <leader>ft
+    -- <leader>fct
     comments = {
         keywords = {
             "TODO", "FIXME", "NOTE",
@@ -162,7 +147,7 @@ local function create_pattern(keywords)
   return "\\<\\(" .. table.concat(keywords, "\\|") .. "\\)\\>"
 end
 
-map({ "n", "x", "o" }, "<leader>fv", function()
+map({ "n", "x", "o" }, "<leader>fcv", function()
   require("flash").jump({
     pattern = create_pattern(categories.variable.keywords),
     search = { mode = "search" },
@@ -170,7 +155,7 @@ map({ "n", "x", "o" }, "<leader>fv", function()
     highlight = { groups = { match = "FlashVariable" } }
 }) end, { desc = "Flash variables" })
 
-map({ "n", "x", "o" }, "<leader>fc", function()
+map({ "n", "x", "o" }, "<leader>fcc", function()
   require("flash").jump({
     pattern = create_pattern(categories.class.keywords),
     search = { mode = "search" },
@@ -178,7 +163,7 @@ map({ "n", "x", "o" }, "<leader>fc", function()
     highlight = { groups = { match = "FlashClass" } }
 }) end, { desc = "Flash classes" })
 
-map({ "n", "x", "o" }, "<leader>fm", function()
+map({ "n", "x", "o" }, "<leader>fcm", function()
   require("flash").jump({
     pattern = create_pattern(categories.method.keywords),
     search = { mode = "search" },
@@ -186,7 +171,7 @@ map({ "n", "x", "o" }, "<leader>fm", function()
     highlight = { groups = { match = "FlashMethod" } }
 }) end, { desc = "Flash methods" })
 
-map({ "n", "x", "o" }, "<leader>fa", function()
+map({ "n", "x", "o" }, "<leader>fca", function()
   require("flash").jump({
     pattern = create_pattern(categories.access.keywords),
     search = { mode = "search" },
@@ -194,7 +179,7 @@ map({ "n", "x", "o" }, "<leader>fa", function()
     highlight = { groups = { match = "FlashAccess" } }
 }) end, { desc = "Flash access modifiers" })
 
-map({ "n", "x", "o" }, "<leader>fl", function()
+map({ "n", "x", "o" }, "<leader>fcl", function()
   require("flash").jump({
     pattern = create_pattern(categories.conditionals.keywords),
     search = { mode = "search" },
@@ -202,7 +187,7 @@ map({ "n", "x", "o" }, "<leader>fl", function()
     highlight = { groups = { match = "FlashConditionals" } }
 }) end, { desc = "Flash conditionals" })
 
-map({ "n", "x", "o" }, "<leader>fi", function()
+map({ "n", "x", "o" }, "<leader>fci", function()
   require("flash").jump({
     pattern = create_pattern(categories.iterators.keywords),
     search = { mode = "search" },
@@ -210,7 +195,7 @@ map({ "n", "x", "o" }, "<leader>fi", function()
     highlight = { groups = { match = "FlashIterators" } }
 }) end, { desc = "Flash loops/iterators" })
 
-map({ "n", "x", "o" }, "<leader>fo", function()
+map({ "n", "x", "o" }, "<leader>fco", function()
   require("flash").jump({
     pattern = create_pattern(categories.operators.keywords),
     search = { mode = "search" },
@@ -219,7 +204,7 @@ map({ "n", "x", "o" }, "<leader>fo", function()
   })
 end, { desc = "Flash operators" })
 
-map({ "n", "x", "o" }, "<leader>fk", function()
+map({ "n", "x", "o" }, "<leader>fck", function()
   require("flash").jump({
     pattern = create_pattern(categories.constants.keywords),
     search = { mode = "search" },
@@ -227,7 +212,7 @@ map({ "n", "x", "o" }, "<leader>fk", function()
     highlight = { groups = { match = "FlashConstants" } }
 }) end, { desc = "Flash constants" })
 
-map({ "n", "x", "o" }, "<leader>ft", function()
+map({ "n", "x", "o" }, "<leader>fct", function()
   require("flash").jump({
     pattern = create_pattern(categories.comments.keywords),
     search = { mode = "search" },
