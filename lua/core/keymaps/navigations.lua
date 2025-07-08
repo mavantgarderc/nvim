@@ -269,19 +269,19 @@ map("n", "<leader>mc0", ":delmarks 0-9<CR>", tbl_extend("force", opts, { desc = 
 -- > - end of last visual selection
 
 -- Enhanced navigation for automatic marks
-map("n", "<leader>j`", "``", tbl_extend("force", opts, { desc = "Jump to last jump position" }))
-map("n", "<leader>j'", "''", tbl_extend("force", opts, { desc = "Jump to last jump line" }))
+map("n", "<leader>j`", "``",   tbl_extend("force", opts, { desc = "Jump to last jump position" }))
+map("n", "<leader>j'", "''",   tbl_extend("force", opts, { desc = "Jump to last jump line" }))
 map("n", "<leader>j\"", "`\"", tbl_extend("force", opts, { desc = "Jump to last exit position" }))
-map("n", "<leader>j^", "`^", tbl_extend("force", opts, { desc = "Jump to last insert position" }))
-map("n", "<leader>j.", "`.", tbl_extend("force", opts, { desc = "Jump to last change position" }))
-map("n", "<leader>j[", "`[", tbl_extend("force", opts, { desc = "Jump to change/yank start" }))
-map("n", "<leader>j]", "`]", tbl_extend("force", opts, { desc = "Jump to change/yank end" }))
-map("n", "<leader>j<", "`<", tbl_extend("force", opts, { desc = "Jump to visual selection start" }))
-map("n", "<leader>j>", "`>", tbl_extend("force", opts, { desc = "Jump to visual selection end" }))
+map("n", "<leader>j^", "`^",   tbl_extend("force", opts, { desc = "Jump to last insert position" }))
+map("n", "<leader>j.", "`.",   tbl_extend("force", opts, { desc = "Jump to last change position" }))
+map("n", "<leader>j[", "`[",   tbl_extend("force", opts, { desc = "Jump to change/yank start" }))
+map("n", "<leader>j]", "`]",   tbl_extend("force", opts, { desc = "Jump to change/yank end" }))
+map("n", "<leader>j<", "`<",   tbl_extend("force", opts, { desc = "Jump to visual selection start" }))
+map("n", "<leader>j>", "`>",   tbl_extend("force", opts, { desc = "Jump to visual selection end" }))
 
 -- Jump list navigation (enhanced)
-map("n", "<C-o>", "<C-o>", tbl_extend("force", opts, { desc = "Jump to older position" }))
-map("n", "<C-i>", "<C-i>", tbl_extend("force", opts, { desc = "Jump to newer position" }))
+map("n", "<C-o>", "<C-o>",           tbl_extend("force", opts, { desc = "Jump to older position" }))
+map("n", "<C-i>", "<C-i>",           tbl_extend("force", opts, { desc = "Jump to newer position" }))
 map("n", "<leader>jo", ":jumps<CR>", tbl_extend("force", opts, { desc = "Show jump list" }))
 
 -- Change list navigation
@@ -393,13 +393,13 @@ api.nvim_create_augroup("MarkHighlight", { clear = true })
 api.nvim_create_autocmd("ModeChanged", {
   group = "MarkHighlight",
   pattern = "*:n",
-  callback = function() -- add highlightings here
+  callback = function()
   end,
 })
 
 api.nvim_create_autocmd("VimLeave", {
   group = "MarkHighlight",
-  callback = function() -- autosave by nvim
+  callback = function()
   end,
 })
 
