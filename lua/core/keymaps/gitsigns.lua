@@ -49,7 +49,7 @@ function M.setup()
     end, { desc = "Blame line (full)" })
 
     map("n", "<leader>gb", gitsigns.toggle_current_line_blame, { desc = "Toggle blame line" })
-    map("n", "<leader>gd", gitsigns.toggle_deleted, { desc = "Toggle deleted" })
+    map("n", "<leader>gd", gitsigns.toggle_deleted,            { desc = "Toggle deleted"    })
 
     map("v", "<leader>ghs", function()
         local s, e = fn.line("v"), fn.line(".")
@@ -61,7 +61,7 @@ function M.setup()
         gitsigns.reset_hunk({ math.min(s, e), math.max(s, e) })
     end, { desc = "Reset hunk (visual)" })
 
-    map({ "o", "x" }, "gih", ":<C-U>Gitsigns select_hunk<CR>", { desc = "Select hunk" })
+    map({ "o", "x" }, "gih", ":<C-U>Gitsigns select_hunk<CR>",    { desc = "Select hunk" })
 
     map("n", "<leader>gs", function() git_term("git status") end, { desc = "Git status" })
     map("n", "<leader>gc", function() git_term("git commit") end, { desc = "Git commit" })
