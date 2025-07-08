@@ -30,23 +30,20 @@ function M.setup()
     map("n", "]c", function()
         if wo.diff then cmd.normal { args = { "]c" }, bang = true }
         else gitsigns.nav_hunk("next")
-        end end, { desc = "Next hunk" })
+    end end, { desc = "Next hunk" })
 
     map("n", "[c", function()
-        if wo.diff then
-            cmd.normal { args = { "[c" }, bang = true }
-        else
-            gitsigns.nav_hunk("prev")
-        end
+        if wo.diff then cmd.normal { args = { "[c" }, bang = true }
+        else gitsigns.nav_hunk("prev") end
     end, { desc = "Prev hunk" })
 
-    map("n", "<leader>ghs", gitsigns.stage_hunk, { desc = "Stage hunk" })
-    map("n", "<leader>ghr", gitsigns.reset_hunk, { desc = "Reset hunk" })
-    map("n", "<leader>ghS", gitsigns.stage_buffer, { desc = "Stage buffer" })
-    map("n", "<leader>ghu", gitsigns.undo_stage_hunk, { desc = "Undo stage hunk" })
-    map("n", "<leader>ghR", gitsigns.reset_buffer, { desc = "Reset buffer" })
-    map("n", "<leader>ghp", gitsigns.preview_hunk, { desc = "Preview hunk" })
-    map("n", "<leader>ghi", gitsigns.preview_hunk_inline, { desc = "Inline preview" })
+    map("n", "<leader>ghs", gitsigns.stage_hunk,          { desc = "Stage hunk"      })
+    map("n", "<leader>ghr", gitsigns.reset_hunk,          { desc = "Reset hunk"      })
+    map("n", "<leader>ghS", gitsigns.stage_buffer,        { desc = "Stage buffer"    })
+    map("n", "<leader>ghu", gitsigns.undo_stage_hunk,     { desc = "Undo stage hunk" })
+    map("n", "<leader>ghR", gitsigns.reset_buffer,        { desc = "Reset buffer"    })
+    map("n", "<leader>ghp", gitsigns.preview_hunk,        { desc = "Preview hunk"    })
+    map("n", "<leader>ghi", gitsigns.preview_hunk_inline, { desc = "Inline preview"  })
     map("n", "<leader>ghb", function()
         gitsigns.blame_line({ full = true })
     end, { desc = "Blame line (full)" })
@@ -68,20 +65,9 @@ function M.setup()
 
     map("n", "<leader>gs", function() git_term("git status") end, { desc = "Git status" })
     map("n", "<leader>gc", function() git_term("git commit") end, { desc = "Git commit" })
-    map("n", "<leader>gb", function() git_term("git branch --sort=-committerdate") end, { desc = "Git branches" })
-    map("n", "<leader>gp", function() git_term("git push") end, { desc = "Git push" })
-    map("n", "<leader>gP", function() git_term("git pull") end, { desc = "Git pull" })
-    map("n", "<leader>gf", function() git_term("git fetch") end, { desc = "Git fetch" })
-
-    map("n", "<leader>gl", function()
-        if not in_git_repo() then
-            return notify("Not in a git repository", log.levels.WARN)
-        end
-        local filepath = fn.expand("%")
-        local log_cmd = filepath ~= "" and ("git log --oneline -- " .. fn.shellescape(filepath))
-                                     or "git log --oneline"
-        cmd("tabnew | term " .. log_cmd)
-    end, { desc = "Git log (file)" })
+    map("n", "<leader>gb", function()
+        git_term("git branch --sort=-committerdate")
+    end, { desc = "Git branches" })
 
     map("n", "<leader>gB", function()
         if not in_git_repo() then
