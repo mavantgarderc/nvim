@@ -12,13 +12,38 @@ local log = vim.log
 local opts = { noremap = true, silent = true, }
 
 -- === === ===  ===  === === ===
+-- === Terminal Multiplexer  ===
+-- === === ===  ===  === === ===
+local function setup_multiplexer_keymaps()
+  local function detect_multiplexer()
+    if env.TMUX then
+      return "tmux"
+    end
+    if env.ZELLIJ then
+      return "zellij"
+    end
+    local term = env.TERM or ""
+    if term:match("screen") then
+      return "screen"
+    elseif term:match("tmux") then
+      return "tmux"
+    end
+    return nil
+  end
+
+  local multiplexer = detect_multiplexer()
+  if multiplexer then
+    map("n", "<A-h>", ":NavigateLeft<CR>",  opts)
+    map("n", "<A-j>", ":NavigateDown<CR>",  opts)
+    map("n", "<A-k>", ":NavigateUp<CR>",    opts)
+    map("n", "<A-l>", ":NavigateRight<CR>", opts)
+  end
+end
+setup_multiplexer_keymaps()
+
+-- === === ===  ===  === === ===
 -- === === ===  NVIM === === ===
 -- === === ===  ===  === === ===
-
--- === === === Tabs === === ===
-map("n", "<leader>on", ":tabonly<CR>", opts)
-map("n", "<leader>gt", "gt", opts)
-map("n", "<leader>gT", "gT", opts)
 
 -- === === === Buffers === === ===
 map("n", "<leader>bb", function() print(api.nvim_buf_get_name(api.nvim_get_current_buf())) end, opts)
@@ -45,79 +70,48 @@ map("n", "<leader>T", "<C-w>T", opts) -- move current pane to a new tab
 map("n", "<leader>sph", ":sp<CR>", opts) -- split current window horizontally
 map("n", "<leader>spv", ":vs<CR>", opts) -- split current window vertically
 
-map("n", "<C-A-h>", ":vertical resize -1<CR>", opts )
-map("n", "<C-A-l>", ":vertical resize +1<CR>", opts )
-map("n", "<C-A-j>", ":resize -1<CR>",          opts )
-map("n", "<C-A-k>", ":resize +1<CR>",          opts )
+map("n", "<C-A-h>",   ":vertical resize -1<CR>", opts )
+map("n", "<C-A-l>",   ":vertical resize +1<CR>", opts )
+map("n", "<C-A-j>",   ":resize -1<CR>",          opts )
+map("n", "<C-A-k>",   ":resize +1<CR>",          opts )
 map("n", "<C-A-S-H>", ":vertical resize -5<CR>", opts )
 map("n", "<C-A-S-L>", ":vertical resize +5<CR>", opts )
 map("n", "<C-A-S-J>", ":resize -5<CR>",          opts )
 map("n", "<C-A-S-K>", ":resize +5<CR>",          opts )
 
--- === === ===  ===  === === ===
--- === Terminal Multiplexer  ===
--- === === ===  ===  === === ===
-local function setup_multiplexer_keymaps()
-  local function detect_multiplexer()
-    if env.TMUX then
-      return "tmux"
-    end
-    if env.ZELLIJ then
-      return "zellij"
-    end
-    local term = env.TERM or ""
-    if term:match("screen") then
-      return "screen"
-    elseif term:match("tmux") then
-      return "tmux"
-    end
-
-    return nil
-  end
-
-  local multiplexer = detect_multiplexer()
-  if multiplexer then
-    map("n", "<A-h>", ":NavigateLeft<CR>",  opts)
-    map("n", "<A-j>", ":NavigateDown<CR>",  opts)
-    map("n", "<A-k>", ":NavigateUp<CR>",    opts)
-    map("n", "<A-l>", ":NavigateRight<CR>", opts)
-  end
-end
-setup_multiplexer_keymaps()
-
 -- === === ===  ===
 -- === Foldings ===
 -- === === ===  ===
 -- Basic folding
-map("n", "zf", "zf", { desc = "Create fold" })
-map("v", "zf", "zf", { desc = "Create fold from selection" })
-map("n", "zd", "zd", { desc = "Delete fold under cursor" })
+map("n", "zf", "zf", { desc = "Create fold"                      })
+map("v", "zf", "zf", { desc = "Create fold from selection"       })
+map("n", "zd", "zd", { desc = "Delete fold under cursor"         })
 map("n", "zD", "zD", { desc = "Delete all folds in current line" })
-map("n", "zE", "zE", { desc = "Eliminate all folds" })
+map("n", "zE", "zE", { desc = "Eliminate all folds"              })
 
 -- Opening folds
-map("n", "zo", "zo", { desc = "Open fold under cursor" })
-map("n", "zO", "zO", { desc = "Open all folds under cursor" })
-map("n", "zc", "zc", { desc = "Close fold under cursor" })
-map("n", "zC", "zC", { desc = "Close all folds under cursor" })
-map("n", "za", "za", { desc = "Toggle fold under cursor" })
+map("n", "zo", "zo", { desc = "Open fold under cursor"        })
+map("n", "zO", "zO", { desc = "Open all folds under cursor"   })
+map("n", "zc", "zc", { desc = "Close fold under cursor"       })
+map("n", "zC", "zC", { desc = "Close all folds under cursor"  })
+map("n", "za", "za", { desc = "Toggle fold under cursor"      })
 map("n", "zA", "zA", { desc = "Toggle all folds under cursor" })
 
 -- Global fold operations
 map("n", "zr", "zr", { desc = "Reduce fold level (open one level)" })
-map("n", "zR", "zR", { desc = "Open all folds" })
-map("n", "zm", "zm", { desc = "Fold more (close one level)" })
-map("n", "zM", "zM", { desc = "Close all folds" })
+map("n", "zR", "zR", { desc = "Open all folds"                     })
+map("n", "zm", "zm", { desc = "Fold more (close one level)"        })
+map("n", "zM", "zM", { desc = "Close all folds"                    })
 
 -- Fold navigation
-map("n", "zj", "zj", { desc = "Move to next fold" })
-map("n", "zk", "zk", { desc = "Move to previous fold" })
+map("n", "zj", "zj", { desc = "Move to next fold"             })
+map("n", "zk", "zk", { desc = "Move to previous fold"         })
 map("n", "[z", "[z", { desc = "Move to start of current fold" })
-map("n", "]z", "]z", { desc = "Move to end of current fold" })
+map("n", "]z", "]z", { desc = "Move to end of current fold"   })
 
 -- Fold view operations
-map("n", "zv", "zv", { desc = "View cursor line (open folds)" })
-map("n", "zx", "zx", { desc = "Update folds" })
+map("n", "zv", "zv", { desc = "View cursor line (open folds)"     })
+map("n", "zx", "zx", { desc = "Update folds"                      })
 map("n", "zX", "zX", { desc = "Undo manually opened/closed folds" })
 
 -- Fold level operations
@@ -133,25 +127,25 @@ map("n", "z9", function() opt.foldlevel = 9 end, { desc = "Set fold level to 9" 
 map("n", "z0", function() opt.foldlevel = 0 end, { desc = "Set fold level to 0" })
 
 -- Leader-based fold operations for easier access
-map("n", "<leader>zf", "zf", { desc = "Create fold" })
-map("v", "<leader>zf", "zf", { desc = "Create fold from selection" })
-map("n", "<leader>zd", "zd", { desc = "Delete fold under cursor" })
+map("n", "<leader>zf", "zf", { desc = "Create fold"                      })
+map("v", "<leader>zf", "zf", { desc = "Create fold from selection"       })
+map("n", "<leader>zd", "zd", { desc = "Delete fold under cursor"         })
 map("n", "<leader>zD", "zD", { desc = "Delete all folds in current line" })
-map("n", "<leader>zE", "zE", { desc = "Eliminate all folds" })
+map("n", "<leader>zE", "zE", { desc = "Eliminate all folds"              })
 
 -- Quick fold level adjustments
 map("n", "<leader>z+", "zr", { desc = "Reduce fold level (open one level)" })
-map("n", "<leader>z-", "zm", { desc = "Fold more (close one level)" })
-map("n", "<leader>zR", "zR", { desc = "Open all folds" })
-map("n", "<leader>zM", "zM", { desc = "Close all folds" })
+map("n", "<leader>z-", "zm", { desc = "Fold more (close one level)"        })
+map("n", "<leader>zR", "zR", { desc = "Open all folds"                     })
+map("n", "<leader>zM", "zM", { desc = "Close all folds"                    })
 
 -- Fold method switching
 map("n", "<leader>zmi", function() opt.foldmethod = "indent" end, { desc = "Set fold method to indent" })
 map("n", "<leader>zms", function() opt.foldmethod = "syntax" end, { desc = "Set fold method to syntax" })
 map("n", "<leader>zmm", function() opt.foldmethod = "manual" end, { desc = "Set fold method to manual" })
-map("n", "<leader>zme", function() opt.foldmethod = "expr" end, { desc = "Set fold method to expr" })
+map("n", "<leader>zme", function() opt.foldmethod = "expr"   end, { desc = "Set fold method to expr"   })
 map("n", "<leader>zmk", function() opt.foldmethod = "marker" end, { desc = "Set fold method to marker" })
-map("n", "<leader>zmd", function() opt.foldmethod = "diff" end, { desc = "Set fold method to diff" })
+map("n", "<leader>zmd", function() opt.foldmethod = "diff"   end, { desc = "Set fold method to diff"   })
 
 -- Toggle fold column
 map("n", "<leader>zfc", function()
@@ -223,10 +217,10 @@ end, { desc = "Load fold state" })
 map("n", "<leader>m", "", { desc = "Mark operations" })
 
 -- Set commonly used marks with descriptive names
-map("n", "<leader>mm", "mM", tbl_extend("force", opts, { desc = "Set mark M (Main)" }))
-map("n", "<leader>mt", "mT", tbl_extend("force", opts, { desc = "Set mark T (Top)" }))
-map("n", "<leader>mb", "mB", tbl_extend("force", opts, { desc = "Set mark B (Bottom)" }))
-map("n", "<leader>ms", "mS", tbl_extend("force", opts, { desc = "Set mark S (Section)" }))
+map("n", "<leader>mm", "mM", tbl_extend("force", opts, { desc = "Set mark M (Main)"     }))
+map("n", "<leader>mt", "mT", tbl_extend("force", opts, { desc = "Set mark T (Top)"      }))
+map("n", "<leader>mb", "mB", tbl_extend("force", opts, { desc = "Set mark B (Bottom)"   }))
+map("n", "<leader>ms", "mS", tbl_extend("force", opts, { desc = "Set mark S (Section)"  }))
 map("n", "<leader>mf", "mF", tbl_extend("force", opts, { desc = "Set mark F (Function)" }))
 
 -- Quick jump to commonly used marks
@@ -253,8 +247,8 @@ map("n", "<leader>md", ":delmarks ", { desc = "Delete marks (specify which)" })
 map("n", "<leader>mD", ":delmarks!<CR>", tbl_extend("force", opts, { desc = "Delete all lowercase marks" }))
 
 -- Clear specific mark ranges
-map("n", "<leader>mca", ":delmarks a-z<CR>", tbl_extend("force", opts, { desc = "Clear all local marks" }))
-map("n", "<leader>mcA", ":delmarks A-Z<CR>", tbl_extend("force", opts, { desc = "Clear all global marks" }))
+map("n", "<leader>mca", ":delmarks a-z<CR>", tbl_extend("force", opts, { desc = "Clear all local marks"    }))
+map("n", "<leader>mcA", ":delmarks A-Z<CR>", tbl_extend("force", opts, { desc = "Clear all global marks"   }))
 map("n", "<leader>mc0", ":delmarks 0-9<CR>", tbl_extend("force", opts, { desc = "Clear all numbered marks" }))
 
 -- automatics; don't need maps. documented for reference:
@@ -269,25 +263,25 @@ map("n", "<leader>mc0", ":delmarks 0-9<CR>", tbl_extend("force", opts, { desc = 
 -- > - end of last visual selection
 
 -- Enhanced navigation for automatic marks
-map("n", "<leader>j`", "``",   tbl_extend("force", opts, { desc = "Jump to last jump position" }))
-map("n", "<leader>j'", "''",   tbl_extend("force", opts, { desc = "Jump to last jump line" }))
-map("n", "<leader>j\"", "`\"", tbl_extend("force", opts, { desc = "Jump to last exit position" }))
-map("n", "<leader>j^", "`^",   tbl_extend("force", opts, { desc = "Jump to last insert position" }))
-map("n", "<leader>j.", "`.",   tbl_extend("force", opts, { desc = "Jump to last change position" }))
-map("n", "<leader>j[", "`[",   tbl_extend("force", opts, { desc = "Jump to change/yank start" }))
-map("n", "<leader>j]", "`]",   tbl_extend("force", opts, { desc = "Jump to change/yank end" }))
+map("n", "<leader>j`", "``",   tbl_extend("force", opts, { desc = "Jump to last jump position"     }))
+map("n", "<leader>j'", "''",   tbl_extend("force", opts, { desc = "Jump to last jump line"         }))
+map("n", "<leader>j\"", "`\"", tbl_extend("force", opts, { desc = "Jump to last exit position"     }))
+map("n", "<leader>j^", "`^",   tbl_extend("force", opts, { desc = "Jump to last insert position"   }))
+map("n", "<leader>j.", "`.",   tbl_extend("force", opts, { desc = "Jump to last change position"   }))
+map("n", "<leader>j[", "`[",   tbl_extend("force", opts, { desc = "Jump to change/yank start"      }))
+map("n", "<leader>j]", "`]",   tbl_extend("force", opts, { desc = "Jump to change/yank end"        }))
 map("n", "<leader>j<", "`<",   tbl_extend("force", opts, { desc = "Jump to visual selection start" }))
-map("n", "<leader>j>", "`>",   tbl_extend("force", opts, { desc = "Jump to visual selection end" }))
+map("n", "<leader>j>", "`>",   tbl_extend("force", opts, { desc = "Jump to visual selection end"   }))
 
 -- Jump list navigation (enhanced)
 map("n", "<C-o>", "<C-o>",           tbl_extend("force", opts, { desc = "Jump to older position" }))
 map("n", "<C-i>", "<C-i>",           tbl_extend("force", opts, { desc = "Jump to newer position" }))
-map("n", "<leader>jo", ":jumps<CR>", tbl_extend("force", opts, { desc = "Show jump list" }))
+map("n", "<leader>jo", ":jumps<CR>", tbl_extend("force", opts, { desc = "Show jump list"         }))
 
 -- Change list navigation
-map("n", "g;", "g;", tbl_extend("force", opts, { desc = "Go to older change" }))
-map("n", "g,", "g,", tbl_extend("force", opts, { desc = "Go to newer change" }))
-map("n", "<leader>jc", ":changes<CR>", tbl_extend("force", opts, { desc = "Show change list" }))
+map("n", "g;", "g;",                   tbl_extend("force", opts, { desc = "Go to older change" }))
+map("n", "g,", "g,",                   tbl_extend("force", opts, { desc = "Go to newer change" }))
+map("n", "<leader>jc", ":changes<CR>", tbl_extend("force", opts, { desc = "Show change list"   }))
 
 -- Function to set a mark and provide feedback
 local function set_mark_with_feedback(mark)
@@ -342,20 +336,20 @@ map("n", "<leader>Bd", "'D", tbl_extend("force", opts, { desc = "Go to Documenta
 -- These don't need maps but can be jumped to with '0-'9
 -- Quick access to recent file positions
 map("n", "<leader>j0", "'0", tbl_extend("force", opts, { desc = "Jump to last exit position" }))
-map("n", "<leader>j1", "'1", tbl_extend("force", opts, { desc = "Jump to recent file 1" }))
-map("n", "<leader>j2", "'2", tbl_extend("force", opts, { desc = "Jump to recent file 2" }))
-map("n", "<leader>j3", "'3", tbl_extend("force", opts, { desc = "Jump to recent file 3" }))
+map("n", "<leader>j1", "'1", tbl_extend("force", opts, { desc = "Jump to recent file 1"      }))
+map("n", "<leader>j2", "'2", tbl_extend("force", opts, { desc = "Jump to recent file 2"      }))
+map("n", "<leader>j3", "'3", tbl_extend("force", opts, { desc = "Jump to recent file 3"      }))
 
 -- Mark the current position before big operations
-map("n", "<leader>m.", "m.", tbl_extend("force", opts, { desc = "Mark current position" }))
+map("n", "<leader>m.", "m.", tbl_extend("force", opts, { desc = "Mark current position"     }))
 map("n", "<leader>j.", "'.", tbl_extend("force", opts, { desc = "Return to marked position" }))
 
 -- Mark and return pattern
 map("n", "<leader>mr", "m'", tbl_extend("force", opts, { desc = "Mark for return" }))
-map("n", "<leader>jr", "''", tbl_extend("force", opts, { desc = "Return to mark" }))
+map("n", "<leader>jr", "''", tbl_extend("force", opts, { desc = "Return to mark"  }))
 
 -- Save position before search
-map("n", "/", "m'/", tbl_extend("force", opts, { desc = "Search (mark position)" }))
+map("n", "/", "m'/", tbl_extend("force", opts, { desc = "Search (mark position)"           }))
 map("n", "?", "m'?", tbl_extend("force", opts, { desc = "Search backwards (mark position)" }))
 
 -- If using telescope.nvim, you might want these
@@ -403,4 +397,75 @@ api.nvim_create_autocmd("VimLeave", {
   end,
 })
 
+-- ===  === ===
+-- === Tabs ===
+-- ===  === ===
 
+map("n", "<leader>tn", ":tabnew<CR>", opts)                    -- New tab
+map("n", "<leader>tc", ":tabclose<CR>", opts)                  -- Close current tab
+map("n", "<leader>to", ":tabonly<CR>", opts)                   -- Close all other tabs
+map("n", "<leader>tt", ":tabnext<CR>", opts)                   -- Next tab
+map("n", "<leader>tp", ":tabprevious<CR>", opts)               -- Previous tab
+
+map("n", "gt", ":tabnext<CR>", opts)                           -- Next tab
+map("n", "gT", ":tabprevious<CR>", opts)                       -- Previous tab
+map("n", "g1", "1gt", opts)                                    -- Go to tab 1
+map("n", "g2", "2gt", opts)                                    -- Go to tab 2
+map("n", "g3", "3gt", opts)                                    -- Go to tab 3
+map("n", "g4", "4gt", opts)                                    -- Go to tab 4
+map("n", "g5", "5gt", opts)                                    -- Go to tab 5
+map("n", "g6", "6gt", opts)                                    -- Go to tab 6
+map("n", "g7", "7gt", opts)                                    -- Go to tab 7
+map("n", "g8", "8gt", opts)                                    -- Go to tab 8
+map("n", "g9", "9gt", opts)                                    -- Go to tab 9
+map("n", "g0", ":tablast<CR>", opts)                           -- Go to last tab
+
+map("n", "<leader>tm", ":tabmove<CR>", opts)                   -- Move tab (will prompt for position)
+map("n", "<leader>t<", ":tabmove -1<CR>", opts)               -- Move tab left
+map("n", "<leader>t>", ":tabmove +1<CR>", opts)               -- Move tab right
+
+map("n", "<C-t>", ":tabnew<CR>", opts)                        -- Quick new tab
+map("n", "<C-w>t", ":tabnew<CR>", opts)                       -- Alternative new tab
+
+map("n", "<leader>te", ":tabedit ", { noremap = true })        -- Edit file in new tab (no silent to see command)
+map("n", "<leader>tf", ":tabfind ", { noremap = true })        -- Find and open file in new tab
+
+map("n", "<leader>ts", "<C-w>T", opts)                        -- Move current split to new tab
+
+map("n", "<leader>tT", ":tabnew | terminal<CR>", opts)         -- Open terminal in new tab
+
+local function create_tab_with_file(filename)
+    cmd("tabnew " .. filename)
+end
+
+local function close_other_tabs()
+    cmd("tabonly")
+end
+
+local function close_tabs_right()
+    local current_tab = fn.tabpagenr()
+    local last_tab = fn.tabpagenr("$")
+
+    for i = last_tab, current_tab + 1, -1 do
+        cmd(i .. "tabclose")
+    end
+end
+
+local function close_tabs_left()
+    local current_tab = fn.tabpagenr()
+    for i = current_tab - 1, 1, -1 do
+        cmd("1tabclose")
+    end
+end
+
+map("n", "<leader>tO", close_other_tabs, opts)                 -- Close all other tabs (function)
+map("n", "<leader>tR", close_tabs_right, opts)                 -- Close tabs to the right
+map("n", "<leader>tL", close_tabs_left, opts)                  -- Close tabs to the left
+
+map("n", "<leader>ti", ":tabs<CR>", opts)                      -- List all tabs
+
+map("n", "<leader>tb", ":tab split<CR>", opts)                 -- Open current buffer in new tab
+map("n", "<leader>td", ":tab drop ", { noremap = true })       -- Drop file in tab (no silent to see command)
+
+map("n", "<leader>th", "1gt", opts)                            -- Go to first tab (home)
+map("n", "<leader>tl", ":tablast<CR>", opts)                   -- Go to last tab
