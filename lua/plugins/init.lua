@@ -2,15 +2,12 @@ return {
     -- ==================================================
     -- Oil file explorer
     "stevearc/oil.nvim",
-    -- ==================================================
-    -- Git Integration
-    "lewis6991/gitsigns.nvim",
     -- === Optimizer
     "lewis6991/impatient.nvim",
     -- === ui ===
-    -- status line
+    -- status line & tabbar
     "nvim-lualine/lualine.nvim",
-    -- dashboard
+    -- startup dashboard
     "goolord/alpha-nvim",
     -- themes
     {
@@ -105,7 +102,10 @@ return {
     -- terminal multiplexer navigations
     "christoomey/vim-tmux-navigator",
     "swaits/zellij-nav.nvim",
-
+    -- ==================================================
+    -- Git Integration
+    "lewis6991/gitsigns.nvim",
+    -- ==================================================
     -- which-key; to show pending keybinds
     "folke/which-key.nvim",
     -- nice-ass comments
