@@ -4,7 +4,6 @@ vim.loader.enable()
 require("core.healthcheck")
 require("core.bootstrap")
 require("core.options")
-require("core.depgraph")
 
 -- Keymaps
 require("core.keymaps.core")
