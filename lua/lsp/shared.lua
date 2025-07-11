@@ -11,6 +11,10 @@ local inspect = vim.inspect
 local b = vim.b
 local lsp = vim.lsp
 local log = vim.log
+local defer_fn = vim.defer_fn
+local uri_from_bufnr = vim.uri_from_bufnr
+local split = vim.split
+local tbl_isempty = vim.tbl_isempty
 
 function M.setup_keymaps()
     api.nvim_create_autocmd("LspAttach", {
@@ -18,7 +22,6 @@ function M.setup_keymaps()
         callback = function(event)
             local opts = { buffer = event.buf, silent = true }
 
-            -- Core navigation
             map("n", "K", buf.hover, opts)
             map("n", "gd", buf.definition, opts)
             map("n", "gD", buf.declaration, opts)
@@ -27,38 +30,33 @@ function M.setup_keymaps()
             map("n", "gr", buf.references, opts)
             map("n", "gs", buf.signature_help, opts)
 
-            -- Telescope integration (if available)
             local has_telescope, telescope = pcall(require, "telescope.builtin")
             if has_telescope then
-                -- Updated Telescope LSP function names
-                map("n", "grd", telescope.lsp_definitions, opts)
-                map("n", "gri", telescope.lsp_implementations, opts)
-                map("n", "grr", telescope.lsp_references, opts)
-                map("n", "gO", telescope.lsp_document_symbols, opts)
-                map("n", "<leader>ws", telescope.lsp_workspace_symbols, opts)
+                map("n", "<leader>li", telescope.lsp_implementations,   { desc = "LSP implementations"  })
+                map("n", "<leader>lr", telescope.lsp_references,        { desc = "LSP references"       })
+                map("n", "<leader>ld", telescope.lsp_definitions,       { desc = "LSP definitions"      })
+                map("n", "<leader>lt", telescope.lsp_type_definitions,  { desc = "LSP type definitions" })
+                map("n", "<leader>ls", telescope.lsp_document_symbols,  { desc = "Document symbols"     })
+                map("n", "<leader>le", telescope.diagnostics,           { desc = "Diagnostics"          })
+                map("n", "<leader>lw", telescope.lsp_workspace_symbols, { desc = "Workspace symbols"    })
             end
 
-            -- Code actions and refactoring
             map("n", "grn", buf.rename, opts)
             map({ "n", "x" }, "gra", buf.code_action, opts)
             map("n", "<leader>ca", buf.code_action, opts)
 
-            -- Diagnostics
             map("n", "<leader>e", diagnostic.open_float, opts)
             map("n", "[d", function() diagnostic.jump({ count = -1 }) end, opts)
             map("n", "]d", function() diagnostic.jump({ count = 1 }) end, opts)
             map("n", "<leader>q", diagnostic.setloclist, opts)
 
-            -- Enhanced diagnostic navigation
             map("n", "[e", function() diagnostic.jump({ count = -1, severity = diagnostic.severity.ERROR }) end, opts)
-            map("n", "]e", function() diagnostic.jump({ count = 1, severity = diagnostic.severity.ERROR }) end, opts)
+            map("n", "]e", function() diagnostic.jump({ count = 1,  severity = diagnostic.severity.ERROR }) end, opts)
 
-            -- Workspace management
             map("n", "<leader>wa", buf.add_workspace_folder, opts)
             map("n", "<leader>wr", buf.remove_workspace_folder, opts)
             map("n", "<leader>wl", function() print(inspect(buf.list_workspace_folders())) end, opts)
 
-            -- Format on save toggle
             map("n", "<leader>tf", function()
                 if b.lsp_format_on_save then
                     b.lsp_format_on_save = false
@@ -69,13 +67,10 @@ function M.setup_keymaps()
                 end
             end, opts)
 
-            -- Manual linting with F3
             map("n", "<F3>", function()
-                -- Run manual linting for current buffer
                 local clients = lsp.get_clients({ bufnr = event.buf })
                 for _, client in ipairs(clients) do
                     if client.name == "null-ls" then
-                        -- Trigger diagnostics refresh
                         lsp.buf.code_action({
                             context = { only = { "source.organizeImports", "source.fixAll" } },
                             apply = true,
@@ -83,12 +78,11 @@ function M.setup_keymaps()
                         break
                     end
                 end
-                -- Also refresh diagnostics
                 diagnostic.reset(nil, event.buf)
-                vim.defer_fn(
+                defer_fn(
                     function()
                         lsp.buf_request(event.buf, "textDocument/diagnostic", {
-                            textDocument = { uri = vim.uri_from_bufnr(event.buf) },
+                            textDocument = { uri = uri_from_bufnr(event.buf) },
                         })
                     end,
                     100
@@ -96,7 +90,6 @@ function M.setup_keymaps()
                 notify("Manual linting triggered", log.levels.INFO)
             end, { desc = "Manual linting (F3)" })
 
-            -- Client info
             map("n", "<leader>li", function()
                 local clients = lsp.get_clients({ bufnr = event.buf })
                 local client_names = {}
@@ -110,7 +103,6 @@ function M.setup_keymaps()
 end
 
 function M.setup_diagnostics()
-    -- Enhanced diagnostic configuration
     diagnostic.config({
         severity_sort = true,
         update_in_insert = false,
@@ -152,13 +144,12 @@ function M.setup_diagnostics()
         },
     })
 
-    -- Enhanced diagnostic signs
     if g.have_nerd_font then
         local signs = {
             { name = "DiagnosticSignError", text = "󰅚", texthl = "DiagnosticSignError" },
-            { name = "DiagnosticSignWarn", text = "󰀪", texthl = "DiagnosticSignWarn" },
-            { name = "DiagnosticSignInfo", text = "󰋽", texthl = "DiagnosticSignInfo" },
-            { name = "DiagnosticSignHint", text = "󰌶", texthl = "DiagnosticSignHint" },
+            { name = "DiagnosticSignWarn",  text = "󰀪", texthl = "DiagnosticSignWarn" },
+            { name = "DiagnosticSignInfo",  text = "󰋽", texthl = "DiagnosticSignInfo" },
+            { name = "DiagnosticSignHint",  text = "󰌶", texthl = "DiagnosticSignHint" },
         }
 
         for _, sign in ipairs(signs) do
@@ -167,17 +158,15 @@ function M.setup_diagnostics()
     end
 end
 
--- Note: Completion setup is handled in your separate cmp configuration file
--- This function is kept for compatibility but doesn't duplicate your existing setup
+-- Completion config is on cmp.lua at plugins/ & core/keymaps/
+-- the below function's responsibility is compatibility
 function M.setup_completion(cmp, luasnip)
-    -- Your existing cmp setup handles this
     return
 end
 
 function M.get_capabilities()
     local capabilities = require("cmp_nvim_lsp").default_capabilities()
 
-    -- Enhanced capabilities
     capabilities.textDocument.completion.completionItem.snippetSupport = true
     capabilities.textDocument.completion.completionItem.resolveSupport = {
         properties = { "documentation", "detail", "additionalTextEdits" },
@@ -194,29 +183,23 @@ function M.setup_null_ls()
     local null_ls = require("null-ls")
     local sources = {}
 
-    -- Lua formatting
-    -- if fn.executable("stylua") == 1 then table.insert(sources, null_ls.builtins.formatting.stylua) end
+    if fn.executable("stylua") == 1 then table.insert(sources, null_ls.builtins.formatting.stylua) end
 
-    -- C# formatting
     if fn.executable("csharpier") == 1 then table.insert(sources, null_ls.builtins.formatting.csharpier) end
 
-    -- SQL formatting only (linting disabled for auto-save)
     if fn.executable("sql-formatter") == 1 then table.insert(sources, null_ls.builtins.formatting.sql_formatter) end
 
     if fn.executable("sqlfluff") == 1 then
         table.insert(sources, null_ls.builtins.formatting.sqlfluff)
-        -- Add sqlfluff diagnostics but only for manual triggering (F3)
         table.insert(
             sources,
             null_ls.builtins.diagnostics.sqlfluff.with({
-                -- Disable auto-diagnostics, only run on manual trigger
                 method = null_ls.methods.DIAGNOSTICS_ON_SAVE,
-                disabled_filetypes = {}, -- Enable for all filetypes but only on manual save
+                disabled_filetypes = {},
             })
         )
     end
 
-    -- Additional common formatters
     if fn.executable("prettier") == 1 then table.insert(sources, null_ls.builtins.formatting.prettier) end
 
     if fn.executable("black") == 1 then table.insert(sources, null_ls.builtins.formatting.black) end
@@ -225,11 +208,9 @@ function M.setup_null_ls()
 
     null_ls.setup({
         sources = sources,
-        -- Disable automatic diagnostics
         diagnostics_format = "#{m}",
         update_in_insert = false,
         on_attach = function(client, bufnr)
-            -- Only format on save, no automatic linting
             if client.supports_method("textDocument/formatting") then
                 api.nvim_create_autocmd("BufWritePre", {
                     buffer = bufnr,
@@ -255,7 +236,6 @@ function M.setup_format_keymap()
         })
     end, { desc = "Format with LSP/null-ls" })
 
-    -- Format selection
     map("x", "<leader>gf", function()
         buf.format({
             async = true,
@@ -268,7 +248,6 @@ function M.setup_format_keymap()
     end, { desc = "Format selection" })
 end
 
--- Auto-format on save (can be toggled per buffer)
 function M.setup_autoformat()
     api.nvim_create_autocmd("BufWritePre", {
         pattern = "*",
@@ -283,9 +262,8 @@ function M.setup_autoformat()
     })
 end
 
--- Enhanced LSP UI
+-- LSP UI
 function M.setup_lsp_ui()
-    -- Customized LSP handlers using modern approach
     lsp.handlers["textDocument/hover"] = function(_, result, ctx, config)
         config = config or {}
         config.border = config.border or "rounded"
@@ -293,14 +271,13 @@ function M.setup_lsp_ui()
 
         if not result or not result.contents then return end
 
-        local markdown_lines = vim.lsp.util.convert_input_to_markdown_lines(result.contents)
-        -- Use vim.split with trimempty instead of deprecated trim_empty_lines
+        local markdown_lines = lsp.util.convert_input_to_markdown_lines(result.contents)
         local content = table.concat(markdown_lines, "\n")
-        markdown_lines = vim.split(content, "\n", { trimempty = true })
+        markdown_lines = split(content, "\n", { trimempty = true })
 
-        if vim.tbl_isempty(markdown_lines) then return end
+        if tbl_isempty(markdown_lines) then return end
 
-        return vim.lsp.util.open_floating_preview(markdown_lines, "markdown", config)
+        return lsp.util.open_floating_preview(markdown_lines, "markdown", config)
     end
 
     lsp.handlers["textDocument/signatureHelp"] = function(_, result, ctx, config)
@@ -308,7 +285,7 @@ function M.setup_lsp_ui()
         config.border = config.border or "rounded"
         config.title = config.title or "Signature Help"
 
-        if not result or not result.signatures or vim.tbl_isempty(result.signatures) then return end
+        if not result or not result.signatures or tbl_isempty(result.signatures) then return end
 
         local lines = {}
         for i, signature in ipairs(result.signatures) do
@@ -324,10 +301,9 @@ function M.setup_lsp_ui()
             if i < #result.signatures then table.insert(lines, "") end
         end
 
-        return vim.lsp.util.open_floating_preview(lines, "markdown", config)
+        return lsp.util.open_floating_preview(lines, "markdown", config)
     end
 
-    -- Enhanced progress handler
     local progress_handler = function(_, result, ctx)
         local client = lsp.get_client_by_id(ctx.client_id)
         if not client then return end

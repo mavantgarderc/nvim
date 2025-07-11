@@ -34,15 +34,6 @@ api.nvim_create_autocmd("User", {
             map("n", "<leader>gs", builtin.git_status,   { desc = "Git status"   })
             map("n", "<leader>gf", builtin.git_files,    { desc = "Git files"    })
 
-            -- LSP
-            map("n", "<leader>lr", builtin.lsp_references,        { desc = "LSP references"       })
-            map("n", "<leader>ld", builtin.lsp_definitions,       { desc = "LSP definitions"      })
-            map("n", "<leader>li", builtin.lsp_implementations,   { desc = "LSP implementations"  })
-            map("n", "<leader>lt", builtin.lsp_type_definitions,  { desc = "LSP type definitions" })
-            map("n", "<leader>ls", builtin.lsp_document_symbols,  { desc = "Document symbols"     })
-            map("n", "<leader>lw", builtin.lsp_workspace_symbols, { desc = "Workspace symbols"    })
-            map("n", "<leader>le", builtin.diagnostics,           { desc = "Diagnostics"          })
-
             -- Vim pickers
             map("n", "<leader>fk", builtin.keymaps,       { desc = "Find keymaps"      })
             map("n", "<leader>fo", builtin.vim_options,   { desc = "Vim options"       })
@@ -85,7 +76,7 @@ api.nvim_create_autocmd("User", {
             map( "n", "<leader>fp", function()
                 builtin.find_files({ cwd = "~/projects" })
             end, { desc = "Find project files" })
-
         end
-    end,
+    end
 })
+
