@@ -11,8 +11,6 @@ local inspect = vim.inspect
 local b = vim.b
 local lsp = vim.lsp
 local log = vim.log
-local tbl_isempty = vim.tbl_isempty
-local split = vim.split
 
 function M.setup_keymaps()
     api.nvim_create_autocmd("LspAttach", {
@@ -70,6 +68,33 @@ function M.setup_keymaps()
                     notify("LSP format on save enabled for buffer", log.levels.INFO)
                 end
             end, opts)
+
+            -- Manual linting with F3
+            map("n", "<F3>", function()
+                -- Run manual linting for current buffer
+                local clients = lsp.get_clients({ bufnr = event.buf })
+                for _, client in ipairs(clients) do
+                    if client.name == "null-ls" then
+                        -- Trigger diagnostics refresh
+                        lsp.buf.code_action({
+                            context = { only = { "source.organizeImports", "source.fixAll" } },
+                            apply = true,
+                        })
+                        break
+                    end
+                end
+                -- Also refresh diagnostics
+                diagnostic.reset(nil, event.buf)
+                vim.defer_fn(
+                    function()
+                        lsp.buf_request(event.buf, "textDocument/diagnostic", {
+                            textDocument = { uri = vim.uri_from_bufnr(event.buf) },
+                        })
+                    end,
+                    100
+                )
+                notify("Manual linting triggered", log.levels.INFO)
+            end, { desc = "Manual linting (F3)" })
 
             -- Client info
             map("n", "<leader>li", function()
@@ -170,17 +195,25 @@ function M.setup_null_ls()
     local sources = {}
 
     -- Lua formatting
-    if fn.executable("stylua") == 1 then table.insert(sources, null_ls.builtins.formatting.stylua) end
+    -- if fn.executable("stylua") == 1 then table.insert(sources, null_ls.builtins.formatting.stylua) end
 
     -- C# formatting
     if fn.executable("csharpier") == 1 then table.insert(sources, null_ls.builtins.formatting.csharpier) end
 
-    -- SQL formatting and linting
+    -- SQL formatting only (linting disabled for auto-save)
     if fn.executable("sql-formatter") == 1 then table.insert(sources, null_ls.builtins.formatting.sql_formatter) end
 
     if fn.executable("sqlfluff") == 1 then
         table.insert(sources, null_ls.builtins.formatting.sqlfluff)
-        table.insert(sources, null_ls.builtins.diagnostics.sqlfluff)
+        -- Add sqlfluff diagnostics but only for manual triggering (F3)
+        table.insert(
+            sources,
+            null_ls.builtins.diagnostics.sqlfluff.with({
+                -- Disable auto-diagnostics, only run on manual trigger
+                method = null_ls.methods.DIAGNOSTICS_ON_SAVE,
+                disabled_filetypes = {}, -- Enable for all filetypes but only on manual save
+            })
+        )
     end
 
     -- Additional common formatters
@@ -192,8 +225,11 @@ function M.setup_null_ls()
 
     null_ls.setup({
         sources = sources,
+        -- Disable automatic diagnostics
+        diagnostics_format = "#{m}",
+        update_in_insert = false,
         on_attach = function(client, bufnr)
-            -- Format on save
+            -- Only format on save, no automatic linting
             if client.supports_method("textDocument/formatting") then
                 api.nvim_create_autocmd("BufWritePre", {
                     buffer = bufnr,
@@ -257,14 +293,14 @@ function M.setup_lsp_ui()
 
         if not result or not result.contents then return end
 
-        local markdown_lines = lsp.util.convert_input_to_markdown_lines(result.contents)
+        local markdown_lines = vim.lsp.util.convert_input_to_markdown_lines(result.contents)
         -- Use vim.split with trimempty instead of deprecated trim_empty_lines
         local content = table.concat(markdown_lines, "\n")
-        markdown_lines = split(content, "\n", { trimempty = true })
+        markdown_lines = vim.split(content, "\n", { trimempty = true })
 
-        if tbl_isempty(markdown_lines) then return end
+        if vim.tbl_isempty(markdown_lines) then return end
 
-        return lsp.util.open_floating_preview(markdown_lines, "markdown", config)
+        return vim.lsp.util.open_floating_preview(markdown_lines, "markdown", config)
     end
 
     lsp.handlers["textDocument/signatureHelp"] = function(_, result, ctx, config)
@@ -272,7 +308,7 @@ function M.setup_lsp_ui()
         config.border = config.border or "rounded"
         config.title = config.title or "Signature Help"
 
-        if not result or not result.signatures or tbl_isempty(result.signatures) then return end
+        if not result or not result.signatures or vim.tbl_isempty(result.signatures) then return end
 
         local lines = {}
         for i, signature in ipairs(result.signatures) do
@@ -288,7 +324,7 @@ function M.setup_lsp_ui()
             if i < #result.signatures then table.insert(lines, "") end
         end
 
-        return lsp.util.open_floating_preview(lines, "markdown", config)
+        return vim.lsp.util.open_floating_preview(lines, "markdown", config)
     end
 
     -- Enhanced progress handler
