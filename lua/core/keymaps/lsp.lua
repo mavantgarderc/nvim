@@ -11,6 +11,7 @@ local lsp = vim.lsp
 local log = vim.log
 local defer_fn = vim.defer_fn
 local uri_from_bufnr = vim.uri_from_bufnr
+local tbl_extend = vim.tbl_extend
 
 local M = {}
 
@@ -102,6 +103,24 @@ function M.setup_lsp_keymaps()
                 end
                 notify("LSP clients: " .. table.concat(client_names, ", "))
             end, opts)
+
+            -- SQL-specific keymaps (buffer-local, only present if SQL LSP attached)
+            local ft = vim.bo[event.buf].filetype
+            if ft == "sql" or ft == "plsql" or ft == "oracle" or ft == "tsql" or ft == "pgsql" then
+                -- Common keymaps for all SQL LSPs
+                map("n", "<leader>sf", function() lsp.buf.format({ async = true }) end, tbl_extend("force", opts, { desc = "Format SQL" }))
+                map("n", "<leader>sk", function() lsp.buf.hover() end, tbl_extend("force", opts, { desc = "Show info (hover)" }))
+            end
+            -- sqls-specific
+            if lsp.get_active_clients({ bufnr = event.buf, name = "sqls" })[1] then
+                map("n", "<leader>se", ":SqlsExecuteQuery<CR>", opts)
+                map("v", "<leader>se", ":SqlsExecuteQuery<CR>", opts)
+                map("n", "<leader>sr", ":SqlsExecuteQueryVertical<CR>", opts)
+                map("v", "<leader>sr", ":SqlsExecuteQueryVertical<CR>", opts)
+                map("n", "<leader>st", ":SqlsShowTables<CR>", opts)
+                map("n", "<leader>sd", ":SqlsShowDatabases<CR>", opts)
+                map("n", "<leader>sc", ":SqlsShowConnections<CR>", opts)
+            end
         end,
     })
 end
