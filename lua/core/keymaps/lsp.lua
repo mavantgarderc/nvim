@@ -13,13 +13,14 @@ local defer_fn = vim.defer_fn
 local uri_from_bufnr = vim.uri_from_bufnr
 
 local M = {}
+
 function M.setup_lsp_keymaps()
     api.nvim_create_autocmd("LspAttach", {
         desc = "LSP actions",
         callback = function(event)
             local opts = { buffer = event.buf, silent = true }
 
-            map("n", "K", buf.hover, opts)
+            map("n", "K",  buf.hover, opts)
             map("n", "gd", buf.definition, opts)
             map("n", "gD", buf.declaration, opts)
             map("n", "gi", buf.implementation, opts)
@@ -29,13 +30,13 @@ function M.setup_lsp_keymaps()
 
             local has_telescope, telescope = pcall(require, "telescope.builtin")
             if has_telescope then
-                map("n", "<leader>li", telescope.lsp_implementations, { desc = "LSP implementations" })
-                map("n", "<leader>lr", telescope.lsp_references, { desc = "LSP references" })
-                map("n", "<leader>ld", telescope.lsp_definitions, { desc = "LSP definitions" })
-                map("n", "<leader>lt", telescope.lsp_type_definitions, { desc = "LSP type definitions" })
-                map("n", "<leader>ls", telescope.lsp_document_symbols, { desc = "Document symbols" })
-                map("n", "<leader>le", telescope.diagnostics, { desc = "Diagnostics" })
-                map("n", "<leader>lw", telescope.lsp_workspace_symbols, { desc = "Workspace symbols" })
+                map("n", "<leader>li", telescope.lsp_implementations,   { desc = "LSP implementations"  })
+                map("n", "<leader>lr", telescope.lsp_references,        { desc = "LSP references"       })
+                map("n", "<leader>ld", telescope.lsp_definitions,       { desc = "LSP definitions"      })
+                map("n", "<leader>lt", telescope.lsp_type_definitions,  { desc = "LSP type definitions" })
+                map("n", "<leader>ls", telescope.lsp_document_symbols,  { desc = "Document symbols"     })
+                map("n", "<leader>le", telescope.diagnostics,           { desc = "Diagnostics"          })
+                map("n", "<leader>lw", telescope.lsp_workspace_symbols, { desc = "Workspace symbols"    })
             end
 
             map("n", "grn", buf.rename, opts)
@@ -44,16 +45,18 @@ function M.setup_lsp_keymaps()
 
             map("n", "<leader>e", diagnostic.open_float, opts)
             map("n", "[d", function() diagnostic.jump({ count = -1 }) end, opts)
-            map("n", "]d", function() diagnostic.jump({ count = 1 }) end, opts)
+            map("n", "]d", function() diagnostic.jump({ count =  1 }) end, opts)
             map("n", "<leader>q", diagnostic.setloclist, opts)
 
             map("n", "[e", function() diagnostic.jump({ count = -1, severity = diagnostic.severity.ERROR }) end, opts)
-            map("n", "]e", function() diagnostic.jump({ count = 1, severity = diagnostic.severity.ERROR }) end, opts)
+            map("n", "]e", function() diagnostic.jump({ count =  1, severity = diagnostic.severity.ERROR }) end, opts)
 
             map("n", "<leader>wa", buf.add_workspace_folder, opts)
             map("n", "<leader>wr", buf.remove_workspace_folder, opts)
             map("n", "<leader>wl", function() print(inspect(buf.list_workspace_folders())) end, opts)
 
+            -- toggle auto-lint
+            b.lsp_format_on_save = false
             map("n", "<leader>tf", function()
                 if b.lsp_format_on_save then
                     b.lsp_format_on_save = false
@@ -64,12 +67,16 @@ function M.setup_lsp_keymaps()
                 end
             end, opts)
 
+            -- lint
             map("n", "<F3>", function()
                 local clients = lsp.get_clients({ bufnr = event.buf })
                 for _, client in ipairs(clients) do
                     if client.name == "null-ls" then
                         lsp.buf.code_action({
-                            context = { only = { "source.organizeImports", "source.fixAll" } },
+                            context = {
+                                only = { "source.organizeImports", "source.fixAll" },
+                                diagnostics = diagnostic.get(event.buf),
+                            },
                             apply = true,
                         })
                         break
