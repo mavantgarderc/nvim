@@ -14,7 +14,8 @@ require("core.keymaps.visualkeys")
 -- Plugins Directory
 require("lazy").setup("plugins")
 
---require("core.themepicker")
---vim.cmd.colorscheme("kanagawa-dragon")
+-- require("core.themepicker")
+-- vim.cmd.colorscheme("kanagawa-dragon")
 --vim.cmd.colorscheme("terafox")
-vim.cmd.colorscheme("base16-da-one-sea")
+-- vim.cmd.colorscheme("base16-da-one-sea")
+vim.cmd.colorscheme("base16-gruvbox-material-dark-hard")

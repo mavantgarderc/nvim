@@ -7,10 +7,8 @@ map("n", "<leader>pv", ":Oil<CR>", opts)
 -- Paste from OS-Integrated Clipboard
 map("n", "<leader>p", "\"_dP", opts)
 
-map("n", "s", "xi")
-
 -- Movement
-map({ "n", "v", "i" }, "<Find>", "0")
+map({ "n", "v", "i" }, "<Find>",   "0")
 map({ "n", "v", "i" }, "<Select>", "$")
 map("n", "j", "v:count == 0 ? 'gj' : 'j'", { expr = true, silent = true })
 map("n", "k", "v:count == 0 ? 'gk' : 'k'", { expr = true, silent = true })
@@ -44,13 +42,13 @@ map("v", "K", ":m '<-2<CR>gv=gv")
 
 -- Comments
 map("n", "<leader>/", "gcc", { remap = true })
-map("v", "<leader>/", "gc", { remap = true })
+map("v", "<leader>/", "gc",  { remap = true })
 
 -- stand-still cursor while merging lines
 map("n", "J", "mzJ`z")
 
 -- searching
-map("n", "/", "/", { desc = "Search forward" })
+map("n", "/", "/", { desc = "Search forward"  })
 map("n", "?", "?", { desc = "Search backward" })
 map("n", "n", "nzzzv")
 map("n", "N", "Nzzzv")

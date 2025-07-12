@@ -53,31 +53,29 @@ map("n", "<leader>bp", ":bprevious<CR>", opts)
 map("n", "<leader>bd", ":bd<CR>",        opts)
 
 -- === === === Panes === === ===
-map("n", "<leader>h", "<C-w>h", opts) -- Switch Window Left
-map("n", "<leader>l", "<C-w>l", opts) -- Switch Window Right
-map("n", "<leader>j", "<C-w>j", opts) -- Switch Window Down
-map("n", "<leader>k", "<C-w>k", opts) -- Switch Window Up
+map("n", "<leader>hh", "<C-w>h", opts) -- Switch Window Left
+map("n", "<leader>ll", "<C-w>l", opts) -- Switch Window Right
+map("n", "<leader>jj", "<C-w>j", opts) -- Switch Window Down
+map("n", "<leader>kk", "<C-w>k", opts) -- Switch Window Up
 
 map("n", "<leader>H", "<C-w>H", opts) -- Move Window to Left
 map("n", "<leader>L", "<C-w>L", opts) -- Move Window to Right
 map("n", "<leader>J", "<C-w>J", opts) -- Move Window to Down
 map("n", "<leader>K", "<C-w>K", opts) -- Move Window to Up
 
-map("n", "<leader>T", "<C-w>T", opts) -- move current pane to a new tab
-
---map("n", "<leader>r", "<C-w>r") -- rotate windows clockwise
-
 map("n", "<leader>sph", ":sp<CR>", opts) -- split current window horizontally
 map("n", "<leader>spv", ":vs<CR>", opts) -- split current window vertically
 
-map("n", "<C-A-h>",   ":vertical resize -1<CR>", opts )
-map("n", "<C-A-l>",   ":vertical resize +1<CR>", opts )
-map("n", "<C-A-j>",   ":resize -1<CR>",          opts )
-map("n", "<C-A-k>",   ":resize +1<CR>",          opts )
-map("n", "<C-A-S-H>", ":vertical resize -5<CR>", opts )
-map("n", "<C-A-S-L>", ":vertical resize +5<CR>", opts )
-map("n", "<C-A-S-J>", ":resize -5<CR>",          opts )
-map("n", "<C-A-S-K>", ":resize +5<CR>",          opts )
+map("n", "<C-A-h>",   ":vertical resize -1<CR>", opts)
+map("n", "<C-A-l>",   ":vertical resize +1<CR>", opts)
+map("n", "<C-A-j>",   ":resize -1<CR>",          opts)
+map("n", "<C-A-k>",   ":resize +1<CR>",          opts)
+map("n", "<C-A-S-H>", ":vertical resize -5<CR>", opts)
+map("n", "<C-A-S-L>", ":vertical resize +5<CR>", opts)
+map("n", "<C-A-S-J>", ":resize -5<CR>",          opts)
+map("n", "<C-A-S-K>", ":resize +5<CR>",          opts)
+
+map("n", "<leader>T", "<C-w>T", opts) -- move current pane to a NEW tab
 
 -- === === ===  ===
 -- === Foldings ===
@@ -203,6 +201,9 @@ map("n", "<leader>zl", function()
   notify("Fold state loaded")
 end, { desc = "Load fold state" })
 
+-- === ===  === ===
+-- === Markings ===
+-- === ===  === ===
 -- Set marks (default: m{a-zA-Z})
 -- m{a-z} - file-local marks
 -- m{A-Z} - global marks (across files)
@@ -355,19 +356,7 @@ map("n", "?", "m'?", tbl_extend("force", opts, { desc = "Search backwards (mark 
 -- If using telescope.nvim, you might want these
 map("n", "<leader>fm", "<cmd>Telescope marks<CR>", { desc = "Find marks with Telescope" })
 
--- If using which-key.nvim, register descriptions
-if pcall(require, "which-key") then
-  local wk = require("which-key")
-  wk.register({
-    ["<leader>m"] = { name = "Marks" },
-    ["<leader>j"] = { name = "Jump to" },
-    ["<leader>b"] = { name = "Bookmarks" },
-    ["<leader>B"] = { name = "Go to Bookmark" },
-    ["<leader>mc"] = { name = "Clear marks" },
-  })
-end
-
--- Create useful commands
+-- useful commands
 api.nvim_create_user_command("ShowMarks", "marks", { desc = "Show all marks" })
 api.nvim_create_user_command("ClearMarks", "delmarks a-z", { desc = "Clear all local marks" })
 api.nvim_create_user_command("ClearAllMarks", "delmarks!", { desc = "Clear all marks" })
