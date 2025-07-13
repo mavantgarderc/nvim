@@ -70,14 +70,6 @@ map( "v", "<F2>", function()
     end
 end, { desc = "LSP Rename", noremap = true, silent = true, })
 
-map({ "n", "v"}, "<F3>", function()
-    if lsp and lsp.buf and lsp.buf.format then
-        lsp.buf.format()
-    else
-        notify("LSP format not available")
-    end
-end, { desc = "LSP format buffer/selection", noremap = true, silent = true, })
-
 map({ "n", "v"}, "<F4>", function()
     if lsp and lsp.buf and lsp.buf.code_action then
         lsp.buf.code_action()

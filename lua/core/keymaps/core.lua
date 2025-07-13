@@ -5,7 +5,22 @@ local opts = { noremap = true, silent = true, }
 map("n", "<leader>pv", ":Oil<CR>", opts)
 
 -- Paste from OS-Integrated Clipboard
-map("n", "<leader>p", "\"_dP", opts)
+-- map("n", "<leader>p", "\"_dp", opts)
+
+-- Surround with Character
+map("n", "<leader>g(", "ciw()<C-[>P",    { desc = "Surround word with (); Normal"   })
+map("n", "<leader>g[", "ciw[]<C-[>P",    { desc = "Surround word with []; Normal"   })
+map("n", "<leader>g{", "ciw{}<C-[>P",    { desc = "Surround word with {}; Normal"   })
+map("n", "<leader>g\"", "ciw\"\"<C-[>P", { desc = "Surround word with \"\"; Normal" })
+map("n", "<leader>g'", "ciw''<C-[>P",    { desc = "Surround word with ''; Normal"   })
+map("n", "<leader>g*", "ciw**<C-[>P",    { desc = "Surround word with **; Normal"   })
+
+map("v", "<leader>g(", "c()<C-[>P",      { desc = "Surround word with (); Visual"   })
+map("v", "<leader>g[", "c[]<C-[>P",      { desc = "Surround word with []; Visual"   })
+map("v", "<leader>g{", "c{}<C-[>P",      { desc = "Surround word with {}; Visual"   })
+map("v", "<leader>g\"", "c\"\"<C-[>P",   { desc = "Surround word with \"\"; Visual" })
+map("v", "<leader>g'", "c''<C-[>P",      { desc = "Surround word with ''; Visual"   })
+map("v", "<leader>g*", "c**<C-[>P",      { desc = "Surround word with **; Visual"   })
 
 -- Movement
 map({ "n", "v", "i" }, "<Find>",   "0")
@@ -41,7 +56,6 @@ map("v", "J", ":m '>+1<CR>gv=gv")
 map("v", "K", ":m '<-2<CR>gv=gv")
 
 -- Comments
-map("n", "<leader>/", "gcc", { remap = true })
 map("v", "<leader>/", "gc",  { remap = true })
 
 -- stand-still cursor while merging lines
@@ -53,6 +67,7 @@ map("n", "?", "?", { desc = "Search backward" })
 map("n", "n", "nzzzv")
 map("n", "N", "Nzzzv")
 map("n", "<Esc>", ":nohlsearch<CR>", opts)
+map("n", "<C-[>", ":nohlsearch<CR>", opts)
 
 -- duplicate lines
 map("n", "<C-A-S-p>", "mzyyP`zk")
