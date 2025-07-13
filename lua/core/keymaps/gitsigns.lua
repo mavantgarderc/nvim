@@ -63,8 +63,8 @@ function M.setup()
 
     map({ "o", "x" }, "gih", ":<C-U>Gitsigns select_hunk<CR>",    { desc = "Select hunk" })
 
-    map("n", "<leader>gs", function() git_term("git status") end, { desc = "Git status" })
-    map("n", "<leader>gc", function() git_term("git commit") end, { desc = "Git commit" })
+    map("n", "<leader>gS", function() git_term("git status") end, { desc = "Git status" })
+    map("n", "<leader>gC", function() git_term("git commit") end, { desc = "Git commit" })
     map("n", "<leader>gb", function()
         git_term("git branch --sort=-committerdate")
     end, { desc = "Git branches" })

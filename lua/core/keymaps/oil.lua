@@ -19,7 +19,7 @@ M.setup = function()
         oil.open_float()
     end, { desc = "Open Oil in floating window" })
 
-    map("n", "<leader>fc", function()
+    map("n", "<leader>fco", function()
         oil.open(fn.getcwd())
     end, { desc = "Open Oil in cwd" })
 
