@@ -259,9 +259,9 @@ map("n", "<leader>zl", function()
   notify("Fold state loaded")
 end, { desc = "Load fold state" })
 
--- === ===  === ===
--- === Markings ===
--- === ===  === ===
+-- === === ===  === === ===
+-- === === Markings === ===
+-- === === ===  === === ===
 -- Set marks (default: m{a-zA-Z})
 -- m{a-z} - file-local marks
 -- m{A-Z} - global marks (across files)
@@ -302,7 +302,7 @@ map("n", "<leader>gf", "`F", tbl_extend("force", opts, { desc = "Go to mark F (e
 map("n", "<leader>ml", ":marks<CR>", tbl_extend("force", opts, { desc = "List all marks" }))
 
 -- Delete marks
-map("n", "<leader>md", ":delmarks ", { desc = "Delete marks (specify which)" })
+map("n", "<leader>md", ":delmarks<CR>",                               { desc = "Delete marks (specify which)" })
 map("n", "<leader>mD", ":delmarks!<CR>", tbl_extend("force", opts, { desc = "Delete all lowercase marks" }))
 
 -- Clear specific mark ranges
@@ -310,7 +310,7 @@ map("n", "<leader>mca", ":delmarks a-z<CR>", tbl_extend("force", opts, { desc = 
 map("n", "<leader>mcA", ":delmarks A-Z<CR>", tbl_extend("force", opts, { desc = "Clear all global marks"   }))
 map("n", "<leader>mc0", ":delmarks 0-9<CR>", tbl_extend("force", opts, { desc = "Clear all numbered marks" }))
 
--- automatics; don't need maps. documented for reference:
+-- automatics; don't need maps; documented for reference:
 -- ` - position before latest jump
 -- ' - position before latest jump (line only)
 -- " - position when last exiting current buffer
@@ -375,17 +375,17 @@ map("v", "<leader>mt", "mT", tbl_extend("force", opts, { desc = "Set mark T (vis
 map("v", "<leader>mb", "mB", tbl_extend("force", opts, { desc = "Set mark B (visual)" }))
 
 -- Project bookmarks using capital letters
-map("n", "<leader>bm", "mM", tbl_extend("force", opts, { desc = "Bookmark: Main file" }))
-map("n", "<leader>bc", "mC", tbl_extend("force", opts, { desc = "Bookmark: Config file" }))
-map("n", "<leader>bt", "mT", tbl_extend("force", opts, { desc = "Bookmark: Test file" }))
-map("n", "<leader>br", "mR", tbl_extend("force", opts, { desc = "Bookmark: README file" }))
+map("n", "<leader>bm", "mM", tbl_extend("force", opts, { desc = "Bookmark: Main file"     }))
+map("n", "<leader>bc", "mC", tbl_extend("force", opts, { desc = "Bookmark: Config file"   }))
+map("n", "<leader>bt", "mT", tbl_extend("force", opts, { desc = "Bookmark: Test file"     }))
+map("n", "<leader>br", "mR", tbl_extend("force", opts, { desc = "Bookmark: README file"   }))
 map("n", "<leader>bd", "mD", tbl_extend("force", opts, { desc = "Bookmark: Documentation" }))
 
 -- Jump to project bookmarks
-map("n", "<leader>Bm", "'M", tbl_extend("force", opts, { desc = "Go to Main bookmark" }))
-map("n", "<leader>Bc", "'C", tbl_extend("force", opts, { desc = "Go to Config bookmark" }))
-map("n", "<leader>Bt", "'T", tbl_extend("force", opts, { desc = "Go to Test bookmark" }))
-map("n", "<leader>Br", "'R", tbl_extend("force", opts, { desc = "Go to README bookmark" }))
+map("n", "<leader>Bm", "'M", tbl_extend("force", opts, { desc = "Go to Main bookmark"          }))
+map("n", "<leader>Bc", "'C", tbl_extend("force", opts, { desc = "Go to Config bookmark"        }))
+map("n", "<leader>Bt", "'T", tbl_extend("force", opts, { desc = "Go to Test bookmark"          }))
+map("n", "<leader>Br", "'R", tbl_extend("force", opts, { desc = "Go to README bookmark"        }))
 map("n", "<leader>Bd", "'D", tbl_extend("force", opts, { desc = "Go to Documentation bookmark" }))
 
 -- numbered marks (0-9) - for recent files
@@ -415,18 +415,16 @@ map("n", "?", "m'?", tbl_extend("force", opts, { desc = "Search backwards (mark 
 map("n", "<leader>fm", "<cmd>Telescope marks<CR>", { desc = "Find marks with Telescope" })
 
 -- useful commands
-api.nvim_create_user_command("ShowMarks", "marks", { desc = "Show all marks" })
+api.nvim_create_user_command("ShowMarks", "marks",         { desc = "Show all marks"        })
 api.nvim_create_user_command("ClearMarks", "delmarks a-z", { desc = "Clear all local marks" })
-api.nvim_create_user_command("ClearAllMarks", "delmarks!", { desc = "Clear all marks" })
+api.nvim_create_user_command("ClearAllMarks", "delmarks!", { desc = "Clear all marks"       })
 
 -- Command to show mark info
 api.nvim_create_user_command("MarkInfo", function()
   local marks = fn.getmarklist()
   local buf_marks = fn.getmarklist(fn.bufnr())
-
   print("Global marks: " .. #marks)
   print("Buffer marks: " .. #buf_marks)
-
   cmd("marks")
 end, { desc = "Show mark information" })
 
