@@ -16,10 +16,7 @@ local function vm_status()
     end
 end
 
-local function vm_clear_all()
-    cmd("VMClear")
-    print("VM: All cursors cleared")
-end
+local function vm_clear_all() cmd("VMClear") print("VM: All cursors cleared") end
 
 -- Helper function to toggle VM case sensitivity
 local function vm_toggle_case() cmd("VMCaseSetting") end
@@ -30,7 +27,7 @@ local function vm_toggle_whole_word() cmd("VMWholeWord") end
 -- VM-specific autocommands for better integration
 api.nvim_create_augroup("VMKeymaps", { clear = true })
 
--- Visual Multi status
+-- Show VM status when entering VM mode
 api.nvim_create_autocmd("User", {
     pattern = "visual_multi_start",
     group = "VMKeymaps",
@@ -38,14 +35,31 @@ api.nvim_create_autocmd("User", {
         print("VM: Multi-cursor mode started")
         opt_local.cursorline = true
         opt_local.cursorcolumn = true
-    end,
-    desc = "VM mode started",
-})
+    end, desc = "VM mode started", })
+
+-- Clean up when exiting VM mode
+api.nvim_create_autocmd("User", {
+    pattern = "visual_multi_exit",
+    group = "VMKeymaps",
+    callback = function()
+        print("VM: Multi-cursor mode exited")
+        opt_local.cursorline = false
+        opt_local.cursorcolumn = false
+    end, desc = "VM mode exited", })
+
+-- Helper function to create custom VM mappings
+local function create_vm_mapping(mode, lhs, rhs, desc)
+    map(mode, lhs, rhs, { desc = "Multi-cursor: " .. desc, silent = true })
+end
+-- Additional useful mappings for working with multiple cursors
+create_vm_mapping("n", "<leader>mq", "<Esc>", "Exit multi-cursor mode")
+create_vm_mapping("n", "<leader>mt", "<Plug>(VM-Toggle-Mappings)", "Toggle VM mappings")
 
 -- Helper keymaps for VM functions
--- map("n", "<leader>ms", vm_status, { desc = "Multi-cursor: Show status" })
--- map("n", "<leader>mx", vm_clear_all, { desc = "Multi-cursor: Clear all cursors" })
+map("n", "<leader>ms", vm_status, { desc = "Multi-cursor: Show status" })
+map("n", "<leader>mx", vm_clear_all, { desc = "Multi-cursor: Clear all cursors" })
 
+-- === Keymaps ===
 -- Quick access to common vim-visual-multi operations
 -- map("n", "<leader>mc", "<Plug>(VM-Find-Under)",         { desc = "Multi-cursor: Find word under cursor" })
 -- map("v", "<leader>mc", "<Plug>(VM-Find-Subword-Under)", { desc = "Multi-cursor: Find selection"         })
@@ -69,3 +83,4 @@ api.nvim_create_autocmd("User", {
 -- Column selection helpers
 -- map("n", "<leader>mb", "<Plug>(VM-Select-BBW)",  { desc = "Multi-cursor: Select by brackets/braces/words" })
 -- map("n", "<leader>ml", "<Plug>(VM-Select-Line)", { desc = "Multi-cursor: Select whole lines"              })
+
