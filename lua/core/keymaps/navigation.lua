@@ -30,7 +30,6 @@ local function setup_multiplexer_keymaps()
     end
     return nil
   end
-
   local multiplexer = detect_multiplexer()
   if multiplexer then
     map("n", "<A-h>", ":NavigateLeft<CR>",  opts)
@@ -45,23 +44,27 @@ setup_multiplexer_keymaps()
 -- === === ===  NVIM === === ===
 -- === === ===  ===  === === ===
 
--- === === === Buffers === === ===
+-- === === === === === === ===
+-- === === === Buffers === ===
+-- === === === === === === ===
 map("n", "<leader>bb", function() print(api.nvim_buf_get_name(api.nvim_get_current_buf())) end, opts)
 map("n", "<leader>bl", ":ls<CR>",        opts)
 map("n", "<leader>bn", ":bnext<CR>",     opts)
 map("n", "<leader>bp", ":bprevious<CR>", opts)
 map("n", "<leader>bd", ":bd<CR>",        opts)
 
+-- === === ===  ===  === === ===
 -- === === === Panes === === ===
-map("n", "<leader>hh", "<C-w>h", opts) -- Switch Window Left
-map("n", "<leader>ll", "<C-w>l", opts) -- Switch Window Right
-map("n", "<leader>jj", "<C-w>j", opts) -- Switch Window Down
-map("n", "<leader>kk", "<C-w>k", opts) -- Switch Window Up
+-- === === ===  ===  === === ===
+map("n", "<leader>;h", "<C-w>h", opts) -- Switch Window Left
+map("n", "<leader>;l", "<C-w>l", opts) -- Switch Window Right
+map("n", "<leader>;j", "<C-w>j", opts) -- Switch Window Down
+map("n", "<leader>;k", "<C-w>k", opts) -- Switch Window Up
 
-map("n", "<leader>H", "<C-w>H", opts) -- Move Window to Left
-map("n", "<leader>L", "<C-w>L", opts) -- Move Window to Right
-map("n", "<leader>J", "<C-w>J", opts) -- Move Window to Down
-map("n", "<leader>K", "<C-w>K", opts) -- Move Window to Up
+map("n", "<leader>HH", "<C-w>H", opts) -- Move Window to Left
+map("n", "<leader>LL", "<C-w>L", opts) -- Move Window to Right
+map("n", "<leader>JJ", "<C-w>J", opts) -- Move Window to Down
+map("n", "<leader>KK", "<C-w>K", opts) -- Move Window to Up
 
 map("n", "<leader>sph", ":sp<CR>", opts) -- split current window horizontally
 map("n", "<leader>spv", ":vs<CR>", opts) -- split current window vertically
@@ -77,15 +80,77 @@ map("n", "<C-A-S-K>", ":resize +5<CR>",          opts)
 
 map("n", "<leader>T", "<C-w>T", opts) -- move current pane to a NEW tab
 
+-- ===  === ===
+-- === Tabs ===
+-- ===  === ===
+map("n", "<leader>tn", ":tabnew<CR>", opts)       -- New tab
+map("n", "<leader>tc", ":tabclose<CR>", opts)     -- Close current tab
+map("n", "<leader>to", ":tabonly<CR>", opts)      -- Close all other tabs
+map("n", "<leader>tt", ":tabnext<CR>", opts)      -- Next tab
+map("n", "<leader>tp", ":tabprevious<CR>", opts)  -- Previous tab
+
+map("n", "<leader>g1", "1gt",          opts) -- Go to tab 1
+map("n", "<leader>g2", "2gt",          opts) -- Go to tab 2
+map("n", "<leader>g3", "3gt",          opts) -- Go to tab 3
+map("n", "<leader>g4", "4gt",          opts) -- Go to tab 4
+map("n", "<leader>g5", "5gt",          opts) -- Go to tab 5
+map("n", "<leader>g6", "6gt",          opts) -- Go to tab 6
+map("n", "<leader>g7", "7gt",          opts) -- Go to tab 7
+map("n", "<leader>g8", "8gt",          opts) -- Go to tab 8
+map("n", "<leader>g9", "9gt",          opts) -- Go to tab 9
+map("n", "<leader>g0", ":tablast<CR>", opts) -- Go to last tab
+
+map("n", "<leader>tm", ":tabmove<CR>",    opts)  -- Move tab (will prompt for position)
+map("n", "<leader>t<", ":tabmove -1<CR>", opts)  -- Move tab left
+map("n", "<leader>t>", ":tabmove +1<CR>", opts)  -- Move tab right
+
+map("n", "<C-t>",  ":tabnew<CR>", opts)                   -- Quick new tab
+map("n", "<C-w>t", ":tabnew<CR>", opts)                  -- Alternative new tab
+
+map("n", "<leader>te", ":tabedit ", { noremap = true })  -- Edit file in new tab (no silent to see command)
+map("n", "<leader>tf", ":tabfind ", { noremap = true })  -- Find and open file in new tab
+
+map("n", "<leader>tT", ":tabnew | terminal<CR>", opts)   -- Open terminal in new tab
+
+local function create_tab_with_file(filename) cmd("tabnew " .. filename) end
+
+local function close_other_tabs() cmd("tabonly") end
+
+local function close_tabs_right()
+    local current_tab = fn.tabpagenr()
+    local last_tab = fn.tabpagenr("$")
+    for i = last_tab, current_tab + 1, -1 do
+        cmd(i .. "tabclose")
+    end
+end
+
+local function close_tabs_left()
+    local current_tab = fn.tabpagenr()
+    for i = current_tab - 1, 1, -1 do
+        cmd("1tabclose")
+    end
+end
+
+map("n", "<leader>tO", close_other_tabs, opts)           -- Close all other tabs (function)
+map("n", "<leader>tR", close_tabs_right, opts)           -- Close tabs to the right
+map("n", "<leader>tL", close_tabs_left, opts)            -- Close tabs to the left
+
+map("n", "<leader>ti", ":tabs<CR>", opts)                -- List all tabs
+map("n", "<leader>tb", ":tab split<CR>", opts)           -- Open current buffer in new tab
+map("n", "<leader>td", ":tab drop ", { noremap = true }) -- Drop file in tab (no silent to see command)
+
+map("n", "<leader>th", "1gt", opts)                      -- Go to first tab (home)
+map("n", "<leader>tl", ":tablast<CR>", opts)             -- Go to last tab
+
 -- === === ===  ===
 -- === Foldings ===
 -- === === ===  ===
 -- Basic folding
-map("n", "zf", "zf", { desc = "Create fold"                      })
-map("v", "zf", "zf", { desc = "Create fold from selection"       })
-map("n", "zd", "zd", { desc = "Delete fold under cursor"         })
-map("n", "zD", "zD", { desc = "Delete all folds in current line" })
-map("n", "zE", "zE", { desc = "Eliminate all folds"              })
+map("n", "<leader>zff", "zf", { desc = "Create fold"                      })
+map("v", "<leader>zff", "zf", { desc = "Create fold from selection"       })
+map("n", "<leader>zd", "zd",  { desc = "Delete fold under cursor"         })
+map("n", "<leader>zD", "zD",  { desc = "Delete all folds in current line" })
+map("n", "<leader>zE", "zE",  { desc = "Eliminate all folds"              })
 
 -- Opening folds
 map("n", "zo", "zo", { desc = "Open fold under cursor"        })
@@ -124,13 +189,6 @@ map("n", "z8", function() opt.foldlevel = 8 end, { desc = "Set fold level to 8" 
 map("n", "z9", function() opt.foldlevel = 9 end, { desc = "Set fold level to 9" })
 map("n", "z0", function() opt.foldlevel = 0 end, { desc = "Set fold level to 0" })
 
--- Leader-based fold operations for easier access
-map("n", "<leader>zf", "zf", { desc = "Create fold"                      })
-map("v", "<leader>zf", "zf", { desc = "Create fold from selection"       })
-map("n", "<leader>zd", "zd", { desc = "Delete fold under cursor"         })
-map("n", "<leader>zD", "zD", { desc = "Delete all folds in current line" })
-map("n", "<leader>zE", "zE", { desc = "Eliminate all folds"              })
-
 -- Quick fold level adjustments
 map("n", "<leader>z+", "zr", { desc = "Reduce fold level (open one level)" })
 map("n", "<leader>z-", "zm", { desc = "Fold more (close one level)"        })
@@ -158,7 +216,7 @@ map("n", "<leader>zfc", function()
 end, { desc = "Toggle fold column" })
 
 -- Show fold info
-map("n", "<leader>zfi", function()
+map("n", "<leader>zi", function()
   local foldlevel  = opt.foldlevel:get()
   local foldmethod = opt.foldmethod:get()
   local foldcolumn = opt.foldcolumn:get()
@@ -179,10 +237,10 @@ map("n", "<leader>zt", function()
 end, { desc = "Toggle folding" })
 
 -- Fold all functions (for programming languages)
-map("n", "<leader>zff", function()
-  cmd("normal! zE")  -- Clear existing folds
-  cmd("g/^\\s*function\\|^\\s*def\\|^\\s*class/,/^}/fold")
-end, { desc = "Fold all functions" })
+-- map("n", "<leader>zff", function()
+--   cmd("normal! zE")  -- Clear existing folds
+--   cmd("g/^\\s*function\\|^\\s*def\\|^\\s*class/,/^}/fold")
+-- end, { desc = "Fold all functions" })
 
 -- Fold all comments
 map("n", "<leader>zcc", function()
@@ -385,76 +443,3 @@ api.nvim_create_autocmd("VimLeave", {
   callback = function()
   end,
 })
-
--- ===  === ===
--- === Tabs ===
--- ===  === ===
-
-map("n", "<leader>tn", ":tabnew<CR>", opts)                    -- New tab
-map("n", "<leader>tc", ":tabclose<CR>", opts)                  -- Close current tab
-map("n", "<leader>to", ":tabonly<CR>", opts)                   -- Close all other tabs
-map("n", "<leader>tt", ":tabnext<CR>", opts)                   -- Next tab
-map("n", "<leader>tp", ":tabprevious<CR>", opts)               -- Previous tab
-
-map("n", "gt", ":tabnext<CR>", opts)                           -- Next tab
-map("n", "gT", ":tabprevious<CR>", opts)                       -- Previous tab
-map("n", "g1", "1gt", opts)                                    -- Go to tab 1
-map("n", "g2", "2gt", opts)                                    -- Go to tab 2
-map("n", "g3", "3gt", opts)                                    -- Go to tab 3
-map("n", "g4", "4gt", opts)                                    -- Go to tab 4
-map("n", "g5", "5gt", opts)                                    -- Go to tab 5
-map("n", "g6", "6gt", opts)                                    -- Go to tab 6
-map("n", "g7", "7gt", opts)                                    -- Go to tab 7
-map("n", "g8", "8gt", opts)                                    -- Go to tab 8
-map("n", "g9", "9gt", opts)                                    -- Go to tab 9
-map("n", "g0", ":tablast<CR>", opts)                           -- Go to last tab
-
-map("n", "<leader>tm", ":tabmove<CR>", opts)                   -- Move tab (will prompt for position)
-map("n", "<leader>t<", ":tabmove -1<CR>", opts)               -- Move tab left
-map("n", "<leader>t>", ":tabmove +1<CR>", opts)               -- Move tab right
-
-map("n", "<C-t>", ":tabnew<CR>", opts)                        -- Quick new tab
-map("n", "<C-w>t", ":tabnew<CR>", opts)                       -- Alternative new tab
-
-map("n", "<leader>te", ":tabedit ", { noremap = true })        -- Edit file in new tab (no silent to see command)
-map("n", "<leader>tf", ":tabfind ", { noremap = true })        -- Find and open file in new tab
-
-map("n", "<leader>ts", "<C-w>T", opts)                        -- Move current split to new tab
-
-map("n", "<leader>tT", ":tabnew | terminal<CR>", opts)         -- Open terminal in new tab
-
-local function create_tab_with_file(filename)
-    cmd("tabnew " .. filename)
-end
-
-local function close_other_tabs()
-    cmd("tabonly")
-end
-
-local function close_tabs_right()
-    local current_tab = fn.tabpagenr()
-    local last_tab = fn.tabpagenr("$")
-
-    for i = last_tab, current_tab + 1, -1 do
-        cmd(i .. "tabclose")
-    end
-end
-
-local function close_tabs_left()
-    local current_tab = fn.tabpagenr()
-    for i = current_tab - 1, 1, -1 do
-        cmd("1tabclose")
-    end
-end
-
-map("n", "<leader>tO", close_other_tabs, opts)                 -- Close all other tabs (function)
-map("n", "<leader>tR", close_tabs_right, opts)                 -- Close tabs to the right
-map("n", "<leader>tL", close_tabs_left, opts)                  -- Close tabs to the left
-
-map("n", "<leader>ti", ":tabs<CR>", opts)                      -- List all tabs
-
-map("n", "<leader>tb", ":tab split<CR>", opts)                 -- Open current buffer in new tab
-map("n", "<leader>td", ":tab drop ", { noremap = true })       -- Drop file in tab (no silent to see command)
-
-map("n", "<leader>th", "1gt", opts)                            -- Go to first tab (home)
-map("n", "<leader>tl", ":tablast<CR>", opts)                   -- Go to last tab
