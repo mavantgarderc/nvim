@@ -160,8 +160,8 @@ end, {
 })
 
 -- === Keymaps ===
-map("n", "<leader>ts", M.select_theme, { desc = "Select theme" })
-map("n", "<leader>tn", M.cycle_next_theme, { desc = "Next theme" })
+map("n", "<leader>Ts", M.select_theme, { desc = "Select theme" })
+map("n", "<leader>Tn", M.cycle_next_theme, { desc = "Next theme" })
 
 -- === Public API ===
 M.load_theme = load_theme

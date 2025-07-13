@@ -4,7 +4,7 @@ local api = vim.api
 local map = vim.keymap.set
 local o = vim.o
 
-map("n", "<leader>u", cmd.UndotreeToggle, { desc = "Toggle undotree" })
+map("n", "<leader>u<leader>", cmd.UndotreeToggle, { desc = "Toggle undotree" })
 
 map("n", "<leader>ut", cmd.UndotreeToggle, { desc = "Toggle undotree"       })
 map("n", "<leader>uf", cmd.UndotreeFocus,  { desc = "Focus undotree window" })
