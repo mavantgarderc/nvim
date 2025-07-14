@@ -60,11 +60,15 @@ map("n", "<leader>;h", "<C-w>h", opts) -- Switch Window Left
 map("n", "<leader>;l", "<C-w>l", opts) -- Switch Window Right
 map("n", "<leader>;j", "<C-w>j", opts) -- Switch Window Down
 map("n", "<leader>;k", "<C-w>k", opts) -- Switch Window Up
+map("n", "<leader>hh", "<C-w>h", opts) -- Switch Window Left
+map("n", "<leader>ll", "<C-w>l", opts) -- Switch Window Right
+map("n", "<leader>jj", "<C-w>j", opts) -- Switch Window Down
+map("n", "<leader>kk", "<C-w>k", opts) -- Switch Window Up
 
-map("n", "<leader>HH", "<C-w>H", opts) -- Move Window to Left
-map("n", "<leader>LL", "<C-w>L", opts) -- Move Window to Right
-map("n", "<leader>JJ", "<C-w>J", opts) -- Move Window to Down
-map("n", "<leader>KK", "<C-w>K", opts) -- Move Window to Up
+map("n", "<leader>H", "<C-w>H", opts) -- Move Window to Left
+map("n", "<leader>L", "<C-w>L", opts) -- Move Window to Right
+map("n", "<leader>J", "<C-w>J", opts) -- Move Window to Down
+map("n", "<leader>K", "<C-w>K", opts) -- Move Window to Up
 
 map("n", "<leader>sph", ":sp<CR>", opts) -- split current window horizontally
 map("n", "<leader>spv", ":vs<CR>", opts) -- split current window vertically

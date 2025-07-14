@@ -28,117 +28,58 @@ end, { desc = "Continue flash" })
 
 local categories = {
     -- <leader>fcv
-    variable = {
-        keywords = {
-            "var", "let", "const",
-            "local", "global", "int",
-            "string", "float", "double",
-            "bool", "boolean", "char",
-            "byte", "short", "long",
-            "auto", "static", "extern",
-            "register", "volatile", "mutable",
-            "final", "readonly",
-        },
-        hl_group = "FlashVariable",
-    },
+    variable = { keywords = {
+        "var", "let", "const", "local", "global", "int", "string", "float",
+        "double", "bool", "boolean", "char", "byte", "short", "long", "auto",
+        "static", "extern", "register", "volatile", "mutable", "final", "readonly",
+    }, hl_group = "FlashVariable", },
     -- <leader>fcc
-    class = {
-        keywords = {
-            "class", "struct", "interface",
-            "enum", "union", "trait",
-            "protocol", "namespace", "module",
-            "package", "type", "typedef",
-            "using", "alias", "record",
-            "data", "newtype",
-        },
-        hl_group = "FlashClass",
-    },
+    class = { keywords = {
+        "class", "struct", "interface", "enum", "union", "trait", "protocol",
+        "namespace", "module", "package", "type", "typedef", "using", "alias",
+        "record", "data", "newtype",
+    }, hl_group = "FlashClass", },
     -- <leader>fcm
-    method = {
-        keywords = {
-            "function", "def", "method",
-            "func", "fn", "proc",
-            "sub", "routine", "lambda",
-            "arrow", "async", "await",
-            "yield", "generator", "constructor",
-            "destructor", "operator", "macro",
-        },
-        hl_group = "FlashMethod",
-    },
+    method = { keywords = {
+        "function", "def", "method", "func", "fn", "proc", "sub", "routine",
+        "lambda", "arrow", "async", "await", "yield", "generator", "constructor",
+        "destructor", "operator", "macro",
+    }, hl_group = "FlashMethod", },
     -- <leader>fca
-    access = {
-        keywords = {
-            "private", "public", "protected",
-            "internal", "package", "export",
-            "import", "from", "as",
-            "default", "static", "abstract",
-            "virtual", "override", "final",
-            "sealed", "partial",
-        },
-        hl_group = "FlashAccess",
-    },
+    access = { keywords = {
+        "private", "public", "protected", "internal", "package", "export",
+        "import", "from", "as", "default", "static", "abstract", "virtual",
+        "override", "final", "sealed", "partial",
+    }, hl_group = "FlashAccess", },
     -- <leader>fcl
-    conditionals = {
-        keywords = {
-            "if", "else", "elif",
-            "elseif", "unless", "when",
-            "case", "switch", "match",
-            "guard", "try", "catch",
-            "except", "finally", "rescue",
-            "ensure", "raise", "throw",
-            "assert",
-        },
-        hl_group = "FlashConditionals",
-    },
+    conditionals = { keywords = {
+        "if", "else", "elif", "elseif", "unless", "when",
+        "case", "switch", "match", "guard", "try", "catch", "except",
+        "finally", "rescue", "ensure", "raise", "throw", "assert",
+    }, hl_group = "FlashConditionals", },
     -- <leader>fci
-    iterators = {
-        keywords = {
-            "for", "foreach", "while",
-            "do", "loop", "repeat",
-            "until", "continue", "break",
-            "next", "redo", "retry",
-            "goto", "return", "exit",
-            "yield", "each", "map",
-            "filter", "reduce",
-        },
-        hl_group = "FlashIterators",
-    },
+    iterators = { keywords = {
+        "for", "foreach", "while", "do", "loop", "repeat", "until", "continue",
+        "break", "next", "redo", "retry", "goto", "return", "exit", "yield",
+        "each", "map", "filter", "reduce",
+    }, hl_group = "FlashIterators", },
     -- <leader>fco
-    operators = {
-        keywords = {
-            "and", "or", "not",
-            "AND", "OR", "NOT",
-            "in", "is", "typeof",
-            "instanceof", "new", "delete",
-            "sizeof", "alignof", "decltype",
-            "typeid", "const_cast", "static_cast",
-            "dynamic_cast", "reinterpret_cast",
-        },
-        hl_group = "FlashOperators",
-    },
+    operators = { keywords = {
+        "and", "or", "not", "AND", "OR", "NOT", "in", "is", "typeof", "instanceof",
+        "new", "delete", "sizeof", "alignof", "decltype", "typeid", "const_cast",
+        "static_cast", "dynamic_cast", "reinterpret_cast",
+    }, hl_group = "FlashOperators", },
     -- <leader>fck
-    constants = {
-        keywords = {
-            "true", "false", "null",
-            "nil", "none", "undefined",
-            "void", "this", "self",
-            "super", "base", "parent",
-            "prototype", "__proto__", "constructor",
-            "typeof",
-        },
-        hl_group = "FlashConstants",
-    },
+    constants = { keywords = {
+        "true", "false", "null", "nil", "none", "undefined", "void", "this",
+        "self", "super", "base", "parent", "prototype", "__proto__",
+        "constructor", "typeof",
+    }, hl_group = "FlashConstants", },
     -- <leader>fct
-    comments = {
-        keywords = {
-            "TODO", "FIXME", "NOTE",
-            "HACK", "XXX", "BUG",
-            "DEPRECATED", "REVIEW", "OPTIMIZE",
-            "WARNING", "IMPORTANT", "QUESTION",
-            "IDEA", "REFACTOR",
-        },
-        hl_group = "FlashComments",
-    },
+    comments = { keywords = {
+        "TODO", "FIXME", "NOTE", "HACK", "XXX", "BUG", "DEPRECATED", "REVIEW",
+        "OPTIMIZE", "WARNING", "IMPORTANT", "QUESTION", "IDEA", "REFACTOR",
+    }, hl_group = "FlashComments", },
 }
 
 -- === === === === === === === === === === === === === === === === === === === === === === === === === === === === === ===
