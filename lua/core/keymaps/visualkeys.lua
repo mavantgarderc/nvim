@@ -62,20 +62,14 @@ api.nvim_create_autocmd("FileType", {
 })
 
 
-map( "v", "<F2>", function()
-    if lsp and lsp.buf and lsp.buf.rename then
-        lsp.buf.rename()
-    else
-        notify("LSP rename not available")
-    end
+map("v", "<F2>", function()
+    if lsp and lsp.buf and lsp.buf.rename then lsp.buf.rename()
+    else notify("LSP rename not available") end
 end, { desc = "LSP Rename", noremap = true, silent = true, })
 
 map({ "n", "v"}, "<F4>", function()
-    if lsp and lsp.buf and lsp.buf.code_action then
-        lsp.buf.code_action()
-    else
-        notify("LSP code action not available")
-    end
+    if lsp and lsp.buf and lsp.buf.code_action then lsp.buf.code_action()
+    else notify("LSP code action not available") end
 end, { desc = "LSP Code Action", noremap = true, silent = true, })
 
 map("n", "<F6>", function()
@@ -97,14 +91,8 @@ map("n", "<F8>", ":Telescope live_grep<CR>",
 map({ "n", "v", "i" }, "<F9>", function() cmd(":LspRestart") end,
     { desc = "Restart LSP", noremap = true, silent = true, })
 
-
-map("n", "<F12>", function()
-    if lsp and lsp.buf and lsp.buf.definition then
-        lsp.buf.definition()
-    else
-        notify("LSP definition not available")
-    end
-end, { desc = "Go to Definition", noremap = true, silent = true, })
+map("n", "<F17>", ":TSPlaygroundToggle<CR>",
+    { desc = "Tree-sitter Playground", noremap = true, silent = true, })
 
 map("i", "<F22>",
     function() wo.relativenumber = not wo.relativenumber end,
@@ -113,5 +101,10 @@ map("i", "<F22>",
 map("n", "<F23>", ":TSHighlightCapturesUnderCursor<CR>",
     { desc = "Highlight under cursor", noremap = true, silent = true, })
 
-map("n", "<F17>", ":TSPlaygroundToggle<CR>",
-    { desc = "Tree-sitter Playground", noremap = true, silent = true, })
+map("n", "<F24>", function()
+    if lsp and lsp.buf and lsp.buf.definition then
+        lsp.buf.definition()
+    else
+        notify("LSP definition not available")
+    end
+end, { desc = "Go to Definition", noremap = true, silent = true, })
