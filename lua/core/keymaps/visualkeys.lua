@@ -3,39 +3,39 @@
 |=== F Keys ===|
 \==============/ ]]
 -- F01, n:
---      i: MD: H1
+--      i:
 --      v:
 -- F02, n:
---      i: MD: H2
---      v: LSP Rename
--- F03, n: LSP Format
---      i: MD: H3
---      v:
--- F04, n: LSP Code action
---      i: MD: H4
---      v:
--- F05, n: Toggle tree-sitter playground
---      i: MD: H5
---      v:
--- F06, n: Toggle Diagnostics Virtual Text
---      i: MD: H6
---      v:
--- F07, n: Spellcheck toggle
 --      i:
 --      v:
--- F08, n: Telescope live grep (project search)
+-- F03, n:
 --      i:
 --      v:
--- F09, n: Restart LSP
+-- F04, n:
+--      i:
+--      v:
+-- F05, n:
+--      i:
+--      v:
+-- F06, n:
+--      i:
+--      v:
+-- F07, n:
+--      i:
+--      v:
+-- F08, n:
+--      i:
+--      v:
+-- F09, n:
 --      i:
 --      v:
 -- F10, n:
---      i: Toggle Relative Line Numbers
---      v:
--- F11, n: Treesitter highlight floater
 --      i:
 --      v:
--- F12, n: LSP Go to Definition
+-- F11, n:
+--      i:
+--      v:
+-- F12, n:
 --      i:
 --      v:
 -- map({ "n", "v", "i" }, "<F24>", "0", opts)
@@ -52,12 +52,12 @@ local diagnostics = vim.diagnostic
 api.nvim_create_autocmd("FileType", {
     pattern = "markdown",
     callback = function()
-        map("i", "<F1>", "# ",      { buffer = true, noremap = true})
-        map("i", "<F2>", "## ",     { buffer = true, noremap = true})
-        map("i", "<F3>", "### ",    { buffer = true, noremap = true})
-        map("i", "<F4>", "#### ",   { buffer = true, noremap = true})
-        map("i", "<F5>", "##### ",  { buffer = true, noremap = true})
-        map("i", "<F6>", "###### ", { buffer = true, noremap = true})
+        map("i", "<F1>", "<C-[>I# <C-[>A",      { buffer = true, noremap = true})
+        map("i", "<F2>", "<C-[>I## <C-[>A",     { buffer = true, noremap = true})
+        map("i", "<F3>", "<C-[>I### <C-[>A",    { buffer = true, noremap = true})
+        map("i", "<F4>", "<C-[>I#### <C-[>A",   { buffer = true, noremap = true})
+        map("i", "<F5>", "<C-[>I##### <C-[>A",  { buffer = true, noremap = true})
+        map("i", "<F6>", "<C-[>I###### <C-[>A", { buffer = true, noremap = true})
     end
 })
 
@@ -97,9 +97,6 @@ map("n", "<F8>", ":Telescope live_grep<CR>",
 map({ "n", "v", "i" }, "<F9>", function() cmd(":LspRestart") end,
     { desc = "Restart LSP", noremap = true, silent = true, })
 
-map("i", "<F10>",
-    function() wo.relativenumber = not wo.relativenumber end,
-    { desc = "Toggle Relative Line Numbers", noremap = true, silent = true, })
 
 map("n", "<F12>", function()
     if lsp and lsp.buf and lsp.buf.definition then
@@ -108,6 +105,10 @@ map("n", "<F12>", function()
         notify("LSP definition not available")
     end
 end, { desc = "Go to Definition", noremap = true, silent = true, })
+
+map("i", "<F22>",
+    function() wo.relativenumber = not wo.relativenumber end,
+    { desc = "Toggle Relative Line Numbers", noremap = true, silent = true, })
 
 map("n", "<F23>", ":TSHighlightCapturesUnderCursor<CR>",
     { desc = "Highlight under cursor", noremap = true, silent = true, })
