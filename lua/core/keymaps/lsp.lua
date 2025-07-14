@@ -112,14 +112,18 @@ function M.setup_lsp_keymaps()
             end
 
             -- sqls-specific
-            if lsp.get_active_clients({ bufnr = event.buf, name = "sqls" })[1] then
-                map("n", "<leader>se", ":SqlsExecuteQuery<CR>",         opts)
-                map("n", "<leader>sr", ":SqlsExecuteQueryVertical<CR>", opts)
-                map("n", "<leader>st", ":SqlsShowTables<CR>",           opts)
-                map("n", "<leader>sd", ":SqlsShowDatabases<CR>",        opts)
-                map("n", "<leader>sc", ":SqlsShowConnections<CR>",      opts)
-                map("v", "<leader>se", ":SqlsExecuteQuery<CR>",         opts)
-                map("v", "<leader>sr", ":SqlsExecuteQueryVertical<CR>", opts)
+            local clients = lsp.get_clients({ bufnr = event.buf })
+            for _, client in ipairs(clients) do
+                if client.name == "sqls" then
+                    map("n", "<leader>se", ":SqlsExecuteQuery<CR>",         opts)
+                    map("n", "<leader>sr", ":SqlsExecuteQueryVertical<CR>", opts)
+                    map("n", "<leader>st", ":SqlsShowTables<CR>",           opts)
+                    map("n", "<leader>sd", ":SqlsShowDatabases<CR>",        opts)
+                    map("n", "<leader>sc", ":SqlsShowConnections<CR>",      opts)
+                    map("v", "<leader>se", ":SqlsExecuteQuery<CR>",         opts)
+                    map("v", "<leader>sr", ":SqlsExecuteQueryVertical<CR>", opts)
+                    break
+                end
             end
         end,
     })
