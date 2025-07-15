@@ -282,6 +282,6 @@ return {
             end, { desc = "Flash jump" })
         end
 
-        vim.notify("Flash.nvim loaded successfully", vim.log.levels.INFO)
+        -- vim.notify("Flash.nvim loaded successfully", vim.log.levels.INFO)
     end,
 }

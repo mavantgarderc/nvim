@@ -383,7 +383,7 @@ map("n", "<leader>bm", "mM", tbl_extend("force", opts, { desc = "Bookmark: Main 
 map("n", "<leader>bc", "mC", tbl_extend("force", opts, { desc = "Bookmark: Config file"   }))
 map("n", "<leader>bt", "mT", tbl_extend("force", opts, { desc = "Bookmark: Test file"     }))
 map("n", "<leader>br", "mR", tbl_extend("force", opts, { desc = "Bookmark: README file"   }))
-map("n", "<leader>bd", "mD", tbl_extend("force", opts, { desc = "Bookmark: Documentation" }))
+-- map("n", "<leader>bd", "mD", tbl_extend("force", opts, { desc = "Bookmark: Documentation" }))
 
 -- Jump to project bookmarks
 map("n", "<leader>Bm", "'M", tbl_extend("force", opts, { desc = "Go to Main bookmark"          }))
