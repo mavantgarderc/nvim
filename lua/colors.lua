@@ -335,6 +335,7 @@ M.theme_map = {
     wildcharm = { "wildcharm", },
     zaibatsu  = { "zaibatsu",  },
     quiet     = { "quiet",     },
+    gotham    = { "gotham"     },
 }
 
 

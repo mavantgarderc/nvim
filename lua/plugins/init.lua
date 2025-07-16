@@ -19,6 +19,7 @@ return {
         "EdenEast/nightfox.nvim",
         "rebelot/kanagawa.nvim",
         "nyoom-engineering/oxocarbon.nvim",
+        "whatyouhide/vim-gotham",
     },
     -- ==================================================
     -- === LSP ===
