@@ -18,16 +18,15 @@ This structures allow the user to read the config modules, as a reference study.
 
 I'll appreciate any recommendations if you do by [gmail](manihabibinava@gmail.com).
 
-> F-Keys are available for OGs, but not a good idea to take the habbit (for sake of zen).
+> F-Keys are availablr for OGs, but not a good idea to take the habit (for sake of zen).
 
-## To Do
-- [x] `themepicker.lua` & `colors.lua`: Selecting & changing theme & filetype logic + related keymaps
+`themepicker.lua` & `colors.lua`: Selecting & changing theme & filetype logic + related keymaps
 
-- [x] `lsp/`: Per-language LSP Configuration
+`lsp/`: Modular Per-language LSP Configuration; extensible & usage specific
 
-- [x] `.editorconfig`: Cross-IDE style constraints
+`.editorconfig`: Cross-IDE style constraints to avoid conflicts with other devs & IDEs like Visual Studio, Visual Studio Code, etc.
 
-- [x] Explore Out-Of-The-Box Configs' Ideas:
+Used out-of-the-box nvim distros & their lua-scripted features:
   - ~~NvChad~~
   - ~~Kickstart~~
   - ~~LunarVim~~
