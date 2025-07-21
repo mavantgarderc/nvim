@@ -17,7 +17,6 @@ return {
         "catppuccin/nvim",
         "folke/tokyonight.nvim",
         "ellisonleao/gruvbox.nvim",
-        "rose-pine/neovim",
         "EdenEast/nightfox.nvim",
         "rebelot/kanagawa.nvim",
         "thesimonho/kanagawa-paper.nvim",
