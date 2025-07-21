@@ -20,6 +20,7 @@ return {
         "rose-pine/neovim",
         "EdenEast/nightfox.nvim",
         "rebelot/kanagawa.nvim",
+        "thesimonho/kanagawa-paper.nvim",
         "nyoom-engineering/oxocarbon.nvim",
         "whatyouhide/vim-gotham",
     },

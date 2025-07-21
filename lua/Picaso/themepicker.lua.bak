@@ -1,0 +1,301 @@
+local M = {}
+local config = require("colors")
+
+local cmd = vim.cmd
+local notify = vim.notify
+local api = vim.api
+local schedule = vim.schedule
+local log = vim.log
+local ui = vim.ui
+local map = vim.keymap.set
+local fn = vim.fn
+local defer_fn = vim.defer_fn
+
+-- Current theme state
+local current_theme = nil
+
+-- === Theme Loader ===
+local function load_theme(theme_name, is_preview)
+    if not theme_name then return end
+    if not is_preview and current_theme == theme_name then return end
+    local ok, err = pcall(cmd.colorscheme, theme_name)
+    if ok then
+        if not is_preview then current_theme = theme_name end
+    else
+        notify("Failed to load theme '" .. theme_name .. "': " .. err, log.levels.ERROR)
+    end
+end
+
+-- === Theme validation ===
+local function is_theme_available(theme_name)
+    for _, name in ipairs(fn.getcompletion("", "color")) do
+        if name == theme_name then return true end
+    end
+    return false
+end
+
+-- === Get theme list ===
+local function get_theme_list()
+    local themes = {}
+    for _, variants in pairs(config.theme_map) do
+        for _, theme in ipairs(variants) do
+            if is_theme_available(theme) then table.insert(themes, theme) end
+        end
+    end
+    return themes
+end
+
+-- === Auto-set Theme Based on Filetype ===
+local function set_theme_by_filetype(buf)
+    local ft = api.nvim_buf_get_option(buf or 0, "filetype")
+    local theme = config.filetype_themes[ft]
+    if theme and is_theme_available(theme) then load_theme(theme) end
+end
+
+-- === Autocmds ===
+local theme_augroup = api.nvim_create_augroup("ThemePicker", { clear = true })
+
+api.nvim_create_autocmd("FileType", {
+    group = theme_augroup,
+    callback = function(args) set_theme_by_filetype(args.buf) end,
+})
+
+api.nvim_create_autocmd("BufEnter", {
+    group = theme_augroup,
+    callback = function(args)
+        if api.nvim_buf_get_option(args.buf, "buflisted") then set_theme_by_filetype(args.buf) end
+    end,
+})
+
+-- === Theme Preview Command ===
+api.nvim_create_user_command("PT", function(opts)
+    local themes = get_theme_list()
+    local delay = tonumber(opts.args) or 700
+    local original_theme = current_theme
+
+    local function restore_theme()
+        if original_theme then load_theme(original_theme) end
+    end
+
+    local preview_index = 1
+    local function preview_next()
+        if preview_index > #themes then
+            restore_theme()
+            notify("Preview complete", log.levels.INFO)
+            return
+        end
+        local theme = themes[preview_index]
+        notify(
+            "Previewing: " .. theme .. " (" .. preview_index .. "/" .. #themes .. ")",
+            log.levels.INFO,
+            { title = "Theme Preview" }
+        )
+        load_theme(theme, true)
+        preview_index = preview_index + 1
+        defer_fn(preview_next, delay)
+    end
+
+    preview_next()
+end, {
+    nargs = "?",
+    desc = "Preview all themes (optional delay in ms)",
+})
+
+-- === Custom Theme Picker ===
+local function create_theme_picker()
+    local themes = get_theme_list()
+    local original_theme = current_theme
+    local preview_theme = nil
+
+    if #themes == 0 then
+        notify("No themes available", log.levels.WARN)
+        return
+    end
+
+    -- Create picker window
+    local buf = api.nvim_create_buf(false, true)
+    local width = math.floor(vim.o.columns * 0.6)
+    local height = math.min(#themes + 2, math.floor(vim.o.lines * 0.8))
+    local row = math.floor((vim.o.lines - height) / 2)
+    local col = math.floor((vim.o.columns - width) / 2)
+
+    local win = api.nvim_open_win(buf, true, {
+        relative = "editor",
+        width = width,
+        height = height,
+        row = row,
+        col = col,
+        style = "minimal",
+        border = "rounded",
+        title = " Theme Picker ",
+        title_pos = "center"
+    })
+
+    -- Populate buffer with themes
+    local lines = { "Select a theme (j/k to navigate, Enter to select, Esc to cancel):", "" }
+    for i, theme in ipairs(themes) do
+        local prefix = (theme == current_theme) and "● " or "  "
+        table.insert(lines, prefix .. theme)
+    end
+
+    api.nvim_buf_set_lines(buf, 0, -1, false, lines)
+    api.nvim_buf_set_option(buf, "modifiable", false)
+    api.nvim_buf_set_option(buf, "bufhidden", "wipe")
+
+    -- Set cursor to current theme or first theme
+    local cursor_line = 3
+    for i, theme in ipairs(themes) do
+        if theme == current_theme then
+            cursor_line = i + 2
+            break
+        end
+    end
+    api.nvim_win_set_cursor(win, { cursor_line, 2 })
+
+    -- Highlight current line
+    local ns_id = api.nvim_create_namespace("theme_picker")
+    local function update_highlight()
+        api.nvim_buf_clear_namespace(buf, ns_id, 0, -1)
+        local line = api.nvim_win_get_cursor(win)[1]
+        if line > 2 then
+            api.nvim_buf_add_highlight(buf, ns_id, "Visual", line - 1, 0, -1)
+        end
+    end
+    update_highlight()
+
+    -- Preview function
+    local function preview_current_theme()
+        local line = api.nvim_win_get_cursor(win)[1]
+        if line > 2 then
+            local theme_index = line - 2
+            local theme = themes[theme_index]
+            if theme and theme ~= preview_theme then
+                preview_theme = theme
+                load_theme(theme, true)
+            end
+        end
+    end
+
+    -- Cleanup function
+    local function cleanup()
+        if api.nvim_win_is_valid(win) then
+            api.nvim_win_close(win, true)
+        end
+        if preview_theme and preview_theme ~= current_theme then
+            if original_theme then
+                load_theme(original_theme)
+            end
+        end
+    end
+
+    -- Apply selected theme
+    local function apply_theme()
+        local line = api.nvim_win_get_cursor(win)[1]
+        if line > 2 then
+            local theme_index = line - 2
+            local theme = themes[theme_index]
+            if theme then
+                load_theme(theme)
+                notify("Theme set to: " .. theme, log.levels.INFO)
+            end
+        end
+        cleanup()
+    end
+
+    -- Key mappings
+    local opts = { buffer = buf, nowait = true }
+
+    -- Navigation
+    map("n", "j", function()
+        local line = api.nvim_win_get_cursor(win)[1]
+        if line < #lines then
+            api.nvim_win_set_cursor(win, { line + 1, 2 })
+            update_highlight()
+            schedule(preview_current_theme)
+        end
+    end, opts)
+
+    map("n", "k", function()
+        local line = api.nvim_win_get_cursor(win)[1]
+        if line > 3 then
+            api.nvim_win_set_cursor(win, { line - 1, 2 })
+            update_highlight()
+            schedule(preview_current_theme)
+        end
+    end, opts)
+
+    -- Selection
+    map("n", "<CR>", apply_theme, opts)
+    map("n", "<Esc>", cleanup, opts)
+    map("n", "q", cleanup, opts)
+
+    -- Arrow keys
+    map("n", "<Down>", function()
+        local line = api.nvim_win_get_cursor(win)[1]
+        if line < #lines then
+            api.nvim_win_set_cursor(win, { line + 1, 2 })
+            update_highlight()
+            schedule(preview_current_theme)
+        end
+    end, opts)
+
+    map("n", "<Up>", function()
+        local line = api.nvim_win_get_cursor(win)[1]
+        if line > 3 then
+            api.nvim_win_set_cursor(win, { line - 1, 2 })
+            update_highlight()
+            schedule(preview_current_theme)
+        end
+    end, opts)
+
+    -- Initial preview
+    schedule(preview_current_theme)
+end
+
+-- === Theme Selector (replaces telescope) ===
+function M.select_theme()
+    create_theme_picker()
+end
+
+-- === Theme Cycling ===
+M.current_theme_index = 1
+
+function M.cycle_next_theme()
+    local themes = get_theme_list()
+    if #themes == 0 then
+        notify("No themes available", log.levels.WARN)
+        return
+    end
+    M.current_theme_index = M.current_theme_index % #themes + 1
+    local theme = themes[M.current_theme_index]
+    load_theme(theme)
+    notify(
+        "Theme: " .. theme .. " (" .. M.current_theme_index .. "/" .. #themes .. ")",
+        log.levels.INFO,
+        { title = "Theme Cycler" }
+    )
+end
+
+-- === User Commands ===
+api.nvim_create_user_command("TT", function(opts)
+    local theme = opts.args
+    if is_theme_available(theme) then
+        load_theme(theme)
+    else
+        notify("Theme '" .. theme .. "' not available", log.levels.ERROR)
+    end
+end, {
+    nargs = 1,
+    complete = function() return get_theme_list() end,
+    desc = "Set theme by name",
+})
+
+-- === Keymaps ===
+map("n", "<leader>ts", M.select_theme, { desc = "Select theme" })
+-- map("n", "<leader>ttn", M.cycle_next_theme, { desc = "Next theme" })
+
+-- === Public API ===
+M.load_theme = load_theme
+M.get_current_theme = function() return current_theme end
+
+return M
