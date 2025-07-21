@@ -7,6 +7,8 @@ local log = vim.log
 local map = vim.keymap.set
 local notify = vim.notify
 local schedule = vim.schedule
+local deepcopy = vim.deepcopy
+local cmd = vim.cmd
 
 -- === Enhanced Theme Picker ===
 function M.create_theme_picker()
@@ -24,8 +26,8 @@ function M.create_theme_picker()
 
     -- Create picker window
     local buf = api.nvim_create_buf(false, true)
-    local width = math.floor(o.columns * 0.6)
-    local height = math.min(#themes + 4, math.floor(o.lines * 0.8))
+    local width = math.floor(o.columns * 0.2)
+    local height = math.min(#themes + 4, math.floor(o.lines * 0.7))
     local row = math.floor((o.lines - height) / 2)
     local col = math.floor((o.columns - width) / 2)
 
@@ -44,7 +46,7 @@ function M.create_theme_picker()
     -- Filter themes based on search text
     local function filter_themes()
         if filter_text == "" then
-            filtered_themes = vim.deepcopy(themes)
+            filtered_themes = deepcopy(themes)
         else
             filtered_themes = {}
             local pattern = filter_text:lower()
@@ -59,11 +61,11 @@ function M.create_theme_picker()
     -- Get status line text based on current mode
     local function get_status_text()
         if search_mode then
-            return "Search: " .. filter_text .. " (Enter to confirm, Esc to cancel)"
+            return "Search: " .. filter_text
         elseif filter_text ~= "" then
             return "Filter: " .. filter_text .. " (/ to search, c to clear)"
         else
-            return "j/k: navigate | Enter: select | /: search | r: random | q/Esc: quit"
+            return "Enter: select | r: random | q/Esc: quit"
         end
     end
 
@@ -149,7 +151,7 @@ function M.create_theme_picker()
     local function clear_keymaps()
         -- This is a bit hacky but necessary since Neovim doesn't have a direct way to clear buffer keymaps
         api.nvim_buf_call(buf, function()
-            vim.cmd("mapclear <buffer>")
+            cmd("mapclear <buffer>")
         end)
     end
 
