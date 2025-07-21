@@ -1,7 +1,6 @@
--- lua/theme-manager/autocmds.lua
 local M = {}
 
-local theme_loader = require("Picaso.theme-loader")
+local theme_loader = require("Raphael.theme-loader")
 local api = vim.api
 
 local theme_augroup = nil

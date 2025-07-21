@@ -20,7 +20,9 @@ I'll appreciate any recommendations if you do by [gmail](manihabibinava@gmail.co
 
 > F-Keys are availablr for OGs, but not a good idea to take the habit (for sake of zen).
 
-`themepicker.lua` & `colors.lua`: Selecting & changing theme & filetype logic + related keymaps
+Raphael: Selecting & changing theme & filetype logic + related keymaps
+- Mava loves La Italia. Big Three of La Italia's Painting are: da Vinci, Michelangelo, & Rapheal...
+- Raphael was the best at harmonious paintings & colorings...
 
 `lsp/`: Modular Per-language LSP Configuration; extensible & usage specific
 

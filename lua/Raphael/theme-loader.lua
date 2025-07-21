@@ -1,7 +1,6 @@
--- lua/theme-manager/theme-loader.lua
 local M = {}
 
-local config = require("Picaso.colors")
+local config = require("Raphael.colors")
 local cmd = vim.cmd
 local notify = vim.notify
 local fn = vim.fn

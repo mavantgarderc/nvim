@@ -1,13 +1,13 @@
 local M = {}
 
 -- Import submodules
-local theme_loader = require("Picaso.theme-loader")
-local theme_picker = require("Picaso.theme-picker")
-local theme_preview = require("Picaso.theme-preview")
-local theme_cycler = require("Picaso.theme-cycler")
-local autocmds = require("Picaso.autocmds")
-local commands = require("Picaso.commands")
-local keymaps = require("Picaso.keymaps")
+local theme_loader = require("Raphael.theme-loader")
+local theme_picker = require("Raphael.theme-picker")
+local theme_preview = require("Raphael.theme-preview")
+local theme_cycler = require("Raphael.theme-cycler")
+local autocmds = require("Raphael.autocmds")
+local commands = require("Raphael.commands")
+local keymaps = require("Raphael.keymaps")
 
 -- Initialize the theme manager
 function M.setup(opts)

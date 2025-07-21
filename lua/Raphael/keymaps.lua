@@ -1,9 +1,8 @@
--- lua/Picaso/keymaps.lua
 local M = {}
 
-local theme_picker = require("Picaso.theme-picker")
-local theme_cycler = require("Picaso.theme-cycler")
-local theme_preview = require("Picaso.theme-preview")
+local theme_picker = require("Raphael.theme-picker")
+local theme_cycler = require("Raphael.theme-cycler")
+local theme_preview = require("Raphael.theme-preview")
 local map = vim.keymap.set
 
 -- Default keymap configuration

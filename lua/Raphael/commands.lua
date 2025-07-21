@@ -1,10 +1,9 @@
--- lua/Picaso/commands.lua
 local M = {}
 
-local theme_loader = require("Picaso.theme-loader")
-local theme_preview = require("Picaso.theme-preview")
-local theme_picker = require("Picaso.theme-picker")
-local theme_cycler = require("Picaso.theme-cycler")
+local theme_loader = require("Raphael.theme-loader")
+local theme_preview = require("Raphael.theme-preview")
+local theme_picker = require("Raphael.theme-picker")
+local theme_cycler = require("Raphael.theme-cycler")
 local api = vim.api
 local notify = vim.notify
 local log = vim.log
