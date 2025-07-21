@@ -9,6 +9,8 @@ return {
     "nvim-lualine/lualine.nvim",
     -- startup dashboard
     "goolord/alpha-nvim",
+    -- Colorizer
+    "norcalli/nvim-colorizer.lua",
     -- themes
     {
         "RRethy/base16-nvim",
