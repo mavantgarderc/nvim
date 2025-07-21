@@ -6,7 +6,7 @@ local theme_picker = require("Raphael.picker")
 local theme_preview = require("Raphael.preview")
 local theme_cycler = require("Raphael.cycler")
 local autocmds = require("Raphael.autocmds")
-local commands = require("Raphael.commands")
+local commands = require("Raphael.cmds")
 local keymaps = require("Raphael.keymaps")
 
 -- Initialize the theme manager

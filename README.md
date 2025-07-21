@@ -1,28 +1,29 @@
-And for them whom following Grimnir's path, The Allfather
-obliged be armored by 100% layout seiðr...
+Odin at Tehran holding a Katana...
 
 # Neovim Configuration
 Rebuild of my Vim setup on Nvim from scratch; nothing more...
-& ofcourse a lil' bit of modernization... or more :)
+& ofcourse a lil' bit of modernization... or perhaps a lot :)
 
 ## Notes
 ### Keymaps
-Keymaps are modularized to help the user engage; good for memorization.
+Keymaps are modularized to help the user engage; Au-DHD friendly.
 
-You'll see three types:
-1. Plugin related keymaps, located in `lua/plugins/{plugin_config_file}`
-2. Nvim keymaps located in `lua/core/keymaps/`, categorized:
+You'll see three types at `lua/core/keymaps/`:
     - Customs
     - Native Re-implementations
+    - Plugin Keymaps
 This structures allow the user to read the config modules, as a reference study.
 
-I'll appreciate any recommendations if you do by [gmail](manihabibinava@gmail.com).
+I'll appreciate any recommendations if you do by [gmail](manihabibinava@gmail.com) or submit issues.
 
 > F-Keys are availablr for OGs, but not a good idea to take the habit (for sake of zen).
 
-Raphael: Selecting & changing theme & filetype logic + related keymaps
-- Mava loves La Italia. Big Three of La Italia's Painting are: da Vinci, Michelangelo, & Rapheal...
-- Raphael was the best at harmonious paintings & colorings...
+Among La Italia's best painters, Raphael was the best at harmonious painting & colorings...
+`Raphael/`: Theme management with auto & user commands
+    - FileType theme appliance; toggle to turn off.
+    - Live theme-selector.
+    - TODO: Integrations with Ghostty & Starship.
+    - TODO: TOML & Hex Code support, powered by [Base16](https://github.com/RRethy/base16-nvim); TOML parser, etc. needed.
 
 `lsp/`: Modular Per-language LSP Configuration; extensible & usage specific
 
