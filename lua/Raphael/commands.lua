@@ -1,9 +1,9 @@
 local M = {}
 
-local theme_loader = require("Raphael.theme-loader")
-local theme_preview = require("Raphael.theme-preview")
-local theme_picker = require("Raphael.theme-picker")
-local theme_cycler = require("Raphael.theme-cycler")
+local theme_loader = require("Raphael.loader")
+local theme_preview = require("Raphael.preview")
+local theme_picker = require("Raphael.picker")
+local theme_cycler = require("Raphael.cycler")
 local api = vim.api
 local notify = vim.notify
 local log = vim.log

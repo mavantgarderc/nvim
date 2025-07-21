@@ -1,10 +1,10 @@
 local M = {}
 
 -- Import submodules
-local theme_loader = require("Raphael.theme-loader")
-local theme_picker = require("Raphael.theme-picker")
-local theme_preview = require("Raphael.theme-preview")
-local theme_cycler = require("Raphael.theme-cycler")
+local theme_loader = require("Raphael.loader")
+local theme_picker = require("Raphael.picker")
+local theme_preview = require("Raphael.preview")
+local theme_cycler = require("Raphael.cycler")
 local autocmds = require("Raphael.autocmds")
 local commands = require("Raphael.commands")
 local keymaps = require("Raphael.keymaps")

@@ -1,8 +1,8 @@
 local M = {}
 
-local theme_picker = require("Raphael.theme-picker")
-local theme_cycler = require("Raphael.theme-cycler")
-local theme_preview = require("Raphael.theme-preview")
+local theme_picker = require("Raphael.picker")
+local theme_cycler = require("Raphael.cycler")
+local theme_preview = require("Raphael.preview")
 local map = vim.keymap.set
 
 -- Default keymap configuration
