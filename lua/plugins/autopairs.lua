@@ -21,26 +21,26 @@ return {
 
     autopairs.add_rules({
       Rule("'", "'", { "-python", "-lua" })
-        :with_pair(cond.not_after_regex("%w"))
-        :with_pair(cond.not_before_regex("%w")),
+          :with_pair(cond.not_after_regex("%w"))
+          :with_pair(cond.not_before_regex("%w")),
 
       Rule(" ", " ")
-        :with_pair(function(opts)
-          return tbl_contains({ "(", "[", "{", "<" }, opts.prev_char:sub(-1, -1))
-        end),
+          :with_pair(function(opts)
+            return tbl_contains({ "(", "[", "{", "<" }, opts.prev_char:sub(-1, -1))
+          end),
 
       Rule("$", "$", "tex")
-        :with_move(cond.after_text("$"))
+          :with_move(cond.after_text("$"))
     })
 
     autopairs.add_rules({
       Rule("<!--", "-->", "html"):only_cr(),
       Rule("<", ">", { "html", "typescriptreact", "javascriptreact" })
-        :replace_endpair(function(opts)
-          return string.format("</%s>", opts.ts_match or "")
-        end)
-        :use_regex(true)
-        :set_end_pair_length(0),
+          :replace_endpair(function(opts)
+            return string.format("</%s>", opts.ts_match or "")
+          end)
+          :use_regex(true)
+          :set_end_pair_length(0),
     })
 
     -- ===== CMP Integration =====

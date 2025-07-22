@@ -10,10 +10,10 @@ return {
         scratch_repl = true,
         repl_definition = {
           sh = {
-            command = {"zsh"}
+            command = { "zsh" }
           },
           python = {
-            command = {"python3"},  -- or ipython
+            command = { "python3" }, -- or ipython
             format = require("iron.fts.common").bracketed_paste,
           }
         },

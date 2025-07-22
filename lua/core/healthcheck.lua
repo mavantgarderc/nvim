@@ -10,17 +10,17 @@ local function check_version()
   if not ver.ge then
     return false, "Neovim out of date (pre-0.10)"
   end
-  return ver.ge(ver, {0, 10, 0}),
-         string.format("Neovim version: %d.%d.%d", ver.major, ver.minor, ver.patch)
+  return ver.ge(ver, { 0, 10, 0 }),
+      string.format("Neovim version: %d.%d.%d", ver.major, ver.minor, ver.patch)
 end
 
 local function check_external_reqs()
   local results = {}
-  for _, exe in ipairs {"git", "make", "unzip", "rg"} do
+  for _, exe in ipairs { "git", "make", "unzip", "rg" } do
     local ok = fn.executable(exe) == 1
     table.insert(results, {
       ok = ok,
-      message = ok and ("Found executable: "..exe) or ("Missing executable: "..exe)
+      message = ok and ("Found executable: " .. exe) or ("Missing executable: " .. exe)
     })
   end
   return results
@@ -33,14 +33,14 @@ end
 
 local function config_check()
   local ok, err = pcall(cmd, "source $MYVIMRC")
-  return ok, ok and "Config loads successfully" or ("Config error: "..tostring(err))
+  return ok, ok and "Config loads successfully" or ("Config error: " .. tostring(err))
 end
 
 function M.check()
   local version_ok, version_msg = check_version()
   local external_reqs = check_external_reqs()
   local config_ok, config_msg = config_check()
-  local critical_plugins = {"nvim-treesitter", "nvim-lspconfig", "plenary.nvim", "lazy.nvim"}
+  local critical_plugins = { "nvim-treesitter", "nvim-lspconfig", "plenary.nvim", "lazy.nvim" }
   local missing_plugins = {}
 
   for _, plugin in ipairs(critical_plugins) do
@@ -50,21 +50,21 @@ function M.check()
   end
 
   local results = {
-    {header = "=== SYSTEM & DEPENDENCIES ==="},
-    {ok = version_ok, message = version_msg},
-    {header = "=== EXTERNAL DEPENDENCIES ==="},
+    { header = "=== SYSTEM & DEPENDENCIES ===" },
+    { ok = version_ok,                         message = version_msg },
+    { header = "=== EXTERNAL DEPENDENCIES ===" },
   }
 
   for _, req in ipairs(external_reqs) do
     table.insert(results, req)
   end
 
-  table.insert(results, {header = "=== USER CONFIG ==="})
-  table.insert(results, {ok = config_ok, message = config_msg})
+  table.insert(results, { header = "=== USER CONFIG ===" })
+  table.insert(results, { ok = config_ok, message = config_msg })
 
-  table.insert(results, {header = "=== CRITICAL PLUGINS ==="})
+  table.insert(results, { header = "=== CRITICAL PLUGINS ===" })
   if #missing_plugins == 0 then
-    table.insert(results, {ok = true, message = "All critical plugins installed"})
+    table.insert(results, { ok = true, message = "All critical plugins installed" })
   else
     table.insert(results, {
       ok = false,
@@ -89,7 +89,7 @@ function M.run()
 end
 
 if not g.loaded_core_healthcheck then
-  api.nvim_create_user_command("Himp", M.run, {desc = "Run config health check"})
+  api.nvim_create_user_command("Himp", M.run, { desc = "Run config health check" })
 
   api.nvim_create_user_command("CheckhealthConfig", function()
     local results = M.check()
@@ -109,7 +109,7 @@ if not g.loaded_core_healthcheck then
     end
     fn.setqflist(qf_list)
     cmd("copen")
-  end, {desc = "Detailed config health check"})
+  end, { desc = "Detailed config health check" })
   g.loaded_core_healthcheck = true
 end
 

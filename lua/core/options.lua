@@ -26,16 +26,16 @@ opt.number = true
 --opt.relativenumber = true
 opt.numberwidth = 2
 
-opt.expandtab = true    -- Convert tabs to spaces
+opt.expandtab = true -- Convert tabs to spaces
 opt.shiftwidth = 4
-opt.softtabstop =  4
+opt.softtabstop = 4
 opt.tabstop = 4
 
-schedule(function()    -- OS-Nvim clipboard sync
-    o.clipboard = "unnamedplus"
+schedule(function() -- OS-Nvim clipboard sync
+  o.clipboard = "unnamedplus"
 end)
 
-o.showmode = false -- don't show the mode (shown in lualine)
+o.showmode = false   -- don't show the mode (shown in lualine)
 
 o.cursorline = false -- show which line cursor is on
 -- opt.guicursor = ""
@@ -50,16 +50,16 @@ opt.swapfile = false
 opt.undodir = os.getenv("HOME") .. "/.vim/undodir"
 opt.undofile = true
 
-opt.hlsearch = true    -- Show matches while typing
-opt.incsearch = true   -- Highlight all matches
+opt.hlsearch = true      -- Show matches while typing
+opt.incsearch = true     -- Highlight all matches
 
-opt.termguicolors = true  -- enable 24-bit RGB colors
+opt.termguicolors = true -- enable 24-bit RGB colors
 
 opt.scrolloff = 3
-opt.signcolumn = "yes"    -- Always show sign column (LSP, Git, etc.)
+opt.signcolumn = "yes" -- Always show sign column (LSP, Git, etc.)
 opt.isfname:append("@-@")
 
 opt.updatetime = 50
 
-opt.splitright = true        -- Vertical splits open to the right
-opt.splitbelow = true        -- Horizontal splits open below
+opt.splitright = true -- Vertical splits open to the right
+opt.splitbelow = true -- Horizontal splits open below

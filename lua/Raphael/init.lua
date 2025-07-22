@@ -11,13 +11,13 @@ local keymaps = require("Raphael.keymaps")
 
 -- Initialize the theme manager
 function M.setup(opts)
-    opts = opts or {}
+  opts = opts or {}
 
-    -- Initialize submodules
-    theme_loader.setup(opts)
-    autocmds.setup()
-    commands.setup()
-    keymaps.setup(opts.keymaps)
+  -- Initialize submodules
+  theme_loader.setup(opts)
+  autocmds.setup()
+  commands.setup()
+  keymaps.setup(opts.keymaps)
 end
 
 -- Public API

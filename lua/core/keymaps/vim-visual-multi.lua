@@ -8,15 +8,18 @@ local fn = vim.fn
 
 -- Functions to help with vim-visual-multi usage
 local function vm_status()
-    if g.VM_Selection then
-        local count = g.VM_Selection.Vars.index
-        print("VM: " .. count .. " cursors active")
-    else
-        print("VM: No active cursors")
-    end
+  if g.VM_Selection then
+    local count = g.VM_Selection.Vars.index
+    print("VM: " .. count .. " cursors active")
+  else
+    print("VM: No active cursors")
+  end
 end
 
-local function vm_clear_all() cmd("VMClear") print("VM: All cursors cleared") end
+local function vm_clear_all()
+  cmd("VMClear")
+  print("VM: All cursors cleared")
+end
 
 -- Helper function to toggle VM case sensitivity
 local function vm_toggle_case() cmd("VMCaseSetting") end
@@ -29,27 +32,31 @@ api.nvim_create_augroup("VMKeymaps", { clear = true })
 
 -- Show VM status when entering VM mode
 api.nvim_create_autocmd("User", {
-    pattern = "visual_multi_start",
-    group = "VMKeymaps",
-    callback = function()
-        print("VM: Multi-cursor mode started")
-        opt_local.cursorline = true
-        opt_local.cursorcolumn = true
-    end, desc = "VM mode started", })
+  pattern = "visual_multi_start",
+  group = "VMKeymaps",
+  callback = function()
+    print("VM: Multi-cursor mode started")
+    opt_local.cursorline = true
+    opt_local.cursorcolumn = true
+  end,
+  desc = "VM mode started",
+})
 
 -- Clean up when exiting VM mode
 api.nvim_create_autocmd("User", {
-    pattern = "visual_multi_exit",
-    group = "VMKeymaps",
-    callback = function()
-        print("VM: Multi-cursor mode exited")
-        opt_local.cursorline = false
-        opt_local.cursorcolumn = false
-    end, desc = "VM mode exited", })
+  pattern = "visual_multi_exit",
+  group = "VMKeymaps",
+  callback = function()
+    print("VM: Multi-cursor mode exited")
+    opt_local.cursorline = false
+    opt_local.cursorcolumn = false
+  end,
+  desc = "VM mode exited",
+})
 
 -- Helper function to create custom VM mappings
 local function create_vm_mapping(mode, lhs, rhs, desc)
-    map(mode, lhs, rhs, { desc = "Multi-cursor: " .. desc, silent = true })
+  map(mode, lhs, rhs, { desc = "Multi-cursor: " .. desc, silent = true })
 end
 -- Additional useful mappings for working with multiple cursors
 create_vm_mapping("n", "<leader>mq", "<Esc>", "Exit multi-cursor mode")
@@ -83,4 +90,3 @@ map("n", "<leader>mx", vm_clear_all, { desc = "Multi-cursor: Clear all cursors" 
 -- Column selection helpers
 -- map("n", "<leader>mb", "<Plug>(VM-Select-BBW)",  { desc = "Multi-cursor: Select by brackets/braces/words" })
 -- map("n", "<leader>ml", "<Plug>(VM-Select-Line)", { desc = "Multi-cursor: Select whole lines"              })
-

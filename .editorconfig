@@ -14,8 +14,8 @@ indent_size = 4
 tab_width = 4
 
 [*.lua]
-indent_size = 4
-tab_width = 4
+indent_size = 2
+tab_width = 2
 
 [*.md]
 trim_trailing_whitespace = false
