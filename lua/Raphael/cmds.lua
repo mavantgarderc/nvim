@@ -51,6 +51,11 @@ function M.setup()
         desc = "Set random theme",
     })
 
+    -- Create user command
+    api.nvim_create_user_command('ToggleAutoTheme', function()
+        M.toggle_auto_theme()
+    end, { desc = "Toggle automatic theme switching based on filetype" })
+
     -- Theme Info Command
     api.nvim_create_user_command("TI", function()
         local current = theme_loader.get_current_theme()

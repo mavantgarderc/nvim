@@ -48,14 +48,20 @@ function M.get_theme_list()
     return themes
 end
 
--- === Auto-set Theme Based on Filetype ===
-function M.set_theme_by_filetype(buf)
-    if not config.filetype_themes then return end
+-- === Auto-set Theme Based on Filetype (Toggle) ===
+M.auto_theme_enabled = true -- Default state
 
+function M.toggle_auto_theme()
+    M.auto_theme_enabled = not M.auto_theme_enabled
+    local status = M.auto_theme_enabled and "enabled" or "disabled"
+    print("Auto theme switching " .. status)
+end
+
+function M.set_theme_by_filetype(buf)
+    if not config.filetype_themes or not M.auto_theme_enabled then return end
     local api = vim.api
     local ft = api.nvim_buf_get_option(buf or 0, "filetype")
     local theme = config.filetype_themes[ft]
-
     if theme and M.is_theme_available(theme) then M.load_theme(theme) end
 end
 
