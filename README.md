@@ -1,11 +1,10 @@
-Odin at Tehran holding a Katana...
+Samurai-Odin at Tehran holding a Katana...
 
 # Neovim Configuration
-Rebuild of my Vim setup on Nvim from scratch; nothing more...
+Converting my Vim setup on Nvim from scratch; nothing more...
 & ofcourse a lil' bit of modernization... or perhaps a lot :)
 
-## Notes
-### Keymaps
+### Iaijutsu
 Keymaps are modularized to help the user engage; Au-DHD friendly.
 
 You'll see three types at `lua/core/keymaps/`:
@@ -18,6 +17,7 @@ I'll appreciate any recommendations if you do by [gmail](manihabibinava@gmail.co
 
 > F-Keys are availablr for OGs, but not a good idea to take the habit (for sake of zen).
 
+### Kendos
 Among La Italia's best painters, Raphael was the best at harmonious painting & colorings...
 `Raphael/`: Theme management with auto & user commands
     - FileType theme appliance; toggle to turn off.
