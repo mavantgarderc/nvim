@@ -1,6 +1,6 @@
 local M = {}
 
-local theme_loader = require("Raphael.loader")
+local theme_loader = require("Raphael.scripts.loader")
 local api = vim.api
 
 local theme_augroup = nil

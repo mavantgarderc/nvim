@@ -376,7 +376,7 @@ return {
       require("lualine").refresh()
     end, { silent = true })
 
-    map("n", "<leader>tt", function()
+    map("n", "<leader>tl", function()
       local new_theme = get_lualine_theme()
       local current_colorscheme = g.colors_name or "default"
       notify("Scheme: " .. current_colorscheme .. " → Lualine: " .. new_theme, log.levels.INFO)

@@ -1,9 +1,9 @@
 local M = {}
 
-local theme_picker = require("Raphael.picker")
-local theme_cycler = require("Raphael.cycler")
-local theme_preview = require("Raphael.preview")
-local theme_loader = require("Raphael.loader")
+local theme_picker = require("Raphael.scripts.picker")
+local theme_cycler = require("Raphael.scripts.cycler")
+local theme_preview = require("Raphael.scripts.preview")
+local theme_loader = require("Raphael.scripts.loader")
 local map = vim.keymap.set
 local tbl_deep_extend = vim.tbl_deep_extend
 

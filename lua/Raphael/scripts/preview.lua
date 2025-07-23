@@ -1,6 +1,6 @@
 local M = {}
 
-local theme_loader = require("Raphael.loader")
+local theme_loader = require("Raphael.scripts.loader")
 local notify = vim.notify
 local log = vim.log
 local defer_fn = vim.defer_fn

@@ -1,12 +1,12 @@
 local M = {}
 
 -- Import submodules
-local theme_loader = require("Raphael.loader")
-local theme_picker = require("Raphael.picker")
-local theme_preview = require("Raphael.preview")
-local theme_cycler = require("Raphael.cycler")
-local autocmds = require("Raphael.autocmds")
-local commands = require("Raphael.cmds")
+local theme_loader = require("Raphael.scripts.loader")
+local theme_picker = require("Raphael.scripts.picker")
+local theme_preview = require("Raphael.scripts.preview")
+local theme_cycler = require("Raphael.scripts.cycler")
+local autocmds = require("Raphael.scripts.autocmds")
+local commands = require("Raphael.scripts.cmds")
 local keymaps = require("Raphael.keymaps")
 
 -- Initialize the theme manager

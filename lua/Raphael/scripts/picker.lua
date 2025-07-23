@@ -1,6 +1,6 @@
 local M = {}
 
-local theme_loader = require("Raphael.loader")
+local theme_loader = require("Raphael.scripts.loader")
 local o = vim.o
 local api = vim.api
 local log = vim.log
@@ -26,7 +26,7 @@ function M.create_theme_picker()
 
   -- Create picker window
   local buf = api.nvim_create_buf(false, true)
-  local width = math.floor(o.columns * 0.2)
+  local width = math.floor(o.columns * 0.5)
   local height = math.min(#themes + 4, math.floor(o.lines * 0.7))
   local row = math.floor((o.lines - height) / 2)
   local col = math.floor((o.columns - width) / 2)
@@ -39,7 +39,7 @@ function M.create_theme_picker()
     col = col,
     style = "minimal",
     border = "rounded",
-    title = " Theme Picker ",
+    title = " Raphael Theme Picker ",
     title_pos = "center"
   })
 
