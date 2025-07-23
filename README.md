@@ -25,9 +25,12 @@ Among La Italia's best painters, Raphael was the best at harmonious painting & c
     - TODO: Integrations with Ghostty & Starship.
     - TODO: TOML & Hex Code support, powered by [Base16](https://github.com/RRethy/base16-nvim); TOML parser, etc. needed.
 
+
 `lsp/`: Modular Per-language LSP Configuration; extensible & usage specific
 
+
 `.editorconfig`: Cross-IDE style constraints to avoid conflicts with other devs & IDEs like Visual Studio, Visual Studio Code, etc.
+
 
 Used out-of-the-box nvim distros & their lua-scripted features:
   - ~~NvChad~~
