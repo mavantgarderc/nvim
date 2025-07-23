@@ -8,10 +8,15 @@ Converting my Vim setup on Nvim from scratch; nothing more...
 Keymaps are modularized to help the user engage; Au-DHD friendly.
 
 You'll see three types at `lua/core/keymaps/`:
+
     - Customs
+
     - Native Re-implementations
+
     - Plugin Keymaps
+
 This structures allow the user to read the config modules, as a reference study.
+
 
 I'll appreciate any recommendations if you do by [gmail](manihabibinava@gmail.com) or submit issues.
 
