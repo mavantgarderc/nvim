@@ -2,67 +2,91 @@ local M = {}
 
 M.theme_map = {
 
-  black_metal = {
-    "base16-black-metal-bathory",
-    "base16-black-metal-dark-funeral",
-    "base16-black-metal-gorgoroth",
-    "base16-black-metal-khold",
-  },
+  -- black_metal = {
+  --   "base16-black-metal-bathory",
+  --   "base16-black-metal-dark-funeral",
+  --   "base16-black-metal-gorgoroth",
+  --   "base16-black-metal-khold",
+  -- },
 
-  base16      = {
-    "base16-horizon-dark",
-    "base16-ashes",
-    "base16-ayu-mirage",
-    "base16-darkmoss",
-    "base16-eighties",
-    "base16-equilibrium-gray-dark",
-    "base16-everforest-dark-hard",
-    "base16-framer",
-    "base16-penumbra-dark-contrast-plus",
-    "base16-precious-dark-eleven",
-    "base16-sandcastle",
-    "base16-schemer-medium",
-    "base16-selenized-black",
-    "base16-tomorrow-night",
-  },
+  -- gotham = {
+  --   "gotham",
+  --   "base16-gotham",
+  -- },
 
-  tokyonight  = {
-    "tokyonight",
-    "tokyonight-moon",      -- html, css
-    "tokyonight-night",     -- json, jsonc
-  },
+  -- zen = {
+  --   "base16-grayscale-dark",
+  --   "base16-icy",
+  --   "base16-mountain",
+  --   "base16-vesper",
+  --   "base16-vulcan",
+  -- },
 
-  catppuccin  = {
-    "base16-catppuccin",
-    "base16-catppuccin-mocha",         -- tex
-    "base16-catppuccin-macchiato",     -- md
-  },
+  -- jukebox = {
+  --   "base16-atelier-dune",
+  --   "base16-atelier-forest",
+  --   "base16-atelier-heath",
+  --   "base16-atelier-plateau",
+  --   "base16-shadesmear-dark",
+  --   "base16-equilibrium-gray-dark",
+  --   "base16-atelier-cave",
+  --   "base16-penumbra-dark-contrast-plus",
+  --   "base16-precious-dark-eleven",
+  --   "base16-darkmoss",
+  --   "base16-tomorrow-night",
+  --   "base16-darktooth",
+  --   "base16-sandcastle",
+  --   "base16-everforest-dark-hard",
+  --   "base16-espresso",
+  --   "base16-railscasts",
+  --   "base16-darcula",
+  --   "base16-ia-dark",
+  -- },
 
-  carbonfox   = {
-    "nightfox",     -- py
-    "duskfox",      -- ts
-    "nordfox",      -- js
-    "terafox",
-    "carbonfox",
-  },
+  -- softs = {
+  --   "base16-nord",
+  --   "base16-eighties",
+  --   "base16-everforest",
+  --   "base16-ocean",
+  --   "base16-oceanicnext",
+  --   "base16-onedark",
+  -- },
 
-  kanagawa    = {
-    "base16-kanagawa",
-    "base16-kanagawa-wave",     -- sql
-    "kanagawa-dragon",          -- nvim section
-    "kanagawa-paper-ink",
-  },
+  -- tokyonight  = {
+  --   "tokyonight-moon",      -- html, css
+  --   "tokyonight-night",     -- json, jsonc
+  -- },
 
-  gruvbox     = {
-    "gruvbox",     -- cs
-    "base16-gruvbox-dark-hard",
-    "base16-gruvbox-dark-pale",
-    "base16-gruvbox-material-dark-hard",
-  },
+  -- catppuccin  = {
+  --   "base16-catppuccin",
+  --   "base16-catppuccin-mocha",         -- tex
+  --   "base16-catppuccin-macchiato",     -- md
+  --   "base16-da-one-ocean",
+  -- },
 
-  rose_pine   = { "base16-rose-pine", },
-  oxocarbon   = { "base16-oxocarbon-dark", },
-  gotham      = { "gotham", },
+  -- carbonfox   = {
+  --   "nightfox",     -- py
+  --   "duskfox",      -- ts
+  --   "nordfox",      -- js
+  --   "terafox",
+  --   "carbonfox",
+  -- },
+
+  -- kanagawa    = {
+  --   "base16-kanagawa",
+  --   "base16-kanagawa-wave",     -- sql
+  --   "kanagawa-dragon",          -- nvim section
+  --   "kanagawa-paper-ink",
+  -- },
+
+  -- gruvbox     = {
+  --   "gruvbox",     -- cs
+  --   "base16-gruvbox-dark-hard",
+  --   "base16-gruvbox-dark-pale",
+  --   "base16-gruvbox-material-dark-hard",
+  -- },
+  --
+
 
 }
 
@@ -76,29 +100,35 @@ M.filetype_themes = {
   lua        = "kanagawa-paper-ink",
   mason      = "kanagawa-paper-ink",
   tmux       = "kanagawa-paper-ink",
-  toml       = "kanagawa-paper-ink",
-  solution   = "kanagawa-paper-ink",
-  csproj     = "kanagawa-paper-ink",
-  hyprlang   = "kanagawa-paper-ink",
-  zsh        = "kanagawa-paper-ink",
-  sh         = "kanagawa-paper-ink",
-  csv        = "kanagawa-paper-ink",
-  conf       = "kanagawa-paper-ink",
   kdl        = "kanagawa-paper-ink",
+  toml       = "kanagawa-paper-ink",
+  conf       = "kanagawa-paper-ink",
+
+  sh         = "kanagawa-paper-ink",
+  zsh        = "kanagawa-paper-ink",
+  hyprlang   = "kanagawa-paper-ink",
+  csv        = "kanagawa-paper-ink",
 
   md         = "base16-catppuccin-frappe",
   tex        = "base16-catppuccin-mocha",
-  xml        = "base16-rose-pine",
-  json       = "base16-rose-pine",
-  jsonc      = "base16-rose-pine",
-  html       = "tokyonight",
-  css        = "tokyonight",
+
+  cs         = "gruvbox",
+  csx        = "base16-gruvbox-dark-hard",
+  csproj     = "base16-gruvbox-dark-pale",
+  xml        = "base16-gruvbox-dark-pale",
+  solution   = "base16-gruvbox-material-dark-hard",
 
   python     = "kanagawa-wave",
+
   sql        = "kanagawa-wave",
-  cs         = "gruvbox",
+  sqls       = "kanagawa-wave",
+
+  html       = "tokyonight",
+  css        = "tokyonight",
   javascript = "nordfox",
   typescript = "duskfox",
+  json       = "base16-rose-pine",
+  jsonc      = "base16-rose-pine",
 }
 
 return M
