@@ -2,90 +2,90 @@ local M = {}
 
 M.theme_map = {
 
-  -- black_metal = {
-  --   "base16-black-metal-bathory",
-  --   "base16-black-metal-dark-funeral",
-  --   "base16-black-metal-gorgoroth",
-  --   "base16-black-metal-khold",
-  -- },
+  black_metal = {
+    "base16-black-metal-bathory",
+    "base16-black-metal-dark-funeral",
+    "base16-black-metal-gorgoroth",
+    "base16-black-metal-khold",
+  },
 
-  -- gotham = {
-  --   "gotham",
-  --   "base16-gotham",
-  -- },
+  gotham = {
+    "gotham",
+    "base16-gotham",
+  },
 
-  -- zen = {
-  --   "base16-grayscale-dark",
-  --   "base16-icy",
-  --   "base16-mountain",
-  --   "base16-vesper",
-  --   "base16-vulcan",
-  -- },
+  zen = {
+    "base16-grayscale-dark",
+    "base16-icy",
+    "base16-mountain",
+    "base16-vesper",
+    "base16-vulcan",
+  },
 
-  -- jukebox = {
-  --   "base16-atelier-dune",
-  --   "base16-atelier-forest",
-  --   "base16-atelier-heath",
-  --   "base16-atelier-plateau",
-  --   "base16-shadesmear-dark",
-  --   "base16-equilibrium-gray-dark",
-  --   "base16-atelier-cave",
-  --   "base16-penumbra-dark-contrast-plus",
-  --   "base16-precious-dark-eleven",
-  --   "base16-darkmoss",
-  --   "base16-tomorrow-night",
-  --   "base16-darktooth",
-  --   "base16-sandcastle",
-  --   "base16-everforest-dark-hard",
-  --   "base16-espresso",
-  --   "base16-railscasts",
-  --   "base16-darcula",
-  --   "base16-ia-dark",
-  -- },
+  jukebox = {
+    "base16-atelier-dune",
+    "base16-atelier-forest",
+    "base16-atelier-heath",
+    "base16-atelier-plateau",
+    "base16-shadesmear-dark",
+    "base16-equilibrium-gray-dark",
+    "base16-atelier-cave",
+    "base16-penumbra-dark-contrast-plus",
+    "base16-precious-dark-eleven",
+    "base16-darkmoss",
+    "base16-tomorrow-night",
+    "base16-darktooth",
+    "base16-sandcastle",
+    "base16-everforest-dark-hard",
+    "base16-espresso",
+    "base16-railscasts",
+    "base16-darcula",
+    "base16-ia-dark",
+  },
 
-  -- softs = {
-  --   "base16-nord",
-  --   "base16-eighties",
-  --   "base16-everforest",
-  --   "base16-ocean",
-  --   "base16-oceanicnext",
-  --   "base16-onedark",
-  -- },
+  softs = {
+    "base16-nord",
+    "base16-eighties",
+    "base16-everforest",
+    "base16-ocean",
+    "base16-oceanicnext",
+    "base16-onedark",
+  },
 
-  -- tokyonight  = {
-  --   "tokyonight-moon",      -- html, css
-  --   "tokyonight-night",     -- json, jsonc
-  -- },
+  tokyonight  = {
+    "tokyonight-moon",      -- html, css
+    "tokyonight-night",     -- json, jsonc
+  },
 
-  -- catppuccin  = {
-  --   "base16-catppuccin",
-  --   "base16-catppuccin-mocha",         -- tex
-  --   "base16-catppuccin-macchiato",     -- md
-  --   "base16-da-one-ocean",
-  -- },
+  catppuccin  = {
+    "base16-catppuccin",
+    "base16-catppuccin-mocha",         -- tex
+    "base16-catppuccin-macchiato",     -- md
+    "base16-da-one-ocean",
+  },
 
-  -- carbonfox   = {
-  --   "nightfox",     -- py
-  --   "duskfox",      -- ts
-  --   "nordfox",      -- js
-  --   "terafox",
-  --   "carbonfox",
-  -- },
+  carbonfox   = {
+    "nightfox",     -- py
+    "duskfox",      -- ts
+    "nordfox",      -- js
+    "terafox",
+    "carbonfox",
+  },
 
-  -- kanagawa    = {
-  --   "base16-kanagawa",
-  --   "base16-kanagawa-wave",     -- sql
-  --   "kanagawa-dragon",          -- nvim section
-  --   "kanagawa-paper-ink",
-  -- },
+  kanagawa    = {
+    "base16-kanagawa",
+    "base16-kanagawa-wave",     -- sql
+    "kanagawa-dragon",          -- nvim section
+    "kanagawa-paper-ink",
+  },
 
-  -- gruvbox     = {
-  --   "gruvbox",     -- cs
-  --   "base16-gruvbox-dark-hard",
-  --   "base16-gruvbox-dark-pale",
-  --   "base16-gruvbox-material-dark-hard",
-  -- },
-  --
+  gruvbox     = {
+    "gruvbox",     -- cs
+    "base16-gruvbox-dark-hard",
+    "base16-gruvbox-dark-pale",
+    "base16-gruvbox-material-dark-hard",
+  },
+
 
 
 }

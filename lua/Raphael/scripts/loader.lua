@@ -47,6 +47,22 @@ function M.get_theme_list()
 
   return themes
 end
+-- === Get theme categories ===
+function M.get_theme_categories()
+  local categories = {}
+  for category, variants in pairs(config.theme_map or {}) do
+    local available_themes = {}
+    for _, theme in ipairs(variants) do
+      if M.is_theme_available(theme) then
+        table.insert(available_themes, theme)
+      end
+    end
+    if #available_themes > 0 then
+      categories[category] = available_themes
+    end
+  end
+  return categories
+end
 
 -- === Auto-set Theme Based on Filetype (Toggle) ===
 M.auto_theme_enabled = true -- Default state

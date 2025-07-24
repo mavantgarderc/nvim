@@ -13,15 +13,23 @@ local cmd = vim.cmd
 -- === Enhanced Theme Picker ===
 function M.create_theme_picker()
   local themes = theme_loader.get_theme_list()
+  local theme_categories = theme_loader.get_theme_categories() -- New function to get categorized themes
   local original_theme = theme_loader.get_current_theme()
   local preview_theme = nil
   local filter_text = ""
-  local filtered_themes = themes
+  local filtered_items = {}
   local search_mode = false
+  local show_categories = true
+  local expanded_categories = {}
 
   if #themes == 0 then
     notify("No themes available", log.levels.WARN)
     return
+  end
+
+  -- Initialize all categories as expanded
+  for category, _ in pairs(theme_categories) do
+    expanded_categories[category] = true
   end
 
   -- Create picker window
@@ -43,16 +51,95 @@ function M.create_theme_picker()
     title_pos = "center"
   })
 
-  -- Filter themes based on search text
-  local function filter_themes()
-    if filter_text == "" then
-      filtered_themes = deepcopy(themes)
+  -- Build display items (categories and themes)
+  local function build_display_items()
+    local items = {}
+
+    if show_categories then
+      for category, category_themes in pairs(theme_categories) do
+        -- Add category header
+        table.insert(items, {
+          type = "category",
+          name = category,
+          display = (expanded_categories[category] and "▼ " or "▶ ") .. category,
+          expanded = expanded_categories[category]
+        })
+
+        -- Add themes if category is expanded
+        if expanded_categories[category] then
+          for _, theme in ipairs(category_themes) do
+            table.insert(items, {
+              type = "theme",
+              name = theme,
+              category = category,
+              display = "  " .. theme
+            })
+          end
+        end
+      end
     else
-      filtered_themes = {}
-      local pattern = filter_text:lower()
+      -- Flat theme list
       for _, theme in ipairs(themes) do
-        if theme:lower():find(pattern, 1, true) then
-          table.insert(filtered_themes, theme)
+        table.insert(items, {
+          type = "theme",
+          name = theme,
+          display = theme
+        })
+      end
+    end
+
+    return items
+  end
+
+  -- Filter items based on search text
+  local function filter_items()
+    if filter_text == "" then
+      filtered_items = build_display_items()
+    else
+      filtered_items = {}
+      local pattern = filter_text:lower()
+
+      if show_categories then
+        -- Filter by category or theme name
+        for category, category_themes in pairs(theme_categories) do
+          local category_matches = category:lower():find(pattern, 1, true)
+          local has_matching_themes = false
+          local matching_themes = {}
+
+          for _, theme in ipairs(category_themes) do
+            if theme:lower():find(pattern, 1, true) then
+              has_matching_themes = true
+              table.insert(matching_themes, {
+                type = "theme",
+                name = theme,
+                category = category,
+                display = "  " .. theme
+              })
+            end
+          end
+
+          if category_matches or has_matching_themes then
+            table.insert(filtered_items, {
+              type = "category",
+              name = category,
+              display = "▼ " .. category:upper(),
+              expanded = true
+            })
+            for _, theme_item in ipairs(matching_themes) do
+              table.insert(filtered_items, theme_item)
+            end
+          end
+        end
+      else
+        -- Flat filtering
+        for _, theme in ipairs(themes) do
+          if theme:lower():find(pattern, 1, true) then
+            table.insert(filtered_items, {
+              type = "theme",
+              name = theme,
+              display = theme
+            })
+          end
         end
       end
     end
@@ -61,17 +148,17 @@ function M.create_theme_picker()
   -- Get status line text based on current mode
   local function get_status_text()
     if search_mode then
-      return "Search: " .. filter_text
+      return "Search: " .. filter_text .. " | Esc: cancel"
     elseif filter_text ~= "" then
-      return "Filter: " .. filter_text .. " (/ to search, c to clear)"
+      return "Filter: " .. filter_text .. " | /: search | c: clear | t: toggle view"
     else
-      return "Enter: select | r: random | q/Esc: quit"
+      return "Enter: select | Space: expand/collapse | r: random | t: toggle view | q/Esc: quit"
     end
   end
 
   -- Populate buffer with themes
   local function update_buffer()
-    filter_themes()
+    filter_items()
 
     local lines = {
       get_status_text(),
@@ -80,12 +167,24 @@ function M.create_theme_picker()
 
     local current_theme = theme_loader.get_current_theme()
 
-    if #filtered_themes == 0 then
-      table.insert(lines, "  No matching themes found")
+    if #filtered_items == 0 then
+      if show_categories then
+        table.insert(lines, "  No matching categories or themes found")
+      else
+        table.insert(lines, "  No matching themes found")
+      end
     else
-      for i, theme in ipairs(filtered_themes) do
-        local prefix = (theme == current_theme) and "● " or "  "
-        table.insert(lines, prefix .. theme)
+      for i, item in ipairs(filtered_items) do
+        if item.type == "category" then
+          table.insert(lines, item.display)
+        else -- theme
+          local prefix = (item.name == current_theme) and "● " or "  "
+          if show_categories then
+            table.insert(lines, prefix .. item.display)
+          else
+            table.insert(lines, prefix .. item.name)
+          end
+        end
       end
     end
 
@@ -103,14 +202,14 @@ function M.create_theme_picker()
     local cursor_line = 3     -- Start after headers
     local current_theme = theme_loader.get_current_theme()
 
-    for i, theme in ipairs(filtered_themes) do
-      if theme == current_theme then
+    for i, item in ipairs(filtered_items) do
+      if item.type == "theme" and item.name == current_theme then
         cursor_line = i + 2
         break
       end
     end
 
-    if #filtered_themes > 0 and cursor_line <= #lines then
+    if #filtered_items > 0 and cursor_line <= #lines then
       api.nvim_win_set_cursor(win, { cursor_line, 2 })
     end
   end
@@ -134,12 +233,12 @@ function M.create_theme_picker()
     if not api.nvim_win_is_valid(win) or search_mode then return end
 
     local line = api.nvim_win_get_cursor(win)[1]
-    if line > 2 and #filtered_themes > 0 then
-      local theme_index = line - 2
-      local theme = filtered_themes[theme_index]
-      if theme and theme ~= preview_theme then
-        preview_theme = theme
-        local success, err = pcall(theme_loader.load_theme, theme, true)
+    if line > 2 and #filtered_items > 0 then
+      local item_index = line - 2
+      local item = filtered_items[item_index]
+      if item and item.type == "theme" and item.name ~= preview_theme then
+        preview_theme = item.name
+        local success, err = pcall(theme_loader.load_theme, item.name, true)
         if not success then
           notify("Failed to preview theme: " .. (err or "unknown error"), log.levels.WARN)
         end
@@ -201,34 +300,63 @@ function M.create_theme_picker()
     end
   end
 
+  -- Toggle category expansion
+  local function toggle_category()
+    if not api.nvim_win_is_valid(win) or search_mode or not show_categories then return end
+
+    local line = api.nvim_win_get_cursor(win)[1]
+    if line > 2 and #filtered_items > 0 then
+      local item_index = line - 2
+      local item = filtered_items[item_index]
+      if item and item.type == "category" then
+        expanded_categories[item.name] = not expanded_categories[item.name]
+        lines = update_buffer()
+        -- Keep cursor on the same category
+        api.nvim_win_set_cursor(win, { line, 2 })
+        update_highlight()
+      end
+    end
+  end
+
+  -- Toggle between category and flat view
+  local function toggle_view()
+    show_categories = not show_categories
+    lines = update_buffer()
+    set_initial_cursor()
+    update_highlight()
+    schedule(preview_current_theme)
+  end
+
   -- Apply selected theme
   local function apply_theme()
     if not api.nvim_win_is_valid(win) or search_mode then return end
 
     local line = api.nvim_win_get_cursor(win)[1]
-    if line > 2 and #filtered_themes > 0 then
+    if line > 2 and #filtered_items > 0 then
       local theme_index = line - 2
-      local theme = filtered_themes[theme_index]
-      if theme then
-        local success, err = pcall(theme_loader.load_theme, theme)
+      local item = filtered_items[theme_index]
+      if item and item.type == "theme" then
+        local success, err = pcall(theme_loader.load_theme, item.name)
         if success then
-          notify("Theme set to: " .. theme, log.levels.INFO)
+          notify("Theme set to: " .. item.name, log.levels.INFO)
         else
           notify("Failed to apply theme: " .. (err or "unknown error"), log.levels.ERROR)
         end
+        cleanup()
+      elseif item and item.type == "category" then
+        toggle_category()
       end
     end
-    cleanup()
   end
 
   -- Navigation functions with bounds checking
   local function move_cursor(direction)
-    if not api.nvim_win_is_valid(win) or #filtered_themes == 0 or search_mode then return end
+    if not api.nvim_win_is_valid(win) or #filtered_items == 0 or search_mode then return end
 
     local line = api.nvim_win_get_cursor(win)[1]
     local new_line = line
     local min_line = 3
-    local max_line = math.min(#filtered_themes + 2, #lines)
+    local max_line = math.min(#filtered_items + 2, #lines)
 
     if direction == "down" and line < max_line then
       new_line = line + 1
@@ -276,9 +404,18 @@ function M.create_theme_picker()
 
   -- Random theme selection
   local function select_random_theme()
-    if #filtered_themes > 0 then
+    -- Collect all theme items (not categories)
+    local theme_items = {}
+    for _, item in ipairs(filtered_items) do
+      if item.type == "theme" then
+        table.insert(theme_items, item)
+      end
+    end
+
+    if #theme_items > 0 then
       math.randomseed(os.time())
-      local random_theme = filtered_themes[math.random(#filtered_themes)]
+      local random_item = theme_items[math.random(#theme_items)]
+      local random_theme = random_item.name
       local success, err = pcall(theme_loader.load_theme, random_theme)
       if success then
         notify("Random theme selected: " .. random_theme, log.levels.INFO)
@@ -286,6 +423,8 @@ function M.create_theme_picker()
         notify("Failed to apply random theme: " .. (err or "unknown error"), log.levels.ERROR)
       end
       cleanup()
+    else
+      notify("No themes available for random selection", log.levels.WARN)
     end
   end
 
@@ -303,8 +442,12 @@ function M.create_theme_picker()
 
     -- Selection and exit
     map("n", "<CR>", apply_theme, opts)
+    map("n", "<Space>", toggle_category, opts)
     map("n", "<Esc>", cleanup, opts)
     map("n", "q", cleanup, opts)
+
+    -- View toggle
+    map("n", "t", toggle_view, opts)
 
     -- Search and filter
     map("n", "/", enter_search_mode, opts)
