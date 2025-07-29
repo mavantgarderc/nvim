@@ -11,8 +11,11 @@ local map = vim.keymap.set
 local tbl_extend = vim.tbl_extend
 local islist = vim.islist
 local diagnostic = vim.diagnostic
+local inspect = vim.inspect
+local tbl_deep_extend = vim.tbl_deep_extend
+local defer_fn = vim.defer_fn
 
--- helper function to find project root
+-- helper function: find project root
 local function find_project_root(bufname)
   local patterns = { "*.sln", "*.csproj", "*.fsproj", "*.vbproj", "project.json", "omnisharp.json" }
   local result = fs.find(patterns, { upward = true, path = bufname })
@@ -22,29 +25,29 @@ local function find_project_root(bufname)
   return nil
 end
 
--- helper function to get omnisharp command
+-- helper function: get omnisharp command
 local function get_omnisharp_cmd()
   local pid = tostring(fn.getpid())
 
-  -- check for different OmniSharp installations
-  if fn.executable("omnisharp") == 1 then
-    return { "omnisharp", "--languageserver", "--hostPID", pid }
-  elseif fn.executable("OmniSharp") == 1 then
-    return { "OmniSharp", "--languageserver", "--hostPID", pid }
-  else
-    -- fallback to common installation paths
-    local omnisharp_paths = {
-      fn.stdpath("data") .. "/mason/bin/omnisharp",
-      "/usr/local/bin/omnisharp",
-      env.HOME .. "/.local/bin/omnisharp",
-    }
+  local omnisharp_paths = {
+    "omnisharp",
+    "OmniSharp",
+    fn.stdpath("data") .. "/mason/bin/omnisharp",
+    fn.stdpath("data") .. "/mason/packages/omnisharp/omnisharp",
+    "/usr/local/bin/omnisharp",
+    "/usr/bin/omnisharp",
+    env.HOME .. "/.local/bin/omnisharp",
+    env.HOME .. "/.dotnet/tools/omnisharp",
+  }
 
-    for _, path in ipairs(omnisharp_paths) do
-      if fn.executable(path) == 1 then return { path, "--languageserver", "--hostPID", pid } end
+  for _, path in ipairs(omnisharp_paths) do
+    if fn.executable(path) == 1 then
+      -- print("Found OmniSharp at: " .. path)
+      return { path, "--languageserver", "--hostPID", pid }
     end
   end
 
-  notify("OmniSharp executable not found", log.levels.ERROR)
+  notify("OmniSharp executable not found. Install via: dotnet tool install -g omnisharp", log.levels.ERROR)
   return nil
 end
 
@@ -54,15 +57,19 @@ function M.setup(capabilities)
   local cmd = get_omnisharp_cmd()
   if not cmd then return end
 
-local extended = require("omnisharp_extended")
+  -- print("Setting up OmniSharp with command: " .. inspect(cmd))
 
   lspconfig.omnisharp.setup({
     cmd = cmd,
-    capabilities = vim.tbl_deep_extend("force", capabilities or {}, extended.capabilities or {}),
+    capabilities = tbl_deep_extend("force", capabilities or {}, extended.capabilities or {}),
+
     root_dir = function(fname)
       local primary_root = find_project_root(fname)
-      if primary_root then return primary_root end
-      return lspconfig.util.root_pattern(
+      if primary_root then
+        -- print("Found project root: " .. primary_root)
+        return primary_root
+      end
+      local fallback = lspconfig.util.root_pattern(
         "*.sln",
         "*.csproj",
         "*.fsproj",
@@ -70,9 +77,35 @@ local extended = require("omnisharp_extended")
         "project.json",
         "omnisharp.json"
       )(fname)
+      if fallback then
+        -- print("Using fallback root: " .. fallback)
+      end
+      return fallback
     end,
 
     filetypes = { "cs", "vb", "razor", "cshtml" },
+
+    flags = {
+      debounce_text_changes = 150,
+    },
+
+    on_init = function(client, initialize_result)
+      -- print("OmniSharp initialized successfully")
+      defer_fn(function()
+        client.initialized = true
+      end, 1000)
+    end,
+
+    on_exit = function(code, signal, client_id)
+      if code ~= 0 then
+        -- print("OmniSharp exited with code: " .. tostring(code))
+      end
+    end,
+
+    init_options = {
+      AutomaticWorkspaceInit = true,
+      StartupTimeout = 30000,
+    },
 
     settings = {
       FormattingOptions = {
@@ -111,20 +144,23 @@ local extended = require("omnisharp_extended")
       },
       MsBuild = {
         LoadProjectsOnDemand = false,
+        MSBuildExtensionsPath = nil,
       },
       RoslynExtensionsOptions = {
         EnableAnalyzersSupport = true,
         EnableImportCompletion = true,
         EnableDecompilationSupport = true,
         DocumentAnalysisTimeoutMs = 30000,
+        LocationTimeout = 10000,
       },
       Sdk = {
         IncludePrereleases = true,
       },
-    },
-
-    init_options = {
-      AutomaticWorkspaceInit = true,
+      enableRoslynAnalyzers = true,
+      enableEditorConfigSupport = true,
+      enableMsBuildLoadProjectsOnDemand = false,
+      waitForDebugger = false,
+      loggingLevel = "information",
     },
 
     on_attach = function(client, bufnr)
@@ -132,71 +168,13 @@ local extended = require("omnisharp_extended")
         lsp.semantic_tokens.start(bufnr, client.id)
       end
 
-      local opts = { buffer = bufnr, silent = true }
-
-      ---@diagnostic disable-next-line: param-type-mismatch
-      map("n", "<leader>cu", function()
-        lsp.buf.code_action({
-          context = {
-            only = { "source.addMissingImports" },
-            diagnostics = diagnostic.get(bufnr)
-          },
-          apply = true,
-        })
-      end, tbl_extend("force", opts, { desc = "Add missing usings" }))
-
-      ---@diagnostic disable-next-line: param-type-mismatch
-      map("n", "<leader>co", function()
-        lsp.buf.code_action({
-          context = {
-            only = { "source.organizeImports" },
-            diagnostics = diagnostic.get(bufnr)
-          },
-          apply = true
-        })
-      end, tbl_extend("force", opts, { desc = "Organize imports" }))
-
-      ---@diagnostic disable-next-line: param-type-mismatch
-      map("n", "<leader>cr", function()
-        lsp.buf.code_action({
-          context = {
-            only = { "source.removeUnnecessaryImports" },
-            diagnostics = diagnostic.get(bufnr)
-          },
-          apply = true,
-        })
-      end, tbl_extend("force", opts, { desc = "Remove unnecessary usings" }))
-
-      if fn.executable("netcoredbg") == 1 then
-        ---@diagnostic disable-next-line: param-type-mismatch
-        map("n", "<leader>rt", function()
-          lsp.buf.code_action({
-            context = {
-              only = { "source.runTest" },
-              diagnostics = diagnostic.get(bufnr)
-            },
-            apply = true,
-          })
-        end, tbl_extend("force", opts, { desc = "Run test" }))
-
-        ---@diagnostic disable-next-line: param-type-mismatch
-        map("n", "<leader>dt", function()
-          lsp.buf.code_action({
-            context = {
-              only = { "source.debugTest" },
-              diagnostics = diagnostic.get(bufnr)
-            },
-            apply = true,
-          })
-        end, tbl_extend("force", opts, { desc = "Debug test" }))
-      end
+      defer_fn(function()
+        client.initialized = true
+        print("OmniSharp fully ready for buffer " .. bufnr)
+      end, 2000)
     end,
 
     handlers = extended.handlers,
-
-    flags = {
-      debounce_text_changes = 150,
-    },
   })
 end
 

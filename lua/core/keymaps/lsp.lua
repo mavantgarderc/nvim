@@ -32,6 +32,7 @@ function M.setup_lsp_keymaps()
 
       map("n", "<leader>grn", buf.rename, opts)
       map("n", "<leader>ca", buf.code_action, opts)
+      map("v", "<leader>ca", buf.code_action, opts)
       map({ "n", "x" }, "<leader>gra", buf.code_action, opts)
 
       map("n", "<leader>e", diagnostic.open_float, opts)
@@ -93,18 +94,134 @@ function M.setup_lsp_keymaps()
         vim.notify("Manual formatting & linting triggered", vim.log.levels.INFO)
       end, { desc = "Manual formatting & linting (F3)" })
 
-      -- map("n", "<leader>li", function()
-      --     local clients = lsp.get_clients({ bufnr = event.buf })
-      --     local client_names = {}
-      --     for _, client in ipairs(clients) do
-      --         table.insert(client_names, client.name)
-      --     end
-      --     notify("LSP clients: " .. table.concat(client_names, ", "))
-      -- end, opts)
+      -- Get client information for language-specific keymaps
+      local clients = lsp.get_clients({ bufnr = event.buf })
+      local client_names = {}
+      for _, client in ipairs(clients) do
+        table.insert(client_names, client.name)
+      end
+
+      -- C# / OmniSharp specific keymaps
+      local ft = bo[event.buf].filetype
+      if ft == "cs" then
+        local omnisharp_client = nil
+        for _, client in ipairs(clients) do
+          if client.name == "omnisharp" then
+            omnisharp_client = client
+            break
+          end
+        end
+
+        if omnisharp_client then
+          -- Helper function to check if OmniSharp is ready
+          local function is_omnisharp_ready()
+            return omnisharp_client.initialized or false
+          end
+
+          -- Add missing usings
+          map("n", "<leader>cu", function()
+            if is_omnisharp_ready() then
+              lsp.buf.code_action({
+                context = {
+                  only = { "source.addMissingImports" },
+                },
+                apply = true,
+              })
+            else
+              notify("OmniSharp still initializing, please wait...", log.levels.WARN)
+            end
+          end, tbl_extend("force", opts, { desc = "Add missing usings" }))
+
+          -- Organize imports
+          map("n", "<leader>co", function()
+            if is_omnisharp_ready() then
+              lsp.buf.code_action({
+                context = {
+                  only = { "source.organizeImports" },
+                },
+                apply = true
+              })
+            else
+              notify("OmniSharp still initializing, please wait...", log.levels.WARN)
+            end
+          end, tbl_extend("force", opts, { desc = "Organize imports" }))
+
+          -- Remove unnecessary usings
+          map("n", "<leader>cr", function()
+            if is_omnisharp_ready() then
+              lsp.buf.code_action({
+                context = {
+                  only = { "source.removeUnnecessaryImports" },
+                },
+                apply = true,
+              })
+            else
+              notify("OmniSharp still initializing, please wait...", log.levels.WARN)
+            end
+          end, tbl_extend("force", opts, { desc = "Remove unnecessary usings" }))
+
+          -- Debug code actions
+          map("n", "<leader>cd", function()
+            if not is_omnisharp_ready() then
+              notify("OmniSharp still initializing, please wait...", log.levels.WARN)
+              return
+            end
+
+            local params = lsp.util.make_range_params()
+            params.context = {
+              diagnostics = diagnostic.get(event.buf, { lnum = fn.line('.') - 1 })
+            }
+
+            lsp.buf_request(event.buf, 'textDocument/codeAction', params, function(err, result, ctx, config)
+              if err then
+                notify("Error getting code actions: " .. err.message, log.levels.ERROR)
+                return
+              end
+
+              if not result or #result == 0 then
+                notify("No code actions available", log.levels.INFO)
+                return
+              end
+
+              print("Available code actions:")
+              for i, action in ipairs(result) do
+                print(string.format("%d: %s (kind: %s)", i, action.title or "No title", action.kind or "No kind"))
+              end
+            end)
+          end, tbl_extend("force", opts, { desc = "Debug code actions" }))
+
+          -- Test running keymaps (if netcoredbg is available)
+          if fn.executable("netcoredbg") == 1 then
+            map("n", "<leader>rt", function()
+              if is_omnisharp_ready() then
+                lsp.buf.code_action({
+                  context = {
+                    only = { "source.runTest" },
+                  },
+                  apply = true,
+                })
+              else
+                notify("OmniSharp still initializing, please wait...", log.levels.WARN)
+              end
+            end, tbl_extend("force", opts, { desc = "Run test" }))
+
+            map("n", "<leader>dt", function()
+              if is_omnisharp_ready() then
+                lsp.buf.code_action({
+                  context = {
+                    only = { "source.debugTest" },
+                  },
+                  apply = true,
+                })
+              else
+                notify("OmniSharp still initializing, please wait...", log.levels.WARN)
+              end
+            end, tbl_extend("force", opts, { desc = "Debug test" }))
+          end
+        end
+      end
 
       -- SQL-specific keymaps (buffer-local, only present if SQL LSP attached)
-      local ft = bo[event.buf].filetype
-      -- Common keymapsefor all SQL LSPs
       if ft == "sql" or ft == "plsql" or ft == "oracle" or ft == "tsql" or ft == "pgsql" then
         map("n", "<leader>sf", function()
           lsp.buf.format({ async = true })
@@ -116,7 +233,6 @@ function M.setup_lsp_keymaps()
       end
 
       -- sqls-specific
-      local clients = lsp.get_clients({ bufnr = event.buf })
       for _, client in ipairs(clients) do
         if client.name == "sqls" then
           map("n", "<leader>se", ":SqlsExecuteQuery<CR>", opts)
