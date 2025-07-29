@@ -50,18 +50,18 @@ end
 
 function M.setup(capabilities)
   local lspconfig = require("lspconfig")
+  local extended = require("omnisharp_extended")
   local cmd = get_omnisharp_cmd()
   if not cmd then return end
 
+local extended = require("omnisharp_extended")
+
   lspconfig.omnisharp.setup({
     cmd = cmd,
-    capabilities = capabilities,
-
-    -- enhanced root directory detection
+    capabilities = vim.tbl_deep_extend("force", capabilities or {}, extended.capabilities or {}),
     root_dir = function(fname)
       local primary_root = find_project_root(fname)
       if primary_root then return primary_root end
-      -- fallback to lspconfig's default
       return lspconfig.util.root_pattern(
         "*.sln",
         "*.csproj",
@@ -72,8 +72,7 @@ function M.setup(capabilities)
       )(fname)
     end,
 
-    -- file types to attach to
-    filetypes = { "cs", "vb" },
+    filetypes = { "cs", "vb", "razor", "cshtml" },
 
     settings = {
       FormattingOptions = {
@@ -128,14 +127,11 @@ function M.setup(capabilities)
       AutomaticWorkspaceInit = true,
     },
 
-    -- on_attach function
     on_attach = function(client, bufnr)
-      -- Enable semantic highlighting if supported
       if client.server_capabilities.semanticTokensProvider then
         lsp.semantic_tokens.start(bufnr, client.id)
       end
 
-      -- set up buffer-local keymaps specific to C#
       local opts = { buffer = bufnr, silent = true }
 
       ---@diagnostic disable-next-line: param-type-mismatch
@@ -171,7 +167,6 @@ function M.setup(capabilities)
         })
       end, tbl_extend("force", opts, { desc = "Remove unnecessary usings" }))
 
-      -- dap integration
       if fn.executable("netcoredbg") == 1 then
         ---@diagnostic disable-next-line: param-type-mismatch
         map("n", "<leader>rt", function()
@@ -197,21 +192,8 @@ function M.setup(capabilities)
       end
     end,
 
-    -- handler overrides for better formatting
-    handlers = {
-      ["textDocument/definition"] = function(err, result, method, ...)
-        if islist(result) and #result > 1 then
-          local filtered_result = {}
-          for _, res in ipairs(result) do
-            if not string.match(res.uri, "metadata") then table.insert(filtered_result, res) end
-          end
-          if #filtered_result > 0 then result = filtered_result end
-        end
-        lsp.handlers["textDocument/definition"](err, result, method, ...)
-      end,
-    },
+    handlers = extended.handlers,
 
-    -- flags for better performance
     flags = {
       debounce_text_changes = 150,
     },

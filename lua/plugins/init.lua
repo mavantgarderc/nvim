@@ -40,6 +40,10 @@ return {
       "hrsh7th/cmp-nvim-lsp",
       "hrsh7th/cmp-nvim-lua",
       "saadparwaiz1/cmp_luasnip",
+      {
+          "Hoffs/omnisharp-extended-lsp.nvim",
+          lazy = true,
+      },
       -- Dev Enhancements
       {
         "folke/lazydev.nvim",
