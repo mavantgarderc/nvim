@@ -1,41 +1,87 @@
-Samurai-Odin at Tehran holding a Katana...
+Odin, The Ronin in Athens holding a Katana...
+
+> Built not for everyone — but for those who want to master their own tools.
 
 # Neovim Configuration
-Converting my Vim setup on Nvim from scratch; nothing more...
 
-& ofcourse a lil' bit of modernization... or perhaps a lot :)
+> Hagakure
 
-### Iaijutsu
-Keymaps are modularized to help the user engage; Au-DHD friendly.
+A wandering soul with a Vim config, now rebuilding it from scratch in Neovim.
+
+The goal is to keep the spirit, upgrade the sword — sharpened with Lua and modern tooling.
+
+### Iaijutsu Sword Attacks - Swift Engagement
+Keymaps are modularized for clarity and ease of discovery — AuDHD-friendly by design.
+
+Designed to be both informative and self-guiding.
 
 You'll see three types at `lua/core/keymaps/`:
 - Customs
 - Native Re-implementations
 - Plugin Keymaps
 
-This structures allow the user to read the config modules, as a reference study.
+This structure allows the user to explore mappings as standalone modules and reference points.
 
-I'll appreciate any recommendations if you do by [gmail](manihabibinava@gmail.com) or submit issues.
+> F-Keys are available for OGs, but not a habit worth building (for the sake of zen).
 
-> F-Keys are availablr for OGs, but not a good idea to take the habit (for sake of zen).
+### Kendos Sword Schools - Techniques & Forms
+*Kendo* means *The Way of The Sword*.
 
-### Kendos
-Among La Italia's best painters, Raphael was the best at harmonious painting & colorings...
+Among La Italia's finest painters, Raphael stood out for his harmony in color — just like your interface should.
 
-`Raphael/`: Theme management with auto & user commands
+#### `Raphael/`
+Theme management with auto & user commands (astigmatist heaven)
 - FileType theme appliance; toggle to turn off.
 - Live theme-selector.
 - TODO: Integrations with Ghostty & Starship.
 - TODO: TOML & Hex Code support, powered by [Base16](https://github.com/RRethy/base16-nvim); TOML parser, etc. needed.
 
+#### `lsp/`
+Modular Per-language LSP Configuration; extensible & usage specific
+  - Add your language server's config to `lua/lsp/servers/`, then inject to `lua/lsp/shared.lua`.
 
-`lsp/`: Modular Per-language LSP Configuration; extensible & usage specific
-
-
-`.editorconfig`: Cross-IDE style constraints to avoid conflicts with other devs & IDEs like Visual Studio, Visual Studio Code, etc.
-
-
-Used out-of-the-box nvim distros & their lua-scripted features:
+Inspired by out-of-the-box Lua-based distros:
   - ~~NvChad~~
   - ~~Kickstart~~
   - ~~LunarVim~~
+
+###  Yoroi of the Sword Master - Tools of Warlike
+*Yoroi* means *Samurai Equipments*.
+
+> Full plugin config lives in `lua/plugins/`, modularized by purpose & intent.
+
+> This config uses [`lazy.nvim`](https://github.com/folke/lazy.nvim) for plugin loading and startup optimization.
+Plugins are lazy-loaded, organized under `lua/plugins/`, and grouped by function.
+
+`plugins/`: configured like a blade — swift, silent, and aligned in purpose
+  - [`colorizer.nvim`](https://github.com/norcalli/nvim-colorizer.lua): Inline hex/rgb coloring
+  - [`dadbod.nvim`](https://github.com/tpope/vim-dadbod): UI + cmp: SQL interaction with RDBMS systems (Postgres, Oracle, SSMS, etc.)
+  - [`flash.nvim`](https://github.com/folke/flash.nvim): Navigate precisely - no more `H/J/K/L` spam
+  - [`gitsigns.nvim`](https://github.com/lewis6991/gitsigns.nvim): Stage hunks, view diffs, navigate history — buffer-local
+  - [`lualine.nvim`](https://github.com/nvim-lualine/lualine.nvim): Custom tabline/statusline with style
+  - [`undotree.nvim`](https://github.com/mbbill/undotree): Visual undo/redo timeline
+  - [`impatient.nvim`](https://github.com/lewis6991/impatient.nvim): Speeds up startup by caching Lua modules rather than search through the entire `runtimepath`
+And of course: Telescope, cmp, luasnip, DAP — the usual suspects.
+
+---
+
+Open an issue or [email](mailto:manihabibinava@gmail.com) me - suggestions are welcome.
+
+---
+
+## Getting Started
+
+```sh
+# Clone the config
+git clone https://github.com/mavantgarderc/ronin-nvim ~/.config/nvim
+
+# Launch Neovim
+nvim
+```
+
+Requires Neovim 0.9+. Linux/macOS. Windows WSL2 supported.
+
+First launch will trigger plugin sync via `lazy.nvim`. Use `:checkhealth` to verify setup.
+
+## License
+This project is licensed under the [MIT License](./LICENSE).
