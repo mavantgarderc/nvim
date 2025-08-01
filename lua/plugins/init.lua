@@ -55,6 +55,8 @@ return {
           },
         },
       },
+      -- dadbod
+      "tpope/vim-dadbod",
       -- Utilities
       -- indent automation; no config needed
       "NMAC427/guess-indent.nvim",

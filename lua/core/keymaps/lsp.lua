@@ -74,24 +74,20 @@ function M.setup_lsp_keymaps()
 
       -- lint
       map("n", "<F3>", function()
-        -- Format the buffer
-        vim.lsp.buf.format({
+        lsp.buf.format({
           async = false,
           filter = function(client)
             return client.name == "null-ls"
           end
         })
-
-        -- Then run code actions if needed
-        vim.lsp.buf.code_action({
+        lsp.buf.code_action({
           context = {
             only = { "source.organizeImports", "source.fixAll" },
-            diagnostics = vim.diagnostic.get(0),
+            diagnostics = diagnostic.get(0),
           },
           apply = true,
         })
-
-        vim.notify("Manual formatting & linting triggered", vim.log.levels.INFO)
+        notify("Manual formatting & linting triggered", log.levels.INFO)
       end, { desc = "Manual formatting & linting (F3)" })
 
       -- Get client information for language-specific keymaps
@@ -218,31 +214,6 @@ function M.setup_lsp_keymaps()
               end
             end, tbl_extend("force", opts, { desc = "Debug test" }))
           end
-        end
-      end
-
-      -- SQL-specific keymaps (buffer-local, only present if SQL LSP attached)
-      if ft == "sql" or ft == "plsql" or ft == "oracle" or ft == "tsql" or ft == "pgsql" then
-        map("n", "<leader>sf", function()
-          lsp.buf.format({ async = true })
-        end, tbl_extend("force", opts, { desc = "Format SQL" }))
-
-        map("n", "<leader>sk", function()
-          lsp.buf.hover()
-        end, tbl_extend("force", opts, { desc = "Show info (hover)" }))
-      end
-
-      -- sqls-specific
-      for _, client in ipairs(clients) do
-        if client.name == "sqls" then
-          map("n", "<leader>se", ":SqlsExecuteQuery<CR>", opts)
-          map("n", "<leader>sr", ":SqlsExecuteQueryVertical<CR>", opts)
-          map("n", "<leader>st", ":SqlsShowTables<CR>", opts)
-          map("n", "<leader>sd", ":SqlsShowDatabases<CR>", opts)
-          map("n", "<leader>sc", ":SqlsShowConnections<CR>", opts)
-          map("v", "<leader>se", ":SqlsExecuteQuery<CR>", opts)
-          map("v", "<leader>sr", ":SqlsExecuteQueryVertical<CR>", opts)
-          break
         end
       end
     end,

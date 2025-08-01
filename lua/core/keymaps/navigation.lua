@@ -14,22 +14,22 @@ local opts = { noremap = true, silent = true, }
 -- === === ===  ===  === === ===
 -- === Terminal Multiplexer  ===
 -- === === ===  ===  === === ===
-local function setup_multiplexer_keymaps()
-  local function detect_multiplexer()
-    if env.TMUX then
-      return "tmux"
-    end
-    if env.ZELLIJ then
-      return "zellij"
-    end
-    local term = env.TERM or ""
-    if term:match("screen") then
-      return "screen"
-    elseif term:match("tmux") then
-      return "tmux"
-    end
-    return nil
+local function detect_multiplexer()
+  if env.TMUX then
+    return "tmux"
   end
+  if env.ZELLIJ then
+    return "zellij"
+  end
+  local term = env.TERM or ""
+  if term:match("screen") then
+    return "screen"
+  elseif term:match("tmux") then
+    return "tmux"
+  end
+  return nil
+end
+local function setup_multiplexer_keymaps()
   local multiplexer = detect_multiplexer()
   if multiplexer then
     map("n", "<A-h>", ":NavigateLeft<CR>", opts)
