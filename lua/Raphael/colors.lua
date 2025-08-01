@@ -1,6 +1,9 @@
 local M = {}
 
 M.theme_map = {
+  everviolet = {
+    "evergarden-fall",
+  },
 
   black_metal = {
     "base16-black-metal-bathory",

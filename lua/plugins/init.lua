@@ -22,6 +22,7 @@ return {
     "thesimonho/kanagawa-paper.nvim",
     "nyoom-engineering/oxocarbon.nvim",
     "whatyouhide/vim-gotham",
+    "everviolet/nvim",
   },
   -- ==================================================
   -- === LSP ===
