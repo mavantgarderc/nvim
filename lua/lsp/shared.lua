@@ -21,7 +21,7 @@ function M.setup_keymaps()
   if keymaps_ok and keymaps.setup_lsp_keymaps then
     keymaps.setup_lsp_keymaps()
 
-    print("Warning: core.keymaps.lsp not found, skipping keymap setup")
+    -- print("Warning: core.keymaps.lsp not found, skipping keymap setup")
   end
 end
 
@@ -85,10 +85,10 @@ function M.get_capabilities()
 
   if cmp_ok and cmp_nvim_lsp.default_capabilities then
     capabilities = cmp_nvim_lsp.default_capabilities()
-    print("✓ Using cmp_nvim_lsp capabilities")
+    -- print("✓ Using cmp_nvim_lsp capabilities")
   else
     capabilities = lsp.protocol.make_client_capabilities()
-    print("⚠ cmp_nvim_lsp not found, using default capabilities")
+    -- print("⚠ cmp_nvim_lsp not found, using default capabilities")
   end
 
   capabilities.textDocument.completion.completionItem.snippetSupport = true
