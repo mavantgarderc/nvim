@@ -16,7 +16,14 @@ local uri_from_bufnr = vim.uri_from_bufnr
 local split = vim.split
 local tbl_isempty = vim.tbl_isempty
 
-function M.setup_keymaps() require("core.keymaps.lsp").setup_lsp_keymaps() end
+function M.setup_keymaps()
+  local keymaps_ok, keymaps = pcall(require, "core.keymaps.lsp")
+  if keymaps_ok and keymaps.setup_lsp_keymaps then
+    keymaps.setup_lsp_keymaps()
+
+    print("Warning: core.keymaps.lsp not found, skipping keymap setup")
+  end
+end
 
 function M.setup_diagnostics()
   diagnostic.config({
@@ -70,12 +77,19 @@ function M.setup_diagnostics()
   end
 end
 
--- Completion config is on cmp.lua at plugins/ & core/keymaps/
--- the below function's responsibility is compatibility
 function M.setup_completion(cmp, luasnip) return end
 
 function M.get_capabilities()
-  local capabilities = require("cmp_nvim_lsp").default_capabilities()
+  local cmp_ok, cmp_nvim_lsp = pcall(require, "cmp_nvim_lsp")
+  local capabilities
+
+  if cmp_ok and cmp_nvim_lsp.default_capabilities then
+    capabilities = cmp_nvim_lsp.default_capabilities()
+    print("✓ Using cmp_nvim_lsp capabilities")
+  else
+    capabilities = lsp.protocol.make_client_capabilities()
+    print("⚠ cmp_nvim_lsp not found, using default capabilities")
+  end
 
   capabilities.textDocument.completion.completionItem.snippetSupport = true
   capabilities.textDocument.completion.completionItem.resolveSupport = {
@@ -90,7 +104,12 @@ function M.get_capabilities()
 end
 
 function M.setup_null_ls()
-  local null_ls = require("null-ls")
+  local null_ls_ok, null_ls = pcall(require, "null-ls")
+  if not null_ls_ok then
+    print("null-ls not found, skipping setup")
+    return
+  end
+
   local sources = {}
 
   if fn.executable("stylua") == 1 then table.insert(sources, null_ls.builtins.formatting.stylua) end

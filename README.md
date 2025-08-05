@@ -10,7 +10,7 @@ A wandering soul with a Vim config, now rebuilding it from scratch in Neovim.
 
 The goal is to keep the spirit, upgrade the sword — sharpened with Lua and modern tooling.
 
-### Iaijutsu Sword Attacks - Swift Engagement
+### Iaijutsu Sword Attacks - Dance of the Sword
 Keymaps are modularized for clarity and ease of discovery — AuDHD-friendly by design.
 
 Designed to be both informative and self-guiding.
@@ -61,6 +61,7 @@ Plugins are lazy-loaded, organized under `lua/plugins/`, and grouped by function
   - [`lualine.nvim`](https://github.com/nvim-lualine/lualine.nvim): Custom tabline/statusline with style
   - [`undotree.nvim`](https://github.com/mbbill/undotree): Visual undo/redo timeline
   - [`impatient.nvim`](https://github.com/lewis6991/impatient.nvim): Speeds up startup by caching Lua modules rather than search through the entire `runtimepath`
+
 And of course: Telescope, cmp, luasnip, DAP — the usual suspects.
 
 ---
@@ -73,13 +74,15 @@ Open an issue or [email](mailto:manihabibinava@gmail.com) me - suggestions are w
 
 ```sh
 # Clone the config
-git clone https://github.com/mavantgarderc/ronin-nvim ~/.config/nvim
+git clone https://github.com/mavantgarderc/nvim ~/.config/nvim
 
 # Launch Neovim
 nvim
 ```
 
-Requires Neovim 0.9+. Linux/macOS. Windows WSL2 supported.
+Requires Neovim 0.9+.
+
+Linux/macOS. Windows WSL2 supported.
 
 First launch will trigger plugin sync via `lazy.nvim`. Use `:checkhealth` to verify setup.
 
