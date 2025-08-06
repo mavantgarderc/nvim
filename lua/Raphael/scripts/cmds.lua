@@ -1,12 +1,13 @@
 local M = {}
 
+local api = vim.api
+local notify = vim.notify
+local log = vim.log
+
 local theme_loader = require("Raphael.scripts.loader")
 local theme_preview = require("Raphael.scripts.preview")
 local theme_picker = require("Raphael.scripts.picker")
 local theme_cycler = require("Raphael.scripts.cycler")
-local api = vim.api
-local notify = vim.notify
-local log = vim.log
 
 -- === Setup User Commands ===
 function M.setup()
@@ -14,10 +15,7 @@ function M.setup()
   api.nvim_create_user_command("PT", function(opts)
     local delay = tonumber(opts.args) or 700
     theme_preview.preview_all_themes(delay)
-  end, {
-    nargs = "?",
-    desc = "Preview all themes (optional delay in ms)",
-  })
+  end, { nargs = "?", desc = "Preview all themes (optional delay in ms)", })
 
   -- Theme Selector Command
   api.nvim_create_user_command("TT", function(opts)
@@ -39,17 +37,17 @@ function M.setup()
   })
 
   -- Theme Cycler Commands
-  api.nvim_create_user_command("TN", function() theme_cycler.cycle_next_theme() end, {
-    desc = "Cycle to next theme",
-  })
+  api.nvim_create_user_command("TN", function()
+    theme_cycler.cycle_next_theme()
+  end, { desc = "Cycle to next theme", })
 
-  api.nvim_create_user_command("TP", function() theme_cycler.cycle_prev_theme() end, {
-    desc = "Cycle to previous theme",
-  })
+  api.nvim_create_user_command("TP", function()
+    theme_cycler.cycle_prev_theme()
+  end, { desc = "Cycle to previous theme", })
 
-  api.nvim_create_user_command("TR", function() theme_cycler.random_theme() end, {
-    desc = "Set random theme",
-  })
+  api.nvim_create_user_command("TR", function()
+    theme_cycler.random_theme()
+  end, { desc = "Set random theme", })
 
   -- Create user command
   api.nvim_create_user_command('ToggleAutoTheme', function()
@@ -66,9 +64,7 @@ function M.setup()
         string.format("Current theme: %s\nAvailable themes: %d\nCycle index: %d", current or "none", #themes, index)
 
     notify(info, log.levels.INFO, { title = "Theme Info" })
-  end, {
-    desc = "Show theme information",
-  })
+  end, { desc = "Show theme information", })
 end
 
 return M

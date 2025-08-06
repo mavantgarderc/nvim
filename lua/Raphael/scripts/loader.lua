@@ -1,10 +1,12 @@
 local M = {}
 
-local config = require("Raphael.colors")
 local cmd = vim.cmd
 local notify = vim.notify
 local fn = vim.fn
 local log = vim.log
+local api = vim.api
+
+local config = require("Raphael.colors")
 
 -- Current theme state
 local current_theme = nil
@@ -75,7 +77,6 @@ end
 
 function M.set_theme_by_filetype(buf)
   if not config.filetype_themes or not M.auto_theme_enabled then return end
-  local api = vim.api
   local ft = api.nvim_buf_get_option(buf or 0, "filetype")
   local theme = config.filetype_themes[ft]
   if theme and M.is_theme_available(theme) then M.load_theme(theme) end

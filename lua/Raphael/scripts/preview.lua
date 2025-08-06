@@ -1,9 +1,10 @@
 local M = {}
 
-local theme_loader = require("Raphael.scripts.loader")
 local notify = vim.notify
 local log = vim.log
 local defer_fn = vim.defer_fn
+
+local theme_loader = require("Raphael.scripts.loader")
 
 -- === Theme Preview ===
 function M.preview_all_themes(delay)
@@ -31,11 +32,8 @@ function M.preview_all_themes(delay)
     end
 
     local theme = themes[preview_index]
-    notify(
-      "Previewing: " .. theme .. " (" .. preview_index .. "/" .. #themes .. ")",
-      log.levels.INFO,
-      { title = "Theme Preview" }
-    )
+    notify( "Previewing: " .. theme .. " (" .. preview_index .. "/" .. #themes .. ")",
+      log.levels.INFO, { title = "Theme Preview" })
 
     theme_loader.load_theme(theme, true)
     preview_index = preview_index + 1

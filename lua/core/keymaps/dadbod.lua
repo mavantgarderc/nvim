@@ -108,28 +108,22 @@ function M.setup_sql_buffer_keymaps()
       map("n", "<localleader>R", ":%DB<CR>", tbl_extend("force", opts, { desc = "Execute entire buffer" }))
 
       map("n", "<localleader>h", function()
-        local word = fn.expand("<cword>")
-        cmd("help " .. word)
+        local word = fn.expand("<cword>") cmd("help " .. word)
       end, tbl_extend("force", opts, { desc = "Help for word under cursor" }))
 
       map("n", "<localleader>f", function()
-        if fn.executable("sqlformat") == 1 then
-          cmd("%!sqlformat --reindent --keywords upper --identifiers lower -")
-        else
-          notify("sqlformat not found. Install it with: pip install sqlparse", log.levels.WARN)
-        end
+        if fn.executable("sqlformat") == 1 then cmd("%!sqlformat --reindent --keywords upper --identifiers lower -")
+        else notify("sqlformat not found. Install it with: pip install sqlparse", log.levels.WARN) end
       end, tbl_extend("force", opts, { desc = "Format SQL" }))
 
       -- Explain query
       map("n", "<localleader>e", function()
-        local line = api.nvim_get_current_line()
-        cmd("DB EXPLAIN " .. line)
+        local line = api.nvim_get_current_line() cmd("DB EXPLAIN " .. line)
       end, tbl_extend("force", opts, { desc = "Explain current query" }))
 
       -- Describe table
       map("n", "<localleader>d", function()
-        local word = fn.expand("<cword>")
-        cmd("DB DESCRIBE " .. word)
+        local word = fn.expand("<cword>") cmd("DB DESCRIBE " .. word)
       end, tbl_extend("force", opts, { desc = "Describe table under cursor" }))
     end,
   })
@@ -137,7 +131,7 @@ end
 
 function M.setup_lsp_integration()
   api.nvim_create_autocmd("LspAttach", {
-    pattern = { "*.sql", "*.mysql", "*.plsql" },
+    pattern = { "*.sql", "*.mysql", "*.plsql", "*.psql" },
     callback = function(event)
       local opts = { buffer = event.buf, noremap = true, silent = true }
 

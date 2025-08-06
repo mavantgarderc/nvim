@@ -1,6 +1,5 @@
 local M = {}
 
-local theme_loader = require("Raphael.scripts.loader")
 local o = vim.o
 local api = vim.api
 local log = vim.log
@@ -10,10 +9,12 @@ local schedule = vim.schedule
 local deepcopy = vim.deepcopy
 local cmd = vim.cmd
 
+local theme_loader = require("Raphael.scripts.loader")
+
 -- === Enhanced Theme Picker ===
 function M.create_theme_picker()
   local themes = theme_loader.get_theme_list()
-  local theme_categories = theme_loader.get_theme_categories() -- New function to get categorized themes
+  local theme_categories = theme_loader.get_theme_categories()
   local original_theme = theme_loader.get_current_theme()
   local preview_theme = nil
   local filter_text = ""
@@ -47,7 +48,7 @@ function M.create_theme_picker()
     col = col,
     style = "minimal",
     border = "rounded",
-    title = " Raphael Theme Picker ",
+    title = " Raphael ",
     title_pos = "center"
   })
 

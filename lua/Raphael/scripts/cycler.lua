@@ -1,8 +1,9 @@
 local M = {}
 
-local theme_loader = require("Raphael.scripts.loader")
 local notify = vim.notify
 local log = vim.log
+
+local theme_loader = require("Raphael.scripts.loader")
 
 -- State
 local current_theme_index = 1
@@ -20,11 +21,8 @@ function M.cycle_next_theme()
   local theme = themes[current_theme_index]
 
   if theme_loader.load_theme(theme) then
-    notify(
-      "Theme: " .. theme .. " (" .. current_theme_index .. "/" .. #themes .. ")",
-      log.levels.INFO,
-      { title = "Theme Cycler" }
-    )
+    notify("Theme: " .. theme .. " (" .. current_theme_index .. "/" .. #themes .. ")",
+      log.levels.INFO, { title = "Theme Cycler" })
   end
 end
 
@@ -42,11 +40,8 @@ function M.cycle_prev_theme()
   local theme = themes[current_theme_index]
 
   if theme_loader.load_theme(theme) then
-    notify(
-      "Theme: " .. theme .. " (" .. current_theme_index .. "/" .. #themes .. ")",
-      log.levels.INFO,
-      { title = "Theme Cycler" }
-    )
+    notify( "Theme: " .. theme .. " (" .. current_theme_index .. "/" .. #themes .. ")",
+      log.levels.INFO, { title = "Theme Cycler" })
   end
 end
 
@@ -66,11 +61,8 @@ function M.random_theme()
   current_theme_index = random_index
 
   if theme_loader.load_theme(theme) then
-    notify(
-      "Random theme: " .. theme .. " (" .. random_index .. "/" .. #themes .. ")",
-      log.levels.INFO,
-      { title = "Theme Cycler" }
-    )
+    notify("Random theme: " .. theme .. " (" .. random_index .. "/" .. #themes .. ")",
+      log.levels.INFO, { title = "Theme Cycler" })
   end
 end
 
