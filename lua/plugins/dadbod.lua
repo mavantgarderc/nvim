@@ -1,39 +1,46 @@
-local g = vim.g
-local fn = vim.fn
-local api = vim.api
-local opt_local = vim.opt_local
+local g       = vim.g
+local fn      = vim.fn
+local api     = vim.api
+local opt_loc = vim.opt_local
 
 return {
   {
     "tpope/vim-dadbod",
     lazy = true,
-    cmd = { "DB" },
+    cmd  = { "DB" },
   },
 
   {
     "kristijanhusak/vim-dadbod-ui",
     dependencies = {
-      { "tpope/vim-dadbod",                     lazy = true },
-      { "kristijanhusak/vim-dadbod-completion", ft = { "sql", "mysql", "plsql", "psql" }, lazy = true },
+      {
+        "tpope/vim-dadbod",
+        lazy = true
+      },
+      {
+        "kristijanhusak/vim-dadbod-completion",
+        ft = { "sql", "mysql", "plsql", "sqlite", "postgresql", "psql" },
+        lazy = true
+      },
     },
     cmd = {
-      "DBUI",
-      "DBUIToggle",
-      "DBUIAddConnection",
-      "DBUIFindBuffer",
+      "DBUI", "DBUIToggle", "DBUIAddConnection", "DBUIFindBuffer", "DBUIRenameBuffer", "DBUILastQueryInfo",
     },
     init = function()
-      g.db_ui_use_nerd_fonts = 1
-      g.db_ui_show_database_icon = 1
-      g.db_ui_force_echo_notifications = 1
-      g.db_ui_win_position = "left"
-      g.db_ui_winwidth = 40
+      -- UI settings
+      g.db_ui_use_nerd_fonts             = 1
+      g.db_ui_show_database_icon         = 1
+      g.db_ui_force_echo_notifications   = 1
+      g.db_ui_win_position               = "left"
+      g.db_ui_winwidth                   = 40
       g.db_ui_auto_execute_table_helpers = 1
+      g.db_ui_execute_on_save            = 0
+      g.db_ui_use_nvim_notify            = 1
 
-      g.db_ui_save_location = fn.stdpath("config") .. require("plenary.path").path.sep .. "db_ui"
-
-      g.db_ui_execute_on_save = 0
-      g.db_ui_use_nvim_notify = 1
+      -- Saved-queries directory (create if missing)
+      local save_dir                     = fn.stdpath("config") .. "/db_ui/saved_queries"
+      if fn.isdirectory(save_dir) == 0 then fn.mkdir(save_dir, "p") end
+      g.db_ui_save_location = save_dir
 
       g.db_ui_icons = {
         expanded = {
@@ -65,26 +72,26 @@ return {
 
       g.db_ui_table_helpers = {
         mysql = {
-          Count = "select count(1) from \"{table}\"",
+          Count   = "select count(1) from \"{table}\"",
           Explain = "explain {last_query}",
         },
         sqlite = {
           Describe = "PRAGMA table_info(\"{table}\")",
         },
         postgresql = {
-          Count = "select count(1) from \"{table}\"",
-          Explain = "explain (analyze, buffers) {last_query}",
+          Count    = "select count(1) from \"{table}\"",
+          Explain  = "explain (analyze, buffers) {last_query}",
           Describe = "\\d+ \"{table}\"",
         },
         oracle = {
-          Count = "SELECT COUNT(1) FROM \"{table}\"",
+          Count    = "SELECT COUNT(1) FROM \"{table}\"",
           Describe = "DESC \"{table}\"",
-          Explain = "EXPLAIN PLAN FOR {last_query}",
+          Explain  = "EXPLAIN PLAN FOR {last_query}",
         },
         plsql = {
-          Count = "SELECT COUNT(1) FROM \"{table}\"",
+          Count    = "SELECT COUNT(1) FROM \"{table}\"",
           Describe = "DESC \"{table}\"",
-          Explain = "EXPLAIN PLAN FOR {last_query}",
+          Explain  = "EXPLAIN PLAN FOR {last_query}",
         },
       }
 
@@ -94,7 +101,7 @@ return {
       require("core.keymaps.dadbod")
 
       api.nvim_create_autocmd("FileType", {
-        pattern = { "sql", "mysql", "plsql" },
+        pattern = { "sql", "mysql", "plsql", "sqlite", "postgresql", "psql" },
         callback = function()
           require("cmp").setup.buffer({
             sources = {
@@ -107,13 +114,13 @@ return {
       })
 
       api.nvim_create_autocmd("FileType", {
-        pattern = { "sql", "mysql", "plsql" },
+        pattern = { "sql", "mysql", "plsql", "sqlite", "postgresql", "psql" },
         callback = function()
-          opt_local.commentstring = "-- %s"
-          opt_local.expandtab = true
-          opt_local.shiftwidth = 2
-          opt_local.tabstop = 2
-          opt_local.softtabstop = 2
+          opt_loc.commentstring = "-- %s"
+          opt_loc.expandtab     = true
+          opt_loc.shiftwidth    = 2
+          opt_loc.tabstop       = 2
+          opt_loc.softtabstop   = 2
         end,
       })
 
@@ -125,19 +132,18 @@ return {
 
   {
     "kristijanhusak/vim-dadbod-completion",
-    ft = { "sql", "mysql", "plsql" },
-    lazy = true,
+    ft     = { "sql", "mysql", "plsql", "sqlite", "postgresql", "psql" },
+    lazy   = true,
     config = function()
-      local cmp_ok, cmp = pcall(require, "cmp")
-      if cmp_ok then
-        cmp.setup.filetype({ "sql", "mysql", "plsql" }, {
-          sources = cmp.config.sources({
-            { name = "vim-dadbod-completion" },
-            { name = "buffer" },
-            { name = "path" },
-          }),
-        })
-      end
+      local ok, cmp = pcall(require, "cmp")
+      if not ok then return end
+      cmp.setup.filetype({ "sql", "mysql", "plsql", "sqlite", "postgresql", "psql" }, {
+        sources = cmp.config.sources({
+          { name = "vim-dadbod-completion" },
+          { name = "buffer" },
+          { name = "path" },
+        }),
+      })
     end,
   },
 }
