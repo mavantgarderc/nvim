@@ -34,8 +34,10 @@ return {
           "html",
           "cssls",
           "texlab",
-          "sqlls",
           "sqls",
+          "solidity_ls",
+          "dockerls",
+          "jsonls",
         },
         automatic_installation = true,
         handlers = {
@@ -77,6 +79,7 @@ return {
       require("lsp.servers.css").setup(capabilities)
       require("lsp.servers.latex").setup(capabilities)
       require("lsp.servers.sql").setup(capabilities)
+      require("lsp.servers.solidity").setup()
 
       shared_config.setup_null_ls()
 

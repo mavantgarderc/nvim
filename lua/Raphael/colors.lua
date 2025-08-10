@@ -35,7 +35,7 @@ M.theme_map = {
     "base16-atelier-cave",
     "base16-penumbra-dark-contrast-plus",
     "base16-precious-dark-eleven",
-    "base16-darkmoss",
+    "base16-darkmoss",       -- solidity
     "base16-tomorrow-night",
     "base16-darktooth",
     "base16-sandcastle",
@@ -78,12 +78,12 @@ M.theme_map = {
   kanagawa    = {
     "base16-kanagawa",
     "base16-kanagawa-wave",     -- sql
-    "kanagawa-dragon",          -- nvim section
-    "kanagawa-paper-ink",
+    "kanagawa-dragon",
+    "kanagawa-paper-ink",       -- nvim section
   },
 
-  gruvbox     = {
-    "gruvbox",     -- cs
+  gruvbox     = {   -- cs & dotnet
+    "gruvbox",
     "base16-gruvbox-dark-hard",
     "base16-gruvbox-dark-pale",
     "base16-gruvbox-material-dark-hard",
@@ -122,6 +122,8 @@ M.filetype_themes = {
   solution   = "base16-gruvbox-material-dark-hard",
 
   python     = "kanagawa-wave",
+
+  solidity   = "base16-darkmoss",
 
   sql        = "kanagawa-wave",
   sqls       = "kanagawa-wave",
