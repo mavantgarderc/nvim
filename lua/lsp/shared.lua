@@ -140,7 +140,7 @@ function M.setup_null_ls()
     diagnostics_format = "#{m}",
     update_in_insert = false,
     on_attach = function(client, bufnr)
-      if client.supports_method("textDocument/formatting") then
+      if client:supports_method("textDocument/formatting") then
         api.nvim_create_autocmd("BufWritePre", {
           buffer = bufnr,
           callback = function()
