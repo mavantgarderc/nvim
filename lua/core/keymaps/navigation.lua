@@ -36,6 +36,11 @@ local function setup_multiplexer_keymaps()
     map("n", "<A-j>", ":NavigateDown<CR>", opts)
     map("n", "<A-k>", ":NavigateUp<CR>", opts)
     map("n", "<A-l>", ":NavigateRight<CR>", opts)
+  else
+    map("n", "<A-h>", "<C-w>h", opts)
+    map("n", "<A-j>", "<C-w>j", opts)
+    map("n", "<A-k>", "<C-w>k", opts)
+    map("n", "<A-l>", "<C-w>l", opts)
   end
 end
 setup_multiplexer_keymaps()
@@ -48,30 +53,30 @@ setup_multiplexer_keymaps()
 -- === === === Buffers === ===
 -- === === === === === === ===
 map("n", "<leader>bb", function() print(api.nvim_buf_get_name(api.nvim_get_current_buf())) end, opts)
-map("n", "<leader>bl", ":ls<CR>", opts)
-map("n", "<leader>bn", ":bnext<CR>", opts)
-map("n", "<leader>bp", ":bprevious<CR>", opts)
-map("n", "<leader>bd", ":bd<CR>", opts)
+map("n", "<leader>bl", cmd.ls, opts)
+map("n", "<leader>bn", cmd.bnext, opts)
+map("n", "<leader>bp", cmd.bprevious, opts)
+map("n", "<leader>bd", cmd.bdelete, opts)
 
 -- === === ===  ===  === === ===
 -- === === === Panes === === ===
 -- === === ===  ===  === === ===
-map("n", "<leader>;h", "<C-w>h", opts)   -- Switch Window Left
-map("n", "<leader>;l", "<C-w>l", opts)   -- Switch Window Right
-map("n", "<leader>;j", "<C-w>j", opts)   -- Switch Window Down
-map("n", "<leader>;k", "<C-w>k", opts)   -- Switch Window Up
-map("n", "<leader>hh", "<C-w>h", opts)   -- Switch Window Left
-map("n", "<leader>ll", "<C-w>l", opts)   -- Switch Window Right
-map("n", "<leader>jj", "<C-w>j", opts)   -- Switch Window Down
-map("n", "<leader>kk", "<C-w>k", opts)   -- Switch Window Up
+map("n", "<leader>;h", "<C-w>h", opts)    -- Switch Window Left
+map("n", "<leader>;l", "<C-w>l", opts)    -- Switch Window Right
+map("n", "<leader>;j", "<C-w>j", opts)    -- Switch Window Down
+map("n", "<leader>;k", "<C-w>k", opts)    -- Switch Window Up
+map("n", "<leader>hh", "<C-w>h", opts)    -- Switch Window Left
+map("n", "<leader>ll", "<C-w>l", opts)    -- Switch Window Right
+map("n", "<leader>jj", "<C-w>j", opts)    -- Switch Window Down
+map("n", "<leader>kk", "<C-w>k", opts)    -- Switch Window Up
 
-map("n", "<leader>H", "<C-w>H", opts)    -- Move Window to Left
-map("n", "<leader>L", "<C-w>L", opts)    -- Move Window to Right
-map("n", "<leader>J", "<C-w>J", opts)    -- Move Window to Down
-map("n", "<leader>K", "<C-w>K", opts)    -- Move Window to Up
+map("n", "<leader>H", "<C-w>H", opts)     -- Move Window to Left
+map("n", "<leader>L", "<C-w>L", opts)     -- Move Window to Right
+map("n", "<leader>J", "<C-w>J", opts)     -- Move Window to Down
+map("n", "<leader>K", "<C-w>K", opts)     -- Move Window to Up
 
-map("n", "<leader>sph", ":sp<CR>", opts) -- split current window horizontally
-map("n", "<leader>spv", ":vs<CR>", opts) -- split current window vertically
+map("n", "<leader>sph", cmd.split, opts)  -- split current window horizontally
+map("n", "<leader>spv", cmd.vsplit, opts) -- split current window vertically
 
 map("n", "<C-A-h>", ":vertical resize -1<CR>", opts)
 map("n", "<C-A-l>", ":vertical resize +1<CR>", opts)
@@ -87,34 +92,34 @@ map("n", "<leader>T", "<C-w>T", opts) -- move current pane to a NEW tab
 -- ===  === ===
 -- === Tabs ===
 -- ===  === ===
-map("n", "<leader>tn", ":tabnew<CR>", opts)             -- New tab
-map("n", "<leader>tc", ":tabclose<CR>", opts)           -- Close current tab
-map("n", "<leader>to", ":tabonly<CR>", opts)            -- Close all other tabs
-map("n", "<leader>tt", ":tabnext<CR>", opts)            -- Next tab
-map("n", "<leader>tp", ":tabprevious<CR>", opts)        -- Previous tab
+map("n", "<leader>tn", cmd.tabnew, opts)                       -- New tab
+map("n", "<leader>tc", cmd.tabclose, opts)                     -- Close current tab
+map("n", "<leader>to", cmd.tabonly, opts)                      -- Close all other tabs
+map("n", "<leader>tt", cmd.tabnext, opts)                      -- Next tab
+map("n", "<leader>tp", cmd.tabprevious, opts)                  -- Previous tab
 
-map("n", "<leader>g1", "1gt", opts)                     -- Go to tab 1
-map("n", "<leader>g2", "2gt", opts)                     -- Go to tab 2
-map("n", "<leader>g3", "3gt", opts)                     -- Go to tab 3
-map("n", "<leader>g4", "4gt", opts)                     -- Go to tab 4
-map("n", "<leader>g5", "5gt", opts)                     -- Go to tab 5
-map("n", "<leader>g6", "6gt", opts)                     -- Go to tab 6
-map("n", "<leader>g7", "7gt", opts)                     -- Go to tab 7
-map("n", "<leader>g8", "8gt", opts)                     -- Go to tab 8
-map("n", "<leader>g9", "9gt", opts)                     -- Go to tab 9
-map("n", "<leader>g0", ":tablast<CR>", opts)            -- Go to last tab
+map("n", "<leader>g1", "1gt", opts)                            -- Go to tab 1
+map("n", "<leader>g2", "2gt", opts)                            -- Go to tab 2
+map("n", "<leader>g3", "3gt", opts)                            -- Go to tab 3
+map("n", "<leader>g4", "4gt", opts)                            -- Go to tab 4
+map("n", "<leader>g5", "5gt", opts)                            -- Go to tab 5
+map("n", "<leader>g6", "6gt", opts)                            -- Go to tab 6
+map("n", "<leader>g7", "7gt", opts)                            -- Go to tab 7
+map("n", "<leader>g8", "8gt", opts)                            -- Go to tab 8
+map("n", "<leader>g9", "9gt", opts)                            -- Go to tab 9
+map("n", "<leader>g0", cmd.tablast, opts)                      -- Go to last tab
 
-map("n", "<leader>tm", ":tabmove<CR>", opts)            -- Move tab (will prompt for position)
-map("n", "<leader>t<", ":tabmove -1<CR>", opts)         -- Move tab left
-map("n", "<leader>t>", ":tabmove +1<CR>", opts)         -- Move tab right
+map("n", "<leader>tm", cmd.tabmove, opts)                      -- Move tab (will prompt for position)
+map("n", "<leader>t<", function() cmd.tabmove("-1") end, opts) -- Move tab left
+map("n", "<leader>t>", function() cmd.tabmove("+1") end, opts) -- Move tab right
 
-map("n", "<C-t>", ":tabnew<CR>", opts)                  -- Quick new tab
-map("n", "<C-w>t", ":tabnew<CR>", opts)                 -- Alternative new tab
+map("n", "<C-t>", cmd.tabnew, opts)                            -- Quick new tab
+map("n", "<C-w>t", cmd.tabnew, opts)                           -- Alternative new tab
 
-map("n", "<leader>te", ":tabedit ", { noremap = true }) -- Edit file in new tab (no silent to see command)
-map("n", "<leader>tf", ":tabfind ", { noremap = true }) -- Find and open file in new tab
+map("n", "<leader>te", ":tabedit ", { noremap = true })        -- Edit file in new tab (no silent to see command)
+map("n", "<leader>tf", ":tabfind ", { noremap = true })        -- Find and open file in new tab
 
-map("n", "<leader>tT", ":tabnew | terminal<CR>", opts)  -- Open terminal in new tab
+map("n", "<leader>tT", ":tabnew | terminal<CR>", opts)         -- Open terminal in new tab
 
 local function create_tab_with_file(filename) cmd("tabnew " .. filename) end
 
@@ -135,16 +140,16 @@ local function close_tabs_left()
   end
 end
 
-map("n", "<leader>tO", close_other_tabs, opts)           -- Close all other tabs (function)
-map("n", "<leader>tR", close_tabs_right, opts)           -- Close tabs to the right
-map("n", "<leader>tL", close_tabs_left, opts)            -- Close tabs to the left
+map("n", "<leader>tO", close_other_tabs, opts)                -- Close all other tabs (function)
+map("n", "<leader>tR", close_tabs_right, opts)                -- Close tabs to the right
+map("n", "<leader>tL", close_tabs_left, opts)                 -- Close tabs to the left
 
-map("n", "<leader>ti", ":tabs<CR>", opts)                -- List all tabs
-map("n", "<leader>tb", ":tab split<CR>", opts)           -- Open current buffer in new tab
-map("n", "<leader>td", ":tab drop ", { noremap = true }) -- Drop file in tab (no silent to see command)
+map("n", "<leader>ti", cmd.tabs, opts)                        -- List all tabs
+map("n", "<leader>tb", function() cmd("tab split") end, opts) -- Open current buffer in new tab
+map("n", "<leader>td", ":tab drop ", { noremap = true })      -- Drop file in tab (no silent to see command)
 
-map("n", "<leader>th", "1gt", opts)                      -- Go to first tab (home)
-map("n", "<leader>tl", ":tablast<CR>", opts)             -- Go to last tab
+map("n", "<leader>th", "1gt", opts)                           -- Go to first tab (home)
+map("n", "<leader>tl", cmd.tablast, opts)                  -- Go to last tab
 
 -- === === ===  ===
 -- === Foldings ===
@@ -303,16 +308,16 @@ map("n", "<leader>gf", "`F", tbl_extend("force", opts, { desc = "Go to mark F (e
 -- MARK MANAGEMENT
 -- ============================================================================
 -- List all marks
-map("n", "<leader>ml", ":marks<CR>", tbl_extend("force", opts, { desc = "List all marks" }))
+map("n", "<leader>ml", cmd.marks, tbl_extend("force", opts, { desc = "List all marks" }))
 
 -- Delete marks
-map("n", "<leader>md", ":delmarks<CR>", { desc = "Delete marks (specify which)" })
-map("n", "<leader>mD", ":delmarks!<CR>", tbl_extend("force", opts, { desc = "Delete all lowercase marks" }))
+map("n", "<leader>md", cmd.delmarks, { desc = "Delete marks (specify which)" })
+map("n", "<leader>mD", function() cmd("delmarks!") end, opts, { desc = "Delete all lowercase marks" })
 
 -- Clear specific mark ranges
-map("n", "<leader>mca", ":delmarks a-z<CR>", tbl_extend("force", opts, { desc = "Clear all local marks" }))
-map("n", "<leader>mcA", ":delmarks A-Z<CR>", tbl_extend("force", opts, { desc = "Clear all global marks" }))
-map("n", "<leader>mc0", ":delmarks 0-9<CR>", tbl_extend("force", opts, { desc = "Clear all numbered marks" }))
+map("n", "<leader>mca", function() cmd("delmarks a-z") end, opts, { desc = "Clear all local marks" })
+map("n", "<leader>mcA", function() cmd("delmarks A-Z") end, opts, { desc = "Clear all global marks" })
+map("n", "<leader>mc0", function() cmd("delmarks 0-9") end, opts, { desc = "Clear all numbered marks" })
 
 -- automatics; don't need maps; documented for reference:
 -- ` - position before latest jump
@@ -339,12 +344,12 @@ map("n", "<leader>j>", "`>", tbl_extend("force", opts, { desc = "Jump to visual 
 -- Jump list navigation (enhanced)
 map("n", "<C-o>", "<C-o>", tbl_extend("force", opts, { desc = "Jump to older position" }))
 map("n", "<C-i>", "<C-i>", tbl_extend("force", opts, { desc = "Jump to newer position" }))
-map("n", "<leader>jo", ":jumps<CR>", tbl_extend("force", opts, { desc = "Show jump list" }))
+map("n", "<leader>jo", cmd.jumps, tbl_extend("force", opts, { desc = "Show jump list" }))
 
 -- Change list navigation
 map("n", "g;", "g;", tbl_extend("force", opts, { desc = "Go to older change" }))
 map("n", "g,", "g,", tbl_extend("force", opts, { desc = "Go to newer change" }))
-map("n", "<leader>jc", ":changes<CR>", tbl_extend("force", opts, { desc = "Show change list" }))
+map("n", "<leader>jc", cmd.changes, tbl_extend("force", opts, { desc = "Show change list" }))
 
 -- Function to set a mark and provide feedback
 local function set_mark_with_feedback(mark)
@@ -416,7 +421,7 @@ map("n", "/", "m'/", tbl_extend("force", opts, { desc = "Search (mark position)"
 map("n", "?", "m'?", tbl_extend("force", opts, { desc = "Search backwards (mark position)" }))
 
 -- If using telescope.nvim, you might want these
-map("n", "<leader>fm", "<cmd>Telescope marks<CR>", { desc = "Find marks with Telescope" })
+map("n", "<leader>fm", function() cmd("Telescope marks") end, { desc = "Find marks with Telescope" })
 
 -- useful commands
 api.nvim_create_user_command("ShowMarks", "marks", { desc = "Show all marks" })
@@ -431,14 +436,6 @@ api.nvim_create_user_command("MarkInfo", function()
   print("Buffer marks: " .. #buf_marks)
   cmd("marks")
 end, { desc = "Show mark information" })
-
-api.nvim_create_augroup("MarkHighlight", { clear = true })
-api.nvim_create_autocmd("ModeChanged", {
-  group = "MarkHighlight",
-  pattern = "*:n",
-  callback = function()
-  end,
-})
 
 api.nvim_create_autocmd("VimLeave", {
   group = "MarkHighlight",
