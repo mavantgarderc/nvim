@@ -436,9 +436,3 @@ api.nvim_create_user_command("MarkInfo", function()
   print("Buffer marks: " .. #buf_marks)
   cmd("marks")
 end, { desc = "Show mark information" })
-
-api.nvim_create_autocmd("VimLeave", {
-  group = "MarkHighlight",
-  callback = function()
-  end,
-})
