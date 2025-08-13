@@ -1,6 +1,8 @@
 local opt = vim.opt
 local g = vim.g
 local o = vim.o
+local fn = vim.fn
+local env = vim.env
 local schedule = vim.schedule
 
 -- Disable netrw
@@ -17,10 +19,14 @@ g.loaded_perl_provider = 0
 g.loaded_ruby_provider = 0
 
 -- add binaries installed by mason.nvim to path
---local is_windows = fn.has "win32" ~= 0
---local sep = is_windows and "\\" or "/"
---local delim = is_windows and ";" or ":"
---env.PATH = table.concat({ vim.fn.stdpath "data", "mason", "bin" }, sep) .. delim .. vim.env.PATH
+local mason_bin = fn.stdpath("data") .. "/mason/bin"
+
+if fn.has("win32") == 1 then
+    mason_bin = mason_bin:gsub("/", "\\")
+    env.PATH = mason_bin .. ";" .. env.PATH
+else
+    env.PATH = mason_bin .. ":" .. env.PATH
+end
 
 opt.number = true
 --opt.relativenumber = true
@@ -50,16 +56,16 @@ opt.swapfile = false
 opt.undodir = os.getenv("HOME") .. "/.vim/undodir"
 opt.undofile = true
 
-opt.hlsearch = true      -- Show matches while typing
-opt.incsearch = true     -- Highlight all matches
+opt.hlsearch = true
+opt.incsearch = true
 
-opt.termguicolors = true -- enable 24-bit RGB colors
+opt.termguicolors = true
 
 opt.scrolloff = 3
-opt.signcolumn = "yes" -- Always show sign column (LSP, Git, etc.)
+opt.signcolumn = "yes"
 opt.isfname:append("@-@")
 
 opt.updatetime = 50
 
-opt.splitright = true -- Vertical splits open to the right
-opt.splitbelow = true -- Horizontal splits open below
+opt.splitright = true
+opt.splitbelow = true
