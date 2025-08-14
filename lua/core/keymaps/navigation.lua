@@ -65,15 +65,16 @@ map("n", "<leader>;h", "<C-w>h", opts)    -- Switch Window Left
 map("n", "<leader>;l", "<C-w>l", opts)    -- Switch Window Right
 map("n", "<leader>;j", "<C-w>j", opts)    -- Switch Window Down
 map("n", "<leader>;k", "<C-w>k", opts)    -- Switch Window Up
-map("n", "<leader>hh", "<C-w>h", opts)    -- Switch Window Left
-map("n", "<leader>ll", "<C-w>l", opts)    -- Switch Window Right
-map("n", "<leader>jj", "<C-w>j", opts)    -- Switch Window Down
-map("n", "<leader>kk", "<C-w>k", opts)    -- Switch Window Up
 
-map("n", "<leader>H", "<C-w>H", opts)     -- Move Window to Left
-map("n", "<leader>L", "<C-w>L", opts)     -- Move Window to Right
-map("n", "<leader>J", "<C-w>J", opts)     -- Move Window to Down
-map("n", "<leader>K", "<C-w>K", opts)     -- Move Window to Up
+map("n", "<leader>hh", "<C-w>h", opts)
+map("n", "<leader>ll", "<C-w>l", opts)
+map("n", "<leader>jj", "<C-w>j", opts)
+map("n", "<leader>kk", "<C-w>k", opts)
+
+map("n", "<leader>HH", "<C-w>H", opts)     -- Move Window to Left
+map("n", "<leader>LL", "<C-w>L", opts)     -- Move Window to Right
+map("n", "<leader>JJ", "<C-w>J", opts)     -- Move Window to Down
+map("n", "<leader>KK", "<C-w>K", opts)     -- Move Window to Up
 
 map("n", "<leader>sph", cmd.split, opts)  -- split current window horizontally
 map("n", "<leader>spv", cmd.vsplit, opts) -- split current window vertically
@@ -315,9 +316,9 @@ map("n", "<leader>md", cmd.delmarks, { desc = "Delete marks (specify which)" })
 map("n", "<leader>mD", function() cmd("delmarks!") end, opts, { desc = "Delete all lowercase marks" })
 
 -- Clear specific mark ranges
-map("n", "<leader>mca", function() cmd("delmarks a-z") end, opts, { desc = "Clear all local marks" })
-map("n", "<leader>mcA", function() cmd("delmarks A-Z") end, opts, { desc = "Clear all global marks" })
-map("n", "<leader>mc0", function() cmd("delmarks 0-9") end, opts, { desc = "Clear all numbered marks" })
+map("n", "<leader>mCa", function() cmd("delmarks a-z") end, opts, { desc = "Clear all local marks" })
+map("n", "<leader>mCA", function() cmd("delmarks A-Z") end, opts, { desc = "Clear all global marks" })
+map("n", "<leader>mC0", function() cmd("delmarks 0-9") end, opts, { desc = "Clear all numbered marks" })
 
 -- automatics; don't need maps; documented for reference:
 -- ` - position before latest jump
