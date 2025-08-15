@@ -94,7 +94,7 @@ function M.setup()
 
   M.setup_solidity_autocmds()
 
-  notify("Solidity LSP configured", log.levels.INFO)
+  -- notify("Solidity LSP configured", log.levels.INFO)
 end
 
 function M.setup_solidity_autocmds()
