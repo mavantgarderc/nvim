@@ -1,4 +1,3 @@
--- lua/core/keymaps/obsidian.lua
 local M = {}
 
 function M.set_keymaps(bufnr)

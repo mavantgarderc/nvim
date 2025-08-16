@@ -1,10 +1,8 @@
-local cmd = vim.cmd
+local o = vim.o
 local fn = vim.fn
+local cmd = vim.cmd
 local api = vim.api
 local map = vim.keymap.set
-local o = vim.o
-
-map("n", "<leader>u<leader>", cmd.UndotreeToggle, { desc = "Toggle undotree" })
 
 map("n", "<leader>ut", cmd.UndotreeToggle, { desc = "Toggle undotree" })
 map("n", "<leader>uf", cmd.UndotreeFocus, { desc = "Focus undotree window" })
@@ -37,7 +35,6 @@ local function setup_undotree_buffer_keymaps()
   local buf_name = api.nvim_buf_get_name(bufnr)
 
   if string.match(buf_name, "undotree") then
-    -- Navigation within undotree
     map("n", "j", "j", { buffer = bufnr, desc = "Move down in undotree" })
     map("n", "k", "k", { buffer = bufnr, desc = "Move up in undotree" })
     map("n", "J", "5j", { buffer = bufnr, desc = "Move down 5 lines in undotree" })
@@ -55,14 +52,12 @@ local function setup_undotree_buffer_keymaps()
   end
 end
 
--- Auto-command to set up buffer-specific keymaps for undotree
 api.nvim_create_autocmd("BufEnter", {
   pattern = "*",
   callback = setup_undotree_buffer_keymaps,
   desc = "Setup undotree buffer keymaps",
 })
 
--- Function to show undo tree statistics
 local function show_undo_stats()
   local stats = {
     undolevels = o.undolevels,

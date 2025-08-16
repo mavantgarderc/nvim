@@ -1,6 +1,6 @@
 local map = vim.keymap.set
-local opts = { noremap = true, silent = true }
 local tbl_extend = vim.tbl_extend
+local opts = { noremap = true, silent = true }
 
 map("x", "<leader>rr", function()
   require("refactoring").select_refactor()

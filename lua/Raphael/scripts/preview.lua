@@ -6,7 +6,6 @@ local defer_fn = vim.defer_fn
 
 local theme_loader = require("Raphael.scripts.loader")
 
--- === Theme Preview ===
 function M.preview_all_themes(delay)
   local themes = theme_loader.get_theme_list()
   delay = delay or 700
@@ -43,7 +42,6 @@ function M.preview_all_themes(delay)
   preview_next()
 end
 
--- === Single Theme Preview ===
 function M.preview_theme(theme_name, duration)
   if not theme_name or not theme_loader.is_theme_available(theme_name) then
     notify("Theme '" .. (theme_name or "nil") .. "' not available", log.levels.ERROR)

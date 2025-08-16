@@ -4,6 +4,7 @@ local function map(mode, lhs, rhs, opts)
   opts = opts or {}
   vim.keymap.set(mode, lhs, rhs, opts)
 end
+
 local v = vim.v
 local cmd = vim.cmd
 local log = vim.log
@@ -11,7 +12,6 @@ local notify = vim.notify
 local wo = vim.wo
 local fn = vim.fn
 local ui = vim.ui
-
 
 local function in_git_repo()
   local git_dir = fn.system("git rev-parse --git-dir 2>/dev/null")

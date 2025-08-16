@@ -1,4 +1,5 @@
 local M = {}
+
 local map = vim.keymap.set
 
 function M.setup()

@@ -1,13 +1,13 @@
 local M = {}
 
+local map = vim.keymap.set
+local tbl_deep_extend = vim.tbl_deep_extend
+
 local theme_picker = require("Raphael.scripts.picker")
 local theme_cycler = require("Raphael.scripts.cycler")
 local theme_preview = require("Raphael.scripts.preview")
 local theme_loader = require("Raphael.scripts.loader")
-local map = vim.keymap.set
-local tbl_deep_extend = vim.tbl_deep_extend
 
--- Default keymap configuration
 local default_keymaps = {
   theme_picker = "<leader>ts",
   cycle_next = "<leader>tn",
@@ -17,7 +17,6 @@ local default_keymaps = {
   toggle_auto_theme = "<leader>tt",
 }
 
--- === Setup Keymaps ===
 function M.setup(user_keymaps)
   local keymaps = tbl_deep_extend("force", default_keymaps, user_keymaps or {})
 
@@ -58,7 +57,6 @@ function M.setup(user_keymaps)
   end
 end
 
--- === Get default keymaps ===
 function M.get_defaults() return vim.deepcopy(default_keymaps) end
 
 return M

@@ -6,7 +6,6 @@ local opt = vim.opt
 local opt_local = vim.opt_local
 local fn = vim.fn
 
--- Functions to help with vim-visual-multi usage
 local function vm_status()
   if g.VM_Selection then
     local count = g.VM_Selection.Vars.index
@@ -21,16 +20,12 @@ local function vm_clear_all()
   print("VM: All cursors cleared")
 end
 
--- Helper function to toggle VM case sensitivity
 local function vm_toggle_case() cmd("VMCaseSetting") end
 
--- Helper function to toggle VM whole word matching
 local function vm_toggle_whole_word() cmd("VMWholeWord") end
 
--- VM-specific autocommands for better integration
 api.nvim_create_augroup("VMKeymaps", { clear = true })
 
--- Show VM status when entering VM mode
 api.nvim_create_autocmd("User", {
   pattern = "visual_multi_start",
   group = "VMKeymaps",
@@ -42,7 +37,6 @@ api.nvim_create_autocmd("User", {
   desc = "VM mode started",
 })
 
--- Clean up when exiting VM mode
 api.nvim_create_autocmd("User", {
   pattern = "visual_multi_exit",
   group = "VMKeymaps",
@@ -54,16 +48,15 @@ api.nvim_create_autocmd("User", {
   desc = "VM mode exited",
 })
 
--- Helper function to create custom VM mappings
 local function create_vm_mapping(mode, lhs, rhs, desc)
   map(mode, lhs, rhs, { desc = "Multi-cursor: " .. desc, silent = true })
 end
--- Additional useful mappings for working with multiple cursors
+
 create_vm_mapping("n", "<leader>mq", "<Esc>", "Exit multi-cursor mode")
 create_vm_mapping("n", "<leader>mt", "<Plug>(VM-Toggle-Mappings)", "Toggle VM mappings")
 
--- Helper keymaps for VM functions
 map("n", "<leader>ms", vm_status, { desc = "Multi-cursor: Show status" })
+
 map("n", "<leader>mx", vm_clear_all, { desc = "Multi-cursor: Clear all cursors" })
 
 -- === Keymaps ===

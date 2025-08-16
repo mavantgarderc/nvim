@@ -1,7 +1,7 @@
 local M = {}
 
 M.theme_map = {
-  everviolet = {
+  everviolet  = {
     "evergarden-fall",
   },
 
@@ -12,12 +12,12 @@ M.theme_map = {
     "base16-black-metal-khold",
   },
 
-  gotham = {
+  gotham      = {
     "gotham",
     "base16-gotham",
   },
 
-  zen = {
+  zen         = {
     "base16-grayscale-dark",
     "base16-icy",
     "base16-mountain",
@@ -25,7 +25,7 @@ M.theme_map = {
     "base16-vulcan",
   },
 
-  jukebox = {
+  jukebox     = {
     "base16-atelier-dune",
     "base16-atelier-forest",
     "base16-atelier-heath",
@@ -35,7 +35,7 @@ M.theme_map = {
     "base16-atelier-cave",
     "base16-penumbra-dark-contrast-plus",
     "base16-precious-dark-eleven",
-    "base16-darkmoss",       -- solidity
+    "base16-darkmoss", -- solidity
     "base16-tomorrow-night",
     "base16-darktooth",
     "base16-sandcastle",
@@ -46,7 +46,7 @@ M.theme_map = {
     "base16-ia-dark",
   },
 
-  softs = {
+  softs       = {
     "base16-nord",
     "base16-eighties",
     "base16-everforest",
@@ -56,43 +56,39 @@ M.theme_map = {
   },
 
   tokyonight  = {
-    "tokyonight-moon",      -- html, css
-    "tokyonight-night",     -- json, jsonc
+    "tokyonight-moon",  -- html, css
+    "tokyonight-night", -- json, jsonc
   },
 
   catppuccin  = {
     "base16-catppuccin",
-    "base16-catppuccin-mocha",         -- tex
-    "base16-catppuccin-macchiato",     -- md
+    "base16-catppuccin-mocha",     -- tex
+    "base16-catppuccin-macchiato", -- md
     "base16-da-one-ocean",
   },
 
   carbonfox   = {
-    "nightfox",     -- py
-    "duskfox",      -- ts
-    "nordfox",      -- js
+    "nightfox", -- py
+    "duskfox",  -- ts
+    "nordfox",  -- js
     "terafox",
     "carbonfox",
   },
 
   kanagawa    = {
     "base16-kanagawa",
-    "base16-kanagawa-wave",     -- sql
+    "base16-kanagawa-wave", -- sql
     "kanagawa-dragon",
-    "kanagawa-paper-ink",       -- nvim section
+    "kanagawa-paper-ink",   -- nvim section
   },
 
-  gruvbox     = {   -- cs & dotnet
+  gruvbox     = { -- cs & dotnet
     "gruvbox",
     "base16-gruvbox-dark-hard",
     "base16-gruvbox-dark-pale",
     "base16-gruvbox-material-dark-hard",
   },
-
-
-
 }
-
 
 M.filetype_themes = {
   alpha      = "kanagawa-paper-ink",

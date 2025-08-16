@@ -1,7 +1,7 @@
 local map = vim.keymap.set
+
 local ls = require("luasnip")
 
--- LuaSnip keymaps
 map({ "i" }, "<C-K>",
   function()
     ls.expand()

@@ -5,10 +5,8 @@ local log = vim.log
 
 local theme_loader = require("Raphael.scripts.loader")
 
--- State
 local current_theme_index = 1
 
--- === Theme Cycling ===
 function M.cycle_next_theme()
   local themes = theme_loader.get_theme_list()
 
@@ -45,7 +43,6 @@ function M.cycle_prev_theme()
   end
 end
 
--- === Random Theme ===
 function M.random_theme()
   local themes = theme_loader.get_theme_list()
 
@@ -66,7 +63,6 @@ function M.random_theme()
   end
 end
 
--- === Getters ===
 function M.get_current_index() return current_theme_index end
 
 function M.set_current_index(index)

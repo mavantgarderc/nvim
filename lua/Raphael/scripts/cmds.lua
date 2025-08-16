@@ -9,15 +9,12 @@ local theme_preview = require("Raphael.scripts.preview")
 local theme_picker = require("Raphael.scripts.picker")
 local theme_cycler = require("Raphael.scripts.cycler")
 
--- === Setup User Commands ===
 function M.setup()
-  -- Theme Preview Command
   api.nvim_create_user_command("PT", function(opts)
     local delay = tonumber(opts.args) or 700
     theme_preview.preview_all_themes(delay)
   end, { nargs = "?", desc = "Preview all themes (optional delay in ms)", })
 
-  -- Theme Selector Command
   api.nvim_create_user_command("TT", function(opts)
     local theme = opts.args
     if theme and theme ~= "" then
@@ -36,7 +33,6 @@ function M.setup()
     desc = "Set theme by name or open picker if no argument",
   })
 
-  -- Theme Cycler Commands
   api.nvim_create_user_command("TN", function()
     theme_cycler.cycle_next_theme()
   end, { desc = "Cycle to next theme", })
@@ -49,12 +45,10 @@ function M.setup()
     theme_cycler.random_theme()
   end, { desc = "Set random theme", })
 
-  -- Create user command
   api.nvim_create_user_command('ToggleAutoTheme', function()
     M.toggle_auto_theme()
   end, { desc = "Toggle automatic theme switching based on filetype" })
 
-  -- Theme Info Command
   api.nvim_create_user_command("TI", function()
     local current = theme_loader.get_current_theme()
     local themes = theme_loader.get_theme_list()

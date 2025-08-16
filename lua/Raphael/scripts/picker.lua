@@ -11,7 +11,6 @@ local cmd = vim.cmd
 
 local theme_loader = require("Raphael.scripts.loader")
 
--- === Enhanced Theme Picker ===
 function M.create_theme_picker()
   local themes = theme_loader.get_theme_list()
   local theme_categories = theme_loader.get_theme_categories()
@@ -28,12 +27,10 @@ function M.create_theme_picker()
     return
   end
 
-  -- Initialize all categories as expanded
   for category, _ in pairs(theme_categories) do
     expanded_categories[category] = true
   end
 
-  -- Create picker window
   local buf = api.nvim_create_buf(false, true)
   local width = math.floor(o.columns * 0.5)
   local height = math.min(#themes + 4, math.floor(o.lines * 0.7))
@@ -52,13 +49,11 @@ function M.create_theme_picker()
     title_pos = "center"
   })
 
-  -- Build display items (categories and themes)
   local function build_display_items()
     local items = {}
 
     if show_categories then
       for category, category_themes in pairs(theme_categories) do
-        -- Add category header
         table.insert(items, {
           type = "category",
           name = category,
@@ -66,7 +61,6 @@ function M.create_theme_picker()
           expanded = expanded_categories[category]
         })
 
-        -- Add themes if category is expanded
         if expanded_categories[category] then
           for _, theme in ipairs(category_themes) do
             table.insert(items, {
@@ -79,7 +73,6 @@ function M.create_theme_picker()
         end
       end
     else
-      -- Flat theme list
       for _, theme in ipairs(themes) do
         table.insert(items, {
           type = "theme",
@@ -92,7 +85,6 @@ function M.create_theme_picker()
     return items
   end
 
-  -- Filter items based on search text
   local function filter_items()
     if filter_text == "" then
       filtered_items = build_display_items()
@@ -101,7 +93,6 @@ function M.create_theme_picker()
       local pattern = filter_text:lower()
 
       if show_categories then
-        -- Filter by category or theme name
         for category, category_themes in pairs(theme_categories) do
           local category_matches = category:lower():find(pattern, 1, true)
           local has_matching_themes = false
@@ -132,7 +123,6 @@ function M.create_theme_picker()
           end
         end
       else
-        -- Flat filtering
         for _, theme in ipairs(themes) do
           if theme:lower():find(pattern, 1, true) then
             table.insert(filtered_items, {
@@ -146,7 +136,6 @@ function M.create_theme_picker()
     end
   end
 
-  -- Get status line text based on current mode
   local function get_status_text()
     if search_mode then
       return "Search: " .. filter_text .. " | Esc: cancel"
@@ -157,7 +146,6 @@ function M.create_theme_picker()
     end
   end
 
-  -- Populate buffer with themes
   local function update_buffer()
     filter_items()
 
@@ -178,7 +166,7 @@ function M.create_theme_picker()
       for i, item in ipairs(filtered_items) do
         if item.type == "category" then
           table.insert(lines, item.display)
-        else -- theme
+        else
           local prefix = (item.name == current_theme) and "● " or "  "
           if show_categories then
             table.insert(lines, prefix .. item.display)
@@ -198,9 +186,8 @@ function M.create_theme_picker()
 
   local lines = update_buffer()
 
-  -- Set cursor to current theme or first theme
   local function set_initial_cursor()
-    local cursor_line = 3     -- Start after headers
+    local cursor_line = 3
     local current_theme = theme_loader.get_current_theme()
 
     for i, item in ipairs(filtered_items) do
@@ -217,7 +204,6 @@ function M.create_theme_picker()
 
   set_initial_cursor()
 
-  -- Highlight current line
   local ns_id = api.nvim_create_namespace("theme_picker")
   local function update_highlight()
     api.nvim_buf_clear_namespace(buf, ns_id, 0, -1)
@@ -229,7 +215,6 @@ function M.create_theme_picker()
     end
   end
 
-  -- Enhanced preview with error handling
   local function preview_current_theme()
     if not api.nvim_win_is_valid(win) or search_mode then return end
 
@@ -247,29 +232,23 @@ function M.create_theme_picker()
     end
   end
 
-  -- Clear all keymaps for the buffer
   local function clear_keymaps()
-    -- This is a bit hacky but necessary since Neovim doesn't have a direct way to clear buffer keymaps
     api.nvim_buf_call(buf, function()
       cmd("mapclear <buffer>")
     end)
   end
 
-  -- Enter search mode
   local function enter_search_mode()
     search_mode = true
     lines = update_buffer()
     update_highlight()
 
-    -- Set cursor to search line
     api.nvim_win_set_cursor(win, { 1, #get_status_text() })
 
-    -- Clear existing maps and set search mode maps
     clear_keymaps()
     setup_search_keymaps()
   end
 
-  -- Exit search mode
   local function exit_search_mode(apply_filter)
     search_mode = false
     if not apply_filter then
@@ -280,17 +259,14 @@ function M.create_theme_picker()
     update_highlight()
     schedule(preview_current_theme)
 
-    -- Clear search maps and restore normal maps
     clear_keymaps()
     setup_normal_keymaps()
   end
 
-  -- Cleanup function with better error handling
   local function cleanup()
     if api.nvim_win_is_valid(win) then
       api.nvim_win_close(win, true)
     end
-    -- Restore original theme only if we previewed something different
     if preview_theme and preview_theme ~= theme_loader.get_current_theme() then
       if original_theme then
         local success, err = pcall(theme_loader.load_theme, original_theme)
@@ -301,7 +277,6 @@ function M.create_theme_picker()
     end
   end
 
-  -- Toggle category expansion
   local function toggle_category()
     if not api.nvim_win_is_valid(win) or search_mode or not show_categories then return end
 
@@ -312,14 +287,12 @@ function M.create_theme_picker()
       if item and item.type == "category" then
         expanded_categories[item.name] = not expanded_categories[item.name]
         lines = update_buffer()
-        -- Keep cursor on the same category
         api.nvim_win_set_cursor(win, { line, 2 })
         update_highlight()
       end
     end
   end
 
-  -- Toggle between category and flat view
   local function toggle_view()
     show_categories = not show_categories
     lines = update_buffer()
@@ -328,7 +301,6 @@ function M.create_theme_picker()
     schedule(preview_current_theme)
   end
 
-  -- Apply selected theme
   local function apply_theme()
     if not api.nvim_win_is_valid(win) or search_mode then return end
 
@@ -350,7 +322,6 @@ function M.create_theme_picker()
     end
   end
 
-  -- Navigation functions with bounds checking
   local function move_cursor(direction)
     if not api.nvim_win_is_valid(win) or #filtered_items == 0 or search_mode then return end
 
@@ -376,11 +347,9 @@ function M.create_theme_picker()
     end
   end
 
-  -- Search functionality
   local function add_char_to_filter(char)
     filter_text = filter_text .. char
     lines = update_buffer()
-    -- Keep cursor on search line
     api.nvim_win_set_cursor(win, { 1, #get_status_text() })
   end
 
@@ -392,7 +361,6 @@ function M.create_theme_picker()
     end
   end
 
-  -- Clear filter
   local function clear_filter()
     if filter_text ~= "" then
       filter_text = ""
@@ -403,9 +371,7 @@ function M.create_theme_picker()
     end
   end
 
-  -- Random theme selection
   local function select_random_theme()
-    -- Collect all theme items (not categories)
     local theme_items = {}
     for _, item in ipairs(filtered_items) do
       if item.type == "theme" then
@@ -429,47 +395,33 @@ function M.create_theme_picker()
     end
   end
 
-  -- Setup normal mode keymaps
   function setup_normal_keymaps()
     local opts = { buffer = buf, nowait = true }
 
-    -- Navigation
     map("n", "j", function() move_cursor("down") end, opts)
     map("n", "k", function() move_cursor("up") end, opts)
     map("n", "<Down>", function() move_cursor("down") end, opts)
     map("n", "<Up>", function() move_cursor("up") end, opts)
     map("n", "gg", function() move_cursor("first") end, opts)
     map("n", "G", function() move_cursor("last") end, opts)
-
-    -- Selection and exit
     map("n", "<CR>", apply_theme, opts)
     map("n", "<Space>", toggle_category, opts)
     map("n", "<Esc>", cleanup, opts)
     map("n", "q", cleanup, opts)
-
-    -- View toggle
     map("n", "t", toggle_view, opts)
-
-    -- Search and filter
     map("n", "/", enter_search_mode, opts)
     map("n", "c", clear_filter, opts)
-
-    -- Random selection
     map("n", "r", select_random_theme, opts)
   end
 
-  -- Setup search mode keymaps
   function setup_search_keymaps()
     local opts = { buffer = buf, nowait = true }
 
-    -- Confirm or cancel search
     map("n", "<CR>", function() exit_search_mode(true) end, opts)
     map("n", "<Esc>", function() exit_search_mode(false) end, opts)
 
-    -- Edit search
     map("n", "<BS>", remove_char_from_filter, opts)
 
-    -- Add character mappings for search
     local chars = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789-_ ."
     for i = 1, #chars do
       local char = chars:sub(i, i)
@@ -477,20 +429,16 @@ function M.create_theme_picker()
     end
   end
 
-  -- Initialize with normal mode keymaps
   setup_normal_keymaps()
 
-  -- Initial state
   update_highlight()
   schedule(preview_current_theme)
 end
 
--- === Public API ===
 function M.select_theme()
   M.create_theme_picker()
 end
 
--- Additional utility function
 function M.random_theme()
   local themes = theme_loader.get_theme_list()
   if #themes > 0 then

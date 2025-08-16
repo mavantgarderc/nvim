@@ -8,10 +8,8 @@ local api = vim.api
 
 local config = require("Raphael.colors")
 
--- Current theme state
 local current_theme = nil
 
--- === Theme Loader ===
 function M.load_theme(theme_name, is_preview)
   if not theme_name then return false end
   if not is_preview and current_theme == theme_name then return true end
@@ -26,7 +24,6 @@ function M.load_theme(theme_name, is_preview)
   end
 end
 
--- === Theme validation ===
 function M.is_theme_available(theme_name)
   if not theme_name then return false end
   for _, name in ipairs(fn.getcompletion("", "color")) do
@@ -35,7 +32,6 @@ function M.is_theme_available(theme_name)
   return false
 end
 
--- === Get theme list ===
 function M.get_theme_list()
   local themes = {}
   for _, variants in pairs(config.theme_map or {}) do
@@ -44,12 +40,11 @@ function M.get_theme_list()
     end
   end
 
-  -- Fallback: get all available colorschemes if config is empty
   if #themes == 0 then themes = fn.getcompletion("", "color") end
 
   return themes
 end
--- === Get theme categories ===
+
 function M.get_theme_categories()
   local categories = {}
   for category, variants in pairs(config.theme_map or {}) do
@@ -66,8 +61,7 @@ function M.get_theme_categories()
   return categories
 end
 
--- === Auto-set Theme Based on Filetype (Toggle) ===
-M.auto_theme_enabled = true -- Default state
+M.auto_theme_enabled = false
 
 function M.toggle_auto_theme()
   M.auto_theme_enabled = not M.auto_theme_enabled
@@ -82,13 +76,10 @@ function M.set_theme_by_filetype(buf)
   if theme and M.is_theme_available(theme) then M.load_theme(theme) end
 end
 
--- === Getters ===
 function M.get_current_theme() return current_theme end
 
--- === Setup ===
 function M.setup(opts)
   opts = opts or {}
-  -- Any loader-specific setup can go here
 end
 
 return M

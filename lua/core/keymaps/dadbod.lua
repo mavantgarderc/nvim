@@ -91,9 +91,9 @@ function M.setup_sql_buffer_keymaps()
       local buf = event.buf
       local opts = { buffer = buf, noremap = true, silent = true }
 
-      map("n", "<localleader>r", ":DB<CR>", vim.tbl_extend("force", opts, { desc = "Execute current line" }))
-      map("v", "<localleader>r", ":DB<CR>", vim.tbl_extend("force", opts, { desc = "Execute selection" }))
-      map("n", "<localleader>R", ":%DB<CR>", vim.tbl_extend("force", opts, { desc = "Execute entire buffer" }))
+      map("n", "<localleader>r", ":DB<CR>", tbl_extend("force", opts, { desc = "Execute current line" }))
+      map("v", "<localleader>r", ":DB<CR>", tbl_extend("force", opts, { desc = "Execute selection" }))
+      map("n", "<localleader>R", ":%DB<CR>", tbl_extend("force", opts, { desc = "Execute entire buffer" }))
       map("n", "<localleader>h", function() -- help on word
         local w = fn.expand("<cword>")
         cmd("help " .. w)
@@ -188,4 +188,5 @@ function M.setup()
 end
 
 M.setup()
+
 return M

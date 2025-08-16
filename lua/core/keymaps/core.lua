@@ -22,7 +22,7 @@ map("n", "<leader>x", function()
     return
   end
   api.nvim_feedkeys(
-  ":%s/" .. fn.escape(word, "/\\") .. "//gc" .. string.rep(api.nvim_replace_termcodes("<Left>", true, false, true), 3),
+    ":%s/" .. fn.escape(word, "/\\") .. "//gc" .. string.rep(api.nvim_replace_termcodes("<Left>", true, false, true), 3),
     "n", false)
 end, "Replace word under cursor interactively")
 
