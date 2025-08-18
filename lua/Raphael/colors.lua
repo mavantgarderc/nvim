@@ -82,7 +82,7 @@ M.theme_map = {
     "kanagawa-paper-ink",   -- nvim section
   },
 
-  gruvbox     = { -- cs & dotnet
+  gruvbox     = { -- dotnet
     "gruvbox",
     "base16-gruvbox-dark-hard",
     "base16-gruvbox-dark-pale",

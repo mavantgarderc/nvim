@@ -1,0 +1,23 @@
+-- -- Core lualine options
+--
+-- local theme = require("plugins.lualine.core.theme")
+--
+-- return {
+--   icons_enabled        = true,
+--   theme                = theme.get_lualine_theme(),
+--   component_separators = { left = "", right = "" },
+--   section_separators   = { left = "", right = "" },
+--   disabled_filetypes   = {
+--     statusline = { "alpha", "dashboard", "lazy", "TelescopePrompt" },
+--     winbar = {},
+--   },
+--   ignore_focus         = {},
+--   always_divide_middle = true,
+--   always_show_tabline  = true,
+--   globalstatus         = false,
+--   refresh              = {
+--     statusline = 5000,
+--     tabline    = 5000,
+--     winbar     = 5000,
+--   },
+-- }
