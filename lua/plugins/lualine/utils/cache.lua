@@ -1,26 +1,27 @@
--- TTL-based cache system for components
-
 local loop = vim.loop
-
-local cache = {}
 
 local M = {}
 
-function M.get(key, update_fn, ttl)
+M.cache = {
+  lsp_clients = { value = "", last_update = 0 },
+  python_env = { value = "", last_update = 0 },
+  dotnet_project = { value = "", last_update = 0 },
+  test_status = { value = "", last_update = 0 },
+  debug_status = { value = "", last_update = 0 },
+  current_symbol = { value = "", last_update = 0 },
+}
+
+function M.get_cached_value(key, update_fn, ttl)
   ttl = ttl or 500
   local now = loop.hrtime() / 1000000
-  local entry = cache[key] or { value = "", last_update = 0 }
+  local cached = M.cache[key]
 
-  if (now - entry.last_update) > ttl then
-    entry.value = update_fn()
-    entry.last_update = now
-    cache[key] = entry
+  if not cached or (now - cached.last_update) > ttl then
+    cached.value = update_fn()
+    cached.last_update = now
+    M.cache[key] = cached
   end
-  return entry.value
-end
-
-function M.invalidate(key)
-  cache[key] = { value = "", last_update = 0 }
+  return cached.value
 end
 
 return M

@@ -6,6 +6,7 @@ return {
   "lewis6991/impatient.nvim",
   -- === ui ===
   -- status line & tabbar
+  -- {
   "nvim-lualine/lualine.nvim",
   -- startup dashboard
   "goolord/alpha-nvim",
@@ -42,8 +43,8 @@ return {
       "hrsh7th/cmp-nvim-lua",
       "saadparwaiz1/cmp_luasnip",
       {
-          "Hoffs/omnisharp-extended-lsp.nvim",
-          lazy = true,
+        "Hoffs/omnisharp-extended-lsp.nvim",
+        lazy = true,
       },
       -- Dev Enhancements
       {

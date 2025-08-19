@@ -2,40 +2,48 @@ local api = vim.api
 local defer_fn = vim.defer_fn
 local schedule_wrap = vim.schedule_wrap
 local loop = vim.loop
-local cache = require("plugins.lualine.utils.cache")
-local lualine = require("lualine")
-local theme = require("plugins.lualine.core.theme")
 
-local group = api.nvim_create_augroup("LualineRefresh", { clear = true })
+local M = {}
 
-api.nvim_create_autocmd({ "LspAttach", "LspDetach" }, {
-  group = group,
-  callback = function()
-    cache.invalidate("lsp_clients")
-    defer_fn(function()
-      lualine.refresh()
-    end, 500)
-  end,
-})
+function M.setup(lualine_opts)
+  local utils = require("plugins.lualine.utils.init")
+  local options = require("plugins.lualine.core.options")
 
-api.nvim_create_autocmd("ColorScheme", {
-  group = group,
-  callback = function()
-    defer_fn(function()
-      require("plugins.lualine.core.options").theme = theme.get_lualine_theme()
-      lualine.setup(require("plugins.lualine.core.options"))
-      lualine.refresh()
-    end, 100)
-  end,
-})
+  -- === AUTO-CMDS ===
+  local group = api.nvim_create_augroup("LualineRefresh", { clear = true })
 
--- Timer-based cache invalidation
-local timer = loop.new_timer()
-if timer then
-  timer:start(60000, 60000, schedule_wrap(function()
-    cache.invalidate("test_status")
-    cache.invalidate("debug_status")
+  api.nvim_create_autocmd({ "LspAttach", "LspDetach" }, {
+    group = group,
+    callback = function()
+      utils.cache.lsp_clients = { value = "", last_update = 0 }
+      defer_fn(function()
+        require("lualine").refresh()
+      end, 500)
+    end,
+  })
 
-    lualine.refresh()
-  end))
+  api.nvim_create_autocmd("ColorScheme", {
+    group = group,
+    callback = function()
+      defer_fn(function()
+        lualine_opts.options.theme = options.get_lualine_theme()
+        require("lualine").setup(lualine_opts)
+        require("lualine").refresh()
+      end, 100)
+    end,
+  })
+
+  local timer = loop.new_timer()
+  if timer then
+    timer:start(60000, 60000, schedule_wrap(function()
+      utils.cache.test_status  = { value = "", last_update = 0 }
+      utils.cache.debug_status = { value = "", last_update = 0 }
+
+      if utils.has_test_running() or utils.has_debug_session() then
+        require("lualine").refresh()
+      end
+    end))
+  end
 end
+
+return M
