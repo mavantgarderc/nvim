@@ -17,20 +17,19 @@ jobs:
       - name: Checkout repo
         uses: actions/checkout@v4
 
-      - name: Set up Lua (for linting)
-        uses: leafo/gh-actions-lua@v10
-        with:
-          luaVersion: "5.1"
+      # Lua / luacheck setup
+      - name: Install Lua + luarocks
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y lua5.1 luarocks
 
-      - name: Install LuaRocks
-        uses: leafo/gh-actions-luarocks@v4
-
-      - name: Install linters
-        run: luarocks install luacheck
+      - name: Install luacheck
+        run: sudo luarocks install luacheck
 
       - name: Run luacheck
         run: luacheck lua
 
+      # Neovim setup
       - name: Install Neovim (${{ matrix.neovim }})
         run: |
           if [ "${{ matrix.neovim }}" = "stable" ]; then
@@ -42,6 +41,7 @@ jobs:
           tar xzvf nvim-linux64.tar.gz
           echo "$PWD/nvim-linux64/bin" >> $GITHUB_PATH
 
+      # Cache plugins for lazy.nvim
       - name: Cache lazy.nvim plugins
         uses: actions/cache@v4
         with:
@@ -50,16 +50,17 @@ jobs:
           restore-keys: |
             ${{ runner.os }}-${{ matrix.neovim }}-lazy-
 
+      # Sync plugins
       - name: Install plugins (Lazy)
         run: |
-          nvim --headless \
-            "+Lazy! sync" \
-            +qa
+          nvim --headless "+Lazy! sync" +qa
 
+      # Verify startup
       - name: Headless Neovim startup test
         run: |
           nvim --headless -c 'quitall'
 
+      # Run healthcheck
       - name: Run healthcheck
         run: |
           nvim --headless -c 'checkhealth' -c 'quitall'
