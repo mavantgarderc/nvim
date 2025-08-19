@@ -4,10 +4,8 @@ local getters = require("plugins.lualine.utils.getters")
 
 local M = {}
 
--- Export cache
 M.cache = cache.cache
 
--- Export all getter functions
 M.get_lsp_clients = getters.get_lsp_clients
 M.get_python_env = getters.get_python_env
 M.get_dotnet_project = getters.get_dotnet_project
@@ -19,7 +17,6 @@ M.get_file_info = getters.get_file_info
 M.get_navic_breadcrumbs = getters.get_navic_breadcrumbs
 M.get_current_symbol = getters.get_current_symbol
 
--- Export all condition functions
 M.has_lsp = conditions.has_lsp
 M.has_python_env = conditions.has_python_env
 M.has_dotnet_project = conditions.has_dotnet_project

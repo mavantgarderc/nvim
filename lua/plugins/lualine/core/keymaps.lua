@@ -9,7 +9,6 @@ function M.setup(lualine_opts)
   local components = require("plugins.lualine.components.init")
   local options = require("plugins.lualine.core.options")
 
-  -- === KEYMAPS ===
   map("n", "<leader>tf", function()
     components.toggle_filetype_text()
     require("lualine").refresh()

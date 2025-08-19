@@ -11,7 +11,7 @@ M.sections = {
     { utils.get_current_symbol,    cond = utils.has_symbol },
   },
   lualine_x = { components.diff, components.filetype },
-  lualine_y = { components.location },
+  lualine_y = { components.location, "  " },
   lualine_z = { components.progress },
 }
 

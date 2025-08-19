@@ -4,7 +4,7 @@ local M = {}
 
 local function get_lualine_theme()
   local colorscheme = g.colors_name or "default"
-  local theme_map = { require("colors") }
+  local theme_map = { require("Raphael.colors") }
   local mapped_theme = theme_map[colorscheme:lower()]
 
   if mapped_theme then
@@ -41,7 +41,6 @@ function M.get_options()
   }
 end
 
--- Expose the theme function for keymaps
 M.get_lualine_theme = get_lualine_theme
 
 return M

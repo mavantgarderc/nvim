@@ -9,7 +9,6 @@ function M.setup(lualine_opts)
   local utils = require("plugins.lualine.utils.init")
   local options = require("plugins.lualine.core.options")
 
-  -- === AUTO-CMDS ===
   local group = api.nvim_create_augroup("LualineRefresh", { clear = true })
 
   api.nvim_create_autocmd({ "LspAttach", "LspDetach" }, {

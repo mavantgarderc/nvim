@@ -19,7 +19,7 @@ function M.get_lsp_clients()
       table.insert(names, client.name)
     end
     return " " .. table.concat(names, ",")
-  end, 10000)       -- cache: 10 sec
+  end, 10000) -- cache: 10 sec
 end
 
 function M.get_python_env()
@@ -35,7 +35,7 @@ function M.get_python_env()
     end
 
     return ""
-  end, 30000)       -- cache: 30 sec
+  end, 30000) -- cache: 30 sec
 end
 
 function M.get_dotnet_project()
@@ -51,7 +51,7 @@ function M.get_dotnet_project()
     end
 
     return ""
-  end, 60000)       -- cache: 60 sec
+  end, 60000) -- cache: 60 sec
 end
 
 function M.get_test_status()
@@ -67,7 +67,7 @@ function M.get_test_status()
     end
 
     return ""
-  end, 15000)       -- cache: 15 sec
+  end, 15000) -- cache: 15 sec
 end
 
 function M.get_debug_status()
@@ -85,7 +85,7 @@ function M.get_debug_status()
       end
     end
     return ""
-  end, 5000)       -- cache: 5 sec
+  end, 5000) -- cache: 5 sec
 end
 
 function M.get_database_status()
@@ -136,14 +136,14 @@ function M.get_current_symbol()
         local name_node = function_node:field("name")[1]
         if name_node then
           local name = treesitter.get_node_text(name_node, 0)
-          return glyphs.status.func.. name
+          return glyphs.status.func .. name
         end
         break
       end
       function_node = function_node:parent()
     end
     return ""
-  end, 200)       -- cache: 0.2 sec
+  end, 200) -- cache: 0.2 sec
 end
 
 return M
