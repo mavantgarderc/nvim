@@ -1,0 +1,65 @@
+name: CI
+
+on:
+  push:
+    branches: [ main, master ]
+  pull_request:
+    branches: [ main, master ]
+
+jobs:
+  lint-and-test:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        neovim: [stable, nightly]
+
+    steps:
+      - name: Checkout repo
+        uses: actions/checkout@v4
+
+      - name: Set up Lua (for linting)
+        uses: leafo/gh-actions-lua@v10
+        with:
+          luaVersion: "5.1"
+
+      - name: Install LuaRocks
+        uses: leafo/gh-actions-luarocks@v4
+
+      - name: Install linters
+        run: luarocks install luacheck
+
+      - name: Run luacheck
+        run: luacheck lua
+
+      - name: Install Neovim (${{ matrix.neovim }})
+        run: |
+          if [ "${{ matrix.neovim }}" = "stable" ]; then
+            url="https://github.com/neovim/neovim/releases/latest/download/nvim-linux64.tar.gz"
+          else
+            url="https://github.com/neovim/neovim/releases/download/nightly/nvim-linux64.tar.gz"
+          fi
+          wget "$url"
+          tar xzvf nvim-linux64.tar.gz
+          echo "$PWD/nvim-linux64/bin" >> $GITHUB_PATH
+
+      - name: Cache lazy.nvim plugins
+        uses: actions/cache@v4
+        with:
+          path: ~/.local/share/nvim/lazy
+          key: ${{ runner.os }}-${{ matrix.neovim }}-lazy-${{ hashFiles('**/lua/**/*.lua') }}
+          restore-keys: |
+            ${{ runner.os }}-${{ matrix.neovim }}-lazy-
+
+      - name: Install plugins (Lazy)
+        run: |
+          nvim --headless \
+            "+Lazy! sync" \
+            +qa
+
+      - name: Headless Neovim startup test
+        run: |
+          nvim --headless -c 'quitall'
+
+      - name: Run healthcheck
+        run: |
+          nvim --headless -c 'checkhealth' -c 'quitall'
