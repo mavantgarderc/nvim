@@ -6,6 +6,8 @@ M.git = {
   added = " ",
   modified = " ",
   removed = " ",
+  ahead = "↑",
+  behind = "↓",
 }
 
 M.diagnostics = {

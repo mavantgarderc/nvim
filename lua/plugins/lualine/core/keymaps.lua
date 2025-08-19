@@ -9,7 +9,7 @@ function M.setup(lualine_opts)
   local components = require("plugins.lualine.components.init")
   local options = require("plugins.lualine.core.options")
 
-  map("n", "<leader>tf", function()
+  map("n", "<leader>tk", function()
     components.toggle_filetype_text()
     require("lualine").refresh()
   end, { silent = true })
@@ -22,6 +22,10 @@ function M.setup(lualine_opts)
     require("lualine").setup(lualine_opts)
     require("lualine").refresh()
   end, { silent = true })
+
+  map("n", "<leader>tg", function()
+    require("plugins.lualine.components.git").toggle_last_commit()
+  end, { desc = "Toggle last commit in lualine" })
 end
 
 return M

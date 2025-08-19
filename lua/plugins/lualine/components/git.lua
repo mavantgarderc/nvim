@@ -1,10 +1,14 @@
 local fn = vim.fn
+local v = vim.v
+local notify = vim.notify
+local cmd = vim.cmd
 local glyphs = require("plugins.lualine.utils.glyphs")
 local cache = require("plugins.lualine.utils.cache")
 
 local M = {}
 
 local hide_in_width = function() return fn.winwidth(0) > 80 end
+local last_commit_enabled = true
 
 M.branch = {
   "branch",
@@ -33,23 +37,36 @@ M.diff = {
   cond = hide_in_width,
 }
 
-M.last_commit = function()
-  return cache.get_cached_value("last_commit", function()
-    local out = vim.fn.system("git rev-parse --short HEAD 2>/dev/null"):gsub("%s+$","")
-    return out ~= "" and ("(" .. out .. ")") or ""
-  end, 60000)
+M.last_commit = {
+  function()
+    if not last_commit_enabled then
+      return ""
+    end
+    local handle = io.popen("git rev-parse --short HEAD 2>/dev/null")
+    if not handle then return "" end
+    local result = handle:read("*a")
+    handle:close()
+    result = result:gsub("%s+", "")
+    return result ~= "" and "(" .. result .. ")" or ""
+  end,
+  fmt = function(str) return str end,
+}
+
+M.toggle_last_commit = function()
+  last_commit_enabled = not last_commit_enabled
+  require("lualine").refresh({ place = { "statusline" } })
 end
 
 M.ahead_behind = function()
   return cache.get_cached_value("git_aheadbehind", function()
-    local out = vim.fn.system("git rev-list --left-right --count @{upstream}...HEAD 2>/dev/null")
-    if vim.v.shell_error ~= 0 or out == "" then return "" end
-    local behind, ahead = out:match("^(%d+)%s+(%d+)")
-    if not behind then return "" end
-    behind, ahead = tonumber(behind), tonumber(ahead)
+    local out = fn.system("git rev-list --left-right --count @{upstream}...HEAD 2>/dev/null")
+    if v.shell_error ~= 0 or out == "" then return "" end
+    local behind_count, ahead_count = out:match("^(%d+)%s+(%d+)")
+    if not behind_count then return "" end
+    behind_count, ahead_count = tonumber(behind_count), tonumber(ahead_count)
     local parts = {}
-    if ahead  > 0 then table.insert(parts, "↑" .. ahead) end
-    if behind > 0 then table.insert(parts, "↓" .. behind) end
+    if ahead_count > 0 then table.insert(parts, glyphs.git.ahead .. ahead_count) end
+    if behind_count > 0 then table.insert(parts, glyphs.git.behind .. behind_count) end
     return #parts > 0 and table.concat(parts, " ") or ""
   end, 15000)
 end
