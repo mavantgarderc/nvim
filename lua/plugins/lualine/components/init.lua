@@ -1,14 +1,17 @@
 local M = {}
 
--- Load all components
 local git = require("plugins.lualine.components.git")
 
 M.diagnostics = require("plugins.lualine.components.diagnostics")
 M.diff = git.diff
 M.branch = git.branch
+M.last_commit = git.last_commit
 M.location = require("plugins.lualine.components.location")
 M.progress = require("plugins.lualine.components.progress")
 M.filetype = require("plugins.lualine.components.filetype").filetype
 M.toggle_filetype_text = require("plugins.lualine.components.filetype").toggle_filetype_text
+M.lsp = require("plugins.lualine.components.lsp")
+-- M.build_status = require("plugins.lualine.components.build_status")
+M.ci = require("plugins.lualine.components.ci")
 
 return M

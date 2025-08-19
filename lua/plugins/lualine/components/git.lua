@@ -1,5 +1,6 @@
 local fn = vim.fn
 local glyphs = require("plugins.lualine.utils.glyphs")
+local cache = require("plugins.lualine.utils.cache")
 
 local M = {}
 
@@ -31,5 +32,26 @@ M.diff = {
   },
   cond = hide_in_width,
 }
+
+M.last_commit = function()
+  return cache.get_cached_value("last_commit", function()
+    local out = vim.fn.system("git rev-parse --short HEAD 2>/dev/null"):gsub("%s+$","")
+    return out ~= "" and ("(" .. out .. ")") or ""
+  end, 60000)
+end
+
+M.ahead_behind = function()
+  return cache.get_cached_value("git_aheadbehind", function()
+    local out = vim.fn.system("git rev-list --left-right --count @{upstream}...HEAD 2>/dev/null")
+    if vim.v.shell_error ~= 0 or out == "" then return "" end
+    local behind, ahead = out:match("^(%d+)%s+(%d+)")
+    if not behind then return "" end
+    behind, ahead = tonumber(behind), tonumber(ahead)
+    local parts = {}
+    if ahead  > 0 then table.insert(parts, "↑" .. ahead) end
+    if behind > 0 then table.insert(parts, "↓" .. behind) end
+    return #parts > 0 and table.concat(parts, " ") or ""
+  end, 15000)
+end
 
 return M
