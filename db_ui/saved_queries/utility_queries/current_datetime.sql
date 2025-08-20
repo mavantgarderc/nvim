@@ -1,0 +1,4 @@
+SELECT
+  NOW () AS current_datetime,
+  CURDATE () ASCURRENT_DATE,
+  CURTIME () ASCURRENT_TIME;

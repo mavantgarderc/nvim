@@ -1,0 +1,8 @@
+SELECT
+  *
+FROM
+  TABLE_NAME
+ORDER BY
+  RAND ()
+LIMIT
+  10;

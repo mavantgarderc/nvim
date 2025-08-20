@@ -1,0 +1,11 @@
+SELECT
+  email,
+  COUNT(*) ASCOUNT
+FROM
+  users
+GROUP BY
+  email
+HAVING
+  COUNT(*) > 1
+ORDER BY
+  COUNTDESC;
