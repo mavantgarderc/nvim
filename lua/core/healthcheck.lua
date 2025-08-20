@@ -50,7 +50,7 @@ local config = {
   language_servers = {
     "lua_ls",
     "pyright",
-    "tsserver",
+    "ts_ls",
     "rust_analyzer",
     "gopls",
     "clangd",
