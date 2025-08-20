@@ -1,0 +1,3 @@
+SHOW OPEN TABLES
+WHERE
+  In_use > 0;

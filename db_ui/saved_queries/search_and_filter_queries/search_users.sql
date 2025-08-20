@@ -1,0 +1,9 @@
+SELECT
+  *
+FROM
+  users
+WHERE
+  LOWER(name) LIKE LOWER ('%SEARCH_TERM%')
+  OR LOWER(email) LIKE LOWER('%SEARCH_TERM%')
+ORDER BY
+  created_atDESC;
