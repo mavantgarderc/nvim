@@ -25,6 +25,7 @@ return {
     "whatyouhide/vim-gotham",
     "everviolet/nvim",
   },
+  "dharmx/toml.nvim",
   -- ==================================================
   -- === LSP ===
   {
