@@ -1,3 +1,7 @@
+-- File: Raphael/colors.lua
+-- ONLY THEMES MAPPING & NOTHING MORE LOGICAL
+-- JUST ACTS AS A REFERENCE FOR THEME APPLIANCE
+
 local M = {}
 
 M.theme_map = {
@@ -90,6 +94,10 @@ M.theme_map = {
   },
 }
 
+M.toml_map = {
+  "midnight_ocean",
+}
+
 M.filetype_themes = {
   alpha      = "kanagawa-paper-ink",
   netrw      = "kanagawa-paper-ink",
@@ -131,5 +139,44 @@ M.filetype_themes = {
   json       = "base16-rose-pine",
   jsonc      = "base16-rose-pine",
 }
+
+-- Return all colorschemes (both builtin & TOML)
+function M.get_all_colorschemes()
+  local all = {}
+  -- builtin: flatten theme_map
+  for _, names in pairs(M.theme_map) do
+    for _, name in ipairs(names) do
+      table.insert(all, { name = name, type = "builtin" })
+    end
+  end
+  -- TOML
+  for _, name in ipairs(M.toml_map or {}) do
+    table.insert(all, { name = name, type = "toml" })
+  end
+  return all
+end
+
+function M.get_dark_colorschemes()
+  -- Placeholder: return all builtin themes for now
+  local all = M.get_all_colorschemes()
+  local dark = {}
+  for _, cs in ipairs(all) do
+    -- You can implement a proper dark/light filter here if needed
+    table.insert(dark, cs)
+  end
+  return dark
+end
+
+function M.get_light_colorschemes()
+  -- Placeholder: return empty (or filter light themes if you have metadata)
+  return {}
+end
+
+function M.is_toml_colorscheme(name)
+  for _, n in ipairs(M.toml_map or {}) do
+    if n == name then return true end
+  end
+  return false
+end
 
 return M
