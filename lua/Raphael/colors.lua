@@ -140,43 +140,21 @@ M.filetype_themes = {
   jsonc      = "base16-rose-pine",
 }
 
--- Return all colorschemes (both builtin & TOML)
-function M.get_all_colorschemes()
-  local all = {}
-  -- builtin: flatten theme_map
-  for _, names in pairs(M.theme_map) do
+function M.get_all_colorschemes_grouped()
+  local grouped = {}
+  for cat, names in pairs(M.theme_map) do
+    local entry = { category = cat, themes = {} }
     for _, name in ipairs(names) do
-      table.insert(all, { name = name, type = "builtin" })
+      table.insert(entry.themes, { name = name, type = "builtin" })
     end
+    table.insert(grouped, entry)
   end
-  -- TOML
+
   for _, name in ipairs(M.toml_map or {}) do
-    table.insert(all, { name = name, type = "toml" })
+    table.insert(grouped, { category = "TOML", themes = { { name = name, type = "toml" } } })
   end
-  return all
-end
 
-function M.get_dark_colorschemes()
-  -- Placeholder: return all builtin themes for now
-  local all = M.get_all_colorschemes()
-  local dark = {}
-  for _, cs in ipairs(all) do
-    -- You can implement a proper dark/light filter here if needed
-    table.insert(dark, cs)
-  end
-  return dark
-end
-
-function M.get_light_colorschemes()
-  -- Placeholder: return empty (or filter light themes if you have metadata)
-  return {}
-end
-
-function M.is_toml_colorscheme(name)
-  for _, n in ipairs(M.toml_map or {}) do
-    if n == name then return true end
-  end
-  return false
+  return grouped
 end
 
 return M

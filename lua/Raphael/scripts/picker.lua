@@ -1,18 +1,18 @@
 -- File: Raphael/scripts/picker.lua
 local api = vim.api
 local theme_loader = require("Raphael.scripts.loader")
+local colors = require("Raphael.colors")
 
 local M = {}
 
 -- ===== State =====
 local state = {
-  themes = {},
-  filtered = {},
+  categories = {},
   win = nil,
   buf = nil,
   prompt_buf = nil,
   prompt_win = nil,
-  prev = nil,
+  last_preview = nil,
 }
 
 -- ===== Helpers =====
@@ -27,44 +27,38 @@ local function fuzzy_match(str, query)
   return true
 end
 
-local function get_display_name(cs)
-  return cs.name
+local function flatten_categories()
+  local lines = {}
+  local line_map = {}
+  for _, cat in ipairs(state.categories) do
+    table.insert(lines, (cat.collapsed and "[+] " or "[-] ") .. cat.category)
+    table.insert(line_map, { category = cat })
+    if not cat.collapsed then
+      for _, cs in ipairs(cat.themes) do
+        table.insert(lines, "  " .. cs.name)
+        table.insert(line_map, { cs = cs })
+      end
+    end
+  end
+  return lines, line_map
 end
 
 -- ===== Render =====
 local function render()
   if not (state.buf and api.nvim_buf_is_valid(state.buf)) then return end
   api.nvim_buf_set_option(state.buf, "modifiable", true)
-  local lines = {}
-  for _, cs in ipairs(state.filtered) do
-    table.insert(lines, get_display_name(cs))
-  end
-  if #lines == 0 then lines = { "[No matches]" } end
+  local lines, line_map = flatten_categories()
+  state.line_map = line_map
+  if #lines == 0 then lines = { "[No themes]" } end
   api.nvim_buf_set_lines(state.buf, 0, -1, false, lines)
   api.nvim_buf_set_option(state.buf, "modifiable", false)
-end
-
--- ===== Filtering =====
-local function update_filtered(query)
-  if not query or query == "" then
-    state.filtered = vim.deepcopy(state.themes)
-  else
-    state.filtered = {}
-    for _, cs in ipairs(state.themes) do
-      if fuzzy_match(cs.name, query) then
-        table.insert(state.filtered, cs)
-      end
-    end
-  end
-  render()
 end
 
 -- ===== Picker Creation =====
 local function create_input_prompt()
   state.prompt_buf = api.nvim_create_buf(false, true)
   local width = math.floor(vim.o.columns * 0.5)
-  local height = math.floor(vim.o.lines * 0.6)
-  local row = math.floor((vim.o.lines - height) / 2) - 1
+  local row = math.floor(vim.o.lines / 2)
   local col = math.floor((vim.o.columns - width) / 2)
 
   state.prompt_win = api.nvim_open_win(state.prompt_buf, true, {
@@ -88,7 +82,7 @@ end
 local function create_list_window()
   state.buf = api.nvim_create_buf(false, true)
   local width = math.floor(vim.o.columns * 0.5)
-  local height = math.floor(vim.o.lines * 0.6) - 2
+  local height = math.floor(vim.o.lines * 0.6)
   local row = math.floor((vim.o.lines - height) / 2) + 1
   local col = math.floor((vim.o.columns - width) / 2)
 
@@ -102,6 +96,19 @@ local function create_list_window()
     border = "single",
   })
   api.nvim_buf_set_option(state.buf, "modifiable", false)
+
+  -- Live preview on cursor move
+  api.nvim_create_autocmd("CursorMoved", {
+    buffer = state.buf,
+    callback = function()
+      local line_nr = unpack(api.nvim_win_get_cursor(state.win))
+      local entry = state.line_map[line_nr]
+      if entry and entry.cs and state.last_preview ~= entry.cs.name then
+        theme_loader.apply_colorscheme(entry.cs.name, entry.cs.type)
+        state.last_preview = entry.cs.name
+      end
+    end,
+  })
 end
 
 -- ===== Event Handlers =====
@@ -109,15 +116,32 @@ function M.on_prompt_changed()
   local ok, line = pcall(api.nvim_get_current_line)
   if not ok or not line then return end
   local query = line:gsub("^Search:%s*", "")
-  update_filtered(query)
+  for _, cat in ipairs(state.categories) do
+    cat.collapsed = false
+    if query ~= "" then
+      local matched = false
+      for _, cs in ipairs(cat.themes) do
+        if fuzzy_match(cs.name, query) then
+          matched = true
+        end
+      end
+      if not matched then cat.collapsed = true end
+    end
+  end
+  render()
 end
 
 local function accept_selection()
-  local idx = unpack(api.nvim_win_get_cursor(state.win))
-  local cs = state.filtered[idx]
-  if cs and cs.name then
-    theme_loader.apply_colorscheme(cs.name, cs.type)
-    vim.notify("Applied colorscheme: " .. cs.name, vim.log.levels.INFO)
+  local line_nr = unpack(api.nvim_win_get_cursor(state.win))
+  local entry = state.line_map[line_nr]
+  if not entry then return end
+
+  if entry.category then
+    entry.category.collapsed = not entry.category.collapsed
+    render()
+  elseif entry.cs then
+    theme_loader.apply_colorscheme(entry.cs.name, entry.cs.type)
+    vim.notify("Applied colorscheme: " .. entry.cs.name, vim.log.levels.INFO)
     api.nvim_win_close(state.win, true)
     api.nvim_win_close(state.prompt_win, true)
   end
@@ -125,8 +149,9 @@ end
 
 -- ===== Public =====
 function M.open_picker()
-  state.themes = theme_loader.get_available_colorschemes()
-  state.filtered = vim.deepcopy(state.themes)
+  state.categories = colors.get_all_colorschemes_grouped()
+  for _, cat in ipairs(state.categories) do cat.collapsed = false end
+
   create_input_prompt()
   create_list_window()
   render()

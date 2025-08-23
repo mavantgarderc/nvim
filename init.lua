@@ -14,5 +14,4 @@ require("core.keymaps.fileactions")
 require("core.keymaps.navigation")
 require("core.keymaps.visualkeys")
 
-vim.cmd.colorscheme("kanagawa-paper-ink") -- default themes of your choice
 require("Raphael").setup()
