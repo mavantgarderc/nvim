@@ -1,0 +1,202 @@
+# Midnight Ocean - A dark blue colorscheme
+# Sample TOML colorscheme for Raphael theme system
+
+[metadata]
+name = "midnight_ocean"
+display_name = "Midnight Ocean"
+author = "Raphael Theme System"
+version = "1.0.0"
+description = "A dark blue colorscheme inspired by the depths of the ocean"
+background = "dark"
+
+[colors]
+# Base colors
+bg = "#0a0e1a"
+bg_alt = "#0f1419"
+bg_highlight = "#1a1f2e"
+fg = "#a3b8cc"
+fg_alt = "#8a9ba8"
+
+# Accent colors
+blue = "#4a9eff"
+cyan = "#2dd4bf"
+green = "#34d399"
+yellow = "#fbbf24"
+orange = "#fb7185"
+red = "#f87171"
+purple = "#a78bfa"
+magenta = "#e879f9"
+
+# UI colors
+border = "#1f2937"
+selection = "#1e3a5f"
+comment = "#6b7280"
+line_number = "#4b5563"
+cursor_line = "#111827"
+
+# Git colors
+git_add = "#34d399"
+git_change = "#fbbf24"
+git_delete = "#f87171"
+
+# Diagnostic colors
+error = "#f87171"
+warning = "#fbbf24"
+info = "#4a9eff"
+hint = "#2dd4bf"
+
+[highlights]
+# Editor highlights
+Normal = { fg = "fg", bg = "bg" }
+NormalFloat = { fg = "fg", bg = "bg_alt" }
+CursorLine = { bg = "cursor_line" }
+CursorColumn = { bg = "cursor_line" }
+ColorColumn = { bg = "bg_highlight" }
+LineNr = { fg = "line_number" }
+CursorLineNr = { fg = "fg_alt", bold = true }
+SignColumn = { bg = "bg" }
+Folded = { fg = "comment", bg = "bg_highlight" }
+FoldColumn = { fg = "comment", bg = "bg" }
+Visual = { bg = "selection" }
+VisualNOS = { bg = "selection" }
+Search = { fg = "bg", bg = "yellow" }
+IncSearch = { fg = "bg", bg = "orange" }
+VertSplit = { fg = "border" }
+WinSeparator = { fg = "border" }
+StatusLine = { fg = "fg", bg = "bg_alt" }
+StatusLineNC = { fg = "fg_alt", bg = "bg_alt" }
+Pmenu = { fg = "fg", bg = "bg_alt" }
+PmenuSel = { fg = "bg", bg = "blue" }
+PmenuSbar = { bg = "bg_highlight" }
+PmenuThumb = { bg = "fg_alt" }
+
+# Syntax highlights
+Comment = { fg = "comment", italic = true }
+Constant = { fg = "purple" }
+String = { fg = "green" }
+Character = { fg = "green" }
+Number = { fg = "orange" }
+Boolean = { fg = "orange" }
+Float = { fg = "orange" }
+Identifier = { fg = "fg" }
+Function = { fg = "blue" }
+Statement = { fg = "magenta" }
+Conditional = { fg = "magenta" }
+Repeat = { fg = "magenta" }
+Label = { fg = "magenta" }
+Operator = { fg = "cyan" }
+Keyword = { fg = "magenta" }
+Exception = { fg = "red" }
+PreProc = { fg = "yellow" }
+Include = { fg = "cyan" }
+Define = { fg = "purple" }
+Macro = { fg = "purple" }
+PreCondit = { fg = "yellow" }
+Type = { fg = "yellow" }
+StorageClass = { fg = "yellow" }
+Structure = { fg = "yellow" }
+Typedef = { fg = "yellow" }
+Special = { fg = "cyan" }
+SpecialChar = { fg = "cyan" }
+Tag = { fg = "blue" }
+Delimiter = { fg = "fg" }
+SpecialComment = { fg = "comment", bold = true }
+Debug = { fg = "red" }
+Underlined = { fg = "blue", underline = true }
+Ignore = { fg = "comment" }
+Error = { fg = "error", bold = true }
+Todo = { fg = "yellow", bg = "bg_highlight", bold = true }
+
+# Tree-sitter highlights
+"@variable" = { fg = "fg" }
+"@variable.builtin" = { fg = "orange" }
+"@variable.parameter" = { fg = "fg_alt" }
+"@variable.member" = { fg = "blue" }
+"@constant" = { fg = "purple" }
+"@constant.builtin" = { fg = "orange" }
+"@constant.macro" = { fg = "purple" }
+"@module" = { fg = "yellow" }
+"@string" = { fg = "green" }
+"@string.escape" = { fg = "cyan" }
+"@string.special" = { fg = "cyan" }
+"@character" = { fg = "green" }
+"@character.special" = { fg = "cyan" }
+"@number" = { fg = "orange" }
+"@boolean" = { fg = "orange" }
+"@float" = { fg = "orange" }
+"@function" = { fg = "blue" }
+"@function.builtin" = { fg = "cyan" }
+"@function.call" = { fg = "blue" }
+"@function.macro" = { fg = "purple" }
+"@method" = { fg = "blue" }
+"@method.call" = { fg = "blue" }
+"@constructor" = { fg = "yellow" }
+"@operator" = { fg = "cyan" }
+"@keyword" = { fg = "magenta" }
+"@keyword.function" = { fg = "magenta" }
+"@keyword.operator" = { fg = "magenta" }
+"@keyword.return" = { fg = "magenta" }
+"@conditional" = { fg = "magenta" }
+"@repeat" = { fg = "magenta" }
+"@exception" = { fg = "red" }
+"@type" = { fg = "yellow" }
+"@type.builtin" = { fg = "yellow" }
+"@type.definition" = { fg = "yellow" }
+"@attribute" = { fg = "purple" }
+"@property" = { fg = "blue" }
+"@label" = { fg = "magenta" }
+"@comment" = { fg = "comment", italic = true }
+"@punctuation.delimiter" = { fg = "fg" }
+"@punctuation.bracket" = { fg = "fg" }
+"@punctuation.special" = { fg = "cyan" }
+"@tag" = { fg = "blue" }
+"@tag.attribute" = { fg = "purple" }
+"@tag.delimiter" = { fg = "fg" }
+
+# LSP highlights
+"@lsp.type.class" = { fg = "yellow" }
+"@lsp.type.decorator" = { fg = "purple" }
+"@lsp.type.enum" = { fg = "yellow" }
+"@lsp.type.enumMember" = { fg = "purple" }
+"@lsp.type.function" = { fg = "blue" }
+"@lsp.type.interface" = { fg = "yellow" }
+"@lsp.type.macro" = { fg = "purple" }
+"@lsp.type.method" = { fg = "blue" }
+"@lsp.type.namespace" = { fg = "yellow" }
+"@lsp.type.parameter" = { fg = "fg_alt" }
+"@lsp.type.property" = { fg = "blue" }
+"@lsp.type.struct" = { fg = "yellow" }
+"@lsp.type.type" = { fg = "yellow" }
+"@lsp.type.typeParameter" = { fg = "yellow" }
+"@lsp.type.variable" = { fg = "fg" }
+
+# Diagnostic highlights
+DiagnosticError = { fg = "error" }
+DiagnosticWarn = { fg = "warning" }
+DiagnosticInfo = { fg = "info" }
+DiagnosticHint = { fg = "hint" }
+DiagnosticUnderlineError = { undercurl = true, sp = "error" }
+DiagnosticUnderlineWarn = { undercurl = true, sp = "warning" }
+DiagnosticUnderlineInfo = { undercurl = true, sp = "info" }
+DiagnosticUnderlineHint = { undercurl = true, sp = "hint" }
+
+# Git highlights
+DiffAdd = { fg = "git_add", bg = "bg" }
+DiffChange = { fg = "git_change", bg = "bg" }
+DiffDelete = { fg = "git_delete", bg = "bg" }
+DiffText = { fg = "git_change", bg = "bg_highlight" }
+GitSignsAdd = { fg = "git_add" }
+GitSignsChange = { fg = "git_change" }
+GitSignsDelete = { fg = "git_delete" }
+
+# Plugin-specific highlights (examples)
+TelescopeBorder = { fg = "border" }
+TelescopePromptBorder = { fg = "border" }
+TelescopeResultsBorder = { fg = "border" }
+TelescopePreviewBorder = { fg = "border" }
+NeoTreeDirectoryIcon = { fg = "blue" }
+NeoTreeDirectoryName = { fg = "blue" }
+NeoTreeFileName = { fg = "fg" }
+NeoTreeFileIcon = { fg = "fg_alt" }
+WhichKeyFloat = { bg = "bg_alt" }
+WhichKeyBorder = { fg = "border" }

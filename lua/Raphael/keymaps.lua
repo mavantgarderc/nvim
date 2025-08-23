@@ -32,8 +32,6 @@ M.config = {
     random = "r",
     next_toml = "<C-n>",
     prev_toml = "<C-p>",
-    next_dark = "<A-n>",
-    prev_dark = "<A-p>",
     auto_cycle = "a",
     stop_cycle = "s",
     cycle_info = "i",
@@ -81,12 +79,12 @@ function M.setup_keymaps(user_config)
   map("n", leader .. mappings.previous, function() cycler.cycle_previous("all") end, { desc = "Previous colorscheme" })
   map("n", leader .. mappings.random, function() cycler.cycle_random("all") end, { desc = "Random colorscheme" })
   map("n", leader .. mappings.next_toml, function() cycler.cycle_next("toml") end, { desc = "Next TOML colorscheme" })
-  map("n", leader .. mappings.prev_toml, function() cycler.cycle_previous("toml") end, { desc = "Previous TOML colorscheme" })
-  map("n", leader .. mappings.next_dark, function() cycler.cycle_next("dark") end, { desc = "Next dark colorscheme" })
-  map("n", leader .. mappings.prev_dark, function() cycler.cycle_previous("dark") end, { desc = "Previous dark colorscheme" })
+  map("n", leader .. mappings.prev_toml, function() cycler.cycle_previous("toml") end,
+    { desc = "Previous TOML colorscheme" })
 
   -- Auto-cycle
-  map("n", leader .. mappings.auto_cycle, function() cycler.toggle_auto_cycle("all", 5000) end, { desc = "Toggle auto-cycle" })
+  map("n", leader .. mappings.auto_cycle, function() cycler.toggle_auto_cycle("all", 5000) end,
+    { desc = "Toggle auto-cycle" })
   map("n", leader .. mappings.stop_cycle, function() cycler.stop_auto_cycle() end, { desc = "Stop auto-cycle" })
   map("n", leader .. mappings.cycle_info, function() cycler.show_cycle_info() end, { desc = "Show cycle information" })
 
@@ -115,7 +113,10 @@ function M.setup_keymaps(user_config)
           local all_colorschemes = require("Raphael.colors").get_all_colorschemes()
           for _, name in ipairs(names) do
             for _, cs in ipairs(all_colorschemes) do
-              if cs.name == name then table.insert(colorschemes, cs) break end
+              if cs.name == name then
+                table.insert(colorschemes, cs)
+                break
+              end
             end
           end
           preview.compare_colorschemes(colorschemes)
@@ -139,9 +140,12 @@ function M.setup_keymaps(user_config)
   map("n", leader .. mappings.validate, function() cmd("RaphaelValidate") end, { desc = "Validate TOML colorschemes" })
 
   -- Global mappings
-  if global.cycle_forward then map("n", global.cycle_forward, function() cycler.cycle_next("all") end, { desc = "Next colorscheme (global)" }) end
-  if global.cycle_backward then map("n", global.cycle_backward, function() cycler.cycle_previous("all") end, { desc = "Previous colorscheme (global)" }) end
-  if global.quick_picker then map("n", global.quick_picker, function() picker.open_picker() end, { desc = "Quick theme picker (global)" }) end
+  if global.cycle_forward then map("n", global.cycle_forward, function() cycler.cycle_next("all") end,
+      { desc = "Next colorscheme (global)" }) end
+  if global.cycle_backward then map("n", global.cycle_backward, function() cycler.cycle_previous("all") end,
+      { desc = "Previous colorscheme (global)" }) end
+  if global.quick_picker then map("n", global.quick_picker, function() picker.open_picker() end,
+      { desc = "Quick theme picker (global)" }) end
   if global.emergency_reset then
     map("n", global.emergency_reset, function()
       local default_config = require("Raphael.colors").config.default_colorscheme
@@ -158,7 +162,9 @@ end
 
 -- Expose keymap config
 function M.get_keymap_config() return M.config end
+
 function M.update_keymap_config(new_config) M.config = tbl_deep_extend("force", M.config, new_config) end
+
 function M.remove_keymaps()
   local leader, mappings, global = M.config.leader, M.config.mappings, M.config.global
   for _, m in pairs(mappings) do pcall(unmap, "n", leader .. m) end
@@ -170,23 +176,29 @@ function M.show_keymaps()
   local leader, mappings, global = M.config.leader, M.config.mappings, M.config.global
   local lines = { "Raphael Theme System - Key Mappings:", "" }
   table.insert(lines, "Picker Commands (prefix: " .. leader .. "):")
-  for _, k in ipairs({ "picker","picker_toml","picker_builtin" }) do table.insert(lines, "  " .. leader .. mappings[k] .. " - Open picker") end
+  for _, k in ipairs({ "picker", "picker_toml", "picker_builtin" }) do table.insert(lines,
+      "  " .. leader .. mappings[k] .. " - Open picker") end
   table.insert(lines, "")
   table.insert(lines, "Cycling Commands:")
-  for _, k in ipairs({ "next","previous","random","next_toml","prev_toml","next_dark","prev_dark" }) do
+  for _, k in ipairs({ "next", "previous", "random", "next_toml", "prev_toml" }) do
     table.insert(lines, "  " .. leader .. mappings[k] .. " - " .. k)
   end
-  local buf = api.nvim_create_buf(false,true)
-  api.nvim_buf_set_lines(buf,0,-1,false,lines)
-  local win = api.nvim_open_win(buf,true,{
-    relative="editor",width=60,height=math.min(#lines+2,o.lines-4),
-    row=math.floor((o.lines-math.min(#lines+2,o.lines-4))/2),
-    col=math.floor((o.columns-60)/2),
-    style="minimal",border="rounded",title=" Key Mappings ",title_pos="center"
+  local buf = api.nvim_create_buf(false, true)
+  api.nvim_buf_set_lines(buf, 0, -1, false, lines)
+  local win = api.nvim_open_win(buf, true, {
+    relative = "editor",
+    width = 60,
+    height = math.min(#lines + 2, o.lines - 4),
+    row = math.floor((o.lines - math.min(#lines + 2, o.lines - 4)) / 2),
+    col = math.floor((o.columns - 60) / 2),
+    style = "minimal",
+    border = "rounded",
+    title = " Key Mappings ",
+    title_pos = "center"
   })
-  api.nvim_buf_set_option(buf,"bufhidden","wipe")
-  map("n","q",function() api.nvim_win_close(win,true) end,{buffer=buf})
-  map("n","<Esc>",function() api.nvim_win_close(win,true) end,{buffer=buf})
+  api.nvim_buf_set_option(buf, "bufhidden", "wipe")
+  map("n", "q", function() api.nvim_win_close(win, true) end, { buffer = buf })
+  map("n", "<Esc>", function() api.nvim_win_close(win, true) end, { buffer = buf })
 end
 
 return M
