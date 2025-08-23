@@ -1,5 +1,12 @@
 -- File: Raphael/scripts/picker.lua
 local api = vim.api
+local o = vim.o
+local fn = vim.fn
+local notify = vim.notify
+local log = vim.log
+local cmd = vim.cmd
+local map = vim.keymap.set
+
 local theme_loader = require("Raphael.scripts.loader")
 local colors = require("Raphael.colors")
 
@@ -57,11 +64,11 @@ end
 -- ===== Picker Creation =====
 local function create_input_prompt()
   state.prompt_buf = api.nvim_create_buf(false, true)
-  local width = math.floor(vim.o.columns * 0.5)
-  local row = math.floor(vim.o.lines / 2)
-  local col = math.floor((vim.o.columns - width) / 2)
+  local width = math.floor(o.columns * 0.5)
+  local row = math.floor(o.lines / 2)
+  local col = math.floor((o.columns - width) / 2)
 
-  state.prompt_win = api.nvim_open_win(state.prompt_buf, true, {
+  state.prompt_win = api.nopen_win(state.prompt_buf, true, {
     relative = "editor",
     row = row,
     col = col,
@@ -71,9 +78,9 @@ local function create_input_prompt()
     border = "single",
   })
   api.nvim_buf_set_option(state.prompt_buf, "buftype", "prompt")
-  vim.fn.prompt_setprompt(state.prompt_buf, "Search: ")
+  fn.prompt_setprompt(state.prompt_buf, "Search: ")
 
-  vim.cmd(string.format([[
+  cmd(string.format([[
     autocmd TextChangedI <buffer=%d> lua require("Raphael.scripts.picker").on_prompt_changed()
     autocmd TextChanged <buffer=%d> lua require("Raphael.scripts.picker").on_prompt_changed()
   ]], state.prompt_buf, state.prompt_buf))
@@ -81,12 +88,12 @@ end
 
 local function create_list_window()
   state.buf = api.nvim_create_buf(false, true)
-  local width = math.floor(vim.o.columns * 0.5)
-  local height = math.floor(vim.o.lines * 0.6)
-  local row = math.floor((vim.o.lines - height) / 2) + 1
-  local col = math.floor((vim.o.columns - width) / 2)
+  local width = math.floor(o.columns * 0.5)
+  local height = math.floor(o.lines * 0.6)
+  local row = math.floor((o.lines - height) / 2) + 1
+  local col = math.floor((o.columns - width) / 2)
 
-  state.win = api.nvim_open_win(state.buf, true, {
+  state.win = api.nopen_win(state.buf, true, {
     relative = "editor",
     row = row,
     col = col,
@@ -101,7 +108,7 @@ local function create_list_window()
   api.nvim_create_autocmd("CursorMoved", {
     buffer = state.buf,
     callback = function()
-      local line_nr = unpack(api.nvim_win_get_cursor(state.win))
+      local line_nr = table.unpack(api.nvim_win_get_cursor(state.win))
       local entry = state.line_map[line_nr]
       if entry and entry.cs and state.last_preview ~= entry.cs.name then
         theme_loader.apply_colorscheme(entry.cs.name, entry.cs.type)
@@ -132,7 +139,7 @@ function M.on_prompt_changed()
 end
 
 local function accept_selection()
-  local line_nr = unpack(api.nvim_win_get_cursor(state.win))
+  local line_nr = table.unpack(api.nvim_win_get_cursor(state.win))
   local entry = state.line_map[line_nr]
   if not entry then return end
 
@@ -141,7 +148,7 @@ local function accept_selection()
     render()
   elseif entry.cs then
     theme_loader.apply_colorscheme(entry.cs.name, entry.cs.type)
-    vim.notify("Applied colorscheme: " .. entry.cs.name, vim.log.levels.INFO)
+    notify("Applied colorscheme: " .. entry.cs.name, log.levels.INFO)
     api.nvim_win_close(state.win, true)
     api.nvim_win_close(state.prompt_win, true)
   end
@@ -156,8 +163,8 @@ function M.open_picker()
   create_list_window()
   render()
 
-  vim.keymap.set("n", "<CR>", accept_selection, { buffer = state.buf })
-  vim.keymap.set("n", "q", function()
+  map("n", "<CR>", accept_selection, { buffer = state.buf })
+  map("n", "q", function()
     api.nvim_win_close(state.win, true)
     api.nvim_win_close(state.prompt_win, true)
   end, { buffer = state.buf })
