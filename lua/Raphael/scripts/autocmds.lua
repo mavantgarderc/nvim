@@ -1,4 +1,5 @@
 -- File: Raphael/scripts/autocmds.lua
+local vim = vim
 local api = vim.api
 local g = vim.g
 local o = vim.o
@@ -200,10 +201,13 @@ function M.setup_autocmds()
       end
     end
 
-    api.nvim_create_autocmd("VimEnter", { group = augroup, callback = function() safe_defer(switch_time_based, 1000) end })
+    api.nvim_create_autocmd("VimEnter",
+      { group = augroup, callback = function() safe_defer(switch_time_based, 1000) end })
     local timer = loop.new_timer()
     timer:start(3600000, 3600000, schedule_wrap(switch_time_based))
-    api.nvim_create_autocmd("VimLeavePre", { group = augroup, callback = function() timer:stop(); timer:close() end })
+    api.nvim_create_autocmd("VimLeavePre", { group = augroup, callback = function()
+      timer:stop(); timer:close()
+    end })
   end
 end
 

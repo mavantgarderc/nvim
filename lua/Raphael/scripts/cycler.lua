@@ -1,4 +1,5 @@
 -- File: Raphael/scripts/cycler.lua
+local vim = vim
 local defer_fn = vim.defer_fn
 local notify = vim.notify
 local log = vim.log
@@ -15,7 +16,7 @@ local M = {}
 local cycler_state = {
   colorschemes = {},
   current_index = 1,
-  cycle_type = "all", -- "all", "toml", "builtin", "dark", "light"
+  cycle_type = "all", -- "all", "toml", "builtin"
   auto_cycle = false,
   auto_cycle_timer = nil,
   auto_cycle_interval = 5000, -- 5 seconds
@@ -121,7 +122,8 @@ function M.start_auto_cycle(cycle_type, interval)
   cycler_state.auto_cycle = true
   cycler_state.auto_cycle_interval = interval or 5000
   cycler_state.auto_cycle_timer = defer_fn(auto_cycle_fn, cycler_state.auto_cycle_interval)
-  notify("Auto-cycle started (" .. cycle_type .. ", " .. (cycler_state.auto_cycle_interval / 1000) .. "s interval)", log.levels.INFO)
+  notify("Auto-cycle started (" .. cycle_type .. ", " .. (cycler_state.auto_cycle_interval / 1000) .. "s interval)",
+    log.levels.INFO)
 end
 
 function M.stop_auto_cycle()

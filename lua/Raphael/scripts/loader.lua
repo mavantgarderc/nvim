@@ -17,9 +17,17 @@ M.cache = {}
 -- ======= Helpers =======
 
 local valid_keys = {
-  fg=true, bg=true, sp=true, bold=true, underline=true,
-  undercurl=true, italic=true, reverse=true, standout=true,
-  strikethrough=true, nocombine=true
+  fg = true,
+  bg = true,
+  sp = true,
+  bold = true,
+  underline = true,
+  undercurl = true,
+  italic = true,
+  reverse = true,
+  standout = true,
+  strikethrough = true,
+  nocombine = true
 }
 
 local function resolve_color(value, colors)

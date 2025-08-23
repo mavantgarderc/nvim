@@ -1,4 +1,5 @@
 -- File: Raphael/scripts/preview.lua
+local vim = vim
 local api = vim.api
 local fn = vim.fn
 local o = vim.o
@@ -7,6 +8,7 @@ local defer_fn = vim.defer_fn
 local map = vim.keymap.set
 local log = vim.log
 local notify = vim.notify
+local tbl_count = vim.tbl_count
 
 local colors_config = require("Raphael.colors")
 local loader = require("Raphael.scripts.loader")
@@ -97,8 +99,8 @@ local function create_preview_window(title, content)
     relative = "editor",
     width = width,
     height = height,
-    row = math.floor((o.lines - height)/2),
-    col = math.floor((o.columns - width)/2),
+    row = math.floor((o.lines - height) / 2),
+    col = math.floor((o.columns - width) / 2),
     style = "minimal",
     border = "rounded",
     title = " " .. title .. " ",
@@ -114,7 +116,7 @@ end
 
 -- Keymap helper for preview windows
 local function set_preview_keymaps(buf, close_fn, apply_fn)
-  local opts = { noremap=true, silent=true, buffer=buf }
+  local opts = { noremap = true, silent = true, buffer = buf }
   map("n", "q", close_fn, opts)
   map("n", "<Esc>", close_fn, opts)
   if apply_fn then map("n", "<CR>", apply_fn, opts) end
@@ -131,7 +133,7 @@ end
 function M.close_preview(preview_id)
   local preview = preview_state.active_previews[preview_id]
   if not preview then return end
-  if preview.win and api.nvim_win_is_valid(preview.win) then api.nvim_win_close(preview.win,true) end
+  if preview.win and api.nvim_win_is_valid(preview.win) then api.nvim_win_close(preview.win, true) end
   preview_state.active_previews[preview_id] = nil
 
   if tbl_isempty(preview_state.active_previews) and preview_state.original_colorscheme then
@@ -142,7 +144,7 @@ end
 
 -- Close all previews
 function M.close_all_previews()
-  for id,_ in pairs(preview_state.active_previews) do M.close_preview(id) end
+  for id, _ in pairs(preview_state.active_previews) do M.close_preview(id) end
 end
 
 -- Single colorscheme preview
@@ -150,13 +152,14 @@ function M.preview_colorscheme(name, scheme_type, duration)
   store_original()
   local success = loader.apply_colorscheme(name, scheme_type)
   if not success then
-    notify("Failed to preview colorscheme: "..name, log.levels.ERROR)
+    notify("Failed to preview colorscheme: " .. name, log.levels.ERROR)
     return false
   end
 
-  local buf, win = create_preview_window("Preview: "..colors_config.get_display_name(name, scheme_type), get_sample_content())
-  local preview_id = name.."_"..scheme_type
-  preview_state.active_previews[preview_id] = { buf=buf, win=win, name=name, type=scheme_type }
+  local buf, win = create_preview_window("Preview: " .. colors_config.get_display_name(name, scheme_type),
+    get_sample_content())
+  local preview_id = name .. "_" .. scheme_type
+  preview_state.active_previews[preview_id] = { buf = buf, win = win, name = name, type = scheme_type }
 
   if duration and duration > 0 then
     defer_fn(function() M.close_preview(preview_id) end, duration)
@@ -167,11 +170,12 @@ function M.preview_colorscheme(name, scheme_type, duration)
     function()
       loader.apply_colorscheme(name, scheme_type)
       M.close_all_previews()
-      notify("Applied colorscheme: "..colors_config.get_display_name(name, scheme_type), log.levels.INFO)
+      notify("Applied colorscheme: " .. colors_config.get_display_name(name, scheme_type), log.levels.INFO)
     end
   )
 
-  notify("Preview: "..colors_config.get_display_name(name, scheme_type).." (q to close, Enter to apply)", log.levels.INFO)
+  notify("Preview: " .. colors_config.get_display_name(name, scheme_type) .. " (q to close, Enter to apply)",
+    log.levels.INFO)
   return true
 end
 
@@ -181,7 +185,7 @@ function M.quick_preview(name, scheme_type, timeout)
   if preview_state.preview_timeout then fn.timer_stop(preview_state.preview_timeout) end
   store_original()
   if loader.apply_colorscheme(name, scheme_type) then
-    notify("Quick preview: "..colors_config.get_display_name(name, scheme_type), log.levels.INFO)
+    notify("Quick preview: " .. colors_config.get_display_name(name, scheme_type), log.levels.INFO)
     preview_state.preview_timeout = defer_fn(function()
       if preview_state.original_colorscheme then
         loader.apply_colorscheme(preview_state.original_colorscheme.name, preview_state.original_colorscheme.type)
@@ -206,7 +210,7 @@ end
 -- Get preview status
 function M.get_preview_status()
   return {
-    active_previews = vim.tbl_count(preview_state.active_previews),
+    active_previews = tbl_count(preview_state.active_previews),
     original_colorscheme = preview_state.original_colorscheme,
     has_quick_preview = preview_state.preview_timeout ~= nil
   }
@@ -216,7 +220,7 @@ end
 function M.slideshow_preview(colorschemes, interval, loop)
   interval = interval or 3000
   loop = loop ~= false
-  colorschemes = (colorschemes and #colorschemes>0) and colorschemes or colors_config.get_all_colorschemes()
+  colorschemes = (colorschemes and #colorschemes > 0) and colorschemes or colors_config.get_all_colorschemes()
   store_original()
 
   local index = 1
@@ -226,10 +230,12 @@ function M.slideshow_preview(colorschemes, interval, loop)
     if index <= #colorschemes then
       local cs = colorschemes[index]
       loader.apply_colorscheme(cs.name, cs.type)
-      notify("Slideshow: "..colors_config.get_display_name(cs.name, cs.type).." ("..index.."/"..#colorschemes..")", log.levels.INFO)
+      notify("Slideshow: " .. colors_config.get_display_name(cs.name, cs.type) .. " (" .. index ..
+      "/" .. #colorschemes .. ")", log.levels.INFO)
       index = index + 1
       if index > #colorschemes and loop then index = 1 end
-      if index <= #colorschemes or loop then timer = defer_fn(next_slide, interval)
+      if index <= #colorschemes or loop then
+        timer = defer_fn(next_slide, interval)
       else
         notify("Slideshow completed", log.levels.INFO)
         if preview_state.original_colorscheme then
@@ -242,7 +248,7 @@ function M.slideshow_preview(colorschemes, interval, loop)
     end
   end
 
-  notify("Starting slideshow with "..#colorschemes.." colorschemes", log.levels.INFO)
+  notify("Starting slideshow with " .. #colorschemes .. " colorschemes", log.levels.INFO)
   next_slide()
 
   return function()

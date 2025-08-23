@@ -1,5 +1,6 @@
 -- File: Raphael/keymaps.lua
 
+local vim = vim
 local o = vim.o
 local split = vim.split
 local ui = vim.ui
@@ -140,12 +141,18 @@ function M.setup_keymaps(user_config)
   map("n", leader .. mappings.validate, function() cmd("RaphaelValidate") end, { desc = "Validate TOML colorschemes" })
 
   -- Global mappings
-  if global.cycle_forward then map("n", global.cycle_forward, function() cycler.cycle_next("all") end,
-      { desc = "Next colorscheme (global)" }) end
-  if global.cycle_backward then map("n", global.cycle_backward, function() cycler.cycle_previous("all") end,
-      { desc = "Previous colorscheme (global)" }) end
-  if global.quick_picker then map("n", global.quick_picker, function() picker.open_picker() end,
-      { desc = "Quick theme picker (global)" }) end
+  if global.cycle_forward then
+    map("n", global.cycle_forward, function() cycler.cycle_next("all") end,
+      { desc = "Next colorscheme (global)" })
+  end
+  if global.cycle_backward then
+    map("n", global.cycle_backward, function() cycler.cycle_previous("all") end,
+      { desc = "Previous colorscheme (global)" })
+  end
+  if global.quick_picker then
+    map("n", global.quick_picker, function() picker.open_picker() end,
+      { desc = "Quick theme picker (global)" })
+  end
   if global.emergency_reset then
     map("n", global.emergency_reset, function()
       local default_config = require("Raphael.colors").config.default_colorscheme
@@ -176,8 +183,10 @@ function M.show_keymaps()
   local leader, mappings, global = M.config.leader, M.config.mappings, M.config.global
   local lines = { "Raphael Theme System - Key Mappings:", "" }
   table.insert(lines, "Picker Commands (prefix: " .. leader .. "):")
-  for _, k in ipairs({ "picker", "picker_toml", "picker_builtin" }) do table.insert(lines,
-      "  " .. leader .. mappings[k] .. " - Open picker") end
+  for _, k in ipairs({ "picker", "picker_toml", "picker_builtin" }) do
+    table.insert(lines,
+      "  " .. leader .. mappings[k] .. " - Open picker")
+  end
   table.insert(lines, "")
   table.insert(lines, "Cycling Commands:")
   for _, k in ipairs({ "next", "previous", "random", "next_toml", "prev_toml" }) do
@@ -196,7 +205,7 @@ function M.show_keymaps()
     title = " Key Mappings ",
     title_pos = "center"
   })
-  api.nvim_buf_set_option(buf, "bufhidden", "wipe")
+  api.nvim_set_option_value("bufhidden", "wipe", { buf = buf })
   map("n", "q", function() api.nvim_win_close(win, true) end, { buffer = buf })
   map("n", "<Esc>", function() api.nvim_win_close(win, true) end, { buffer = buf })
 end

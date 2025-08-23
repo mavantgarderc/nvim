@@ -1,4 +1,5 @@
 -- File: Raphael/scripts/cmds.lua
+local vim = vim
 local api = vim.api
 local map = vim.keymap.set
 local log = vim.log
@@ -60,16 +61,22 @@ end
 
 -- Helper: get colorschemes by type
 local function get_colorschemes_by_type(type_name)
-  if type_name == "toml" then return colors_config.get_toml_colorschemes()
-  elseif type_name == "builtin" then return colors_config.get_builtin_colorschemes()
-  elseif type_name == "dark" then return colors_config.get_dark_colorschemes()
-  elseif type_name == "light" then return colors_config.get_light_colorschemes()
-  else return colors_config.get_all_colorschemes() end
+  if type_name == "toml" then
+    return colors_config.get_toml_colorschemes()
+  elseif type_name == "builtin" then
+    return colors_config.get_builtin_colorschemes()
+  elseif type_name == "dark" then
+    return colors_config.get_dark_colorschemes()
+  elseif type_name == "light" then
+    return colors_config.get_light_colorschemes()
+  else
+    return colors_config.get_all_colorschemes()
+  end
 end
 
 function M.setup_commands()
   -- Picker commands
-  for _, cmd in ipairs({{"RaphaelPicker", "Open Raphael theme picker"}, {"Rp", "Alias for RaphaelPicker"}}) do
+  for _, cmd in ipairs({ { "RaphaelPicker", "Open Raphael theme picker" }, { "Rp", "Alias for RaphaelPicker" } }) do
     user_cmd(cmd[1], function(opts)
       picker.open_picker(opts.args ~= "" and opts.args or nil)
     end, { nargs = "?", complete = complete_colorscheme_types, desc = cmd[2] })
@@ -92,7 +99,7 @@ function M.setup_commands()
   end, { nargs = "+", complete = complete_colorschemes, desc = "Apply a specific colorscheme" })
 
   -- Cycle commands
-  local cycle_cmds = { {"Next", "cycle_next"}, {"Prev", "cycle_previous"}, {"Random", "cycle_random"} }
+  local cycle_cmds = { { "Next", "cycle_next" }, { "Prev", "cycle_previous" }, { "Random", "cycle_random" } }
   for _, c in ipairs(cycle_cmds) do
     user_cmd("Raphael" .. c[1], function(opts)
       local cycle_type = opts.args ~= "" and opts.args or "all"
@@ -110,14 +117,20 @@ function M.setup_commands()
 
   user_cmd("RaphaelAutoCycle", function(opts) handle_auto_cycle(cycler.start_auto_cycle, opts) end, {
     nargs = "*",
-    complete = function(arg_lead, cmd_line) if #split(cmd_line, "%s+") <= 2 then return complete_colorscheme_types(arg_lead) end return {} end,
+    complete = function(arg_lead, cmd_line)
+      if #split(cmd_line, "%s+") <= 2 then return complete_colorscheme_types(arg_lead) end
+      return {}
+    end,
     desc = "Start auto-cycling colorschemes [type] [interval_seconds]"
   })
 
   user_cmd("RaphaelStopCycle", cycler.stop_auto_cycle, { desc = "Stop auto-cycling colorschemes" })
   user_cmd("RaphaelToggleCycle", function(opts) handle_auto_cycle(cycler.toggle_auto_cycle, opts) end, {
     nargs = "*",
-    complete = function(arg_lead, cmd_line) if #split(cmd_line, "%s+") <= 2 then return complete_colorscheme_types(arg_lead) end return {} end,
+    complete = function(arg_lead, cmd_line)
+      if #split(cmd_line, "%s+") <= 2 then return complete_colorscheme_types(arg_lead) end
+      return {}
+    end,
     desc = "Toggle auto-cycling colorschemes"
   })
 
@@ -137,8 +150,10 @@ function M.setup_commands()
     end
   end
 
-  user_cmd("RaphaelPreview", preview_cmd("preview_colorscheme", nil), { nargs = "+", complete = complete_colorschemes, desc = "Preview a colorscheme in a window" })
-  user_cmd("RaphaelQuickPreview", preview_cmd("quick_preview", 2000), { nargs = "+", complete = complete_colorschemes, desc = "Quick preview a colorscheme with auto-restore" })
+  user_cmd("RaphaelPreview", preview_cmd("preview_colorscheme", nil),
+    { nargs = "+", complete = complete_colorschemes, desc = "Preview a colorscheme in a window" })
+  user_cmd("RaphaelQuickPreview", preview_cmd("quick_preview", 2000),
+    { nargs = "+", complete = complete_colorschemes, desc = "Quick preview a colorscheme with auto-restore" })
 
   -- Remaining commands (Compare, Slideshow, Info, List, Reload, Validate, Status) can be similarly refactored using helpers above.
 end
