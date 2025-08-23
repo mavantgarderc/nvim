@@ -81,7 +81,7 @@ M.theme_map = {
 
   kanagawa    = {
     "base16-kanagawa",
-    "base16-kanagawa-wave", -- sql
+    -- "base16-kanagawa-wave", -- sql
     "kanagawa-dragon",
     "kanagawa-paper-ink",   -- nvim section
   },
@@ -95,7 +95,8 @@ M.theme_map = {
 }
 
 M.toml_map = {
-  "midnight_ocean",
+    "kanagawa_paper_ink",
+    "midnight_ocean",
 }
 
 M.filetype_themes = {
@@ -129,8 +130,8 @@ M.filetype_themes = {
 
   solidity   = "base16-darkmoss",
 
-  sql        = "kanagawa-wave",
-  sqls       = "kanagawa-wave",
+  sql        = "kanagawa-dragon",
+  sqls       = "kanagawa-dragon",
 
   html       = "tokyonight",
   css        = "tokyonight",
