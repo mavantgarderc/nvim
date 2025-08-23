@@ -1,65 +1,264 @@
+-- File: Raphael/scripts/preview.lua
+local vim = vim
+local api = vim.api
+local fn = vim.fn
+local o = vim.o
+local tbl_isempty = vim.tbl_isempty
+local defer_fn = vim.defer_fn
+local map = vim.keymap.set
+local log = vim.log
+local notify = vim.notify
+local tbl_count = vim.tbl_count
+
+local colors_config = require("Raphael.colors")
+local loader = require("Raphael.scripts.loader")
+
 local M = {}
 
-local notify = vim.notify
-local log = vim.log
-local defer_fn = vim.defer_fn
+-- Preview state
+local preview_state = {
+  active_previews = {},
+  original_colorscheme = nil,
+  preview_timeout = nil,
+  sample_content = nil
+}
 
-local theme_loader = require("Raphael.scripts.loader")
+-- Sample content for previews
+local function get_sample_content()
+  if preview_state.sample_content then return preview_state.sample_content end
 
-function M.preview_all_themes(delay)
-  local themes = theme_loader.get_theme_list()
-  delay = delay or 700
-  local original_theme = theme_loader.get_current_theme()
+  preview_state.sample_content = {
+    "-- Raphael Theme Preview",
+    "-- This window shows how the colorscheme looks with syntax highlighting",
+    "",
+    "-- Comments and documentation",
+    '-- TODO: Add more features',
+    '-- FIXME: Handle edge cases',
+    '-- NOTE: This is just a preview',
+    "",
+    "-- Variables and constants",
+    "local config = {",
+    '  theme = "midnight_ocean",',
+    "  version = 1.0,",
+    "  enabled = true,",
+    "  features = { 'syntax', 'lsp', 'treesitter' }",
+    "}",
+    "",
+    "-- Functions and methods",
+    "local function setup_colorscheme(name, options)",
+    '  print("Setting up colorscheme: " .. name)',
+    "  if not options then error('Options are required!') end",
+    "  for k,v in pairs(options) do config[k]=v end",
+    "  return config",
+    "end",
+    "",
+    "-- Control flow",
+    "if config.enabled then",
+    "  local result = setup_colorscheme('test', {background='dark', transparency=false})",
+    "  while result.loading do vim.wait(100) end",
+    "else vim.notify('Colorscheme disabled', vim.log.levels.WARN) end",
+    "",
+    "-- Classes and types (simulated)",
+    "---@class ThemeConfig",
+    "---@field name string",
+    "---@field background 'light'|'dark'",
+    "local ThemeConfig={}",
+    "function ThemeConfig:new(name)",
+    "  local obj={name=name, background='dark'}",
+    "  setmetatable(obj,self)",
+    "  self.__index=self",
+    "  return obj",
+    "end",
+    "local ok,result=pcall(function() return ThemeConfig:new('example') end)",
+    "if not ok then vim.api.nvim_err_writeln('Failed to create theme: '..result) end",
+    "",
+    "-- String manipulation & regex",
+    "local message=[[This is a multi-line string\nwith various content types:\n- Numbers: 123,45.67,0xFF\n- Booleans: true,false\n- Special chars: @#$%^&*()[]{}]]",
+    "local pattern='%w+%.%w+'",
+    "local matches={}",
+    "for m in message:gmatch(pattern) do table.insert(matches,m) end",
+    "",
+    "-- Complex syntax",
+    "return setmetatable({",
+    "  get_theme=function() return config.theme end,",
+    "  set_theme=function(theme) config.theme=theme end,",
+    "  __call=function(_,...) return setup_colorscheme(...) end",
+    "},{__index=config,__newindex=function(t,k,v) rawset(config,k,v) end})"
+  }
 
-  if #themes == 0 then
-    notify("No themes available", log.levels.WARN)
-    return
-  end
-
-  local function restore_theme()
-    if original_theme then
-      theme_loader.load_theme(original_theme)
-    end
-  end
-
-  local preview_index = 1
-  local function preview_next()
-    if preview_index > #themes then
-      restore_theme()
-      notify("Preview complete", log.levels.INFO)
-      return
-    end
-
-    local theme = themes[preview_index]
-    notify( "Previewing: " .. theme .. " (" .. preview_index .. "/" .. #themes .. ")",
-      log.levels.INFO, { title = "Theme Preview" })
-
-    theme_loader.load_theme(theme, true)
-    preview_index = preview_index + 1
-    defer_fn(preview_next, delay)
-  end
-
-  preview_next()
+  return preview_state.sample_content
 end
 
-function M.preview_theme(theme_name, duration)
-  if not theme_name or not theme_loader.is_theme_available(theme_name) then
-    notify("Theme '" .. (theme_name or "nil") .. "' not available", log.levels.ERROR)
-    return
+-- Create a buffer + window helper
+local function create_preview_window(title, content)
+  local buf = api.nvim_create_buf(false, true)
+  api.nvim_buf_set_lines(buf, 0, -1, false, content)
+  local width = math.min(80, o.columns - 10)
+  local height = math.min(#content + 4, o.lines - 10)
+  local win = api.nvim_open_win(buf, false, {
+    relative = "editor",
+    width = width,
+    height = height,
+    row = math.floor((o.lines - height) / 2),
+    col = math.floor((o.columns - width) / 2),
+    style = "minimal",
+    border = "rounded",
+    title = " " .. title .. " ",
+    title_pos = "center"
+  })
+  api.nvim_buf_set_option(buf, "bufhidden", "wipe")
+  api.nvim_buf_set_option(buf, "buftype", "nofile")
+  api.nvim_buf_set_option(buf, "swapfile", false)
+  api.nvim_buf_set_option(buf, "modifiable", false)
+  api.nvim_buf_set_option(buf, "filetype", "lua")
+  return buf, win
+end
+
+-- Keymap helper for preview windows
+local function set_preview_keymaps(buf, close_fn, apply_fn)
+  local opts = { noremap = true, silent = true, buffer = buf }
+  map("n", "q", close_fn, opts)
+  map("n", "<Esc>", close_fn, opts)
+  if apply_fn then map("n", "<CR>", apply_fn, opts) end
+end
+
+-- Store original colorscheme if needed
+local function store_original()
+  if not preview_state.original_colorscheme then
+    preview_state.original_colorscheme = loader.get_current_colorscheme()
+  end
+end
+
+-- Close preview by ID
+function M.close_preview(preview_id)
+  local preview = preview_state.active_previews[preview_id]
+  if not preview then return end
+  if preview.win and api.nvim_win_is_valid(preview.win) then api.nvim_win_close(preview.win, true) end
+  preview_state.active_previews[preview_id] = nil
+
+  if tbl_isempty(preview_state.active_previews) and preview_state.original_colorscheme then
+    loader.apply_colorscheme(preview_state.original_colorscheme.name, preview_state.original_colorscheme.type)
+    preview_state.original_colorscheme = nil
+  end
+end
+
+-- Close all previews
+function M.close_all_previews()
+  for id, _ in pairs(preview_state.active_previews) do M.close_preview(id) end
+end
+
+-- Single colorscheme preview
+function M.preview_colorscheme(name, scheme_type, duration)
+  store_original()
+  local success = loader.apply_colorscheme(name, scheme_type)
+  if not success then
+    notify("Failed to preview colorscheme: " .. name, log.levels.ERROR)
+    return false
   end
 
-  duration = duration or 2000
-  local original_theme = theme_loader.get_current_theme()
+  local buf, win = create_preview_window("Preview: " .. colors_config.get_display_name(name, scheme_type),
+    get_sample_content())
+  local preview_id = name .. "_" .. scheme_type
+  preview_state.active_previews[preview_id] = { buf = buf, win = win, name = name, type = scheme_type }
 
-  theme_loader.load_theme(theme_name, true)
-  notify("Previewing: " .. theme_name, log.levels.INFO, { title = "Theme Preview" })
+  if duration and duration > 0 then
+    defer_fn(function() M.close_preview(preview_id) end, duration)
+  end
 
-  defer_fn(function()
-    if original_theme then
-      theme_loader.load_theme(original_theme)
-      notify("Restored: " .. original_theme, log.levels.INFO)
+  set_preview_keymaps(buf,
+    function() M.close_preview(preview_id) end,
+    function()
+      loader.apply_colorscheme(name, scheme_type)
+      M.close_all_previews()
+      notify("Applied colorscheme: " .. colors_config.get_display_name(name, scheme_type), log.levels.INFO)
     end
-  end, duration)
+  )
+
+  notify("Preview: " .. colors_config.get_display_name(name, scheme_type) .. " (q to close, Enter to apply)",
+    log.levels.INFO)
+  return true
+end
+
+-- Quick preview
+function M.quick_preview(name, scheme_type, timeout)
+  timeout = timeout or 2000
+  if preview_state.preview_timeout then fn.timer_stop(preview_state.preview_timeout) end
+  store_original()
+  if loader.apply_colorscheme(name, scheme_type) then
+    notify("Quick preview: " .. colors_config.get_display_name(name, scheme_type), log.levels.INFO)
+    preview_state.preview_timeout = defer_fn(function()
+      if preview_state.original_colorscheme then
+        loader.apply_colorscheme(preview_state.original_colorscheme.name, preview_state.original_colorscheme.type)
+        preview_state.original_colorscheme = nil
+      end
+      preview_state.preview_timeout = nil
+    end, timeout)
+    return true
+  end
+  return false
+end
+
+function M.cancel_quick_preview()
+  if preview_state.preview_timeout then
+    fn.timer_stop(preview_state.preview_timeout)
+    preview_state.preview_timeout = nil
+    preview_state.original_colorscheme = nil
+    notify("Quick preview cancelled", log.levels.INFO)
+  end
+end
+
+-- Get preview status
+function M.get_preview_status()
+  return {
+    active_previews = tbl_count(preview_state.active_previews),
+    original_colorscheme = preview_state.original_colorscheme,
+    has_quick_preview = preview_state.preview_timeout ~= nil
+  }
+end
+
+-- Slideshow preview
+function M.slideshow_preview(colorschemes, interval, loop)
+  interval = interval or 3000
+  loop = loop ~= false
+  colorschemes = (colorschemes and #colorschemes > 0) and colorschemes or colors_config.get_all_colorschemes()
+  store_original()
+
+  local index = 1
+  local timer = nil
+
+  local function next_slide()
+    if index <= #colorschemes then
+      local cs = colorschemes[index]
+      loader.apply_colorscheme(cs.name, cs.type)
+      notify("Slideshow: " .. colors_config.get_display_name(cs.name, cs.type) .. " (" .. index ..
+      "/" .. #colorschemes .. ")", log.levels.INFO)
+      index = index + 1
+      if index > #colorschemes and loop then index = 1 end
+      if index <= #colorschemes or loop then
+        timer = defer_fn(next_slide, interval)
+      else
+        notify("Slideshow completed", log.levels.INFO)
+        if preview_state.original_colorscheme then
+          defer_fn(function()
+            loader.apply_colorscheme(preview_state.original_colorscheme.name, preview_state.original_colorscheme.type)
+            preview_state.original_colorscheme = nil
+          end, 1000)
+        end
+      end
+    end
+  end
+
+  notify("Starting slideshow with " .. #colorschemes .. " colorschemes", log.levels.INFO)
+  next_slide()
+
+  return function()
+    if timer then fn.timer_stop(timer) end
+    if preview_state.original_colorscheme then
+      loader.apply_colorscheme(preview_state.original_colorscheme.name, preview_state.original_colorscheme.type)
+      preview_state.original_colorscheme = nil
+    end
+    notify("Slideshow stopped", log.levels.INFO)
+  end
 end
 
 return M

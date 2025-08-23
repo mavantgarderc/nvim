@@ -1,0 +1,363 @@
+local tbl_contains = vim.tbl_contains
+
+local M = {}
+
+local function trim(str)
+  return str:match("^%s*(.-)%s*$")
+end
+
+local function parse_value(value)
+  value = trim(value)
+
+  if value:match('^".*"$') or value:match("^'.*'$") then
+    return value:sub(2, -2)
+  end
+
+  if value:match("^#%x%x%x%x%x%x$") or value:match("^#%x%x%x$") then
+    return value
+  end
+
+  if value:lower() == "true" then
+    return true
+  elseif value:lower() == "false" then
+    return false
+  end
+
+  local num = tonumber(value)
+  if num then
+    return num
+  end
+
+  if value:match("^%[.*%]$") then
+    local array = {}
+    local content = value:sub(2, -2)
+    for item in content:gmatch("[^,]+") do
+      table.insert(array, parse_value(item))
+    end
+    return array
+  end
+
+  return value
+end
+
+local function parse_section(lines, start_idx)
+  local section = {}
+  local current_table = section
+  local i = start_idx
+
+  while i <= #lines do
+    local line = trim(lines[i])
+
+    if line == "" or line:match("^#") then
+      i = i + 1
+      goto continue
+    end
+
+    if line:match("^%[") then
+      if i > start_idx then
+        break
+      end
+    end
+
+    local key, value = line:match("^([^=]+)=(.+)$")
+    if key and value then
+      key = trim(key)
+      value = trim(value)
+
+      if key:match("%.") then
+        local parts = {}
+        for part in key:gmatch("[^%.]+") do
+          table.insert(parts, trim(part))
+        end
+
+        local current = current_table
+        for j = 1, #parts - 1 do
+          if not current[parts[j]] then
+            current[parts[j]] = {}
+          end
+          current = current[parts[j]]
+        end
+        current[parts[#parts]] = parse_value(value)
+      else
+        current_table[key] = parse_value(value)
+      end
+    end
+
+    i = i + 1
+    ::continue::
+  end
+
+  return section, i
+end
+
+function M.parse(content)
+  local result = {}
+  local lines = {}
+
+  for line in content:gmatch("[^\r\n]+") do
+    table.insert(lines, line)
+  end
+
+  local i = 1
+  local current_section = "root"
+  result[current_section] = {}
+
+  while i <= #lines do
+    local line = trim(lines[i])
+
+    if line == "" or line:match("^#") then
+      i = i + 1
+      goto continue
+    end
+
+    local section_name = line:match("^%[(.-)%]$")
+    if section_name then
+      current_section = section_name
+      result[current_section] = {}
+      i = i + 1
+      goto continue
+    end
+
+    local section_data, next_i = parse_section(lines, i)
+    for k, v in pairs(section_data) do
+      result[current_section][k] = v
+    end
+    i = next_i
+
+    ::continue::
+  end
+
+  return result
+end
+
+function M.load_file(filepath)
+  local file = io.open(filepath, "r")
+  if not file then
+    return nil, "Could not open file: " .. filepath
+  end
+
+  local content = file:read("*a")
+  file:close()
+
+  local success, result = pcall(M.parse, content)
+  if not success then
+    return nil, "Parse error: " .. result
+  end
+
+  return result
+end
+
+function M.validate_colorscheme(data)
+  local required_sections = { "metadata", "colors", "highlights" }
+
+  for _, section in ipairs(required_sections) do
+    if not data[section] then
+      return false, "Missing required section: " .. section
+    end
+  end
+
+  if not data.metadata.name then
+    return false, "Missing colorscheme name in metadata"
+  end
+
+  local color_count = 0
+  for _ in pairs(data.colors) do
+    color_count = color_count + 1
+  end
+
+  if color_count == 0 then
+    return false, "No colors defined in colors section"
+  end
+
+  for hl_name, hl_def in pairs(data.highlights) do
+    if type(hl_def) == "table" then
+      for attr, value in pairs(hl_def) do
+        if attr == "fg" or attr == "bg" or attr == "sp" then
+          if type(value) == "string" then
+            if not (value:match("^#%x%x%x%x%x%x$") or value:match("^#%x%x%x$")) then
+              if not data.colors[value] then
+                return false, "Highlight '" .. hl_name .. "." .. attr .. "' references undefined color: " .. value
+              end
+            end
+          end
+        end
+      end
+    end
+  end
+
+  return true
+end
+
+function M.normalize_colorscheme(data)
+  local normalized = {
+    metadata = data.metadata or {},
+    colors = data.colors or {},
+    highlights = data.highlights or {},
+    raw = data
+  }
+
+  normalized.metadata.name = normalized.metadata.name or "untitled"
+  normalized.metadata.display_name = normalized.metadata.display_name or normalized.metadata.name
+  normalized.metadata.background = normalized.metadata.background or "dark"
+  normalized.metadata.version = normalized.metadata.version or "1.0.0"
+
+  return normalized
+end
+
+function M.generate_template(name, base_colors)
+  base_colors = base_colors or {
+    bg = "#1a1a1a",
+    fg = "#ffffff",
+    red = "#ff6b6b",
+    green = "#51cf66",
+    blue = "#339af0",
+    yellow = "#ffd43b",
+    purple = "#b197fc",
+    cyan = "#22d3ee"
+  }
+
+  local template = string.format([[# %s - Custom TOML Colorscheme
+# Generated by Raphael Theme System
+
+[metadata]
+name = "%s"
+display_name = "%s"
+author = "Your Name"
+version = "1.0.0"
+description = "A custom colorscheme"
+background = "dark"
+
+[colors]
+# Base colors
+bg = "%s"
+bg_alt = "%s"
+fg = "%s"
+fg_alt = "%s"
+
+# Accent colors
+red = "%s"
+green = "%s"
+blue = "%s"
+yellow = "%s"
+purple = "%s"
+cyan = "%s"
+
+# UI colors
+comment = "#808080"
+selection = "#404040"
+cursor_line = "#2a2a2a"
+
+[highlights]
+# Basic editor highlights
+Normal = { fg = "fg", bg = "bg" }
+Comment = { fg = "comment", italic = true }
+String = { fg = "green" }
+Function = { fg = "blue" }
+Keyword = { fg = "purple" }
+Type = { fg = "yellow" }
+Constant = { fg = "red" }
+Operator = { fg = "cyan" }
+CursorLine = { bg = "cursor_line" }
+Visual = { bg = "selection" }
+]],
+    name:gsub("_", " "):gsub("^%l", string.upper),
+    name,
+    name:gsub("_", " "):gsub("^%l", string.upper),
+    base_colors.bg,
+    base_colors.bg,
+    base_colors.fg,
+    base_colors.fg,
+    base_colors.red,
+    base_colors.green,
+    base_colors.blue,
+    base_colors.yellow,
+    base_colors.purple,
+    base_colors.cyan
+  )
+
+  return template
+end
+
+function M.export(data)
+  local lines = {}
+
+  local function export_value(value)
+    if type(value) == "string" then
+      if value:match("^#%x+$") then
+        return '"' .. value .. '"'
+      else
+        return '"' .. value .. '"'
+      end
+    elseif type(value) == "boolean" then
+      return value and "true" or "false"
+    elseif type(value) == "number" then
+      return tostring(value)
+    elseif type(value) == "table" then
+      local array_parts = {}
+      for _, item in ipairs(value) do
+        table.insert(array_parts, export_value(item))
+      end
+      return "[" .. table.concat(array_parts, ", ") .. "]"
+    end
+    return '""'
+  end
+
+  local function export_table(tbl, section_name)
+    if section_name then
+      table.insert(lines, "[" .. section_name .. "]")
+    end
+
+    local keys = {}
+    for k in pairs(tbl) do
+      table.insert(keys, k)
+    end
+    table.sort(keys)
+
+    for _, key in ipairs(keys) do
+      local value = tbl[key]
+      if type(value) == "table" and not value[1] then
+        local inline_parts = {}
+        for nested_key, nested_value in pairs(value) do
+          table.insert(inline_parts, nested_key .. " = " .. export_value(nested_value))
+        end
+        table.insert(lines, key .. " = { " .. table.concat(inline_parts, ", ") .. " }")
+      else
+        table.insert(lines, key .. " = " .. export_value(value))
+      end
+    end
+
+    table.insert(lines, "")
+  end
+
+  local section_order = { "metadata", "colors", "highlights" }
+
+  for _, section in ipairs(section_order) do
+    if data[section] then
+      export_table(data[section], section)
+    end
+  end
+
+  for section_name, section_data in pairs(data) do
+    if not tbl_contains(section_order, section_name) and section_name ~= "root" then
+      export_table(section_data, section_name)
+    end
+  end
+
+  return table.concat(lines, "\n")
+end
+
+function M.save_file(filepath, data)
+  local content = M.export(data)
+
+  local file = io.open(filepath, "w")
+  if not file then
+    return false, "Could not open file for writing: " .. filepath
+  end
+
+  file:write(content)
+  file:close()
+
+  return true
+end
+
+return M

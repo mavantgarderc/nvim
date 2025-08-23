@@ -1,3 +1,7 @@
+-- File: Raphael/colors.lua
+-- ONLY THEMES MAPPING & NOTHING MORE LOGICAL
+-- JUST ACTS AS A REFERENCE FOR THEME APPLIANCE
+
 local M = {}
 
 M.theme_map = {
@@ -77,7 +81,7 @@ M.theme_map = {
 
   kanagawa    = {
     "base16-kanagawa",
-    "base16-kanagawa-wave", -- sql
+    -- "base16-kanagawa-wave", -- sql
     "kanagawa-dragon",
     "kanagawa-paper-ink",   -- nvim section
   },
@@ -88,6 +92,11 @@ M.theme_map = {
     "base16-gruvbox-dark-pale",
     "base16-gruvbox-material-dark-hard",
   },
+}
+
+M.toml_map = {
+    "kanagawa_paper_ink",
+    "midnight_ocean",
 }
 
 M.filetype_themes = {
@@ -121,8 +130,8 @@ M.filetype_themes = {
 
   solidity   = "base16-darkmoss",
 
-  sql        = "kanagawa-wave",
-  sqls       = "kanagawa-wave",
+  sql        = "kanagawa-dragon",
+  sqls       = "kanagawa-dragon",
 
   html       = "tokyonight",
   css        = "tokyonight",
@@ -131,5 +140,22 @@ M.filetype_themes = {
   json       = "base16-rose-pine",
   jsonc      = "base16-rose-pine",
 }
+
+function M.get_all_colorschemes_grouped()
+  local grouped = {}
+  for cat, names in pairs(M.theme_map) do
+    local entry = { category = cat, themes = {} }
+    for _, name in ipairs(names) do
+      table.insert(entry.themes, { name = name, type = "builtin" })
+    end
+    table.insert(grouped, entry)
+  end
+
+  for _, name in ipairs(M.toml_map or {}) do
+    table.insert(grouped, { category = "TOML", themes = { { name = name, type = "toml" } } })
+  end
+
+  return grouped
+end
 
 return M

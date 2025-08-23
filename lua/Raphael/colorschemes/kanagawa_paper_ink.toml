@@ -1,0 +1,374 @@
+# Kanagawa Paper Ink - A muted dark colorscheme
+# Based on thesimonho/kanagawa-paper.nvim
+# Muted dark variant inspired by Japanese woodblock prints and sumi ink
+
+[metadata]
+name = "kanagawa_paper_ink"
+display_name = "Kanagawa Paper Ink"
+author = "thesimonho"
+version = "2.0.0"
+description = "Muted dark Kanagawa colorscheme inspired by Japanese woodblock prints and sumi ink"
+background = "dark"
+
+[colors]
+# Base colors - Core backgrounds and foregrounds
+bg = "#181820"
+bg_alt = "#16161D"
+bg_highlight = "#1F1F28"
+bg_dim = "#16161D"
+bg_light = "#1F1F28"
+fg = "#DCD7BA"
+fg_alt = "#C8C093"
+fg_dim = "#C8C093"
+fg_dark = "#A6A69C"
+
+# Sumi ink colors (darker blacks and grays)
+sumi_ink_0 = "#16161D"
+sumi_ink_1 = "#1F1F28"
+sumi_ink_2 = "#2A2A37"
+sumi_ink_3 = "#363646"
+sumi_ink_4 = "#54546D"
+
+# Fuji (mountain) colors
+fuji_white = "#DCD7BA"
+fuji_gray = "#727169"
+
+# Wave colors (muted blues)
+wave_blue_1 = "#223249"
+wave_blue_2 = "#2D4F67"
+wave_aqua_1 = "#6A9589"
+wave_aqua_2 = "#7AA89F"
+
+# Lotus colors (muted pastels)
+lotus_white = "#F2ECBC"
+lotus_white_0 = "#E9E7D2"
+lotus_white_1 = "#DCD7BA"
+lotus_white_2 = "#C8C093"
+lotus_white_3 = "#A6A69C"
+
+# Autumn colors (muted earth tones)
+autumn_green = "#76946A"
+autumn_red = "#C34043"
+autumn_yellow = "#DCA561"
+
+# Dragon colors (muted vibrant accents)
+dragon_blue = "#8BA4B0"
+dragon_orange = "#E98A00"
+dragon_orange_2 = "#E6C384"
+
+# Spring colors (muted nature tones)
+spring_green = "#98BB6C"
+spring_violet_1 = "#938AA9"
+spring_violet_2 = "#9CABCA"
+spring_blue = "#7E9CD8"
+
+# Boat colors (muted traditional tones)
+boat_yellow_1 = "#938056"
+boat_yellow_2 = "#C0A36E"
+
+# Carp colors (muted accent colors)
+carp_yellow = "#E6C384"
+carp_yellow_2 = "#DCA561"
+
+# Rope colors (muted warm tones)
+rope_orange = "#FFA066"
+
+# Tea colors (muted greens)
+tea_green = "#7AA89F"
+
+# Paper-inspired neutral tones
+black = "#090618"
+dark_gray = "#2A2A37"
+gray = "#54546D"
+light_gray = "#727169"
+white = "#DCD7BA"
+
+# Semantic color mappings
+blue = "#7E9CD8"
+cyan = "#7AA89F"
+green = "#98BB6C"
+yellow = "#E6C384"
+orange = "#FFA066"
+red = "#E82424"
+purple = "#938AA9"
+magenta = "#9CABCA"
+
+# UI colors
+border = "#54546D"
+selection = "#2D4F67"
+comment = "#727169"
+line_number = "#54546D"
+cursor_line = "#2A2A37"
+cursor_column = "#2A2A37"
+visual = "#2D4F67"
+visual_nc = "#223249"
+search = "#C34043"
+inc_search = "#E82424"
+match_paren = "#DCA561"
+cursor_line_nr = "#C8C093"
+folded = "#54546D"
+fold_column = "#54546D"
+
+# Completion menu
+pmenu = "#1F1F28"
+pmenu_sel = "#2D4F67"
+pmenu_sb = "#16161D"
+pmenu_thumb = "#54546D"
+
+# Statusline
+status_line = "#1F1F28"
+status_line_nc = "#16161D"
+
+# Tabline
+tab_line = "#16161D"
+tab_line_fill = "#090618"
+tab_line_sel = "#1F1F28"
+
+# Vertical split
+vert_split = "#54546D"
+
+# Diff colors
+diff_add = "#76946A"
+diff_delete = "#C34043"
+diff_change = "#E6C384"
+diff_text = "#DCA561"
+
+# Git colors
+git_add = "#76946A"
+git_change = "#E6C384"
+git_delete = "#E82424"
+
+# Diagnostic colors
+error = "#E82424"
+warning = "#E98A00"
+info = "#7AA89F"
+hint = "#9CABCA"
+
+# Terminal colors (ANSI)
+terminal_black = "#090618"
+terminal_red = "#C34043"
+terminal_green = "#76946A"
+terminal_yellow = "#C0A36E"
+terminal_blue = "#7E9CD8"
+terminal_magenta = "#938AA9"
+terminal_cyan = "#7AA89F"
+terminal_white = "#DCD7BA"
+terminal_bright_black = "#54546D"
+terminal_bright_red = "#E82424"
+terminal_bright_green = "#98BB6C"
+terminal_bright_yellow = "#E6C384"
+terminal_bright_blue = "#7FB4CA"
+terminal_bright_magenta = "#9CABCA"
+terminal_bright_cyan = "#7AA89F"
+terminal_bright_white = "#C8C093"
+
+[highlights]
+# Editor highlights
+Normal = { fg = "fg", bg = "bg" }
+NormalFloat = { fg = "fg", bg = "bg_alt" }
+CursorLine = { bg = "cursor_line" }
+CursorColumn = { bg = "cursor_column" }
+ColorColumn = { bg = "bg_highlight" }
+LineNr = { fg = "line_number" }
+CursorLineNr = { fg = "cursor_line_nr", bold = true }
+SignColumn = { bg = "bg" }
+Folded = { fg = "folded", bg = "bg_highlight" }
+FoldColumn = { fg = "fold_column", bg = "bg" }
+Visual = { bg = "visual" }
+VisualNOS = { bg = "visual_nc" }
+Search = { fg = "bg", bg = "search" }
+IncSearch = { fg = "bg", bg = "inc_search" }
+VertSplit = { fg = "vert_split" }
+WinSeparator = { fg = "border" }
+StatusLine = { fg = "fg", bg = "status_line" }
+StatusLineNC = { fg = "fg_alt", bg = "status_line_nc" }
+Pmenu = { fg = "fg", bg = "pmenu" }
+PmenuSel = { fg = "bg", bg = "pmenu_sel" }
+PmenuSbar = { bg = "pmenu_sb" }
+PmenuThumb = { bg = "pmenu_thumb" }
+TabLine = { fg = "fg_alt", bg = "tab_line" }
+TabLineFill = { bg = "tab_line_fill" }
+TabLineSel = { fg = "fg", bg = "tab_line_sel" }
+
+# Syntax highlights - Traditional vim groups
+Comment = { fg = "comment", italic = true }
+Constant = { fg = "rope_orange" }
+String = { fg = "spring_green" }
+Character = { fg = "carp_yellow" }
+Number = { fg = "carp_yellow_2" }
+Boolean = { fg = "dragon_orange_2" }
+Float = { fg = "carp_yellow_2" }
+Identifier = { fg = "fg" }
+Function = { fg = "tea_green" }
+Statement = { fg = "spring_violet_1" }
+Conditional = { fg = "boat_yellow_2" }
+Repeat = { fg = "spring_violet_1" }
+Label = { fg = "boat_yellow_2" }
+Operator = { fg = "fg" }
+Keyword = { fg = "spring_violet_1" }
+Exception = { fg = "error" }
+PreProc = { fg = "spring_violet_1" }
+Include = { fg = "spring_violet_1" }
+Define = { fg = "spring_violet_1" }
+Macro = { fg = "spring_violet_1" }
+PreCondit = { fg = "spring_violet_1" }
+Type = { fg = "tea_green" }
+StorageClass = { fg = "tea_green" }
+Structure = { fg = "tea_green" }
+Typedef = { fg = "tea_green" }
+Special = { fg = "rope_orange" }
+SpecialChar = { fg = "dragon_orange_2" }
+Tag = { fg = "boat_yellow_2" }
+Delimiter = { fg = "spring_violet_2" }
+SpecialComment = { fg = "autumn_red" }
+Debug = { fg = "error" }
+Underlined = { fg = "blue", underline = true }
+Ignore = { fg = "comment" }
+Error = { fg = "error", bold = true }
+Todo = { fg = "yellow", bg = "bg_highlight", bold = true }
+
+# Modern Tree-sitter highlights (TS* groups)
+TSVariable = { fg = "fg" }
+TSVariableBuiltin = { fg = "dragon_orange_2" }
+TSParameter = { fg = "fg_alt" }
+TSField = { fg = "tea_green" }
+TSProperty = { fg = "tea_green" }
+TSConstant = { fg = "rope_orange" }
+TSConstBuiltin = { fg = "dragon_orange_2" }
+TSConstMacro = { fg = "rope_orange" }
+TSNamespace = { fg = "tea_green" }
+TSString = { fg = "spring_green" }
+TSStringEscape = { fg = "dragon_orange_2" }
+TSStringSpecial = { fg = "dragon_orange_2" }
+TSCharacter = { fg = "carp_yellow" }
+TSCharacterSpecial = { fg = "dragon_orange_2" }
+TSNumber = { fg = "carp_yellow_2" }
+TSBoolean = { fg = "dragon_orange_2" }
+TSFloat = { fg = "carp_yellow_2" }
+TSFunction = { fg = "tea_green" }
+TSFuncBuiltin = { fg = "wave_aqua_2" }
+TSFuncCall = { fg = "tea_green" }
+TSFuncMacro = { fg = "rope_orange" }
+TSMethod = { fg = "tea_green" }
+TSMethodCall = { fg = "tea_green" }
+TSConstructor = { fg = "tea_green" }
+TSOperator = { fg = "fg" }
+TSKeyword = { fg = "spring_violet_1" }
+TSKeywordFunction = { fg = "spring_violet_1" }
+TSKeywordOperator = { fg = "spring_violet_1" }
+TSKeywordReturn = { fg = "spring_violet_1" }
+TSConditional = { fg = "boat_yellow_2" }
+TSRepeat = { fg = "spring_violet_1" }
+TSException = { fg = "error" }
+TSType = { fg = "tea_green" }
+TSTypeBuiltin = { fg = "tea_green" }
+TSTypeDefinition = { fg = "tea_green" }
+TSAttribute = { fg = "rope_orange" }
+TSLabel = { fg = "boat_yellow_2" }
+TSComment = { fg = "comment", italic = true }
+TSPunctDelimiter = { fg = "fg" }
+TSPunctBracket = { fg = "fg" }
+TSPunctSpecial = { fg = "dragon_orange_2" }
+TSTag = { fg = "boat_yellow_2" }
+TSTagAttribute = { fg = "rope_orange" }
+TSTagDelimiter = { fg = "fg" }
+
+# LSP highlights
+LspReferenceText = { bg = "bg_highlight" }
+LspReferenceRead = { bg = "bg_highlight" }
+LspReferenceWrite = { bg = "bg_highlight" }
+LspSignatureActiveParameter = { fg = "yellow", bold = true }
+
+# Diagnostic highlights
+DiagnosticError = { fg = "error" }
+DiagnosticWarn = { fg = "warning" }
+DiagnosticInfo = { fg = "info" }
+DiagnosticHint = { fg = "hint" }
+DiagnosticUnderlineError = { undercurl = true, sp = "error" }
+DiagnosticUnderlineWarn = { undercurl = true, sp = "warning" }
+DiagnosticUnderlineInfo = { undercurl = true, sp = "info" }
+DiagnosticUnderlineHint = { undercurl = true, sp = "hint" }
+DiagnosticVirtualTextError = { fg = "error", bg = "bg_highlight" }
+DiagnosticVirtualTextWarn = { fg = "warning", bg = "bg_highlight" }
+DiagnosticVirtualTextInfo = { fg = "info", bg = "bg_highlight" }
+DiagnosticVirtualTextHint = { fg = "hint", bg = "bg_highlight" }
+
+# Git highlights
+DiffAdd = { fg = "diff_add", bg = "bg" }
+DiffChange = { fg = "diff_change", bg = "bg" }
+DiffDelete = { fg = "diff_delete", bg = "bg" }
+DiffText = { fg = "diff_text", bg = "bg_highlight" }
+GitSignsAdd = { fg = "git_add" }
+GitSignsChange = { fg = "git_change" }
+GitSignsDelete = { fg = "git_delete" }
+GitSignsCurrentLineBlame = { fg = "comment", italic = true }
+
+# Plugin-specific highlights
+# Telescope
+TelescopeBorder = { fg = "border" }
+TelescopePromptBorder = { fg = "border" }
+TelescopeResultsBorder = { fg = "border" }
+TelescopePreviewBorder = { fg = "border" }
+TelescopeSelection = { bg = "selection" }
+TelescopePromptPrefix = { fg = "blue" }
+TelescopeMatching = { fg = "yellow", bold = true }
+
+# Neo-tree
+NeoTreeDirectoryIcon = { fg = "blue" }
+NeoTreeDirectoryName = { fg = "blue" }
+NeoTreeFileName = { fg = "fg" }
+NeoTreeFileIcon = { fg = "fg_alt" }
+NeoTreeRootName = { fg = "purple", bold = true }
+NeoTreeModified = { fg = "orange" }
+NeoTreeGitAdded = { fg = "git_add" }
+NeoTreeGitDeleted = { fg = "git_delete" }
+NeoTreeGitModified = { fg = "git_change" }
+
+# Which-key
+WhichKeyFloat = { bg = "bg_alt" }
+WhichKeyBorder = { fg = "border" }
+WhichKey = { fg = "blue" }
+WhichKeyGroup = { fg = "purple" }
+WhichKeyDesc = { fg = "fg" }
+WhichKeySeparator = { fg = "comment" }
+
+# Notify
+NotifyERRORBorder = { fg = "error" }
+NotifyWARNBorder = { fg = "warning" }
+NotifyINFOBorder = { fg = "info" }
+NotifyDEBUGBorder = { fg = "comment" }
+NotifyTRACEBorder = { fg = "hint" }
+NotifyERRORIcon = { fg = "error" }
+NotifyWARNIcon = { fg = "warning" }
+NotifyINFOIcon = { fg = "info" }
+NotifyDEBUGIcon = { fg = "comment" }
+NotifyTRACEIcon = { fg = "hint" }
+
+# Nvim-cmp
+CmpItemAbbr = { fg = "fg" }
+CmpItemAbbrDeprecated = { fg = "comment", strikethrough = true }
+CmpItemAbbrMatch = { fg = "blue", bold = true }
+CmpItemAbbrMatchFuzzy = { fg = "blue", bold = true }
+CmpItemKind = { fg = "purple" }
+CmpItemMenu = { fg = "comment" }
+
+# Dashboard
+DashboardShortCut = { fg = "blue" }
+DashboardHeader = { fg = "purple" }
+DashboardCenter = { fg = "green" }
+DashboardFooter = { fg = "comment", italic = true }
+
+# Indent Blankline
+IndentBlanklineChar = { fg = "sumi_ink_3" }
+IndentBlanklineContextChar = { fg = "sumi_ink_4" }
+IndentBlanklineSpaceChar = { fg = "sumi_ink_3" }
+IndentBlanklineSpaceCharBlankline = { fg = "sumi_ink_2" }
+
+# Rainbow delimiters
+RainbowDelimiterRed = { fg = "autumn_red" }
+RainbowDelimiterYellow = { fg = "carp_yellow" }
+RainbowDelimiterBlue = { fg = "spring_blue" }
+RainbowDelimiterOrange = { fg = "rope_orange" }
+RainbowDelimiterGreen = { fg = "spring_green" }
+RainbowDelimiterViolet = { fg = "spring_violet_1" }
+RainbowDelimiterCyan = { fg = "tea_green" }
