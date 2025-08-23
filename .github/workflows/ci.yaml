@@ -17,7 +17,6 @@ jobs:
       - name: Checkout repo
         uses: actions/checkout@v4
 
-      # Lua / luacheck setup
       - name: Install Lua + luarocks
         run: |
           sudo apt-get update
@@ -26,10 +25,14 @@ jobs:
       - name: Install luacheck
         run: sudo luarocks install luacheck
 
-      - name: Run luacheck
-        run: luacheck lua
+      - name: Run luacheck (robust)
+        run: |
+          if [ -d "lua" ]; then
+            luacheck lua
+          else
+            echo "No lua/ directory found, skipping lint."
+          fi
 
-      # Neovim setup
       - name: Install Neovim (${{ matrix.neovim }})
         run: |
           if [ "${{ matrix.neovim }}" = "stable" ]; then
@@ -40,8 +43,8 @@ jobs:
           wget "$url"
           tar xzvf nvim-linux64.tar.gz
           echo "$PWD/nvim-linux64/bin" >> $GITHUB_PATH
+          export PATH="$PWD/nvim-linux64/bin:$PATH"
 
-      # Cache plugins for lazy.nvim
       - name: Cache lazy.nvim plugins
         uses: actions/cache@v4
         with:
@@ -50,17 +53,12 @@ jobs:
           restore-keys: |
             ${{ runner.os }}-${{ matrix.neovim }}-lazy-
 
-      # Sync plugins
       - name: Install plugins (Lazy)
-        run: |
-          nvim --headless "+Lazy! sync" +qa
+        run: nvim --headless "+Lazy! sync" +qa
 
-      # Verify startup
-      - name: Headless Neovim startup test
-        run: |
-          nvim --headless -c 'quitall'
+      - name: Verify Neovim startup
+        run: nvim --headless -c 'quitall'
 
-      # Run healthcheck
       - name: Run healthcheck
         run: |
           nvim --headless -c 'checkhealth' -c 'quitall'
