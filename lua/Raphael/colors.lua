@@ -83,7 +83,7 @@ M.theme_map = {
     "base16-kanagawa",
     -- "base16-kanagawa-wave", -- sql
     "kanagawa-dragon",
-    "kanagawa-paper-ink",   -- nvim section
+    "kanagawa-paper-ink", -- nvim section
   },
 
   gruvbox     = { -- dotnet
@@ -95,8 +95,12 @@ M.theme_map = {
 }
 
 M.toml_map = {
+  main_tomls = {
     "kanagawa_paper_ink",
+  },
+  others_tomls = {
     "midnight_ocean",
+  },
 }
 
 M.filetype_themes = {
@@ -151,8 +155,12 @@ function M.get_all_colorschemes_grouped()
     table.insert(grouped, entry)
   end
 
-  for _, name in ipairs(M.toml_map or {}) do
-    table.insert(grouped, { category = "TOML", themes = { { name = name, type = "toml" } } })
+    for cat, names in pairs(M.toml_map) do
+    local entry = { category = cat, themes = {} }
+    for _, name in ipairs(names) do
+      table.insert(entry.themes, { name = name, type = "toml" })
+    end
+    table.insert(grouped, entry)
   end
 
   return grouped
