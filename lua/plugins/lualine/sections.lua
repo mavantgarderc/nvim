@@ -34,7 +34,10 @@ M.inactive_sections = {
 
 M.tabline = {
   lualine_a = { "tabs" },
-  lualine_b = { utils.get_cwd },
+  lualine_b = {
+    -- utils.get_cwd
+    components.project
+  },
   lualine_c = { "filename" },
   lualine_x = {},
   lualine_y = {
