@@ -12,7 +12,7 @@ local colors = require("Raphael.colors")
 
 local M = {}
 
--- ===== State =====
+-- State
 local state = {
   categories = {},
   win = nil,
@@ -23,7 +23,7 @@ local state = {
   line_map = {},
 }
 
--- ===== Helpers =====
+-- Helpers
 local function fuzzy_match(str, query)
   str, query = str:lower(), query:lower()
   local i = 1
@@ -39,7 +39,7 @@ local function flatten_categories()
   local lines = {}
   local line_map = {}
   for _, cat in ipairs(state.categories) do
-    table.insert(lines, (cat.collapsed and "[+] " or "[-] ") .. cat.category)
+    table.insert(lines, (cat.collapsed and "[  ] " or "[  ] ") .. cat.category)
     table.insert(line_map, { category = cat })
     if not cat.collapsed then
       for _, cs in ipairs(cat.themes) do
@@ -62,7 +62,7 @@ local function render()
   api.nvim_set_option_value("modifiable", false, { buf = state.buf })
 end
 
--- ===== Picker Creation =====
+-- Picker Creation
 local function create_input_prompt()
   state.prompt_buf = api.nvim_create_buf(false, true)
   local width = math.floor(o.columns * 0.5)
@@ -122,7 +122,7 @@ local function create_list_window()
   })
 end
 
--- ===== Event Handlers =====
+-- Event Handlers
 function M.on_prompt_changed()
   local ok, line = pcall(api.nvim_get_current_line)
   if not ok or not line then return end
@@ -158,7 +158,7 @@ local function accept_selection()
   end
 end
 
--- ===== Public =====
+-- Public
 function M.open_picker()
   state.categories = colors.get_all_colorschemes_grouped()
   for _, cat in ipairs(state.categories) do cat.collapsed = false end
