@@ -15,6 +15,7 @@ M.sections = {
   },
   lualine_x = {
     components.diff,
+    components.deps,
     components.ahead_behind,
     components.last_commit,
     components.filetype
