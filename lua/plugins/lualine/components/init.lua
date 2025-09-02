@@ -15,5 +15,6 @@ M.toggle_filetype_text = require("plugins.lualine.components.filetype").toggle_f
 M.lsp = require("plugins.lualine.components.lsp")
 M.build_status = require("plugins.lualine.components.build_status")
 M.ci = require("plugins.lualine.components.ci")
+M.coverage = require("plugins.lualine.components.coverage")
 
 return M

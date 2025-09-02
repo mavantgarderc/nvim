@@ -11,6 +11,7 @@ M.sections = {
   lualine_c = {
     { utils.get_navic_breadcrumbs, cond = utils.has_navic },
     { utils.get_current_symbol,    cond = utils.has_symbol },
+    components.coverage,
   },
   lualine_x = {
     components.diff,
