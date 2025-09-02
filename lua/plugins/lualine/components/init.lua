@@ -16,5 +16,6 @@ M.lsp = require("plugins.lualine.components.lsp")
 M.build_status = require("plugins.lualine.components.build_status")
 M.ci = require("plugins.lualine.components.ci")
 M.coverage = require("plugins.lualine.components.coverage")
+M.container = require("plugins.lualine.components.container")
 
 return M
