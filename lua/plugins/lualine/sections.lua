@@ -15,7 +15,7 @@ M.sections = {
   },
   lualine_x = {
     components.diff,
-    components.deps,
+    -- components.deps,
     components.ahead_behind,
     components.last_commit,
     components.filetype
@@ -29,7 +29,7 @@ M.inactive_sections = {
   lualine_b = {},
   lualine_c = { "filename" },
   lualine_x = { "location" },
-  lualine_y = { components.build_status },
+  lualine_y = {},
   lualine_z = { components.progress },
 }
 
@@ -48,7 +48,6 @@ M.tabline = {
     { utils.get_test_status,     cond = utils.has_test_running },
     { utils.get_debug_status,    cond = utils.has_debug_session },
     { utils.get_database_status, cond = utils.is_sql_file },
-    components.container,
     utils.get_file_info,
     components.ci,
   },

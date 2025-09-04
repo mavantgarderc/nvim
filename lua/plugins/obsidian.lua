@@ -10,7 +10,7 @@ return {
     workspaces = {
       {
         name = "Vanaheim",
-        path = "/home/mava/media/data/Obsidian/Vanaheim",
+        path = "home/mava/projects/0-shelfs/obsdn/Vanaheim",
       },
     },
     notes_subdir = "z-Inbox",
