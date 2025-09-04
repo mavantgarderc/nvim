@@ -6,6 +6,9 @@ local env = vim.env
 local schedule = vim.schedule
 local map = vim.keymap
 local opt_local = vim.opt_local
+local wo = vim.wo
+local api = vim.api
+local w = vim.w
 
 map.set("n", "<leader>J", "<Nop>")
 map.set("n", "gc", "<Nop>")
@@ -22,6 +25,7 @@ g.loaded_node_provider = 0
 g.loaded_python3_provider = 0
 g.loaded_perl_provider = 0
 g.loaded_ruby_provider = 0
+g.markdown_recommended_style = 0
 
 -- add binaries installed by mason.nvim to path
 local mason_bin = fn.stdpath("data") .. "/mason/bin"
@@ -37,6 +41,32 @@ opt_local.wrap = true         -- wrap lines visually
 opt_local.linebreak = true    -- wrap at word boundaries
 opt_local.textwidth = 130     -- recommended column width
 opt_local.colorcolumn = "130" -- visual guide
+local grp = api.nvim_create_augroup("GlobalWrap", { clear = true })
+api.nvim_create_autocmd({ "BufWinEnter", "WinNew" }, {
+  group = grp,
+  callback = function()
+    if w.__wrap_user_disabled then return end
+    wo.wrap = true
+    wo.linebreak = true
+    wo.colorcolumn = "130"
+  end,
+})
+local function toggle_wrap()
+  if w.__wrap_user_disabled then
+    w.__wrap_user_disabled = nil
+    wo.wrap = true
+    wo.linebreak = true
+    wo.colorcolumn = "130"
+    print("Wrap ON")
+  else
+    w.__wrap_user_disabled = true
+    wo.wrap = false
+    wo.linebreak = false
+    wo.colorcolumn = ""
+    print("Wrap OFF (sticky for this window)")
+  end
+end
+map.set("n", "<leader>ww", toggle_wrap, { desc = "Toggle line wrap" })
 
 opt.number = true
 --opt.relativenumber = true
