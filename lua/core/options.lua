@@ -5,6 +5,7 @@ local fn = vim.fn
 local env = vim.env
 local schedule = vim.schedule
 local map = vim.keymap
+local opt_local = vim.opt_local
 
 map.set("n", "<leader>J", "<Nop>")
 map.set("n", "gc", "<Nop>")
@@ -32,6 +33,11 @@ else
     env.PATH = mason_bin .. ":" .. env.PATH
 end
 
+opt_local.wrap = true         -- wrap lines visually
+opt_local.linebreak = true    -- wrap at word boundaries
+opt_local.textwidth = 130     -- recommended column width
+opt_local.colorcolumn = "130" -- visual guide
+
 opt.number = true
 --opt.relativenumber = true
 opt.numberwidth = 2
@@ -45,7 +51,7 @@ schedule(function() -- OS-Nvim clipboard sync
     o.clipboard = "unnamedplus"
 end)
 
-o.showmode = false   -- don not show the mode (shown in lualine)
+o.showmode = false   -- don not show the mode (shown in commandline)
 
 o.cursorline = false -- show which line cursor is on
 -- opt.guicursor = ""
