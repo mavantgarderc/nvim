@@ -1,3 +1,5 @@
+local fn = vim.fn
+
 return {
   "epwalsh/obsidian.nvim",
   version = "*",
@@ -9,8 +11,8 @@ return {
   opts = {
     workspaces = {
       {
-        name = "Vanaheim",
-        path = "home/mava/projects/0-shelfs/obsdn/Vanaheim",
+        name = "vanaheim",
+        path = fn.expand("~/projects/0-shelfs/obsdn/Vanaheim"),
       },
     },
     notes_subdir = "z-Inbox",
