@@ -12,9 +12,6 @@ local notify = vim.notify
 local g = vim.g
 local unmap = vim.keymap.del
 local api = vim.api
-local fn = vim.fn
-local defer_fn = vim.defer_fn
-local bo = vim.bo
 
 local picker = require("Raphael.scripts.picker")
 local cycler = require("Raphael.scripts.cycler")
@@ -26,13 +23,9 @@ M.config = {
   leader = "<leader>t",
   mappings = {
     picker = "p",
-    picker_toml = "P",
-    picker_builtin = "b",
     next = "n",
     previous = "N",
     random = "r",
-    next_toml = "<C-n>",
-    prev_toml = "<C-p>",
     auto_cycle = "a",
     stop_cycle = "s",
     cycle_info = "i",
@@ -67,21 +60,10 @@ function M.setup_keymaps(user_config)
     picker.open_picker()
   end, { desc = "Open Raphael theme picker" })
 
-  map("n", leader .. mappings.picker_toml, function()
-    picker.open_picker("toml")
-  end, { desc = "Open TOML colorscheme picker" })
-
-  map("n", leader .. mappings.picker_builtin, function()
-    picker.open_picker("builtin")
-  end, { desc = "Open built-in colorscheme picker" })
-
   -- Cycling mappings
   map("n", leader .. mappings.next, function() cycler.cycle_next("all") end, { desc = "Next colorscheme" })
   map("n", leader .. mappings.previous, function() cycler.cycle_previous("all") end, { desc = "Previous colorscheme" })
   map("n", leader .. mappings.random, function() cycler.cycle_random("all") end, { desc = "Random colorscheme" })
-  map("n", leader .. mappings.next_toml, function() cycler.cycle_next("toml") end, { desc = "Next TOML colorscheme" })
-  map("n", leader .. mappings.prev_toml, function() cycler.cycle_previous("toml") end,
-    { desc = "Previous TOML colorscheme" })
 
   -- Auto-cycle
   map("n", leader .. mappings.auto_cycle, function() cycler.toggle_auto_cycle("all", 5000) end,
@@ -183,13 +165,13 @@ function M.show_keymaps()
   local leader, mappings, global = M.config.leader, M.config.mappings, M.config.global
   local lines = { "Raphael Theme System - Key Mappings:", "" }
   table.insert(lines, "Picker Commands (prefix: " .. leader .. "):")
-  for _, k in ipairs({ "picker", "picker_toml", "picker_builtin" }) do
+  for _, k in ipairs({ "picker" }) do
     table.insert(lines,
       "  " .. leader .. mappings[k] .. " - Open picker")
   end
   table.insert(lines, "")
   table.insert(lines, "Cycling Commands:")
-  for _, k in ipairs({ "next", "previous", "random", "next_toml", "prev_toml" }) do
+  for _, k in ipairs({ "next", "previous", "random" }) do
     table.insert(lines, "  " .. leader .. mappings[k] .. " - " .. k)
   end
   local buf = api.nvim_create_buf(false, true)
@@ -202,7 +184,7 @@ function M.show_keymaps()
     col = math.floor((o.columns - 60) / 2),
     style = "minimal",
     border = "rounded",
-    title = " Key Mappings ",
+    title = " Raphael Key Mappings ",
     title_pos = "center"
   })
   api.nvim_set_option_value("bufhidden", "wipe", { buf = buf })

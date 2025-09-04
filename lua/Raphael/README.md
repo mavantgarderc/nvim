@@ -366,5 +366,3 @@ local colorscheme = loader.load_toml_colorscheme("midnight_ocean")
 -- modify colorscheme.colors or colorscheme.highlights
 -- then apply manually
 ```
-
-This complete system provides a powerful and flexible theme management solution for Neovim with full TOML support!

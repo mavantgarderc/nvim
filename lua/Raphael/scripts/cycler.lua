@@ -6,6 +6,7 @@ local log = vim.log
 local api = vim.api
 local fn = vim.fn
 local map = vim.keymap.set
+local fetch_fn = vim.fetch_fn
 
 local colors_config = require("Raphael.colors")
 local loader = require("Raphael.scripts.loader")

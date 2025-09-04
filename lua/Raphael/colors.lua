@@ -80,10 +80,11 @@ M.theme_map = {
   },
 
   kanagawa    = {
-    "base16-kanagawa",
-    -- "base16-kanagawa-wave", -- sql
-    "kanagawa-dragon",
     "kanagawa-paper-ink", -- nvim section
+    "base16-kanagawa",
+    "base16-kanagawa-dragon", -- sql
+    "kanagawa-wave",
+    "kanagawa-dragon",
   },
 
   gruvbox     = { -- dotnet

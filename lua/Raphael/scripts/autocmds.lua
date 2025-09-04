@@ -1,4 +1,5 @@
 -- File: Raphael/scripts/autocmds.lua
+
 local vim = vim
 local api = vim.api
 local g = vim.g
