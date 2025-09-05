@@ -1,0 +1,19 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Small Demo</title>
+  <style>
+    body{display:flex;min-height:100vh;align-items:center;justify-content:center;margin:0;background:#f7fafc}
+    .btn{padding:.6rem 1rem;border-radius:8px;border:0;background:#2563eb;color:#fff;cursor:pointer;font-weight:600}
+  </style>
+</head>
+<body>
+  <button class="btn" onclick="count()">Click me (<span id="n">0</span>)</button>
+  <script>
+    let n = 0;
+    function count(){ n++; document.getElementById('n').textContent = n; }
+  </script>
+</body>
+</html>
