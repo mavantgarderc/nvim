@@ -1,3 +1,5 @@
+local fn = vim.fn
+
 return {
   "L3MON4D3/LuaSnip",
   version = "v2.*",
@@ -27,7 +29,8 @@ return {
     })
 
     require("luasnip.loaders.from_vscode").lazy_load()
-
-    -- require("luasnip.loaders.from_vscode").lazy_load({ paths = { "./my-snippets" } })
+    require("luasnip.loaders.from_lua").lazy_load({
+      paths = fn.stdpath("config") .. "/lua/core/snippets",
+    })
   end,
 }

@@ -1,3 +1,7 @@
+local vim = vim
+local g = vim.g
+local fn = vim.fn
+
 return {
   -- ==================================================
   -- Oil file explorer
@@ -81,7 +85,7 @@ return {
     opts = {},
   },
   -- ==================================================
-  -- -- === Obsidian Integration ===
+  -- === Obsidian Integration ===
   {
     "epwalsh/obsidian.nvim",
     version = "*",
@@ -94,6 +98,15 @@ return {
   {
     "renerocksai/telekasten.nvim",
     dependencies = { "nvim-telescope/telescope.nvim" },
+  },
+  -- ==================================================
+  -- === LaTeX Integration ===
+  {
+    "lervag/vimtex",
+    init = function()
+      g.vimtex_view_method = "zathura" -- the PDF live viewer
+      g.vimtex_compiler_method = "latexmk"
+    end
   },
   -- ==================================================
   -- === nvim plugins ===
@@ -110,12 +123,12 @@ return {
       {
         "nvim-telescope/telescope-fzf-native.nvim",
         build = "make",
-        cond = function() return vim.fn.executable("make") == 1 end,
+        cond = function() return fn.executable("make") == 1 end,
       },
       { "nvim-telescope/telescope-ui-select.nvim" },
 
       -- Useful for getting pretty icons, but requires a Nerd Font.
-      { "nvim-tree/nvim-web-devicons",            enabled = vim.g.have_nerd_font },
+      { "nvim-tree/nvim-web-devicons",            enabled = g.have_nerd_font },
     },
   },
   -- harpoon
