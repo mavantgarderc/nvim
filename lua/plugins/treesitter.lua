@@ -25,6 +25,7 @@ return {
           "sql",
           "regex",
           "query",
+          "latex",
         },
         sync_install = false,
         auto_install = true,
@@ -33,12 +34,12 @@ return {
         highlight = {
           enable = true,
           disable = { "css" },
-          additional_vim_regex_highlighting = false,
+          additional_vim_regex_highlighting = { "latex" },
         },
 
         indent = {
           enable = true,
-          disable = { "python", "css" },
+          disable = { "python", "css", "latex" },
         },
 
         autopairs = { enable = true },
