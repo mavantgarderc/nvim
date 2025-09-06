@@ -105,6 +105,7 @@ M.toml_map = {
     "foggy_london",
     "vintage_film",
     "neon_synthwave",
+    "fireside",
   },
 }
 
