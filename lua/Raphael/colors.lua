@@ -96,11 +96,9 @@ M.theme_map = {
 }
 
 M.toml_map = {
-  main_tomls = {
+  Claude_Made = {
     "kanagawa_paper_ink",
-  },
-  others_tomls = {
-    "midnight_ocean",
+    "nordic_frost",
   },
 }
 
