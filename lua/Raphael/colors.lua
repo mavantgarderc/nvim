@@ -104,6 +104,7 @@ M.toml_map = {
     "midnight_city",
     "foggy_london",
     "vintage_film",
+    "neon_synthwave",
   },
 }
 
