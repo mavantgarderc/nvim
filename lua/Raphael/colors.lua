@@ -106,6 +106,7 @@ M.toml_map = {
     "vintage_film",
     "neon_synthwave",
     "fireside",
+    "winter_pine",
   },
 }
 
