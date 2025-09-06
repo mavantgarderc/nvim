@@ -115,3 +115,179 @@ tab_line_sel = "#24201B"
 
 # Vertical split
 vert_split = "#5A5850"
+
+# Diff colors
+diff_add = "#8A9B6F"
+diff_delete = "#A67366"
+diff_change = "#D4B366"
+diff_text = "#E6C57A"
+
+# Git colors
+git_add = "#8A9B6F"
+git_change = "#D4B366"
+git_delete = "#B8847A"
+
+# Diagnostic colors
+error = "#B8847A"
+warning = "#B8A052"
+info = "#7A9999"
+hint = "#A89BAA"
+
+# Terminal colors (ANSI)
+terminal_black = "#0A0805"
+terminal_red = "#A67366"
+terminal_green = "#8A9B6F"
+terminal_yellow = "#D4B366"
+terminal_blue = "#6B8A8A"
+terminal_magenta = "#9B8A94"
+terminal_cyan = "#7A9999"
+terminal_white = "#E0D5C7"
+terminal_bright_black = "#5A5850"
+terminal_bright_red = "#B8847A"
+terminal_bright_green = "#9BAC80"
+terminal_bright_yellow = "#E6C57A"
+terminal_bright_blue = "#7A9999"
+terminal_bright_magenta = "#A89BAA"
+terminal_bright_cyan = "#7A9999"
+terminal_bright_white = "#CDBFA8"
+
+[highlights]
+# Editor highlights
+Normal = { fg = "fg", bg = "bg" }
+NormalFloat = { fg = "fg", bg = "bg_alt" }
+CursorLine = { bg = "cursor_line" }
+CursorColumn = { bg = "cursor_column" }
+ColorColumn = { bg = "bg_highlight" }
+LineNr = { fg = "line_number" }
+CursorLineNr = { fg = "cursor_line_nr", bold = true }
+SignColumn = { bg = "bg" }
+Folded = { fg = "folded", bg = "bg_highlight" }
+FoldColumn = { fg = "fold_column", bg = "bg" }
+Visual = { bg = "visual" }
+VisualNOS = { bg = "visual_nc" }
+Search = { fg = "bg", bg = "search" }
+IncSearch = { fg = "bg", bg = "inc_search" }
+VertSplit = { fg = "vert_split" }
+WinSeparator = { fg = "border" }
+StatusLine = { fg = "fg", bg = "status_line" }
+StatusLineNC = { fg = "fg_alt", bg = "status_line_nc" }
+Pmenu = { fg = "fg", bg = "pmenu" }
+PmenuSel = { fg = "bg", bg = "pmenu_sel" }
+PmenuSbar = { bg = "pmenu_sb" }
+PmenuThumb = { bg = "pmenu_thumb" }
+TabLine = { fg = "fg_alt", bg = "tab_line" }
+TabLineFill = { bg = "tab_line_fill" }
+TabLineSel = { fg = "fg", bg = "tab_line_sel" }
+
+# Syntax highlights - Traditional vim groups
+Comment = { fg = "comment", italic = true }
+Constant = { fg = "leaf_amber" }
+String = { fg = "moss_sage" }
+Character = { fg = "leaf_gold" }
+Number = { fg = "leaf_yellow" }
+Boolean = { fg = "leaf_amber" }
+Float = { fg = "leaf_yellow" }
+Identifier = { fg = "fg" }
+Function = { fg = "bark_aged" }
+Statement = { fg = "purple" }
+Conditional = { fg = "wood_maple" }
+Repeat = { fg = "purple" }
+Label = { fg = "wood_maple" }
+Operator = { fg = "fg" }
+Keyword = { fg = "purple" }
+Exception = { fg = "error" }
+PreProc = { fg = "purple" }
+Include = { fg = "purple" }
+Define = { fg = "purple" }
+Macro = { fg = "purple" }
+PreCondit = { fg = "purple" }
+Type = { fg = "bark_aged" }
+StorageClass = { fg = "bark_aged" }
+Structure = { fg = "bark_aged" }
+Typedef = { fg = "bark_aged" }
+Special = { fg = "leaf_amber" }
+SpecialChar = { fg = "leaf_gold" }
+Tag = { fg = "wood_maple" }
+Delimiter = { fg = "magenta" }
+SpecialComment = { fg = "red" }
+Debug = { fg = "error" }
+Underlined = { fg = "blue", underline = true }
+Ignore = { fg = "comment" }
+Error = { fg = "error", bold = true }
+Todo = { fg = "yellow", bg = "bg_highlight", bold = true }
+
+# Modern Tree-sitter highlights (TS* groups)
+TSVariable = { fg = "fg" }
+TSVariableBuiltin = { fg = "leaf_amber" }
+TSParameter = { fg = "fg_alt" }
+TSField = { fg = "bark_aged" }
+TSProperty = { fg = "bark_aged" }
+TSConstant = { fg = "leaf_amber" }
+TSConstBuiltin = { fg = "leaf_gold" }
+TSConstMacro = { fg = "leaf_amber" }
+TSNamespace = { fg = "bark_aged" }
+TSString = { fg = "moss_sage" }
+TSStringEscape = { fg = "leaf_gold" }
+TSStringSpecial = { fg = "leaf_gold" }
+TSCharacter = { fg = "leaf_gold" }
+TSCharacterSpecial = { fg = "leaf_gold" }
+TSNumber = { fg = "leaf_yellow" }
+TSBoolean = { fg = "leaf_amber" }
+TSFloat = { fg = "leaf_yellow" }
+TSFunction = { fg = "bark_aged" }
+TSFuncBuiltin = { fg = "cyan" }
+TSFuncCall = { fg = "bark_aged" }
+TSFuncMacro = { fg = "leaf_amber" }
+TSMethod = { fg = "bark_aged" }
+TSMethodCall = { fg = "bark_aged" }
+TSConstructor = { fg = "bark_aged" }
+TSOperator = { fg = "fg" }
+TSKeyword = { fg = "purple" }
+TSKeywordFunction = { fg = "purple" }
+TSKeywordOperator = { fg = "purple" }
+TSKeywordReturn = { fg = "purple" }
+TSConditional = { fg = "wood_maple" }
+TSRepeat = { fg = "purple" }
+TSException = { fg = "error" }
+TSType = { fg = "bark_aged" }
+TSTypeBuiltin = { fg = "bark_aged" }
+TSTypeDefinition = { fg = "bark_aged" }
+TSAttribute = { fg = "leaf_amber" }
+TSLabel = { fg = "wood_maple" }
+TSComment = { fg = "comment", italic = true }
+TSPunctDelimiter = { fg = "fg" }
+TSPunctBracket = { fg = "fg" }
+TSPunctSpecial = { fg = "leaf_gold" }
+TSTag = { fg = "wood_maple" }
+TSTagAttribute = { fg = "leaf_amber" }
+TSTagDelimiter = { fg = "fg" }
+
+# LSP highlights
+LspReferenceText = { bg = "bg_highlight" }
+LspReferenceRead = { bg = "bg_highlight" }
+LspReferenceWrite = { bg = "bg_highlight" }
+LspSignatureActiveParameter = { fg = "yellow", bold = true }
+
+# Diagnostic highlights
+DiagnosticError = { fg = "error" }
+DiagnosticWarn = { fg = "warning" }
+DiagnosticInfo = { fg = "info" }
+DiagnosticHint = { fg = "hint" }
+DiagnosticUnderlineError = { undercurl = true, sp = "error" }
+DiagnosticUnderlineWarn = { undercurl = true, sp = "warning" }
+DiagnosticUnderlineInfo = { undercurl = true, sp = "info" }
+DiagnosticUnderlineHint = { undercurl = true, sp = "hint" }
+DiagnosticVirtualTextError = { fg = "error", bg = "bg_highlight" }
+DiagnosticVirtualTextWarn = { fg = "warning", bg = "bg_highlight" }
+DiagnosticVirtualTextInfo = { fg = "info", bg = "bg_highlight" }
+DiagnosticVirtualTextHint = { fg = "hint", bg = "bg_highlight" }
+
+# Git highlights
+DiffAdd = { fg = "diff_add", bg = "bg" }
+DiffChange = { fg = "diff_change", bg = "bg" }
+DiffDelete = { fg = "diff_delete", bg = "bg" }
+DiffText = { fg = "diff_text", bg = "bg_highlight" }
+GitSignsAdd = { fg = "git_add" }
+GitSignsChange = { fg = "git_change" }
+GitSignsDelete = { fg = "git_delete" }
+GitSignsCurrentLineBlame = { fg = "comment", italic = true }
