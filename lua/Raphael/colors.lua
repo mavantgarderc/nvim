@@ -100,6 +100,7 @@ M.toml_map = {
     "kanagawa_paper_ink",
     "nordic_frost",
     "autumn_maple",
+    "desert_sunset",
   },
 }
 

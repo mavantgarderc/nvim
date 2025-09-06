@@ -1,0 +1,369 @@
+# Desert Sunset - A warm desert colorscheme
+# Inspired by Southwest desert landscapes, cacti, and dramatic sunsets
+
+[metadata]
+name = "desert_sunset"
+display_name = "Desert Sunset"
+author = "Claude"
+version = "1.0.0"
+description = "Warm desert colorscheme inspired by Southwest landscapes and dramatic sunsets"
+background = "dark"
+
+[colors]
+# Base colors - Desert foundations
+bg = "#1F1611"
+bg_alt = "#1A120E"
+bg_highlight = "#2D1F18"
+bg_dim = "#1A120E"
+bg_light = "#2D1F18"
+fg = "#F5E6D3"
+fg_alt = "#E8D5C0"
+fg_dim = "#E8D5C0"
+fg_dark = "#C9A876"
+
+# Sand colors (desert base tones)
+sand_0 = "#1A120E"
+sand_1 = "#2D1F18"
+sand_2 = "#3F2B1F"
+sand_3 = "#524028"
+sand_4 = "#6B5344"
+
+# Mesa colors (red rock formations)
+mesa_red = "#B85450"
+mesa_orange = "#D2691E"
+mesa_pink = "#CD5C5C"
+
+# Cactus colors (desert greens)
+cactus_green_1 = "#6B8E23"
+cactus_green_2 = "#8FBC8F"
+sage_green_1 = "#9CAF88"
+sage_green_2 = "#87A96B"
+
+# Sunset colors (dramatic evening sky)
+sunset_crimson = "#DC143C"
+sunset_orange = "#FF6347"
+sunset_gold = "#FFD700"
+sunset_pink = "#FF69B4"
+sunset_purple = "#9370DB"
+
+# Canyon colors (rock formations)
+canyon_red = "#A0522D"
+canyon_brown = "#8B4513"
+canyon_tan = "#D2B48C"
+
+# Turquoise colors (Southwest accent)
+turquoise_blue = "#40E0D0"
+turquoise_green = "#48D1CC"
+
+# Adobe colors (earthen architecture)
+adobe_tan = "#DDBF94"
+adobe_brown = "#A0522D"
+
+# Prickly pear colors (cactus flowers)
+prickly_yellow = "#FFFF00"
+prickly_pink = "#FF1493"
+
+# Copper colors (desert metals)
+copper_orange = "#B87333"
+copper_red = "#CD853F"
+
+# Agave colors (desert plant tones)
+agave_blue = "#4682B4"
+agave_green = "#228B22"
+
+# Paper-inspired neutral tones
+black = "#0F0A07"
+dark_gray = "#3F2B1F"
+gray = "#6B5344"
+light_gray = "#8B7355"
+white = "#F5E6D3"
+
+# Semantic color mappings
+blue = "#4682B4"
+cyan = "#40E0D0"
+green = "#6B8E23"
+yellow = "#FFD700"
+orange = "#FF6347"
+red = "#B85450"
+purple = "#9370DB"
+magenta = "#FF69B4"
+
+# UI colors
+border = "#6B5344"
+selection = "#524028"
+comment = "#8B7355"
+line_number = "#6B5344"
+cursor_line = "#3F2B1F"
+cursor_column = "#3F2B1F"
+visual = "#524028"
+visual_nc = "#3F2B1F"
+search = "#B85450"
+inc_search = "#DC143C"
+match_paren = "#FFD700"
+cursor_line_nr = "#E8D5C0"
+folded = "#6B5344"
+fold_column = "#6B5344"
+
+# Completion menu
+pmenu = "#2D1F18"
+pmenu_sel = "#524028"
+pmenu_sb = "#1A120E"
+pmenu_thumb = "#6B5344"
+
+# Statusline
+status_line = "#2D1F18"
+status_line_nc = "#1A120E"
+
+# Tabline
+tab_line = "#1A120E"
+tab_line_fill = "#0F0A07"
+tab_line_sel = "#2D1F18"
+
+# Vertical split
+vert_split = "#6B5344"
+
+# Diff colors
+diff_add = "#6B8E23"
+diff_delete = "#B85450"
+diff_change = "#FFD700"
+diff_text = "#FF6347"
+
+# Git colors
+git_add = "#6B8E23"
+git_change = "#FFD700"
+git_delete = "#B85450"
+
+# Diagnostic colors
+error = "#DC143C"
+warning = "#FF6347"
+info = "#40E0D0"
+hint = "#9370DB"
+
+# Terminal colors (ANSI)
+terminal_black = "#1F1611"
+terminal_red = "#B85450"
+terminal_green = "#6B8E23"
+terminal_yellow = "#FFD700"
+terminal_blue = "#4682B4"
+terminal_magenta = "#9370DB"
+terminal_cyan = "#40E0D0"
+terminal_white = "#F5E6D3"
+terminal_bright_black = "#6B5344"
+terminal_bright_red = "#DC143C"
+terminal_bright_green = "#8FBC8F"
+terminal_bright_yellow = "#FFFF00"
+terminal_bright_blue = "#87CEEB"
+terminal_bright_magenta = "#FF69B4"
+terminal_bright_cyan = "#48D1CC"
+terminal_bright_white = "#DDBF94"
+
+[highlights]
+# Editor highlights
+Normal = { fg = "fg", bg = "bg" }
+NormalFloat = { fg = "fg", bg = "bg_alt" }
+CursorLine = { bg = "cursor_line" }
+CursorColumn = { bg = "cursor_column" }
+ColorColumn = { bg = "bg_highlight" }
+LineNr = { fg = "line_number" }
+CursorLineNr = { fg = "cursor_line_nr", bold = true }
+SignColumn = { bg = "bg" }
+Folded = { fg = "folded", bg = "bg_highlight" }
+FoldColumn = { fg = "fold_column", bg = "bg" }
+Visual = { bg = "visual" }
+VisualNOS = { bg = "visual_nc" }
+Search = { fg = "bg", bg = "search" }
+IncSearch = { fg = "bg", bg = "inc_search" }
+VertSplit = { fg = "vert_split" }
+WinSeparator = { fg = "border" }
+StatusLine = { fg = "fg", bg = "status_line" }
+StatusLineNC = { fg = "fg_alt", bg = "status_line_nc" }
+Pmenu = { fg = "fg", bg = "pmenu" }
+PmenuSel = { fg = "bg", bg = "pmenu_sel" }
+PmenuSbar = { bg = "pmenu_sb" }
+PmenuThumb = { bg = "pmenu_thumb" }
+TabLine = { fg = "fg_alt", bg = "tab_line" }
+TabLineFill = { bg = "tab_line_fill" }
+TabLineSel = { fg = "fg", bg = "tab_line_sel" }
+
+# Syntax highlights
+Comment = { fg = "comment", italic = true }
+Constant = { fg = "copper_orange" }
+String = { fg = "cactus_green_1" }
+Character = { fg = "sunset_gold" }
+Number = { fg = "turquoise_blue" }
+Boolean = { fg = "sunset_orange" }
+Float = { fg = "turquoise_blue" }
+Identifier = { fg = "fg" }
+Function = { fg = "mesa_orange" }
+Statement = { fg = "sunset_crimson" }
+Conditional = { fg = "sunset_purple" }
+Repeat = { fg = "sunset_crimson" }
+Label = { fg = "sunset_purple" }
+Operator = { fg = "fg" }
+Keyword = { fg = "sunset_crimson" }
+Exception = { fg = "error" }
+PreProc = { fg = "sunset_crimson" }
+Include = { fg = "sunset_crimson" }
+Define = { fg = "sunset_crimson" }
+Macro = { fg = "sunset_crimson" }
+PreCondit = { fg = "sunset_crimson" }
+Type = { fg = "mesa_orange" }
+StorageClass = { fg = "mesa_orange" }
+Structure = { fg = "mesa_orange" }
+Typedef = { fg = "mesa_orange" }
+Special = { fg = "copper_orange" }
+SpecialChar = { fg = "sunset_orange" }
+Tag = { fg = "sunset_purple" }
+Delimiter = { fg = "adobe_brown" }
+SpecialComment = { fg = "mesa_red" }
+Debug = { fg = "error" }
+Underlined = { fg = "blue", underline = true }
+Ignore = { fg = "comment" }
+Error = { fg = "error", bold = true }
+Todo = { fg = "yellow", bg = "bg_highlight", bold = true }
+
+# Modern Tree-sitter highlights
+TSVariable = { fg = "fg" }
+TSVariableBuiltin = { fg = "sunset_orange" }
+TSParameter = { fg = "fg_alt" }
+TSField = { fg = "mesa_orange" }
+TSProperty = { fg = "mesa_orange" }
+TSConstant = { fg = "copper_orange" }
+TSConstBuiltin = { fg = "sunset_orange" }
+TSConstMacro = { fg = "copper_orange" }
+TSNamespace = { fg = "mesa_orange" }
+TSString = { fg = "cactus_green_1" }
+TSStringEscape = { fg = "sunset_orange" }
+TSStringSpecial = { fg = "sunset_orange" }
+TSCharacter = { fg = "sunset_gold" }
+TSCharacterSpecial = { fg = "sunset_orange" }
+TSNumber = { fg = "turquoise_blue" }
+TSBoolean = { fg = "sunset_orange" }
+TSFloat = { fg = "turquoise_blue" }
+TSFunction = { fg = "mesa_orange" }
+TSFuncBuiltin = { fg = "sage_green_2" }
+TSFuncCall = { fg = "mesa_orange" }
+TSFuncMacro = { fg = "copper_orange" }
+TSMethod = { fg = "mesa_orange" }
+TSMethodCall = { fg = "mesa_orange" }
+TSConstructor = { fg = "mesa_orange" }
+TSOperator = { fg = "fg" }
+TSKeyword = { fg = "sunset_crimson" }
+TSKeywordFunction = { fg = "sunset_crimson" }
+TSKeywordOperator = { fg = "sunset_crimson" }
+TSKeywordReturn = { fg = "sunset_crimson" }
+TSConditional = { fg = "sunset_purple" }
+TSRepeat = { fg = "sunset_crimson" }
+TSException = { fg = "error" }
+TSType = { fg = "mesa_orange" }
+TSTypeBuiltin = { fg = "mesa_orange" }
+TSTypeDefinition = { fg = "mesa_orange" }
+TSAttribute = { fg = "copper_orange" }
+TSLabel = { fg = "sunset_purple" }
+TSComment = { fg = "comment", italic = true }
+TSPunctDelimiter = { fg = "fg" }
+TSPunctBracket = { fg = "fg" }
+TSPunctSpecial = { fg = "sunset_orange" }
+TSTag = { fg = "sunset_purple" }
+TSTagAttribute = { fg = "copper_orange" }
+TSTagDelimiter = { fg = "fg" }
+
+# LSP highlights
+LspReferenceText = { bg = "bg_highlight" }
+LspReferenceRead = { bg = "bg_highlight" }
+LspReferenceWrite = { bg = "bg_highlight" }
+LspSignatureActiveParameter = { fg = "yellow", bold = true }
+
+# Diagnostic highlights
+DiagnosticError = { fg = "error" }
+DiagnosticWarn = { fg = "warning" }
+DiagnosticInfo = { fg = "info" }
+DiagnosticHint = { fg = "hint" }
+DiagnosticUnderlineError = { undercurl = true, sp = "error" }
+DiagnosticUnderlineWarn = { undercurl = true, sp = "warning" }
+DiagnosticUnderlineInfo = { undercurl = true, sp = "info" }
+DiagnosticUnderlineHint = { undercurl = true, sp = "hint" }
+DiagnosticVirtualTextError = { fg = "error", bg = "bg_highlight" }
+DiagnosticVirtualTextWarn = { fg = "warning", bg = "bg_highlight" }
+DiagnosticVirtualTextInfo = { fg = "info", bg = "bg_highlight" }
+DiagnosticVirtualTextHint = { fg = "hint", bg = "bg_highlight" }
+
+# Git highlights
+DiffAdd = { fg = "diff_add", bg = "bg" }
+DiffChange = { fg = "diff_change", bg = "bg" }
+DiffDelete = { fg = "diff_delete", bg = "bg" }
+DiffText = { fg = "diff_text", bg = "bg_highlight" }
+GitSignsAdd = { fg = "git_add" }
+GitSignsChange = { fg = "git_change" }
+GitSignsDelete = { fg = "git_delete" }
+GitSignsCurrentLineBlame = { fg = "comment", italic = true }
+
+# Plugin-specific highlights
+# Telescope
+TelescopeBorder = { fg = "border" }
+TelescopePromptBorder = { fg = "border" }
+TelescopeResultsBorder = { fg = "border" }
+TelescopePreviewBorder = { fg = "border" }
+TelescopeSelection = { bg = "selection" }
+TelescopePromptPrefix = { fg = "blue" }
+TelescopeMatching = { fg = "yellow", bold = true }
+
+# Neo-tree
+NeoTreeDirectoryIcon = { fg = "blue" }
+NeoTreeDirectoryName = { fg = "blue" }
+NeoTreeFileName = { fg = "fg" }
+NeoTreeFileIcon = { fg = "fg_alt" }
+NeoTreeRootName = { fg = "purple", bold = true }
+NeoTreeModified = { fg = "orange" }
+NeoTreeGitAdded = { fg = "git_add" }
+NeoTreeGitDeleted = { fg = "git_delete" }
+NeoTreeGitModified = { fg = "git_change" }
+
+# Which-key
+WhichKeyFloat = { bg = "bg_alt" }
+WhichKeyBorder = { fg = "border" }
+WhichKey = { fg = "blue" }
+WhichKeyGroup = { fg = "purple" }
+WhichKeyDesc = { fg = "fg" }
+WhichKeySeparator = { fg = "comment" }
+
+# Notify
+NotifyERRORBorder = { fg = "error" }
+NotifyWARNBorder = { fg = "warning" }
+NotifyINFOBorder = { fg = "info" }
+NotifyDEBUGBorder = { fg = "comment" }
+NotifyTRACEBorder = { fg = "hint" }
+NotifyERRORIcon = { fg = "error" }
+NotifyWARNIcon = { fg = "warning" }
+NotifyINFOIcon = { fg = "info" }
+NotifyDEBUGIcon = { fg = "comment" }
+NotifyTRACEIcon = { fg = "hint" }
+
+# Nvim-cmp
+CmpItemAbbr = { fg = "fg" }
+CmpItemAbbrDeprecated = { fg = "comment", strikethrough = true }
+CmpItemAbbrMatch = { fg = "blue", bold = true }
+CmpItemAbbrMatchFuzzy = { fg = "blue", bold = true }
+CmpItemKind = { fg = "purple" }
+CmpItemMenu = { fg = "comment" }
+
+# Dashboard
+DashboardShortCut = { fg = "blue" }
+DashboardHeader = { fg = "purple" }
+DashboardCenter = { fg = "green" }
+DashboardFooter = { fg = "comment", italic = true }
+
+# Indent Blankline
+IndentBlanklineChar = { fg = "sand_3" }
+IndentBlanklineContextChar = { fg = "sand_4" }
+IndentBlanklineSpaceChar = { fg = "sand_3" }
+IndentBlanklineSpaceCharBlankline = { fg = "sand_2" }
+
+# Rainbow delimiters
+RainbowDelimiterRed = { fg = "mesa_red" }
+RainbowDelimiterYellow = { fg = "sunset_gold" }
+RainbowDelimiterBlue = { fg = "turquoise_blue" }
+RainbowDelimiterOrange = { fg = "sunset_orange" }
+RainbowDelimiterGreen = { fg = "cactus_green_1" }
+RainbowDelimiterViolet = { fg = "sunset_purple" }
+RainbowDelimiterCyan = { fg = "turquoise_green" }
