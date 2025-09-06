@@ -1,0 +1,375 @@
+# Vintage Film - A faded analog colorscheme
+# Inspired by vintage photography, sepia tones, and aged film stock
+
+[metadata]
+name = "vintage_film"
+display_name = "Vintage Film"
+author = "Claude"
+version = "1.0.0"
+description = "Faded analog colorscheme inspired by vintage photography and aged film"
+background = "dark"
+
+[colors]
+# Base colors - Film foundations
+bg = "#1A1612"
+bg_alt = "#15120F"
+bg_highlight = "#24201B"
+bg_dim = "#15120F"
+bg_light = "#24201B"
+fg = "#E6D7C3"
+fg_alt = "#D9C7B0"
+fg_dim = "#D9C7B0"
+fg_dark = "#B8A489"
+
+# Film colors (vintage photo tones)
+film_0 = "#15120F"
+film_1 = "#24201B"
+film_2 = "#332E27"
+film_3 = "#423B33"
+film_4 = "#51493F"
+
+# Sepia colors (brown-toned vintage)
+sepia_light = "#F4E4BC"
+sepia_medium = "#D2B48C"
+sepia_dark = "#A0522D"
+sepia_brown = "#8B4513"
+
+# Kodachrome colors (faded color film)
+kodak_red = "#CD5C5C"
+kodak_yellow = "#DAA520"
+kodak_blue = "#4682B4"
+kodak_green = "#6B8E23"
+
+# Polaroid colors (instant film tones)
+polar_cream = "#F5F5DC"
+polar_beige = "#F5DEB3"
+polar_tan = "#D2B48C"
+
+# Daguerreotype colors (early photography)
+daguer_silver = "#C0C0C0"
+daguer_mercury = "#E5E4E2"
+daguer_copper = "#B87333"
+
+# Tintype colors (metal plate photography)
+tin_black = "#2F2F2F"
+tin_gray = "#696969"
+tin_silver = "#A9A9A9"
+
+# Albumen colors (egg white prints)
+albumen_cream = "#FFFDD0"
+albumen_ivory = "#FFFFF0"
+albumen_gold = "#FFD700"
+
+# Cyanotype colors (blueprint process)
+cyan_blue = "#4682B4"
+cyan_white = "#F0F8FF"
+
+# Autochrome colors (early color process)
+auto_amber = "#FFBF00"
+auto_green = "#8FBC8F"
+auto_violet = "#9370DB"
+
+# Emulsion colors (photographic layer)
+emul_silver = "#C0C0C0"
+emul_grain = "#8B7D6B"
+
+# Vignette colors (darkened edges)
+vign_dark = "#2F2B26"
+vign_medium = "#3E3930"
+
+# Paper-inspired neutral tones
+black = "#0D0A08"
+dark_gray = "#332E27"
+gray = "#51493F"
+light_gray = "#6B5F53"
+white = "#E6D7C3"
+
+# Semantic color mappings
+blue = "#4682B4"
+cyan = "#5F9EA0"
+green = "#6B8E23"
+yellow = "#DAA520"
+orange = "#D2691E"
+red = "#CD5C5C"
+purple = "#9370DB"
+magenta = "#BC8F8F"
+
+# UI colors
+border = "#51493F"
+selection = "#423B33"
+comment = "#6B5F53"
+line_number = "#51493F"
+cursor_line = "#332E27"
+cursor_column = "#332E27"
+visual = "#423B33"
+visual_nc = "#332E27"
+search = "#CD5C5C"
+inc_search = "#B22222"
+match_paren = "#DAA520"
+cursor_line_nr = "#D9C7B0"
+folded = "#51493F"
+fold_column = "#51493F"
+
+# Completion menu
+pmenu = "#24201B"
+pmenu_sel = "#423B33"
+pmenu_sb = "#15120F"
+pmenu_thumb = "#51493F"
+
+# Statusline
+status_line = "#24201B"
+status_line_nc = "#15120F"
+
+# Tabline
+tab_line = "#15120F"
+tab_line_fill = "#0D0A08"
+tab_line_sel = "#24201B"
+
+# Vertical split
+vert_split = "#51493F"
+
+# Diff colors
+diff_add = "#6B8E23"
+diff_delete = "#CD5C5C"
+diff_change = "#DAA520"
+diff_text = "#D2691E"
+
+# Git colors
+git_add = "#6B8E23"
+git_change = "#DAA520"
+git_delete = "#CD5C5C"
+
+# Diagnostic colors
+error = "#CD5C5C"
+warning = "#D2691E"
+info = "#5F9EA0"
+hint = "#9370DB"
+
+# Terminal colors (ANSI)
+terminal_black = "#1A1612"
+terminal_red = "#CD5C5C"
+terminal_green = "#6B8E23"
+terminal_yellow = "#DAA520"
+terminal_blue = "#4682B4"
+terminal_magenta = "#9370DB"
+terminal_cyan = "#5F9EA0"
+terminal_white = "#E6D7C3"
+terminal_bright_black = "#51493F"
+terminal_bright_red = "#B22222"
+terminal_bright_green = "#8FBC8F"
+terminal_bright_yellow = "#FFD700"
+terminal_bright_blue = "#87CEEB"
+terminal_bright_magenta = "#BC8F8F"
+terminal_bright_cyan = "#5F9EA0"
+terminal_bright_white = "#F5F5DC"
+
+[highlights]
+# Editor highlights
+Normal = { fg = "fg", bg = "bg" }
+NormalFloat = { fg = "fg", bg = "bg_alt" }
+CursorLine = { bg = "cursor_line" }
+CursorColumn = { bg = "cursor_column" }
+ColorColumn = { bg = "bg_highlight" }
+LineNr = { fg = "line_number" }
+CursorLineNr = { fg = "cursor_line_nr", bold = true }
+SignColumn = { bg = "bg" }
+Folded = { fg = "folded", bg = "bg_highlight" }
+FoldColumn = { fg = "fold_column", bg = "bg" }
+Visual = { bg = "visual" }
+VisualNOS = { bg = "visual_nc" }
+Search = { fg = "bg", bg = "search" }
+IncSearch = { fg = "bg", bg = "inc_search" }
+VertSplit = { fg = "vert_split" }
+WinSeparator = { fg = "border" }
+StatusLine = { fg = "fg", bg = "status_line" }
+StatusLineNC = { fg = "fg_alt", bg = "status_line_nc" }
+Pmenu = { fg = "fg", bg = "pmenu" }
+PmenuSel = { fg = "bg", bg = "pmenu_sel" }
+PmenuSbar = { bg = "pmenu_sb" }
+PmenuThumb = { bg = "pmenu_thumb" }
+TabLine = { fg = "fg_alt", bg = "tab_line" }
+TabLineFill = { bg = "tab_line_fill" }
+TabLineSel = { fg = "fg", bg = "tab_line_sel" }
+
+# Syntax highlights
+Comment = { fg = "comment", italic = true }
+Constant = { fg = "daguer_copper" }
+String = { fg = "kodak_green" }
+Character = { fg = "sepia_medium" }
+Number = { fg = "albumen_gold" }
+Boolean = { fg = "auto_amber" }
+Float = { fg = "albumen_gold" }
+Identifier = { fg = "fg" }
+Function = { fg = "kodak_blue" }
+Statement = { fg = "kodak_red" }
+Conditional = { fg = "auto_violet" }
+Repeat = { fg = "kodak_red" }
+Label = { fg = "auto_violet" }
+Operator = { fg = "fg" }
+Keyword = { fg = "kodak_red" }
+Exception = { fg = "error" }
+PreProc = { fg = "kodak_red" }
+Include = { fg = "kodak_red" }
+Define = { fg = "kodak_red" }
+Macro = { fg = "kodak_red" }
+PreCondit = { fg = "kodak_red" }
+Type = { fg = "kodak_blue" }
+StorageClass = { fg = "kodak_blue" }
+Structure = { fg = "kodak_blue" }
+Typedef = { fg = "kodak_blue" }
+Special = { fg = "daguer_copper" }
+SpecialChar = { fg = "auto_amber" }
+Tag = { fg = "auto_violet" }
+Delimiter = { fg = "emul_grain" }
+SpecialComment = { fg = "sepia_dark" }
+Debug = { fg = "error" }
+Underlined = { fg = "blue", underline = true }
+Ignore = { fg = "comment" }
+Error = { fg = "error", bold = true }
+Todo = { fg = "yellow", bg = "bg_highlight", bold = true }
+
+# Modern Tree-sitter highlights
+TSVariable = { fg = "fg" }
+TSVariableBuiltin = { fg = "auto_amber" }
+TSParameter = { fg = "fg_alt" }
+TSField = { fg = "kodak_blue" }
+TSProperty = { fg = "kodak_blue" }
+TSConstant = { fg = "daguer_copper" }
+TSConstBuiltin = { fg = "auto_amber" }
+TSConstMacro = { fg = "daguer_copper" }
+TSNamespace = { fg = "kodak_blue" }
+TSString = { fg = "kodak_green" }
+TSStringEscape = { fg = "auto_amber" }
+TSStringSpecial = { fg = "auto_amber" }
+TSCharacter = { fg = "sepia_medium" }
+TSCharacterSpecial = { fg = "auto_amber" }
+TSNumber = { fg = "albumen_gold" }
+TSBoolean = { fg = "auto_amber" }
+TSFloat = { fg = "albumen_gold" }
+TSFunction = { fg = "kodak_blue" }
+TSFuncBuiltin = { fg = "auto_green" }
+TSFuncCall = { fg = "kodak_blue" }
+TSFuncMacro = { fg = "daguer_copper" }
+TSMethod = { fg = "kodak_blue" }
+TSMethodCall = { fg = "kodak_blue" }
+TSConstructor = { fg = "kodak_blue" }
+TSOperator = { fg = "fg" }
+TSKeyword = { fg = "kodak_red" }
+TSKeywordFunction = { fg = "kodak_red" }
+TSKeywordOperator = { fg = "kodak_red" }
+TSKeywordReturn = { fg = "kodak_red" }
+TSConditional = { fg = "auto_violet" }
+TSRepeat = { fg = "kodak_red" }
+TSException = { fg = "error" }
+TSType = { fg = "kodak_blue" }
+TSTypeBuiltin = { fg = "kodak_blue" }
+TSTypeDefinition = { fg = "kodak_blue" }
+TSAttribute = { fg = "daguer_copper" }
+TSLabel = { fg = "auto_violet" }
+TSComment = { fg = "comment", italic = true }
+TSPunctDelimiter = { fg = "fg" }
+TSPunctBracket = { fg = "fg" }
+TSPunctSpecial = { fg = "auto_amber" }
+TSTag = { fg = "auto_violet" }
+TSTagAttribute = { fg = "daguer_copper" }
+TSTagDelimiter = { fg = "fg" }
+
+# LSP highlights
+LspReferenceText = { bg = "bg_highlight" }
+LspReferenceRead = { bg = "bg_highlight" }
+LspReferenceWrite = { bg = "bg_highlight" }
+LspSignatureActiveParameter = { fg = "yellow", bold = true }
+
+# Diagnostic highlights
+DiagnosticError = { fg = "error" }
+DiagnosticWarn = { fg = "warning" }
+DiagnosticInfo = { fg = "info" }
+DiagnosticHint = { fg = "hint" }
+DiagnosticUnderlineError = { undercurl = true, sp = "error" }
+DiagnosticUnderlineWarn = { undercurl = true, sp = "warning" }
+DiagnosticUnderlineInfo = { undercurl = true, sp = "info" }
+DiagnosticUnderlineHint = { undercurl = true, sp = "hint" }
+DiagnosticVirtualTextError = { fg = "error", bg = "bg_highlight" }
+DiagnosticVirtualTextWarn = { fg = "warning", bg = "bg_highlight" }
+DiagnosticVirtualTextInfo = { fg = "info", bg = "bg_highlight" }
+DiagnosticVirtualTextHint = { fg = "hint", bg = "bg_highlight" }
+
+# Git highlights
+DiffAdd = { fg = "diff_add", bg = "bg" }
+DiffChange = { fg = "diff_change", bg = "bg" }
+DiffDelete = { fg = "diff_delete", bg = "bg" }
+DiffText = { fg = "diff_text", bg = "bg_highlight" }
+GitSignsAdd = { fg = "git_add" }
+GitSignsChange = { fg = "git_change" }
+GitSignsDelete = { fg = "git_delete" }
+GitSignsCurrentLineBlame = { fg = "comment", italic = true }
+
+# Plugin-specific highlights
+# Telescope
+TelescopeBorder = { fg = "border" }
+TelescopePromptBorder = { fg = "border" }
+TelescopeResultsBorder = { fg = "border" }
+TelescopePreviewBorder = { fg = "border" }
+TelescopeSelection = { bg = "selection" }
+TelescopePromptPrefix = { fg = "blue" }
+TelescopeMatching = { fg = "yellow", bold = true }
+
+# Neo-tree
+NeoTreeDirectoryIcon = { fg = "blue" }
+NeoTreeDirectoryName = { fg = "blue" }
+NeoTreeFileName = { fg = "fg" }
+NeoTreeFileIcon = { fg = "fg_alt" }
+NeoTreeRootName = { fg = "purple", bold = true }
+NeoTreeModified = { fg = "orange" }
+NeoTreeGitAdded = { fg = "git_add" }
+NeoTreeGitDeleted = { fg = "git_delete" }
+NeoTreeGitModified = { fg = "git_change" }
+
+# Which-key
+WhichKeyFloat = { bg = "bg_alt" }
+WhichKeyBorder = { fg = "border" }
+WhichKey = { fg = "blue" }
+WhichKeyGroup = { fg = "purple" }
+WhichKeyDesc = { fg = "fg" }
+WhichKeySeparator = { fg = "comment" }
+
+# Notify
+NotifyERRORBorder = { fg = "error" }
+NotifyWARNBorder = { fg = "warning" }
+NotifyINFOBorder = { fg = "info" }
+NotifyDEBUGBorder = { fg = "comment" }
+NotifyTRACEBorder = { fg = "hint" }
+NotifyERRORIcon = { fg = "error" }
+NotifyWARNIcon = { fg = "warning" }
+NotifyINFOIcon = { fg = "info" }
+NotifyDEBUGIcon = { fg = "comment" }
+NotifyTRACEIcon = { fg = "hint" }
+
+# Nvim-cmp
+CmpItemAbbr = { fg = "fg" }
+CmpItemAbbrDeprecated = { fg = "comment", strikethrough = true }
+CmpItemAbbrMatch = { fg = "blue", bold = true }
+CmpItemAbbrMatchFuzzy = { fg = "blue", bold = true }
+CmpItemKind = { fg = "purple" }
+CmpItemMenu = { fg = "comment" }
+
+# Dashboard
+DashboardShortCut = { fg = "blue" }
+DashboardHeader = { fg = "purple" }
+DashboardCenter = { fg = "green" }
+DashboardFooter = { fg = "comment", italic = true }
+
+# Indent Blankline
+IndentBlanklineChar = { fg = "film_3" }
+IndentBlanklineContextChar = { fg = "film_4" }
+IndentBlanklineSpaceChar = { fg = "film_3" }
+IndentBlanklineSpaceCharBlankline = { fg = "film_2" }
+
+# Rainbow delimiters
+RainbowDelimiterRed = { fg = "kodak_red" }
+RainbowDelimiterYellow = { fg = "kodak_yellow" }
+RainbowDelimiterBlue = { fg = "kodak_blue" }
+RainbowDelimiterOrange = { fg = "orange" }
+RainbowDelimiterGreen = { fg = "kodak_green" }
+RainbowDelimiterViolet = { fg = "auto_violet" }
+RainbowDelimiterCyan = { fg = "cyan" }

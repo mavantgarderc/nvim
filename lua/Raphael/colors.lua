@@ -103,6 +103,7 @@ M.toml_map = {
     "desert_sunset",
     "midnight_city",
     "foggy_london",
+    "vintage_film",
   },
 }
 
