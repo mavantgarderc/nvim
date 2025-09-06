@@ -107,6 +107,7 @@ M.toml_map = {
     "neon_synthwave",
     "fireside",
     "winter_pine",
+    "weathered_bark",
   },
 }
 

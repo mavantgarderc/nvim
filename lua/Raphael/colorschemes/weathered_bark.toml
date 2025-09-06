@@ -1,1 +1,117 @@
-asdl;kfj
+# Weathered Bark - An earthy, organic colorscheme
+# Deep browns with muted greens and soft yellows
+# Inspired by aged tree bark and forest floors
+
+[metadata]
+name = "weathered_bark"
+display_name = "Weathered Bark"
+author = "custom"
+version = "1.0.0"
+description = "Earthy colorscheme with deep browns, muted greens, and soft yellows"
+background = "dark"
+
+[colors]
+# Base colors - Core backgrounds and foregrounds
+bg = "#1A1612"
+bg_alt = "#14110E"
+bg_highlight = "#24201B"
+bg_dim = "#14110E"
+bg_light = "#24201B"
+fg = "#E0D5C7"
+fg_alt = "#CDBFA8"
+fg_dim = "#CDBFA8"
+fg_dark = "#B5A488"
+
+# Bark colors (brown variations)
+bark_deep = "#2B1F15"
+bark_dark = "#3D2E20"
+bark_medium = "#4F3F2E"
+bark_light = "#6B5545"
+bark_aged = "#8B6F5B"
+
+# Wood colors (rich browns)
+wood_ebony = "#1C1208"
+wood_walnut = "#2E1F12"
+wood_oak = "#4A3426"
+wood_maple = "#66493A"
+wood_pine = "#7A5E4F"
+
+# Moss colors (muted greens)
+moss_deep = "#2A3326"
+moss_dark = "#3C4738"
+moss_medium = "#4F5C4A"
+moss_light = "#62705C"
+moss_sage = "#7A8A6F"
+
+# Lichen colors (pale greens)
+lichen_gray = "#6B7566"
+lichen_green = "#7A8570"
+lichen_pale = "#94A387"
+
+# Earth colors (soil tones)
+earth_dark = "#2B1A0F"
+earth_rich = "#3D2A1F"
+earth_loam = "#5C4A35"
+earth_clay = "#75634A"
+
+# Leaf colors (muted yellows and greens)
+leaf_yellow = "#B8A052"
+leaf_amber = "#D4B366"
+leaf_gold = "#E6C57A"
+leaf_green = "#8A9B6F"
+
+# Stone colors (grays)
+stone_dark = "#4A4A42"
+stone_medium = "#5C5C54"
+stone_light = "#7A7A6E"
+
+# Paper-inspired neutral tones
+black = "#0A0805"
+dark_gray = "#2B2A24"
+gray = "#5A5850"
+light_gray = "#7B7A6E"
+white = "#E0D5C7"
+
+# Semantic color mappings
+blue = "#6B8A8A"
+cyan = "#7A9999"
+green = "#8A9B6F"
+yellow = "#D4B366"
+orange = "#B8A052"
+red = "#A67366"
+purple = "#9B8A94"
+magenta = "#A89BAA"
+
+# UI colors
+border = "#5A5850"
+selection = "#3D2E20"
+comment = "#7B7A6E"
+line_number = "#5A5850"
+cursor_line = "#2B2A24"
+cursor_column = "#2B2A24"
+visual = "#3D2E20"
+visual_nc = "#3C4738"
+search = "#A67366"
+inc_search = "#B8847A"
+match_paren = "#D4B366"
+cursor_line_nr = "#CDBFA8"
+folded = "#5A5850"
+fold_column = "#5A5850"
+
+# Completion menu
+pmenu = "#24201B"
+pmenu_sel = "#3D2E20"
+pmenu_sb = "#14110E"
+pmenu_thumb = "#5A5850"
+
+# Statusline
+status_line = "#24201B"
+status_line_nc = "#14110E"
+
+# Tabline
+tab_line = "#14110E"
+tab_line_fill = "#0A0805"
+tab_line_sel = "#24201B"
+
+# Vertical split
+vert_split = "#5A5850"
