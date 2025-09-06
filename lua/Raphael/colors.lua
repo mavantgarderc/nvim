@@ -102,6 +102,7 @@ M.toml_map = {
     "autumn_maple",
     "desert_sunset",
     "midnight_city",
+    "foggy_london",
   },
 }
 
