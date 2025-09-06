@@ -1,0 +1,235 @@
+# Midnight City - A cyberpunk neon colorscheme
+# Inspired by neon-lit cityscapes, cyberpunk aesthetics, and electric nights
+
+[metadata]
+name = "midnight_city"
+display_name = "Midnight City"
+author = "Claude"
+version = "1.0.0"
+description = "Cyberpunk neon colorscheme inspired by electric cityscapes and digital dreams"
+background = "dark"
+
+[colors]
+# Base colors - Dark cyber foundations
+bg = "#0A0A0F"
+bg_alt = "#060609"
+bg_highlight = "#141420"
+bg_dim = "#060609"
+bg_light = "#141420"
+fg = "#E8E6F0"
+fg_alt = "#C8C5D8"
+fg_dim = "#C8C5D8"
+fg_dark = "#9B98AB"
+
+# Circuit colors (dark tech backgrounds)
+circuit_0 = "#060609"
+circuit_1 = "#141420"
+circuit_2 = "#1F1F35"
+circuit_3 = "#2A2A4A"
+circuit_4 = "#35355F"
+
+# Neon colors (electric brights)
+neon_pink = "#FF0080"
+neon_cyan = "#00FFFF"
+neon_green = "#00FF41"
+neon_purple = "#8A2BE2"
+neon_yellow = "#FFFF00"
+
+# Chrome colors (metallic tech tones)
+chrome_blue_1 = "#4169E1"
+chrome_blue_2 = "#1E90FF"
+chrome_silver_1 = "#C0C0C0"
+chrome_silver_2 = "#A9A9A9"
+
+# Data colors (information streams)
+data_green = "#32CD32"
+data_blue = "#0080FF"
+data_orange = "#FF8C00"
+
+# Hologram colors (translucent effects)
+holo_blue = "#87CEEB"
+holo_purple = "#9370DB"
+holo_pink = "#FFB6C1"
+
+# Matrix colors (digital rain)
+matrix_green_1 = "#00FF00"
+matrix_green_2 = "#32CD32"
+matrix_dark = "#008000"
+
+# Laser colors (focused beams)
+laser_red = "#FF0000"
+laser_blue = "#0033FF"
+laser_violet = "#8B00FF"
+
+# Screen colors (display tones)
+screen_green = "#00FF41"
+screen_blue = "#0080FF"
+screen_amber = "#FFB000"
+
+# Wire colors (connection lines)
+wire_red = "#DC143C"
+wire_blue = "#1E90FF"
+wire_yellow = "#FFD700"
+
+# Plasma colors (energy effects)
+plasma_pink = "#FF1493"
+plasma_cyan = "#00CED1"
+
+# Paper-inspired neutral tones
+black = "#000000"
+dark_gray = "#1F1F35"
+gray = "#35355F"
+light_gray = "#4A4A6A"
+white = "#E8E6F0"
+
+# Semantic color mappings
+blue = "#0080FF"
+cyan = "#00FFFF"
+green = "#00FF41"
+yellow = "#FFFF00"
+orange = "#FF8C00"
+red = "#FF0080"
+purple = "#8A2BE2"
+magenta = "#FF1493"
+
+# UI colors
+border = "#35355F"
+selection = "#2A2A4A"
+comment = "#4A4A6A"
+line_number = "#35355F"
+cursor_line = "#1F1F35"
+cursor_column = "#1F1F35"
+visual = "#2A2A4A"
+visual_nc = "#1F1F35"
+search = "#FF0080"
+inc_search = "#FF1493"
+match_paren = "#FFFF00"
+cursor_line_nr = "#C8C5D8"
+folded = "#35355F"
+fold_column = "#35355F"
+
+# Completion menu
+pmenu = "#141420"
+pmenu_sel = "#2A2A4A"
+pmenu_sb = "#060609"
+pmenu_thumb = "#35355F"
+
+# Statusline
+status_line = "#141420"
+status_line_nc = "#060609"
+
+# Tabline
+tab_line = "#060609"
+tab_line_fill = "#000000"
+tab_line_sel = "#141420"
+
+# Vertical split
+vert_split = "#35355F"
+
+# Diff colors
+diff_add = "#00FF41"
+diff_delete = "#FF0080"
+diff_change = "#FFFF00"
+diff_text = "#FF8C00"
+
+# Git colors
+git_add = "#00FF41"
+git_change = "#FFFF00"
+git_delete = "#FF0080"
+
+# Diagnostic colors
+error = "#FF0080"
+warning = "#FF8C00"
+info = "#00FFFF"
+hint = "#8A2BE2"
+
+# Terminal colors (ANSI)
+terminal_black = "#0A0A0F"
+terminal_red = "#FF0080"
+terminal_green = "#00FF41"
+terminal_yellow = "#FFFF00"
+terminal_blue = "#0080FF"
+terminal_magenta = "#8A2BE2"
+terminal_cyan = "#00FFFF"
+terminal_white = "#E8E6F0"
+terminal_bright_black = "#35355F"
+terminal_bright_red = "#FF1493"
+terminal_bright_green = "#32CD32"
+terminal_bright_yellow = "#FFD700"
+terminal_bright_blue = "#1E90FF"
+terminal_bright_magenta = "#FF00FF"
+terminal_bright_cyan = "#00CED1"
+terminal_bright_white = "#FFFFFF"
+
+[highlights]
+# Editor highlights
+Normal = { fg = "fg", bg = "bg" }
+NormalFloat = { fg = "fg", bg = "bg_alt" }
+CursorLine = { bg = "cursor_line" }
+CursorColumn = { bg = "cursor_column" }
+ColorColumn = { bg = "bg_highlight" }
+LineNr = { fg = "line_number" }
+CursorLineNr = { fg = "cursor_line_nr", bold = true }
+SignColumn = { bg = "bg" }
+Folded = { fg = "folded", bg = "bg_highlight" }
+FoldColumn = { fg = "fold_column", bg = "bg" }
+Visual = { bg = "visual" }
+VisualNOS = { bg = "visual_nc" }
+Search = { fg = "bg", bg = "search" }
+IncSearch = { fg = "bg", bg = "inc_search" }
+VertSplit = { fg = "vert_split" }
+WinSeparator = { fg = "border" }
+StatusLine = { fg = "fg", bg = "status_line" }
+StatusLineNC = { fg = "fg_alt", bg = "status_line_nc" }
+Pmenu = { fg = "fg", bg = "pmenu" }
+PmenuSel = { fg = "bg", bg = "pmenu_sel" }
+PmenuSbar = { bg = "pmenu_sb" }
+PmenuThumb = { bg = "pmenu_thumb" }
+TabLine = { fg = "fg_alt", bg = "tab_line" }
+TabLineFill = { bg = "tab_line_fill" }
+TabLineSel = { fg = "fg", bg = "tab_line_sel" }
+
+# Syntax highlights
+Comment = { fg = "comment", italic = true }
+Constant = { fg = "data_orange" }
+String = { fg = "neon_green" }
+Character = { fg = "neon_yellow" }
+Number = { fg = "neon_cyan" }
+Boolean = { fg = "neon_purple" }
+Float = { fg = "neon_cyan" }
+Identifier = { fg = "fg" }
+Function = { fg = "chrome_blue_2" }
+Statement = { fg = "neon_pink" }
+Conditional = { fg = "laser_violet" }
+Repeat = { fg = "neon_pink" }
+Label = { fg = "laser_violet" }
+Operator = { fg = "fg" }
+Keyword = { fg = "neon_pink" }
+Exception = { fg = "error" }
+PreProc = { fg = "neon_pink" }
+Include = { fg = "neon_pink" }
+Define = { fg = "neon_pink" }
+Macro = { fg = "neon_pink" }
+PreCondit = { fg = "neon_pink" }
+Type = { fg = "chrome_blue_2" }
+StorageClass = { fg = "chrome_blue_2" }
+Structure = { fg = "chrome_blue_2" }
+Typedef = { fg = "chrome_blue_2" }
+Special = { fg = "data_orange" }
+SpecialChar = { fg = "neon_purple" }
+Tag = { fg = "laser_violet" }
+Delimiter = { fg = "holo_purple" }
+SpecialComment = { fg = "wire_red" }
+Debug = { fg = "error" }
+Underlined = { fg = "blue", underline = true }
+Ignore = { fg = "comment" }
+Error = { fg = "error", bold = true }
+Todo = { fg = "yellow", bg = "bg_highlight", bold = true }
+
+# Modern Tree-sitter highlights
+TSVariable = { fg = "fg" }
+TSVariableBuiltin = { fg = "neon_purple" }
+TSParameter = { fg = "fg_alt" }
+TSField = { fg = "chrome_blue_2" }
+TSProperty = { fg = "chrome_blue_2" }
+TSConstant = { fg = "data_orange"
