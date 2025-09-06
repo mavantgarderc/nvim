@@ -1,0 +1,296 @@
+# Autumn Maple - A warm fall colorscheme
+# Inspired by New England autumn, maple leaves, and harvest seasons
+
+[metadata]
+name = "autumn_maple"
+display_name = "Autumn Maple"
+author = "Claude"
+version = "1.0.0"
+description = "Warm autumn colorscheme inspired by maple leaves and harvest seasons"
+background = "dark"
+
+[colors]
+# Base colors - Rich autumn foundations
+bg = "#1A0F0A"
+bg_alt = "#140B08"
+bg_highlight = "#2B1A12"
+bg_dim = "#140B08"
+bg_light = "#2B1A12"
+fg = "#F4E6D4"
+fg_alt = "#E8D5C0"
+fg_dim = "#E8D5C0"
+fg_dark = "#C5A882"
+
+# Bark colors (deep browns)
+bark_0 = "#140B08"
+bark_1 = "#2B1A12"
+bark_2 = "#3D2619"
+bark_3 = "#4F3020"
+bark_4 = "#6B4028"
+
+# Maple colors (reds and oranges)
+maple_red = "#D73027"
+maple_orange = "#FC8D59"
+maple_gold = "#FEE08B"
+
+# Oak colors (browns and tans)
+oak_brown_1 = "#8B4513"
+oak_brown_2 = "#A0522D"
+oak_tan_1 = "#D2B48C"
+oak_tan_2 = "#F5DEB3"
+
+# Birch colors (pale yellows)
+birch_yellow = "#FFFACD"
+birch_cream = "#F5F5DC"
+
+# Harvest colors (warm earth tones)
+harvest_orange = "#FF8C00"
+harvest_red = "#B22222"
+harvest_yellow = "#DAA520"
+harvest_brown = "#8B4513"
+
+# Pumpkin colors (bright oranges)
+pumpkin_orange_1 = "#FF7F50"
+pumpkin_orange_2 = "#FF6347"
+
+# Cider colors (warm amber tones)
+cider_amber_1 = "#FFBF00"
+cider_amber_2 = "#D2691E"
+
+# Spice colors (warm accents)
+cinnamon = "#D2691E"
+nutmeg = "#8B4513"
+clove = "#654321"
+
+# Sunset colors (evening warm tones)
+sunset_orange = "#FF4500"
+sunset_red = "#CD5C5C"
+sunset_gold = "#FFD700"
+
+# Acorn colors (muted browns)
+acorn_brown_1 = "#A0522D"
+acorn_brown_2 = "#8B7355"
+
+# Paper-inspired neutral tones
+black = "#0A0404"
+dark_gray = "#3D2619"
+gray = "#6B4028"
+light_gray = "#8B7355"
+white = "#F4E6D4"
+
+# Semantic color mappings
+blue = "#4682B4"
+cyan = "#5F9EA0"
+green = "#228B22"
+yellow = "#DAA520"
+orange = "#FF8C00"
+red = "#D73027"
+purple = "#9370DB"
+magenta = "#BA55D3"
+
+# UI colors
+border = "#6B4028"
+selection = "#4F3020"
+comment = "#8B7355"
+line_number = "#6B4028"
+cursor_line = "#3D2619"
+cursor_column = "#3D2619"
+visual = "#4F3020"
+visual_nc = "#3D2619"
+search = "#D73027"
+inc_search = "#FF4500"
+match_paren = "#DAA520"
+cursor_line_nr = "#E8D5C0"
+folded = "#6B4028"
+fold_column = "#6B4028"
+
+# Completion menu
+pmenu = "#2B1A12"
+pmenu_sel = "#4F3020"
+pmenu_sb = "#140B08"
+pmenu_thumb = "#6B4028"
+
+# Statusline
+status_line = "#2B1A12"
+status_line_nc = "#140B08"
+
+# Tabline
+tab_line = "#140B08"
+tab_line_fill = "#0A0404"
+tab_line_sel = "#2B1A12"
+
+# Vertical split
+vert_split = "#6B4028"
+
+# Diff colors
+diff_add = "#228B22"
+diff_delete = "#D73027"
+diff_change = "#DAA520"
+diff_text = "#FF8C00"
+
+# Git colors
+git_add = "#228B22"
+git_change = "#DAA520"
+git_delete = "#D73027"
+
+# Diagnostic colors
+error = "#D73027"
+warning = "#FF8C00"
+info = "#5F9EA0"
+hint = "#9370DB"
+
+# Terminal colors (ANSI)
+terminal_black = "#1A0F0A"
+terminal_red = "#D73027"
+terminal_green = "#228B22"
+terminal_yellow = "#DAA520"
+terminal_blue = "#4682B4"
+terminal_magenta = "#9370DB"
+terminal_cyan = "#5F9EA0"
+terminal_white = "#F4E6D4"
+terminal_bright_black = "#6B4028"
+terminal_bright_red = "#FF4500"
+terminal_bright_green = "#32CD32"
+terminal_bright_yellow = "#FFD700"
+terminal_bright_blue = "#87CEEB"
+terminal_bright_magenta = "#BA55D3"
+terminal_bright_cyan = "#5F9EA0"
+terminal_bright_white = "#FFFACD"
+
+[highlights]
+# Editor highlights
+Normal = { fg = "fg", bg = "bg" }
+NormalFloat = { fg = "fg", bg = "bg_alt" }
+CursorLine = { bg = "cursor_line" }
+CursorColumn = { bg = "cursor_column" }
+ColorColumn = { bg = "bg_highlight" }
+LineNr = { fg = "line_number" }
+CursorLineNr = { fg = "cursor_line_nr", bold = true }
+SignColumn = { bg = "bg" }
+Folded = { fg = "folded", bg = "bg_highlight" }
+FoldColumn = { fg = "fold_column", bg = "bg" }
+Visual = { bg = "visual" }
+VisualNOS = { bg = "visual_nc" }
+Search = { fg = "bg", bg = "search" }
+IncSearch = { fg = "bg", bg = "inc_search" }
+VertSplit = { fg = "vert_split" }
+WinSeparator = { fg = "border" }
+StatusLine = { fg = "fg", bg = "status_line" }
+StatusLineNC = { fg = "fg_alt", bg = "status_line_nc" }
+Pmenu = { fg = "fg", bg = "pmenu" }
+PmenuSel = { fg = "bg", bg = "pmenu_sel" }
+PmenuSbar = { bg = "pmenu_sb" }
+PmenuThumb = { bg = "pmenu_thumb" }
+TabLine = { fg = "fg_alt", bg = "tab_line" }
+TabLineFill = { bg = "tab_line_fill" }
+TabLineSel = { fg = "fg", bg = "tab_line_sel" }
+
+# Syntax highlights
+Comment = { fg = "comment", italic = true }
+Constant = { fg = "harvest_orange" }
+String = { fg = "harvest_yellow" }
+Character = { fg = "cider_amber_1" }
+Number = { fg = "sunset_gold" }
+Boolean = { fg = "maple_orange" }
+Float = { fg = "sunset_gold" }
+Identifier = { fg = "fg" }
+Function = { fg = "pumpkin_orange_1" }
+Statement = { fg = "maple_red" }
+Conditional = { fg = "cinnamon" }
+Repeat = { fg = "maple_red" }
+Label = { fg = "cinnamon" }
+Operator = { fg = "fg" }
+Keyword = { fg = "maple_red" }
+Exception = { fg = "error" }
+PreProc = { fg = "maple_red" }
+Include = { fg = "maple_red" }
+Define = { fg = "maple_red" }
+Macro = { fg = "maple_red" }
+PreCondit = { fg = "maple_red" }
+Type = { fg = "pumpkin_orange_1" }
+StorageClass = { fg = "pumpkin_orange_1" }
+Structure = { fg = "pumpkin_orange_1" }
+Typedef = { fg = "pumpkin_orange_1" }
+Special = { fg = "harvest_orange" }
+SpecialChar = { fg = "maple_orange" }
+Tag = { fg = "cinnamon" }
+Delimiter = { fg = "acorn_brown_2" }
+SpecialComment = { fg = "harvest_red" }
+Debug = { fg = "error" }
+Underlined = { fg = "blue", underline = true }
+Ignore = { fg = "comment" }
+Error = { fg = "error", bold = true }
+Todo = { fg = "yellow", bg = "bg_highlight", bold = true }
+
+# Modern Tree-sitter highlights
+TSVariable = { fg = "fg" }
+TSVariableBuiltin = { fg = "maple_orange" }
+TSParameter = { fg = "fg_alt" }
+TSField = { fg = "pumpkin_orange_1" }
+TSProperty = { fg = "pumpkin_orange_1" }
+TSConstant = { fg = "harvest_orange" }
+TSConstBuiltin = { fg = "maple_orange" }
+TSConstMacro = { fg = "harvest_orange" }
+TSNamespace = { fg = "pumpkin_orange_1" }
+TSString = { fg = "harvest_yellow" }
+TSStringEscape = { fg = "maple_orange" }
+TSStringSpecial = { fg = "maple_orange" }
+TSCharacter = { fg = "cider_amber_1" }
+TSCharacterSpecial = { fg = "maple_orange" }
+TSNumber = { fg = "sunset_gold" }
+TSBoolean = { fg = "maple_orange" }
+TSFloat = { fg = "sunset_gold" }
+TSFunction = { fg = "pumpkin_orange_1" }
+TSFuncBuiltin = { fg = "oak_tan_1" }
+TSFuncCall = { fg = "pumpkin_orange_1" }
+TSFuncMacro = { fg = "harvest_orange" }
+TSMethod = { fg = "pumpkin_orange_1" }
+TSMethodCall = { fg = "pumpkin_orange_1" }
+TSConstructor = { fg = "pumpkin_orange_1" }
+TSOperator = { fg = "fg" }
+TSKeyword = { fg = "maple_red" }
+TSKeywordFunction = { fg = "maple_red" }
+TSKeywordOperator = { fg = "maple_red" }
+TSKeywordReturn = { fg = "maple_red" }
+TSConditional = { fg = "cinnamon" }
+TSRepeat = { fg = "maple_red" }
+TSException = { fg = "error" }
+TSType = { fg = "pumpkin_orange_1" }
+TSTypeBuiltin = { fg = "pumpkin_orange_1" }
+TSTypeDefinition = { fg = "pumpkin_orange_1" }
+TSAttribute = { fg = "harvest_orange" }
+TSLabel = { fg = "cinnamon" }
+TSComment = { fg = "comment", italic = true }
+TSPunctDelimiter = { fg = "fg" }
+TSPunctBracket = { fg = "fg" }
+TSPunctSpecial = { fg = "maple_orange" }
+TSTag = { fg = "cinnamon" }
+TSTagAttribute = { fg = "harvest_orange" }
+TSTagDelimiter = { fg = "fg" }
+
+# LSP highlights
+LspReferenceText = { bg = "bg_highlight" }
+LspReferenceRead = { bg = "bg_highlight" }
+LspReferenceWrite = { bg = "bg_highlight" }
+LspSignatureActiveParameter = { fg = "yellow", bold = true }
+
+# Diagnostic highlights
+DiagnosticError = { fg = "error" }
+DiagnosticWarn = { fg = "warning" }
+DiagnosticInfo = { fg = "info" }
+DiagnosticHint = { fg = "hint" }
+DiagnosticUnderlineError = { undercurl = true, sp = "error" }
+DiagnosticUnderlineWarn = { undercurl = true, sp = "warning" }
+DiagnosticUnderlineInfo = { undercurl = true, sp = "info" }
+DiagnosticUnderlineHint = { undercurl = true, sp = "hint" }
+DiagnosticVirtualTextError = { fg = "error", bg = "bg_highlight" }
+DiagnosticVirtualTextWarn = { fg = "warning", bg = "bg_highlight" }
+DiagnosticVirtualTextInfo = { fg = "info", bg = "bg_highlight" }
+DiagnosticVirtualTextHint = { fg = "hint", bg = "bg_highlight" }
+
+# Git highlights
+DiffAdd = { fg = "diff_add", bg = "bg" }
+DiffChange = { fg = "diff_change", bg = "bg" }
+DiffDelete = { fg = "diff_delete", bg = "bg" }
+DiffText = { fg = "diff_text", bg = "bg_highlight" }
+GitSignsAdd = { fg = "git_add" }

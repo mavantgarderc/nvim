@@ -99,6 +99,7 @@ M.toml_map = {
   Claude_Made = {
     "kanagawa_paper_ink",
     "nordic_frost",
+    "autumn_maple",
   },
 }
 
