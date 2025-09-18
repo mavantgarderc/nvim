@@ -10,7 +10,6 @@ return {
   "lewis6991/impatient.nvim",
   -- === ui ===
   -- status line & tabbar
-  -- {
   "nvim-lualine/lualine.nvim",
   -- startup dashboard
   "goolord/alpha-nvim",
@@ -94,10 +93,6 @@ return {
     dependencies = {
       "nvim-lua/plenary.nvim",
     },
-  },
-  {
-    "renerocksai/telekasten.nvim",
-    dependencies = { "nvim-telescope/telescope.nvim" },
   },
   -- ==================================================
   -- === LaTeX Integration ===
