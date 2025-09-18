@@ -17,12 +17,13 @@ function M.setup(capabilities)
         },
         chktex = {
           onEdit = false,
-          onOpenAndSave = false,
+          onOpenAndSave = true,
         },
         diagnosticsDelay = 300,
         formatterLineLength = 80,
         forwardSearch = {
-          args = {},
+          executable = "zathura",
+          args = { "--synctex-forward", "%l:1:%f", "%p" },
         },
         latexFormatter = "latexindent",
         latexindent = {
@@ -30,6 +31,9 @@ function M.setup(capabilities)
         },
       },
     },
+    on_attach = function(client, bufnr)
+      client.server_capabilities.documentFormattingProvider = false
+    end,
   })
 end
 
