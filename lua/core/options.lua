@@ -37,8 +37,8 @@ else
     env.PATH = mason_bin .. ":" .. env.PATH
 end
 
-opt_local.wrap = true         -- wrap lines visually
-opt_local.linebreak = true    -- wrap at word boundaries
+opt_local.wrap = false         -- wrap lines visually
+opt_local.linebreak = false    -- wrap at word boundaries
 opt_local.textwidth = 130     -- recommended column width
 opt_local.colorcolumn = "130" -- visual guide
 local grp = api.nvim_create_augroup("GlobalWrap", { clear = true })
