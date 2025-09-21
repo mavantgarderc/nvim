@@ -37,36 +37,41 @@ else
     env.PATH = mason_bin .. ":" .. env.PATH
 end
 
-opt_local.wrap = false         -- wrap lines visually
-opt_local.linebreak = false    -- wrap at word boundaries
-opt_local.textwidth = 130     -- recommended column width
-opt_local.colorcolumn = "130" -- visual guide
+opt_local.wrap = false        -- disable line wrapping by default
+opt_local.linebreak = false   -- disable word-boundary wrapping by default
+opt_local.textwidth = 135     -- recommended column width
+opt_local.colorcolumn = ""    -- disable visual marker by default
 local grp = api.nvim_create_augroup("GlobalWrap", { clear = true })
 api.nvim_create_autocmd({ "BufWinEnter", "WinNew" }, {
-  group = grp,
-  callback = function()
-    if w.__wrap_user_disabled then return end
-    wo.wrap = true
-    wo.linebreak = true
-    wo.colorcolumn = "130"
-  end,
+    group = grp,
+    callback = function()
+        if w.__wrap_user_enabled then
+            wo.wrap = true
+            wo.linebreak = true
+            wo.colorcolumn = "135"
+        else
+            wo.wrap = false
+            wo.linebreak = false
+            wo.colorcolumn = ""
+        end
+    end,
 })
 local function toggle_wrap()
-  if w.__wrap_user_disabled then
-    w.__wrap_user_disabled = nil
-    wo.wrap = true
-    wo.linebreak = true
-    wo.colorcolumn = "130"
-    print("Wrap ON")
-  else
-    w.__wrap_user_disabled = true
-    wo.wrap = false
-    wo.linebreak = false
-    wo.colorcolumn = ""
-    print("Wrap OFF (sticky for this window)")
-  end
+    if w.__wrap_user_enabled then
+        w.__wrap_user_enabled = nil
+        wo.wrap = false
+        wo.linebreak = false
+        wo.colorcolumn = ""
+        print("Wrap OFF")
+    else
+        w.__wrap_user_enabled = true
+        wo.wrap = true
+        wo.linebreak = true
+        wo.colorcolumn = "135"
+        print("Wrap ON (sticky for this window)")
+    end
 end
-map.set("n", "<leader>ww", toggle_wrap, { desc = "Toggle line wrap" })
+map.set("n", "<leader>ww", toggle_wrap, { desc = "Toggle line wrap, linebreak, and colorcolumn" })
 
 opt.number = true
 --opt.relativenumber = true
