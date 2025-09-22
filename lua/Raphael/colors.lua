@@ -4,6 +4,8 @@
 
 local M = {}
 
+M.config = {}
+
 M.theme_map = {
   everviolet  = {
     "evergarden-fall",
@@ -153,24 +155,72 @@ M.filetype_themes = {
   jsonc      = "base16-rose-pine",
 }
 
+function M.get_all_colorschemes()
+  local all = {}
+  for group, themes in pairs(M.theme_map) do
+    for _, name in ipairs(themes) do
+      table.insert(all, { name = name, type = "builtin", display_name = name, group = group })
+    end
+  end
+  for group, themes in pairs(M.toml_map) do
+    for _, name in ipairs(themes) do
+      table.insert(all, { name = name, type = "toml", display_name = name, group = group })
+    end
+  end
+  return all
+end
+
+function M.get_toml_colorschemes()
+  local toml = {}
+  for _, cs in ipairs(M.get_all_colorschemes()) do
+    if cs.type == "toml" then table.insert(toml, cs) end
+  end
+  return toml
+end
+
+function M.get_builtin_colorschemes()
+  local builtin = {}
+  for _, cs in ipairs(M.get_all_colorschemes()) do
+    if cs.type == "builtin" then table.insert(builtin, cs) end
+  end
+  return builtin
+end
+
+function M.get_dark_colorschemes()
+  return M.get_all_colorschemes() -- Assume all dark; extend with metadata if available
+end
+
+function M.get_light_colorschemes()
+  return {} -- No light themes defined
+end
+
+function M.is_toml_colorscheme(name)
+  for _, cs in ipairs(M.get_toml_colorschemes()) do
+    if cs.name == name then return true end
+  end
+  return false
+end
+
+function M.get_display_name(name, type_)
+  return name -- Extend with metadata if needed
+end
+
 function M.get_all_colorschemes_grouped()
   local grouped = {}
-  for cat, names in pairs(M.theme_map) do
-    local entry = { category = cat, themes = {} }
-    for _, name in ipairs(names) do
-      table.insert(entry.themes, { name = name, type = "builtin" })
+  for group, themes in pairs(M.theme_map) do
+    local cat = { category = group, themes = {}, collapsed = false }
+    for _, name in ipairs(themes) do
+      table.insert(cat.themes, { name = name, type = "builtin", display_name = name })
     end
-    table.insert(grouped, entry)
+    table.insert(grouped, cat)
   end
-
-    for cat, names in pairs(M.toml_map) do
-    local entry = { category = cat, themes = {} }
-    for _, name in ipairs(names) do
-      table.insert(entry.themes, { name = name, type = "toml" })
+  for group, themes in pairs(M.toml_map) do
+    local cat = { category = group, themes = {}, collapsed = false }
+    for _, name in ipairs(themes) do
+      table.insert(cat.themes, { name = name, type = "toml", display_name = name })
     end
-    table.insert(grouped, entry)
+    table.insert(grouped, cat)
   end
-
   return grouped
 end
 

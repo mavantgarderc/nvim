@@ -1,4 +1,5 @@
 -- File: Raphael/scripts/cmds.lua
+
 local vim = vim
 local api = vim.api
 local map = vim.keymap.set
@@ -155,7 +156,47 @@ function M.setup_commands()
   user_cmd("RaphaelQuickPreview", preview_cmd("quick_preview", 2000),
     { nargs = "+", complete = complete_colorschemes, desc = "Quick preview a colorscheme with auto-restore" })
 
-  -- Remaining commands (Compare, Slideshow, Info, List, Reload, Validate, Status) can be similarly refactored using helpers above.
+  -- Compare command
+  user_cmd("RaphaelCompare", function(opts)
+    local args = parse_args(opts.args)
+    if #args < 2 then notify("Need at least 2 colorschemes", log.levels.WARN) return end
+    local colorschemes = {}
+    for _, name in ipairs(args) do
+      local type_ = detect_type(name)
+      table.insert(colorschemes, { name = name, type = type_ })
+    end
+    preview.compare_colorschemes(colorschemes)
+  end, { nargs = "+", complete = complete_colorschemes, desc = "Compare colorschemes" })
+
+  -- Slideshow command
+  user_cmd("RaphaelSlideshow", function(opts)
+    local type_ = opts.args ~= "" and opts.args or "all"
+    local schemes = get_colorschemes_by_type(type_)
+    preview.slideshow_preview(schemes, 3000, true)
+  end, { nargs = "?", complete = complete_colorscheme_types, desc = "Start slideshow" })
+
+  -- Info command
+  user_cmd("RaphaelInfo", function()
+    local cur = loader.get_current_colorscheme()
+    notify("Current: " .. cur.name .. " (" .. cur.type .. ")", log.levels.INFO)
+  end, { desc = "Show current info" })
+
+  -- Status command
+  user_cmd("RaphaelStatus", function()
+    local status = preview.get_preview_status()
+    notify("Previews: " .. status.active_previews .. ", Auto-cycle: " .. (cycler.get_cycle_status().active and "On" or "Off"), log.levels.INFO)
+  end, { desc = "Show status" })
+
+  -- Reload command
+  user_cmd("RaphaelReload", loader.clear_cache, { desc = "Reload TOML" })
+
+  -- Validate command
+  user_cmd("RaphaelValidate", function()
+    local results = loader.validate_all_toml_colorschemes()
+    local valid = 0
+    for _, r in pairs(results) do if r.valid then valid = valid + 1 end end
+    notify("Validated " .. valid .. "/" .. #results, log.levels.INFO)
+  end, { desc = "Validate TOML" })
 end
 
 return M
