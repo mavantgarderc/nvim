@@ -2,12 +2,9 @@ local M = {}
 local fn = vim.fn
 
 function M.setup(capabilities)
-  local lspconfig = require("lspconfig")
-  lspconfig.lua_ls.setup({
+  vim.lsp.config("lua_ls", {
     capabilities = capabilities,
-    -- Disable LSP formatting since we'll use StyLua
     on_attach = function(client, bufnr)
-      -- Disable lua_ls formatting capabilities
       client.server_capabilities.documentFormattingProvider = false
       client.server_capabilities.documentRangeFormattingProvider = false
     end,

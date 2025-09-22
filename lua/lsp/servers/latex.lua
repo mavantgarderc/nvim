@@ -1,9 +1,7 @@
 local M = {}
 
 function M.setup(capabilities)
-  local lspconfig = require("lspconfig")
-
-  lspconfig.texlab.setup({
+  vim.lsp.config("texlab", {
     capabilities = capabilities,
     settings = {
       texlab = {
