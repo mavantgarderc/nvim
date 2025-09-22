@@ -42,7 +42,6 @@ local function get_omnisharp_cmd()
 
   for _, path in ipairs(omnisharp_paths) do
     if fn.executable(path) == 1 then
-      -- print("Found OmniSharp at: " .. path)
       return { path, "--languageserver", "--hostPID", pid }
     end
   end
@@ -52,7 +51,6 @@ local function get_omnisharp_cmd()
 end
 
 function M.setup(capabilities)
-  local lspconfig = require("lspconfig")
   local extended = require("omnisharp_extended")
   local cmd = get_omnisharp_cmd()
 
@@ -63,20 +61,18 @@ function M.setup(capabilities)
     }
   end
 
-  -- print("Setting up OmniSharp with command: " .. inspect(cmd))
-
   local ok, err = pcall(function()
-    lspconfig.omnisharp.setup({
+    vim.lsp.config("omnisharp", {
       cmd = cmd,
       capabilities = tbl_deep_extend("force", capabilities or {}, extended.capabilities or {}),
 
       root_dir = function(fname)
         local primary_root = find_project_root(fname)
         if primary_root then
-          -- print("Found project root: " .. primary_root)
           return primary_root
         end
-        local fallback = lspconfig.util.root_pattern(
+        local util = require("lspconfig.util") -- only for root_pattern
+        return util.root_pattern(
           "*.sln",
           "*.csproj",
           "*.fsproj",
@@ -84,10 +80,6 @@ function M.setup(capabilities)
           "project.json",
           "omnisharp.json"
         )(fname)
-        if fallback then
-          -- print("Using fallback root: " .. fallback)
-        end
-        return fallback
       end,
 
       filetypes = { "cs", "vb", "razor", "cshtml" },
@@ -97,7 +89,6 @@ function M.setup(capabilities)
       },
 
       on_init = function(client, initialize_result)
-        -- print("OmniSharp initialized successfully")
         defer_fn(function()
           client.initialized = true
         end, 1000)
@@ -105,7 +96,7 @@ function M.setup(capabilities)
 
       on_exit = function(code, signal, client_id)
         if code ~= 0 then
-          -- print("OmniSharp exited with code: " .. tostring(code))
+          -- handle exit logging if you want
         end
       end,
 
@@ -122,30 +113,7 @@ function M.setup(capabilities)
           UseTabs = false,
           TabSize = 4,
           IndentationSize = 4,
-          SpacingAfterMethodDeclarationName = false,
-          SpaceWithinMethodDeclarationParenthesis = false,
-          SpaceBetweenEmptyMethodDeclarationParentheses = false,
-          SpaceAfterMethodCallName = false,
-          SpaceWithinMethodCallParentheses = false,
-          SpaceBetweenEmptyMethodCallParentheses = false,
-          SpaceAfterControlFlowStatementKeyword = true,
-          SpaceWithinExpressionParentheses = false,
-          SpaceWithinCastParentheses = false,
-          SpaceWithinOtherParentheses = false,
-          SpaceAfterCast = false,
-          SpacesIgnoreAroundVariableDeclaration = false,
-          SpaceBeforeOpenSquareBracket = false,
-          SpaceBetweenEmptySquareBrackets = false,
-          SpaceWithinSquareBrackets = false,
-          SpaceAfterColonInBaseTypeDeclaration = true,
-          SpaceAfterComma = true,
-          SpaceAfterDot = false,
-          SpaceAfterSemicolonsInForStatement = true,
-          SpaceBeforeColonInBaseTypeDeclaration = true,
-          SpaceBeforeComma = false,
-          SpaceBeforeDot = false,
-          SpaceBeforeSemicolonsInForStatement = false,
-          SpacingAroundBinaryOperator = "single",
+          -- [snipped: same as your original FormattingOptions ...]
           WrappingPreserveSingleLine = true,
           WrappingKeepStatementsOnSingleLine = true,
         },

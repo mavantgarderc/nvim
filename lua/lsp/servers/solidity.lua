@@ -8,19 +8,12 @@ local bo = vim.bo
 local lsp = vim.lsp
 local log = vim.log
 local api = vim.api
-local notify = vim.notify
 local opt_local = vim.opt_local
 
 function M.setup()
-  local lspconfig_ok, lspconfig = pcall(require, "lspconfig")
-  if not lspconfig_ok then
-    notify("lspconfig not found", log.levels.ERROR)
-    return
-  end
-
   local capabilities = shared.get_capabilities()
 
-  lspconfig.solidity_ls.setup({
+  vim.lsp.config["solidity_ls"] = {
     capabilities = capabilities,
     on_attach = function(client, bufnr)
       shared.setup_keymaps()
@@ -40,61 +33,47 @@ function M.setup()
           end,
         })
       end
-
-      -- notify(
-      --   string.format("Solidity LSP attached to buffer %d", bufnr),
-      --   log.levels.INFO
-      -- )
     end,
 
     settings = {
       solidity = {
         compileUsingRemoteVersion = "latest",
         compileUsingLocalVersion = "",
-
         formatter = "forge",
-
         enabledAsYouTypeCompilationErrorCheck = true,
         validationDelay = 1500,
-
         packageDefaultDependenciesContractsDirectory = "contracts",
         packageDefaultDependenciesDirectory = "lib",
-
         mocha = {
           enabled = false,
-          optionsPath = "./test/.mocharc.json"
+          optionsPath = "./test/.mocharc.json",
         },
-
         defaultCompiler = "remote", -- "remote", "localFile", "localNodeModule"
-
         analysisLevel = "full", -- "full", "basic", "none"
-
         enableIncrementalCompilation = true,
-      }
+      },
     },
 
     filetypes = { "solidity" },
 
-    root_dir = lspconfig.util.root_pattern(
-      "hardhat.config.js",
-      "hardhat.config.ts",
-      "foundry.toml",
-      "truffle-config.js",
-      "truffle.js",
-      "remappings.txt",
-      ".git"
-    ),
+    root_dir = function(fname)
+      return vim.fs.root(
+        fname,
+        { "hardhat.config.js", "hardhat.config.ts", "foundry.toml", "truffle-config.js", "truffle.js", "remappings.txt", ".git" }
+      )
+    end,
 
     single_file_support = true,
 
     init_options = {
       enableTelemetry = false,
     },
-  })
+  }
+
+  -- actually start the server
+  vim.lsp.start(vim.lsp.config["solidity_ls"])
 
   M.setup_solidity_autocmds()
-
-  -- notify("Solidity LSP configured", log.levels.INFO)
 end
 
 function M.setup_solidity_autocmds()
@@ -107,20 +86,15 @@ function M.setup_solidity_autocmds()
       opt_local.tabstop = 4
       opt_local.shiftwidth = 4
       opt_local.expandtab = true
-
       opt_local.commentstring = "// %s"
-
       opt_local.spell = false
-
       opt_local.foldmethod = "syntax"
-
-      -- notify("Solidity file settings applied", log.levels.DEBUG)
     end,
   })
 
-  api.nvim_create_autocmd({"BufRead", "BufNewFile"}, {
+  api.nvim_create_autocmd({ "BufRead", "BufNewFile" }, {
     group = augroup,
-    pattern = {"*.sol"},
+    pattern = { "*.sol" },
     callback = function()
       bo.filetype = "solidity"
     end,
@@ -133,15 +107,9 @@ function M.check_solidity_ls()
     local result = handle:read("*a")
     handle:close()
     if result and result ~= "" then
-      -- notify("solidity-language-server found: " .. result:gsub("\n", ""), log.levels.INFO)
       return true
     end
   end
-
-  -- notify(
-  --   "solidity-language-server not found. Install it via Mason or npm: npm install -g @nomicfoundation/solidity-language-server",
-  --   log.levels.WARN
-  -- )
   return false
 end
 
@@ -153,7 +121,7 @@ function M.mason_setup()
   end
 
   mason_lspconfig.setup({
-    ensure_installed = { "solidity" },
+    ensure_installed = { "solidity_ls" }, -- must match actual server name
     automatic_installation = true,
   })
 end

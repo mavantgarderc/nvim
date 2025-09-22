@@ -6,23 +6,19 @@ local cmd = vim.cmd
 local api = vim.api
 local log = vim.log
 local notify = vim.notify
-local tbl_extend = vim.tbl_extend
 local fn = vim.fn
 local split = vim.split
 local list_slice = vim.list_slice
 
 function M.setup(capabilities)
-  local lspconfig = require("lspconfig")
-
-  -- PL/pgSQL & general SQL: postgres_lsp
-  lspconfig.postgres_lsp.setup({
+  -- Postgres LSP
+  vim.lsp.config["postgres_lsp"] = {
     capabilities = capabilities,
     settings = {
       postgres = {
         connection = {
           host = "localhost",
           port = 5432,
-          -- user/password/database can be prompted/extended later
         },
         plpgsql = {
           enabled = true,
@@ -31,56 +27,56 @@ function M.setup(capabilities)
       },
     },
     filetypes = { "sql", "pgsql", "plpgsql" },
-  })
+  }
 
-  -- T-SQL: sqlls for best SQL Server support
-  lspconfig.sqlls.setup({
+  -- SQL Server (T-SQL)
+  vim.lsp.config["sqlls"] = {
     capabilities = capabilities,
     settings = {
       sql = {
         connections = {
-          -- Uncomment and configure for MS SQL:
+          -- Example:
           -- {
-          --     name = "local_mssql",
-          --     adapter = "mssql",
-          --     host = "localhost",
-          --     port = 1433,
-          --     user = "sa",
-          --     password = "your_password",
-          --     database = "master"
+          --   name = "local_mssql",
+          --   adapter = "mssql",
+          --   host = "localhost",
+          --   port = 1433,
+          --   user = "sa",
+          --   password = "your_password",
+          --   database = "master",
           -- }
         },
-        linting = {
-          enabled = true,
-        },
-        formatting = {
-          enabled = true,
-        },
+        linting = { enabled = true },
+        formatting = { enabled = true },
       },
     },
     filetypes = { "sql", "tsql" },
     root_dir = function(fname)
-      return lspconfig.util.find_git_ancestor(fname) or
-          lspconfig.util.path.dirname(fname)
+      return vim.fs.root(fname, { ".git" }) or vim.fs.dirname(fname)
     end,
-  })
+  }
 
-  -- PL/SQL (Oracle): sqls is closest, but limited
-  lspconfig.sqls.setup({
+  -- SQLs (generic, Oracle/MySQL/Postgres)
+  vim.lsp.config["sqls"] = {
     capabilities = capabilities,
     settings = {
       sqls = {
         connections = {
-          -- Add Oracle, PostgreSQL, or MySQL connection strings if you use them
+          -- Example Oracle connection:
           -- {
-          --     driver = "oracle",
-          --     dataSourceName = "user/password@localhost:1521/XEPDB1"
-          -- },
+          --   driver = "oracle",
+          --   dataSourceName = "user/password@localhost:1521/XEPDB1"
+          -- }
         },
       },
     },
     filetypes = { "sql", "plsql", "oracle" },
-  })
+  }
+
+  -- Start all SQL servers
+  vim.lsp.start(vim.lsp.config["postgres_lsp"])
+  vim.lsp.start(vim.lsp.config["sqlls"])
+  vim.lsp.start(vim.lsp.config["sqls"])
 end
 
 -- Dynamically add a DB connection for sqls or sqlls
@@ -142,7 +138,7 @@ end, {
   desc = "Add a database connection to sqls or sqlls (usage: :SqlConnect sqls '{...}')",
   complete = function()
     return { "sqls", "sqlls" }
-  end
+  end,
 })
 
 return M
