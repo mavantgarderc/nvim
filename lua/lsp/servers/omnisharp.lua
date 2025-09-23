@@ -20,7 +20,12 @@ end
 
 -- helper: get omnisharp command
 local function get_omnisharp_cmd()
+  local fn = vim.fn
+  local notify = vim.notify
+  local log = vim.log
+
   local pid = tostring(fn.getpid())
+  local home = os.getenv("HOME")
   local candidates = {
     "omnisharp",
     "OmniSharp",
@@ -28,8 +33,8 @@ local function get_omnisharp_cmd()
     fn.stdpath("data") .. "/mason/packages/omnisharp/omnisharp",
     "/usr/local/bin/omnisharp",
     "/usr/bin/omnisharp",
-    env.HOME .. "/.local/bin/omnisharp",
-    env.HOME .. "/.dotnet/tools/omnisharp",
+    home .. "/.local/bin/omnisharp",
+    home .. "/.dotnet/tools/omnisharp",
   }
 
   for _, path in ipairs(candidates) do
@@ -38,7 +43,10 @@ local function get_omnisharp_cmd()
     end
   end
 
-  notify("OmniSharp executable not found. Install via: dotnet tool install -g omnisharp", log.levels.ERROR)
+  notify(
+    "OmniSharp executable not found. Install via: dotnet tool install -g omnisharp",
+    log.levels.ERROR
+  )
   return nil
 end
 
