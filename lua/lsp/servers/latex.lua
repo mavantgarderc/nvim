@@ -1,7 +1,7 @@
 local M = {}
 
 function M.setup(capabilities)
-  vim.lsp.config("texlab", {
+  vim.lsp.config["texlab"] = {
     capabilities = capabilities,
     settings = {
       texlab = {
@@ -32,7 +32,7 @@ function M.setup(capabilities)
     on_attach = function(client, bufnr)
       client.server_capabilities.documentFormattingProvider = false
     end,
-  })
+  }
 end
 
 return M

@@ -2,7 +2,7 @@ local M = {}
 local fn = vim.fn
 
 function M.setup(capabilities)
-  vim.lsp.config("lua_ls", {
+  vim.lsp.config["lua_ls"] = {
     capabilities = capabilities,
     on_attach = function(client, bufnr)
       client.server_capabilities.documentFormattingProvider = false
@@ -31,7 +31,7 @@ function M.setup(capabilities)
         },
       },
     },
-  })
+  }
 end
 
 return M

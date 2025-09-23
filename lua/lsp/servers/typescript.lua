@@ -3,6 +3,7 @@ local M = {}
 function M.setup(capabilities)
   vim.lsp.config["ts_ls"] = {
     capabilities = capabilities,
+    filetypes = { "typescript", "typescriptreact", "javascript", "javascriptreact" },
     settings = {
       typescript = {
         inlayHints = {
@@ -29,7 +30,7 @@ function M.setup(capabilities)
     },
   }
 
-  vim.lsp.start(vim.lsp.config["ts_ls"])
+  -- no need for vim.lsp.start()
 end
 
 return M
