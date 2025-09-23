@@ -20,8 +20,6 @@ function M.setup_keymaps()
   local keymaps_ok, keymaps = pcall(require, "core.keymaps.lsp")
   if keymaps_ok and keymaps.setup_lsp_keymaps then
     keymaps.setup_lsp_keymaps()
-
-    -- print("Warning: core.keymaps.lsp not found, skipping keymap setup")
   end
 end
 
@@ -70,14 +68,15 @@ function M.setup_diagnostics()
       { name = "DiagnosticSignInfo", text = "󰋽", texthl = "DiagnosticSignInfo" },
       { name = "DiagnosticSignHint", text = "󰌶", texthl = "DiagnosticSignHint" },
     }
-
     for _, sign in ipairs(signs) do
       fn.sign_define(sign.name, sign)
     end
   end
 end
 
-function M.setup_completion(cmp, luasnip) return end
+function M.setup_completion(cmp, luasnip)
+  -- placeholder; configure your cmp here
+end
 
 function M.get_capabilities()
   local cmp_ok, cmp_nvim_lsp = pcall(require, "cmp_nvim_lsp")
@@ -85,10 +84,8 @@ function M.get_capabilities()
 
   if cmp_ok and cmp_nvim_lsp.default_capabilities then
     capabilities = cmp_nvim_lsp.default_capabilities()
-    -- print("✓ Using cmp_nvim_lsp capabilities")
   else
     capabilities = lsp.protocol.make_client_capabilities()
-    -- print("⚠ cmp_nvim_lsp not found, using default capabilities")
   end
 
   capabilities.textDocument.completion.completionItem.snippetSupport = true
@@ -112,27 +109,32 @@ function M.setup_null_ls()
 
   local sources = {}
 
-  if fn.executable("stylua") == 1 then table.insert(sources, null_ls.builtins.formatting.stylua) end
-
-  if fn.executable("csharpier") == 1 then table.insert(sources, null_ls.builtins.formatting.csharpier) end
-
-  if fn.executable("sql-formatter") == 1 then table.insert(sources, null_ls.builtins.formatting.sql_formatter) end
-
-  if fn.executable("sqlfluff") == 1 then
-    table.insert(sources, null_ls.builtins.formatting.sqlfluff)
-    table.insert(
-      sources,
-      null_ls.builtins.diagnostics.sqlfluff.with({
-        method = null_ls.methods.DIAGNOSTICS_ON_SAVE,
-        disabled_filetypes = {},
-      })
-    )
+  -- Stylua
+  if fn.executable("stylua") == 1 then
+    table.insert(sources, null_ls.builtins.formatting.stylua.with({
+      extra_args = { "--config-path", "/home/mava/.config/stylua/stylua.toml" }, -- optional
+    }))
   end
 
+  -- CSharpier
+  if fn.executable("csharpier") == 1 then
+    table.insert(sources, null_ls.builtins.formatting.csharpier)
+  end
+
+  -- SQL
+  if fn.executable("sql-formatter") == 1 then
+    table.insert(sources, null_ls.builtins.formatting.sql_formatter)
+  end
+  if fn.executable("sqlfluff") == 1 then
+    table.insert(sources, null_ls.builtins.formatting.sqlfluff)
+    table.insert(sources, null_ls.builtins.diagnostics.sqlfluff.with({
+      method = null_ls.methods.DIAGNOSTICS_ON_SAVE,
+    }))
+  end
+
+  -- other common formatters
   if fn.executable("prettier") == 1 then table.insert(sources, null_ls.builtins.formatting.prettier) end
-
   if fn.executable("black") == 1 then table.insert(sources, null_ls.builtins.formatting.black) end
-
   if fn.executable("isort") == 1 then table.insert(sources, null_ls.builtins.formatting.isort) end
 
   null_ls.setup({
@@ -168,10 +170,7 @@ function M.setup_format_keymap()
   map("x", "<leader>gf", function()
     buf.format({
       async = true,
-      range = {
-        start = fn.getpos("'<"),
-        ["end"] = fn.getpos("'>"),
-      },
+      range = { start = fn.getpos("'<"), ["end"] = fn.getpos("'>") },
       filter = function(client) return client.name ~= "ts_ls" end,
     })
   end, { desc = "Format selection" })
@@ -191,31 +190,26 @@ function M.setup_autoformat()
   })
 end
 
--- LSP UI
 function M.setup_lsp_ui()
+  -- Hover
   lsp.handlers["textDocument/hover"] = function(_, result, ctx, config)
     config = config or {}
     config.border = config.border or "rounded"
     config.title = config.title or "Hover"
-
     if not result or not result.contents then return end
-
     local markdown_lines = lsp.util.convert_input_to_markdown_lines(result.contents)
     local content = table.concat(markdown_lines, "\n")
     markdown_lines = split(content, "\n", { trimempty = true })
-
     if tbl_isempty(markdown_lines) then return end
-
     return lsp.util.open_floating_preview(markdown_lines, "markdown", config)
   end
 
+  -- Signature Help
   lsp.handlers["textDocument/signatureHelp"] = function(_, result, ctx, config)
     config = config or {}
     config.border = config.border or "rounded"
     config.title = config.title or "Signature Help"
-
     if not result or not result.signatures or tbl_isempty(result.signatures) then return end
-
     local lines = {}
     for i, signature in ipairs(result.signatures) do
       table.insert(lines, signature.label)
@@ -229,14 +223,13 @@ function M.setup_lsp_ui()
       end
       if i < #result.signatures then table.insert(lines, "") end
     end
-
     return lsp.util.open_floating_preview(lines, "markdown", config)
   end
 
-  local progress_handler = function(_, result, ctx)
+  -- Progress notifications
+  lsp.handlers["$/progress"] = function(_, result, ctx)
     local client = lsp.get_client_by_id(ctx.client_id)
     if not client then return end
-
     local value = result.value
     if value.kind == "end" then
       notify(string.format("%s: %s", client.name, value.message or "Complete"), log.levels.INFO)
@@ -245,8 +238,6 @@ function M.setup_lsp_ui()
       notify(string.format("%s: %s%s", client.name, value.message, percentage), log.levels.INFO)
     end
   end
-
-  lsp.handlers["$/progress"] = progress_handler
 end
 
 return M
