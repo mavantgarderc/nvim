@@ -1,13 +1,9 @@
-local o = vim.o
-local fn = vim.fn
-local cmd = vim.cmd
-local api = vim.api
 local map = vim.keymap.set
 
-map("n", "<leader>ut", cmd.UndotreeToggle, { desc = "Toggle undotree" })
-map("n", "<leader>uf", cmd.UndotreeFocus, { desc = "Focus undotree window" })
-map("n", "<leader>us", cmd.UndotreeShow, { desc = "Show undotree" })
-map("n", "<leader>uh", cmd.UndotreeHide, { desc = "Hide undotree" })
+map("n", "<leader>ut", vim.cmd.UndotreeToggle, { desc = "Toggle undotree" })
+map("n", "<leader>uf", vim.cmd.UndotreeFocus, { desc = "Focus undotree window" })
+map("n", "<leader>us", vim.cmd.UndotreeShow, { desc = "Show undotree" })
+map("n", "<leader>uh", vim.cmd.UndotreeHide, { desc = "Hide undotree" })
 
 map("n", "U", "<C-r>", { desc = "Redo" })
 map("n", "<C-z>", "u", { desc = "Undo" })
@@ -24,15 +20,15 @@ map("i", ";", ";<C-g>u", { desc = "Undo breakpoint" })
 map("i", ":", ":<C-g>u", { desc = "Undo breakpoint" })
 
 local function create_undo_checkpoint()
-  cmd("normal! i<C-g>u<Esc>")
+  vim.cmd("normal! i<C-g>u<Esc>")
   print("Undo checkpoint created")
 end
 
 map("n", "<leader>uc", create_undo_checkpoint, { desc = "Create undo checkpoint" })
 
 local function setup_undotree_buffer_keymaps()
-  local bufnr = api.nvim_get_current_buf()
-  local buf_name = api.nvim_buf_get_name(bufnr)
+  local bufnr = vim.api.nvim_get_current_buf()
+  local buf_name = vim.api.nvim_buf_get_name(bufnr)
 
   if string.match(buf_name, "undotree") then
     map("n", "j", "j", { buffer = bufnr, desc = "Move down in undotree" })
@@ -52,7 +48,7 @@ local function setup_undotree_buffer_keymaps()
   end
 end
 
-api.nvim_create_autocmd("BufEnter", {
+vim.api.nvim_create_autocmd("BufEnter", {
   pattern = "*",
   callback = setup_undotree_buffer_keymaps,
   desc = "Setup undotree buffer keymaps",
@@ -60,10 +56,10 @@ api.nvim_create_autocmd("BufEnter", {
 
 local function show_undo_stats()
   local stats = {
-    undolevels = o.undolevels,
-    undoreload = o.undoreload,
-    undofile   = o.undofile,
-    undodir    = o.undodir,
+    undolevels = vim.o.undolevels,
+    undoreload = vim.o.undoreload,
+    undofile   = vim.o.undofile,
+    undodir    = vim.o.undodir,
   }
 
   print("Undo Configuration:")
@@ -72,7 +68,7 @@ local function show_undo_stats()
   print("  Undo file: " .. tostring(stats.undofile))
   print("  Undo dir: " .. stats.undodir)
 
-  if fn.has("persistent_undo") == 1 then
+  if vim.fn.has("persistent_undo") == 1 then
     print("  Persistent undo: enabled")
   else
     print("  Persistent undo: disabled")

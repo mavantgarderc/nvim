@@ -1,52 +1,39 @@
 local map = vim.keymap.set
-local api = vim.api
-local buf = vim.lsp.buf
-local diagnostic = vim.diagnostic
-local g = vim.g
-local fn = vim.fn
-local notify = vim.notify
-local inspect = vim.inspect
-local b = vim.b
-local bo = vim.bo
-local lsp = vim.lsp
-local log = vim.log
-local defer_fn = vim.defer_fn
-local uri_from_bufnr = vim.uri_from_bufnr
-local tbl_extend = vim.tbl_extend
+local buff = vim.lsp.buf
 
 local M = {}
 
 function M.setup_lsp_keymaps()
-  api.nvim_create_autocmd("LspAttach", {
+  vim.api.nvim_create_autocmd("LspAttach", {
     desc = "LSP actions",
     callback = function(event)
       local opts = { buffer = event.buf, silent = true }
 
-      map("n", "<leader>K", buf.hover, opts)
-      map("n", "<leader>gd", buf.definition, opts)
-      map("n", "<leader>gD", buf.declaration, opts)
-      map("n", "<leader>gi", buf.implementation, opts)
-      map("n", "<leader>go", buf.type_definition, opts)
-      map("n", "<leader>gr", buf.references, opts)
-      map("n", "<leader>gs", buf.signature_help, opts)
+      map("n", "<leader>K", buff.hover, opts)
+      map("n", "<leader>gd", buff.definition, opts)
+      map("n", "<leader>gD", buff.declaration, opts)
+      map("n", "<leader>gi", buff.implementation, opts)
+      map("n", "<leader>go", buff.type_definition, opts)
+      map("n", "<leader>gr", buff.references, opts)
+      map("n", "<leader>gs", buff.signature_help, opts)
 
-      map("n", "<leader>grn", buf.rename, opts)
-      map("n", "<leader>ca", buf.code_action, opts)
-      map("v", "<leader>ca", buf.code_action, opts)
-      map({ "n", "x" }, "<leader>gra", buf.code_action, opts)
+      map("n", "<leader>grn", buff.rename, opts)
+      map("n", "<leader>ca", buff.code_action, opts)
+      map("v", "<leader>ca", buff.code_action, opts)
+      map({ "n", "x" }, "<leader>gra", buff.code_action, opts)
 
-      map("n", "<leader>e", diagnostic.open_float, opts)
-      map("n", "<leader>q", diagnostic.setloclist, opts)
-      map("n", "<leader>[d", function() diagnostic.jump({ count = -1 }) end, opts)
-      map("n", "<leader>]d", function() diagnostic.jump({ count = 1 }) end, opts)
+      map("n", "<leader>e", vim.diagnostic.open_float, opts)
+      map("n", "<leader>q", vim.diagnostic.setloclist, opts)
+      map("n", "<leader>[d", function() vim.diagnostic.jump({ count = -1 }) end, opts)
+      map("n", "<leader>]d", function() vim.diagnostic.jump({ count = 1 }) end, opts)
 
-      map("n", "<leader>[e", function() diagnostic.jump({ count = -1, severity = diagnostic.severity.ERROR }) end, opts)
-      map("n", "<leader>]e", function() diagnostic.jump({ count = 1, severity = diagnostic.severity.ERROR }) end, opts)
+      map("n", "<leader>[e", function() vim.diagnostic.jump({ count = -1, severity = vim.diagnostic.severity.ERROR }) end, opts)
+      map("n", "<leader>]e", function() vim.diagnostic.jump({ count = 1, severity = vim.diagnostic.severity.ERROR }) end, opts)
 
-      map("n", "<leader>wa", buf.add_workspace_folder, opts)
-      map("n", "<leader>wr", buf.remove_workspace_folder, opts)
+      map("n", "<leader>wa", buff.add_workspace_folder, opts)
+      map("n", "<leader>wr", buff.remove_workspace_folder, opts)
       map("n", "<leader>wl", function()
-        print(inspect(buf.list_workspace_folders()))
+        print(vim.inspect(buff.list_workspace_folders()))
       end, opts)
 
       local has_telescope, telescope = pcall(require, "telescope.builtin")
@@ -61,44 +48,44 @@ function M.setup_lsp_keymaps()
       end
 
       -- toggle auto-lint
-      b.lsp_format_on_save = false
+      vim.b.lsp_format_on_save = false
       map("n", "<leader>tf", function()
-        if b.lsp_format_on_save then
-          b.lsp_format_on_save = false
-          notify("LSP format on save disabled for buffer", log.levels.INFO)
+        if vim.b.lsp_format_on_save then
+          vim.b.lsp_format_on_save = false
+          vim.notify("LSP format on save disabled for buffer", vim.log.levels.INFO)
         else
-          b.lsp_format_on_save = true
-          notify("LSP format on save enabled for buffer", log.levels.INFO)
+          vim.b.lsp_format_on_save = true
+          vim.notify("LSP format on save enabled for buffer", vim.log.levels.INFO)
         end
       end, opts)
 
       -- lint
-      map("n", "<F3>", function()
-        lsp.buf.format({
+      map("n", "<leader>glb", function()
+        vim.lsp.buf.format({
           async = false,
           filter = function(client)
             return client.name == "null-ls"
           end
         })
-        lsp.buf.code_action({
+        vim.lsp.buf.code_action({
           context = {
             only = { "source.organizeImports", "source.fixAll" },
-            diagnostics = diagnostic.get(0),
+            diagnostics = vim.diagnostic.get(0),
           },
           apply = true,
         })
-        notify("Manual formatting & linting triggered", log.levels.INFO)
+        vim.notify("Manual formatting & linting triggered", vim.log.levels.INFO)
       end, { desc = "Manual formatting & linting (F3)" })
 
       -- Get client information for language-specific keymaps
-      local clients = lsp.get_clients({ bufnr = event.buf })
+      local clients = vim.lsp.get_clients({ bufnr = event.buf })
       local client_names = {}
       for _, client in ipairs(clients) do
         table.insert(client_names, client.name)
       end
 
       -- C# / OmniSharp specific keymaps
-      local ft = bo[event.buf].filetype
+      local ft = vim.bo[event.buf].filetype
       if ft == "cs" then
         local omnisharp_client = nil
         for _, client in ipairs(clients) do
@@ -117,65 +104,68 @@ function M.setup_lsp_keymaps()
           -- Add missing usings
           map("n", "<leader>cu", function()
             if is_omnisharp_ready() then
-              lsp.buf.code_action({
+              buff.code_action({
                 context = {
                   only = { "source.addMissingImports" },
+                  diagnostics = vim.diagnostic.get(0),
                 },
                 apply = true,
               })
             else
-              notify("OmniSharp still initializing, please wait...", log.levels.WARN)
+              vim.notify("OmniSharp still initializing, please wait...", vim.log.levels.WARN)
             end
-          end, tbl_extend("force", opts, { desc = "Add missing usings" }))
+          end, vim.tbl_extend("force", opts, { desc = "Add missing usings" }))
 
           -- Organize imports
           map("n", "<leader>co", function()
             if is_omnisharp_ready() then
-              lsp.buf.code_action({
+              buff.code_action({
                 context = {
                   only = { "source.organizeImports" },
+                  diagnostics = vim.diagnostic.get(0),
                 },
                 apply = true
               })
             else
-              notify("OmniSharp still initializing, please wait...", log.levels.WARN)
+              vim.notify("OmniSharp still initializing, please wait...", vim.log.levels.WARN)
             end
-          end, tbl_extend("force", opts, { desc = "Organize imports" }))
+          end, vim.tbl_extend("force", opts, { desc = "Organize imports" }))
 
           -- Remove unnecessary usings
           map("n", "<leader>cr", function()
             if is_omnisharp_ready() then
-              lsp.buf.code_action({
+              buff.code_action({
                 context = {
                   only = { "source.removeUnnecessaryImports" },
+                  diagnostics = vim.diagnostic.get(0),
                 },
                 apply = true,
               })
             else
-              notify("OmniSharp still initializing, please wait...", log.levels.WARN)
+              vim.notify("OmniSharp still initializing, please wait...", vim.log.levels.WARN)
             end
-          end, tbl_extend("force", opts, { desc = "Remove unnecessary usings" }))
+          end, vim.tbl_extend("force", opts, { desc = "Remove unnecessary usings" }))
 
           -- Debug code actions
           map("n", "<leader>cd", function()
             if not is_omnisharp_ready() then
-              notify("OmniSharp still initializing, please wait...", log.levels.WARN)
+              vim.notify("OmniSharp still initializing, please wait...", vim.log.levels.WARN)
               return
             end
 
-            local params = lsp.util.make_range_params()
+            local params = vim.lsp.util.make_range_params(event.buf, "utf-16")
             params.context = {
-              diagnostics = diagnostic.get(event.buf, { lnum = fn.line('.') - 1 })
+              diagnostics = vim.diagnostic.get(event.buf, { lnum = vim.fn.line('.') - 1 }),
             }
 
-            lsp.buf_request(event.buf, 'textDocument/codeAction', params, function(err, result, ctx, config)
+            vim.lsp.buf_request(event.buf, 'textDocument/codeAction', params, function(err, result, ctx, config)
               if err then
-                notify("Error getting code actions: " .. err.message, log.levels.ERROR)
+                vim.notify("Error getting code actions: " .. err.message, vim.log.levels.ERROR)
                 return
               end
 
               if not result or #result == 0 then
-                notify("No code actions available", log.levels.INFO)
+                vim.notify("No code actions available", vim.log.levels.INFO)
                 return
               end
 
@@ -184,35 +174,37 @@ function M.setup_lsp_keymaps()
                 print(string.format("%d: %s (kind: %s)", i, action.title or "No title", action.kind or "No kind"))
               end
             end)
-          end, tbl_extend("force", opts, { desc = "Debug code actions" }))
+          end, vim.tbl_extend("force", opts, { desc = "Debug code actions" }))
 
           -- Test running keymaps (if netcoredbg is available)
-          if fn.executable("netcoredbg") == 1 then
+          if vim.fn.executable("netcoredbg") == 1 then
             map("n", "<leader>rt", function()
               if is_omnisharp_ready() then
-                lsp.buf.code_action({
+                buff.code_action({
                   context = {
                     only = { "source.runTest" },
+                    diagnostics = vim.diagnostic.get(0),
                   },
                   apply = true,
                 })
               else
-                notify("OmniSharp still initializing, please wait...", log.levels.WARN)
+                vim.notify("OmniSharp still initializing, please wait...", vim.log.levels.WARN)
               end
-            end, tbl_extend("force", opts, { desc = "Run test" }))
+            end, vim.tbl_extend("force", opts, { desc = "Run test" }))
 
             map("n", "<leader>dt", function()
               if is_omnisharp_ready() then
-                lsp.buf.code_action({
+                buff.code_action({
                   context = {
                     only = { "source.debugTest" },
+                    diagnostics = vim.diagnostic.get(0),
                   },
                   apply = true,
                 })
               else
-                notify("OmniSharp still initializing, please wait...", log.levels.WARN)
+                vim.notify("OmniSharp still initializing, please wait...", vim.log.levels.WARN)
               end
-            end, tbl_extend("force", opts, { desc = "Debug test" }))
+            end, vim.tbl_extend("force", opts, { desc = "Debug test" }))
           end
         end
       end

@@ -1,7 +1,6 @@
 local dap = require("dap")
 local dapui = require("dapui")
 local map = vim.keymap.set
-local fn = vim.fn
 
 -- Basic debugging
 map("n", "<F05>", dap.continue, { desc = "Continue debugging" })
@@ -13,11 +12,11 @@ map("n", "<F12>", dap.step_out, { desc = "Step out" })
 map("n", "<leader>db", dap.toggle_breakpoint, { desc = "Toggle breakpoint" })
 
 map("n", "<leader>dB", function()
-  dap.set_breakpoint(fn.input("Breakpoint condition: "))
+  dap.set_breakpoint(vim.fn.input("Breakpoint condition: "))
 end, { desc = "Set conditional breakpoint" })
 
 map("n", "<leader>dl", function()
-  dap.set_breakpoint(nil, nil, fn.input("Log point message: "))
+  dap.set_breakpoint(nil, nil, vim.fn.input("Log point message: "))
 end, { desc = "Set log point" })
 
 -- DAP UI and utilities

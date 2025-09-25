@@ -1,14 +1,8 @@
 local map = vim.keymap.set
-local g = vim.g
-local cmd = vim.cmd
-local api = vim.api
-local opt = vim.opt
-local opt_local = vim.opt_local
-local fn = vim.fn
 
 local function vm_status()
-  if g.VM_Selection then
-    local count = g.VM_Selection.Vars.index
+  if vim.g.VM_Selection then
+    local count = vim.g.VM_Selection.Vars.index
     print("VM: " .. count .. " cursors active")
   else
     print("VM: No active cursors")
@@ -16,34 +10,34 @@ local function vm_status()
 end
 
 local function vm_clear_all()
-  cmd("VMClear")
+  vim.cmd("VMClear")
   print("VM: All cursors cleared")
 end
 
-local function vm_toggle_case() cmd("VMCaseSetting") end
+local function vm_toggle_case() vim.cmd("VMCaseSetting") end
 
-local function vm_toggle_whole_word() cmd("VMWholeWord") end
+local function vm_toggle_whole_word() vim.cmd("VMWholeWord") end
 
-api.nvim_create_augroup("VMKeymaps", { clear = true })
+vim.api.nvim_create_augroup("VMKeymaps", { clear = true })
 
-api.nvim_create_autocmd("User", {
+vim.api.nvim_create_autocmd("User", {
   pattern = "visual_multi_start",
   group = "VMKeymaps",
   callback = function()
     print("VM: Multi-cursor mode started")
-    opt_local.cursorline = true
-    opt_local.cursorcolumn = true
+    vim.opt_local.cursorline = true
+    vim.opt_local.cursorcolumn = true
   end,
   desc = "VM mode started",
 })
 
-api.nvim_create_autocmd("User", {
+vim.api.nvim_create_autocmd("User", {
   pattern = "visual_multi_exit",
   group = "VMKeymaps",
   callback = function()
     print("VM: Multi-cursor mode exited")
-    opt_local.cursorline = false
-    opt_local.cursorcolumn = false
+    vim.opt_local.cursorline = false
+    vim.opt_local.cursorcolumn = false
   end,
   desc = "VM mode exited",
 })

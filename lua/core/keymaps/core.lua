@@ -5,9 +5,6 @@ end
 local set = vim.keymap.set
 local opts = { noremap = true, silent = true, }
 
-local fn = vim.fn
-local api = vim.api
-
 -- Paste from OS-Integrated Clipboard
 -- map("n", "<leader>p", "\"_dp", opts)
 
@@ -16,13 +13,13 @@ set("n", "<leader>pv", ":Oil<CR>", { noremap = true, silent = true, desc = "Open
 
 -- interactive replace word under the cursor
 map("n", "<leader>x", function()
-  local word = fn.expand("<cword>")
+  local word = vim.fn.expand("<cword>")
   if word == "" then
     print("No word under cursor")
     return
   end
-  api.nvim_feedkeys(
-    ":%s/" .. fn.escape(word, "/\\") .. "//gc" .. string.rep(api.nvim_replace_termcodes("<Left>", true, false, true), 3),
+  vim.api.nvim_feedkeys(
+    ":%s/" .. vim.fn.escape(word, "/\\") .. "//gc" .. string.rep(vim.api.nvim_replace_termcodes("<Left>", true, false, true), 3),
     "n", false)
 end, "Replace word under cursor interactively")
 

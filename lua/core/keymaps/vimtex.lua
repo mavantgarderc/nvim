@@ -1,10 +1,8 @@
-local vim = vim
-local api = vim.api
 local opts = { noremap = true, silent = true, buffer = true }
 
-local group = api.nvim_create_augroup("vimtex_keymaps", { clear = true })
+local group = vim.api.nvim_create_augroup("vimtex_keymaps", { clear = true })
 
-api.nvim_create_autocmd("FileType", {
+vim.api.nvim_create_autocmd("FileType", {
   group = group,
   pattern = "tex",
   callback = function(ev)

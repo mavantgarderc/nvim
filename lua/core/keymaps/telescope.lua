@@ -1,8 +1,6 @@
-local fn = vim.fn
 local map = vim.keymap.set
-local api = vim.api
 
-api.nvim_create_autocmd("User", {
+vim.api.nvim_create_autocmd("User", {
   pattern = "LazyLoad",
   callback = function(event)
     if event.data == "telescope.nvim" then
@@ -55,11 +53,11 @@ api.nvim_create_autocmd("User", {
       end, { desc = "Live grep (including hidden)" })
 
       map("n", "<leader>fd", function()
-        builtin.find_files({ cwd = fn.expand("%:p:h") })
+        builtin.find_files({ cwd = vim.fn.expand("%:p:h") })
       end, { desc = "Find files in current directory" })
 
       map("n", "<leader>fD", function()
-        builtin.live_grep({ cwd = fn.expand("%:p:h") })
+        builtin.live_grep({ cwd = vim.fn.expand("%:p:h") })
       end, { desc = "Live grep in current directory" })
 
       map("n", "<leader>s/", function()
@@ -67,11 +65,11 @@ api.nvim_create_autocmd("User", {
       end, { desc = "[S]earch [/] in open files" })
 
       map("n", "<leader>sn", function()
-        builtin.find_files({ cwd = fn.stdpath("config") })
+        builtin.find_files({ cwd = vim.fn.stdpath("config") })
       end, { desc = "[S]earch [N]eovim files" })
 
       map("n", "<leader>fn", function()
-        builtin.find_files({ cwd = fn.stdpath("config") })
+        builtin.find_files({ cwd = vim.fn.stdpath("config") })
       end, { desc = "Find nvim config files" })
 
       map("n", "<leader>fp", function()
