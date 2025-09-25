@@ -6,37 +6,4 @@ quote_style = "AutoPreferDouble"
 call_parentheses = "Always"
 collapse_simple_statement = "Always"
 no_call_parentheses = false
-space_after_function_names = "none"
-space_around_equals_in_field = true
-verify_ast = true
-verbose = false
-color = "Auto"
-
-[table]
-collapse_simple_statement = "Never"
-multi_line_table_align = "Always"
-table_separator_style = "TrailingCommas"
-
-function_args_collapse = "FitOrVertical"
-function_calls_collapse = "FitOrVertical"
-if_collapse = "AlwaysOneLine"
-while_collapse = "AlwaysOneLine"
-for_collapse = "AlwaysOneLine"
-string_normalize = true
-comment_directive = "KeepDirectives"
-
-exclude = [
-    "**/node_modules/**",
-    "**/target/**",
-    "**/build/**",
-    "**/.git/**",
-    "**/vendor/**",
-]
-
-[sort_requires]
-enabled = true
-group_imports = true
-
-# [overrides]
-# "**/*_spec.lua" = { indent_width = 4 }  # Different indent for test files
-# "**/init.lua" = { column_width = 80 }   # Shorter lines for init files
+space_after_function_names = "Never"
