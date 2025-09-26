@@ -1,3 +1,4 @@
+-- lua/Raphael/picker.lua
 local themes = require("Raphael.themes")
 
 local M = {}
@@ -10,7 +11,6 @@ local ICON_INSTALLED = ""
 local ICON_MISSING = ""
 local ICON_CURRENT = ""
 
--- Helpers
 local function is_bookmarked(theme)
   return vim.tbl_contains(state_ref.bookmarks or {}, theme)
 end
@@ -50,7 +50,9 @@ local function render()
 end
 
 local function parse_line_theme(line)
-  -- Remove all leading icons & whitespace
+  if not line or line == "" then return nil end
+  if line:match("^%s*[▶▼]") then return nil end
+  -- remove all leading non-alphanumeric characters (icons + spaces), then strip trailing current icon
   local theme = line:gsub("^[^%w]*", ""):gsub("%s*" .. ICON_CURRENT .. "$", "")
   return vim.trim(theme)
 end
@@ -61,9 +63,9 @@ local function preview(theme)
   previewed = theme
   local ok, err = pcall(vim.cmd.colorscheme, theme)
   if ok then
-    vim.notify("Preview: " .. theme)
+    vim.notify("Raphael preview: " .. theme)
   else
-    vim.notify("Preview failed: " .. tostring(err), vim.log.levels.WARN)
+    vim.notify("Raphael: preview failed for " .. theme .. ": " .. tostring(err), vim.log.levels.WARN)
   end
 end
 
@@ -86,12 +88,18 @@ local function close_picker(revert)
   win, buf, previewed = nil, nil, nil
 end
 
--- Main picker function
 function M.open(core)
   core_ref = core
   state_ref = core.state
   previewed = nil
   ensure_buf()
+
+  -- restore persisted collapsed state from core.state (if any)
+  if core_ref and core_ref.state and type(core_ref.state.collapsed) == "table" then
+    collapsed = vim.deepcopy(core_ref.state.collapsed)
+  else
+    collapsed = {} -- default: expanded
+  end
 
   local width = math.floor(vim.o.columns * 0.5)
   local height = math.floor(vim.o.lines * 0.6)
@@ -109,7 +117,7 @@ function M.open(core)
   core.state.previous = vim.g.colors_name
   render()
 
-  -- Keymaps
+  -- keymaps
   vim.keymap.set("n", "q", function() close_picker(true) end, { buffer = buf })
   vim.keymap.set("n", "<Esc>", function() close_picker(true) end, { buffer = buf })
 
@@ -117,11 +125,11 @@ function M.open(core)
     local line = vim.api.nvim_get_current_line()
     local theme = parse_line_theme(line)
     if theme then
-      vim.notify("Selected: " .. theme)
+      vim.notify("Raphael selected: " .. theme)
       if themes.is_available(theme) then
         core.apply(theme)
       else
-        vim.notify("Theme not available: " .. theme, vim.log.levels.WARN)
+        vim.notify("Raphael: theme not available: " .. theme, vim.log.levels.WARN)
       end
     end
     close_picker(false)
@@ -130,18 +138,30 @@ function M.open(core)
   vim.keymap.set("n", "<leader>tb", function()
     local line = vim.api.nvim_get_current_line()
     local theme = parse_line_theme(line)
-    if not theme then return vim.notify("No theme here", vim.log.levels.INFO) end
+    if not theme then
+      vim.notify("Raphael: no theme on this line to bookmark", vim.log.levels.INFO)
+      return
+    end
     core.toggle_bookmark(theme)
     render()
   end, { buffer = buf })
 
+  -- collapse toggle on header with 'c' and persist to core.state
   vim.keymap.set("n", "c", function()
     local line = vim.api.nvim_get_current_line()
     local hdr = line:match("^%s*[▶▼]%s*(.+)$")
-    if hdr then collapsed[hdr] = not collapsed[hdr]; render() end
+    if hdr then
+      collapsed[hdr] = not collapsed[hdr]
+      -- persist into core.state and save via core.save_state (if available)
+      if core_ref and core_ref.state then
+        core_ref.state.collapsed = vim.deepcopy(collapsed)
+        if core_ref.save_state then core_ref.save_state() end
+      end
+      render()
+    end
   end, { buffer = buf })
 
-  -- Cursor preview
+  -- live preview on cursor move
   vim.api.nvim_create_autocmd({"CursorMoved", "CursorMovedI"}, {
     buffer = buf,
     callback = function()
@@ -151,7 +171,7 @@ function M.open(core)
     end,
   })
 
-  -- Auto-select current theme
+  -- focus current theme on open
   vim.schedule(function()
     local lines = vim.api.nvim_buf_get_lines(buf, 0, -1, false)
     for i, l in ipairs(lines) do
