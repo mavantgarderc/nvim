@@ -12,17 +12,56 @@ local function ensure_dir()
   end
 end
 
+-- default state generator
+local function default_state()
+  return {
+    enabled = false,
+    current = "kanagawa-paper-ink",
+    previous = nil,
+    history = {},
+    bookmarks = {},
+  }
+end
+
 function M.load_state(state)
   ensure_dir()
   local fd = io.open(state_file, "r")
-  if not fd then return end
+  if not fd then
+    -- create default file asynchronously
+    local payload = vim.fn.json_encode(default_state())
+    -- write async
+    uv.fs_open(state_file, "w", 438, function(err, fdw)
+      if err then return end
+      uv.fs_write(fdw, payload, -1, function()
+        uv.fs_close(fdw)
+      end)
+    end)
+    -- merge defaults into provided state
+    local d = default_state()
+    for k, v in pairs(d) do state[k] = v end
+    return
+  end
+
   local content = fd:read("*a")
   fd:close()
   local ok, decoded = pcall(vim.fn.json_decode, content)
   if ok and type(decoded) == "table" then
-    for k, v in pairs(decoded) do
-      state[k] = v
+    -- merge with defaults to ensure keys exist
+    local d = default_state()
+    for k, v in pairs(d) do
+      state[k] = decoded[k] ~= nil and decoded[k] or v
     end
+  else
+    -- failed decode: write defaults back
+    local payload = vim.fn.json_encode(default_state())
+    uv.fs_open(state_file, "w", 438, function(err, fdw)
+      if err then return end
+      uv.fs_write(fdw, payload, -1, function()
+        uv.fs_close(fdw)
+      end)
+    end)
+    local d = default_state()
+    for k, v in pairs(d) do state[k] = v end
   end
 end
 
@@ -45,6 +84,7 @@ function M.add_history(theme, state)
 end
 
 function M.toggle_bookmark(theme, state)
+  if not theme or theme == "" then return end
   local idx = vim.fn.index(state.bookmarks, theme)
   if idx >= 0 then
     table.remove(state.bookmarks, idx + 1)

@@ -1,98 +1,94 @@
-local M = {}
+-- Raphael: main entry point
 
-local themes   = require("Raphael.themes")
-local autocmds = require("Raphael.autocmds")
-local keymaps  = require("Raphael.keymaps")
-local commands = require("Raphael.commands")
-local cache    = require("Raphael.cache")
+local Raphael = {}
 
-M.state = {
-  enabled      = false,
-  current      = "kanagawa-paper-ink",
-  previous     = nil,
-  history      = {},
-  bookmarks    = {},
+Raphael.state = {
+  current = "kanagawa-paper-ink",
+  previous = nil,
+  auto_apply = false,
+  bookmarks = {},
 }
 
--- setup function
-function M.setup(opts)
-  opts = opts or {}
-
-  -- load user config from ~/raphael.lua if present
-  local home_config = vim.fn.expand("~") .. "/raphael.lua"
-  if vim.fn.filereadable(home_config) == 1 then
-    local ok, user_cfg = pcall(dofile, home_config)
-    if ok and type(user_cfg) == "table" then
-      themes.merge_user_config(user_cfg)
-    end
-  else
-    -- auto-create template if missing
-    local f = io.open(home_config, "w")
-    if f then
-      f:write([[
--- File: ~/raphael.lua
--- Raphael user preferences
--- You can override mappings or add filetype themes here.
-
-return {
-  -- Example:
-  -- filetype_themes = {
-  --   rust = "gruvbox",
-  --   go   = "carbonfox",
-  -- },
+Raphael.config = {
+  leader = "<leader>t",
+  mappings = { picker = "p", next = "n", previous = "N", random = "r" },
 }
-]])
-      f:close()
+
+local path = vim.fn.expand("~") .. "/raphael.lua"
+
+-- load saved state if it exists
+local function load_state()
+  if vim.fn.filereadable(path) == 1 then
+    local ok, tbl = pcall(dofile, path)
+    if ok and type(tbl) == "table" then
+      for k,v in pairs(tbl) do
+        Raphael.state[k] = v
+      end
     end
   end
-
-  -- restore state from JSON
-  cache.load_state(M.state)
-
-  -- setup autocmds for filetype switching
-  autocmds.setup(M)
-
-  -- setup keymaps and commands
-  keymaps.setup(M)
-  commands.setup(M)
 end
 
--- apply a theme
-function M.apply(theme, opts)
-  opts = opts or {}
-  if not themes.is_available(theme) then
-    vim.notify("Raphael: theme " .. theme .. " not available", vim.log.levels.ERROR)
+-- save state asynchronously
+local function save_state()
+  local f = io.open(path, "w")
+  if not f then return end
+  local content = "return " .. vim.inspect(Raphael.state)
+  f:write(content)
+  f:close()
+end
+
+-- safe requires
+Raphael.colors = require("Raphael.colors")
+Raphael.themes = require("Raphael.themes")
+Raphael.themes.refresh()
+Raphael.picker = require("Raphael.picker")
+
+-- apply theme
+function Raphael.apply(theme)
+  if not theme or not Raphael.themes.is_available(theme) then
+    vim.notify("Raphael: theme not available: " .. tostring(theme), vim.log.levels.WARN)
     return
   end
-
-  M.state.previous = vim.g.colors_name
-  local ok, err = pcall(vim.cmd.colorscheme, theme)
-  if not ok then
-    vim.notify("Raphael failed to apply theme: " .. err, vim.log.levels.ERROR)
-    vim.cmd.colorscheme("kanagawa-paper-ink")
-    return
-  end
-
-  M.state.current = theme
-  cache.add_history(theme, M.state)
-  cache.save_state(M.state)
+  Raphael.state.previous = Raphael.state.current
+  Raphael.state.current = theme
+  vim.cmd.colorscheme(theme)
+  save_state()  -- persist immediately
 end
 
 -- toggle auto-theme
-function M.toggle()
-  M.state.enabled = not M.state.enabled
-  vim.notify("Raphael auto-theme " .. (M.state.enabled and "enabled" or "disabled"))
-  cache.save_state(M.state)
+function Raphael.toggle_auto()
+  Raphael.state.auto_apply = not Raphael.state.auto_apply
+  vim.notify(Raphael.state.auto_apply and "Raphael auto-theme: ON" or "Raphael auto-theme: OFF")
+  save_state()
 end
 
--- picker entry point
-function M.pick()
-  require("Raphael.picker").open(M)
+-- open picker
+function Raphael.open_picker()
+  Raphael.picker.open(Raphael)
 end
 
--- bookmarks
-function M.toggle_bookmark(theme)
-  cache.toggle_bookmark(theme, M.state)
-end
+-- filetype auto-apply
+vim.api.nvim_create_autocmd("FileType", {
+  callback = function(args)
+    if not Raphael.state.auto_apply then return end
+    local ft = args.match
+    local theme = Raphael.themes.filetype_themes[ft]
+    if theme then Raphael.apply(theme) end
+  end,
+})
 
-return M
+-- keymaps
+vim.keymap.set("n", Raphael.config.leader .. Raphael.config.mappings.picker, Raphael.open_picker, { desc = "Open Raphael Theme Picker" })
+vim.keymap.set("n", Raphael.config.leader .. "ta", Raphael.toggle_auto, { desc = "Toggle Raphael auto-theme" })
+
+-- load saved theme on startup
+load_state()
+vim.schedule(function()
+  if Raphael.themes.is_available(Raphael.state.current) then
+    vim.cmd.colorscheme(Raphael.state.current)
+  else
+    vim.cmd.colorscheme("kanagawa-paper-ink")
+  end
+end)
+
+return Raphael
