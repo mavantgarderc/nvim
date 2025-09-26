@@ -1,5 +1,3 @@
--- toml_parser.lua
-
 local tbl_contains = vim.tbl_contains
 
 local M = {}

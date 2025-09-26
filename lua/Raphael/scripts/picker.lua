@@ -1,5 +1,4 @@
 -- File: Raphael/scripts/picker.lua
-
 local vim = vim
 local api = vim.api
 local o = vim.o

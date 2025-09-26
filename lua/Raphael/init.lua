@@ -79,18 +79,6 @@ green = "#34d399"
 yellow = "#fbbf24"
 red = "#f87171"
 purple = "#a78bfa"
-
-[highlights]
-Normal = { fg = "fg", bg = "bg" }
-Comment = { fg = "#808080", italic = true }
-String = { fg = "green" }
-Function = { fg = "blue" }
-Keyword = { fg = "purple" }
-Type = { fg = "yellow" }
-Constant = { fg = "red" }
-Operator = { fg = "#22d3ee" }
-CursorLine = { bg = "#2a2a2a" }
-Visual = { bg = "#404040" }
 ]]
   local f = io.open(sample_file, "w")
   if f then

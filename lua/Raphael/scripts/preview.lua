@@ -1,5 +1,4 @@
 -- File: Raphael/scripts/preview.lua
-
 local vim = vim
 local api = vim.api
 local fn = vim.fn
@@ -259,42 +258,6 @@ function M.slideshow_preview(colorschemes, interval, loop)
       preview_state.original_colorscheme = nil
     end
     notify("Slideshow stopped", log.levels.INFO)
-  end
-end
-
--- Compare colorschemes (sequential quick previews with delay)
-function M.compare_colorschemes(colorschemes)
-  if #colorschemes < 2 then return end
-  store_original()
-  local index = 1
-  local delay = 3000
-  local timer = nil
-
-  local function show_next()
-    if index <= #colorschemes then
-      local cs = colorschemes[index]
-      loader.apply_colorscheme(cs.name, cs.type)
-      notify("Compare " .. index .. "/" .. #colorschemes .. ": " .. cs.name, log.levels.INFO)
-      index = index + 1
-      timer = defer_fn(show_next, delay)
-    else
-      if preview_state.original_colorscheme then
-        loader.apply_colorscheme(preview_state.original_colorscheme.name, preview_state.original_colorscheme.type)
-        preview_state.original_colorscheme = nil
-      end
-      notify("Comparison complete", log.levels.INFO)
-    end
-  end
-
-  show_next()
-
-  return function()
-    if timer then fn.timer_stop(timer) end
-    if preview_state.original_colorscheme then
-      loader.apply_colorscheme(preview_state.original_colorscheme.name, preview_state.original_colorscheme.type)
-      preview_state.original_colorscheme = nil
-    end
-    notify("Comparison stopped", log.levels.INFO)
   end
 end
 

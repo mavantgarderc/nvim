@@ -1,5 +1,4 @@
 -- File: Raphael/scripts/loader.lua
-
 local vim = vim
 local fn = vim.fn
 local g = vim.g
@@ -111,7 +110,7 @@ function M.apply_toml_colorscheme(name)
   cmd("hi clear")
   if fn.exists("syntax_on") == 1 then cmd("syntax reset") end
 
-  if cs.metadata.background then o.background = cs.metadata.background else o.background = "dark" end
+  if cs.metadata.background then o.background = cs.metadata.background end
   g.colors_name = name
 
   for hl_name, hl_def in pairs(cs.highlights) do
@@ -154,7 +153,7 @@ end
 
 function M.get_colorscheme_metadata(name)
   local cs = M.load_toml_colorscheme(name)
-  return cs and cs.metadata or {}
+  return cs and cs.metadata or nil
 end
 
 function M.get_colorscheme_colors(name)

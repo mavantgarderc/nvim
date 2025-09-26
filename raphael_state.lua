@@ -1,1 +1,1 @@
-return { last_colorscheme = { name = "kanagawa-paper-ink", type = "builtin", timestamp = 1758769837 } }
+return { last_colorscheme = { name = "kanagawa-paper-ink", type = "builtin", timestamp = 1758844885 } }

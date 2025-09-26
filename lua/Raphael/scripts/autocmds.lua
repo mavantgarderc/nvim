@@ -182,23 +182,6 @@ function M.setup_autocmds()
     desc = "Auto-switch colorscheme based on background",
   })
 
-  -- Filetype-based switching
-  api.nvim_create_autocmd("BufEnter", {
-    group = augroup,
-    callback = function()
-      local ft = vim.bo.filetype
-      if not ft or ft == "" then return end
-      local theme = colors_config.filetype_themes[ft]
-      if not theme then return end
-      local current = get_current_colorscheme()
-      local type_ = colors_config.is_toml_colorscheme(theme) and "toml" or "builtin"
-      if current.name ~= theme then
-        loader.apply_colorscheme(theme, type_)
-      end
-    end,
-    desc = "Apply filetype-specific colorscheme",
-  })
-
   -- Time-based switching
   if colors_config.config and colors_config.config.time_based_switching then
     local function switch_time_based()
