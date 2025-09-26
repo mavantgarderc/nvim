@@ -1,17 +1,10 @@
 -- File: Raphael/scripts/loader.lua
-local vim = vim
-local fn = vim.fn
-local g = vim.g
-local cmd = vim.cmd
-local api = vim.api
-local o = vim.o
-local notify = vim.notify
-local log = vim.log
 
 local toml_parser = require("Raphael.toml_parser")
 local colors_config = require("Raphael.colors")
 
 local M = {}
+
 M.cache = {}
 
 -- ======= Helpers =======
@@ -44,7 +37,7 @@ end
 local function process_highlight(name, hl_def, colors)
   if type(hl_def) == "string" then hl_def = { fg = hl_def } end
   if type(hl_def) ~= "table" then
-    notify(("Highlight '%s' is not a table, skipping"):format(name), log.levels.WARN)
+    vim.notify(("Highlight '%s' is not a table, skipping"):format(name), vim.log.levels.WARN)
     return {}
   end
 
@@ -60,7 +53,7 @@ local function process_highlight(name, hl_def, colors)
         hl[key] = value
       end
     else
-      notify(("Invalid highlight key '%s' in '%s'"):format(key, name), log.levels.WARN)
+      vim.notify(("Invalid highlight key '%s' in '%s'"):format(key, name), vim.log.levels.WARN)
     end
   end
   return hl
@@ -74,13 +67,13 @@ function M.load_toml_colorscheme(name)
   local filepath = colors_config.config.toml_dir .. name .. ".toml"
   local data, err = toml_parser.load_file(filepath)
   if not data then
-    notify(("Failed to load TOML colorscheme '%s': %s"):format(name, err or "unknown error"), log.levels.ERROR)
+    vim.notify(("Failed to load TOML colorscheme '%s': %s"):format(name, err or "unknown error"), vim.log.levels.ERROR)
     return nil
   end
 
   local valid, validation_err = toml_parser.validate_colorscheme(data)
   if not valid then
-    notify(("Invalid TOML colorscheme '%s': %s"):format(name, validation_err), log.levels.ERROR)
+    vim.notify(("Invalid TOML colorscheme '%s': %s"):format(name, validation_err), vim.log.levels.ERROR)
     return nil
   end
 
@@ -107,17 +100,17 @@ function M.apply_toml_colorscheme(name)
   local cs = M.load_toml_colorscheme(name)
   if not cs then return false end
 
-  cmd("hi clear")
-  if fn.exists("syntax_on") == 1 then cmd("syntax reset") end
+  vim.cmd("hi clear")
+  if vim.fn.exists("syntax_on") == 1 then vim.cmd("syntax reset") end
 
-  if cs.metadata.background then o.background = cs.metadata.background end
-  g.colors_name = name
+  if cs.metadata.background then vim.o.background = cs.metadata.background end
+  vim.g.colors_name = name
 
   for hl_name, hl_def in pairs(cs.highlights) do
-    api.nvim_set_hl(0, sanitize_hl_name(hl_name), hl_def)
+    vim.api.nvim_set_hl(0, sanitize_hl_name(hl_name), hl_def)
   end
 
-  g.raphael_current_colorscheme = {
+  vim.g.raphael_current_colorscheme = {
     name = name,
     type = "toml",
     metadata = cs.metadata
@@ -127,10 +120,10 @@ function M.apply_toml_colorscheme(name)
 end
 
 function M.apply_builtin_colorscheme(name)
-  g.raphael_current_colorscheme = { name = name, type = "builtin", metadata = {} }
-  local ok = pcall(cmd, "colorscheme " .. name)
+  vim.g.raphael_current_colorscheme = { name = name, type = "builtin", metadata = {} }
+  local ok = pcall(vim.cmd, "colorscheme " .. name)
   if not ok then
-    notify("Failed to load built-in colorscheme: " .. name, log.levels.ERROR)
+    vim.notify("Failed to load built-in colorscheme: " .. name, vim.log.levels.ERROR)
     return false
   end
   return true
@@ -144,8 +137,8 @@ end
 -- ======= Utility =======
 
 function M.get_current_colorscheme()
-  return g.raphael_current_colorscheme or {
-    name = g.colors_name or "default",
+  return vim.g.raphael_current_colorscheme or {
+    name = vim.g.colors_name or "default",
     type = "builtin",
     metadata = {}
   }
@@ -180,10 +173,10 @@ end
 
 function M.validate_all_toml_colorschemes()
   local results = {}
-  local files = fn.glob(colors_config.config.toml_dir .. "*.toml", false, true)
+  local files = vim.fn.glob(colors_config.config.toml_dir .. "*.toml", false, true)
 
   for _, file in ipairs(files) do
-    local name = fn.fnamemodify(file, ":t:r")
+    local name = vim.fn.fnamemodify(file, ":t:r")
     local cs = M.load_toml_colorscheme(name)
     results[name] = {
       valid = cs ~= nil,
@@ -198,11 +191,11 @@ end
 -- ======= Theme Listing =======
 
 function M.get_available_colorschemes()
-  local files = fn.glob(colors_config.config.toml_dir .. "*.toml", false, true)
+  local files = vim.fn.glob(colors_config.config.toml_dir .. "*.toml", false, true)
   local themes = {}
 
   for _, file in ipairs(files) do
-    local name = fn.fnamemodify(file, ":t:r")
+    local name = vim.fn.fnamemodify(file, ":t:r")
     local cs = M.load_toml_colorscheme(name)
     if cs then
       table.insert(themes, {

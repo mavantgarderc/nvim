@@ -1,14 +1,6 @@
 -- File: Raphael/scripts/preview.lua
-local vim = vim
-local api = vim.api
-local fn = vim.fn
-local o = vim.o
-local tbl_isempty = vim.tbl_isempty
-local defer_fn = vim.defer_fn
+
 local map = vim.keymap.set
-local log = vim.log
-local notify = vim.notify
-local tbl_count = vim.tbl_count
 
 local colors_config = require("Raphael.colors")
 local loader = require("Raphael.scripts.loader")
@@ -91,26 +83,26 @@ end
 
 -- Create a buffer + window helper
 local function create_preview_window(title, content)
-  local buf = api.nvim_create_buf(false, true)
-  api.nvim_buf_set_lines(buf, 0, -1, false, content)
-  local width = math.min(80, o.columns - 10)
-  local height = math.min(#content + 4, o.lines - 10)
-  local win = api.nvim_open_win(buf, false, {
+  local buf = vim.api.nvim_create_buf(false, true)
+  vim.api.nvim_buf_set_lines(buf, 0, -1, false, content)
+  local width = math.min(80, vim.o.columns - 10)
+  local height = math.min(#content + 4, vim.o.lines - 10)
+  local win = vim.api.nvim_open_win(buf, false, {
     relative = "editor",
     width = width,
     height = height,
-    row = math.floor((o.lines - height) / 2),
-    col = math.floor((o.columns - width) / 2),
+    row = math.floor((vim.o.lines - height) / 2),
+    col = math.floor((vim.o.columns - width) / 2),
     style = "minimal",
     border = "rounded",
     title = " " .. title .. " ",
     title_pos = "center"
   })
-  api.nvim_buf_set_option(buf, "bufhidden", "wipe")
-  api.nvim_buf_set_option(buf, "buftype", "nofile")
-  api.nvim_buf_set_option(buf, "swapfile", false)
-  api.nvim_buf_set_option(buf, "modifiable", false)
-  api.nvim_buf_set_option(buf, "filetype", "lua")
+  vim.api.nvim_buf_set_option(buf, "bufhidden", "wipe")
+  vim.api.nvim_buf_set_option(buf, "buftype", "nofile")
+  vim.api.nvim_buf_set_option(buf, "swapfile", false)
+  vim.api.nvim_buf_set_option(buf, "modifiable", false)
+  vim.api.nvim_buf_set_option(buf, "filetype", "lua")
   return buf, win
 end
 
@@ -133,10 +125,10 @@ end
 function M.close_preview(preview_id)
   local preview = preview_state.active_previews[preview_id]
   if not preview then return end
-  if preview.win and api.nvim_win_is_valid(preview.win) then api.nvim_win_close(preview.win, true) end
+  if preview.win and vim.api.nvim_win_is_valid(preview.win) then vim.api.nvim_win_close(preview.win, true) end
   preview_state.active_previews[preview_id] = nil
 
-  if tbl_isempty(preview_state.active_previews) and preview_state.original_colorscheme then
+  if vim.tbl_isempty(preview_state.active_previews) and preview_state.original_colorscheme then
     loader.apply_colorscheme(preview_state.original_colorscheme.name, preview_state.original_colorscheme.type)
     preview_state.original_colorscheme = nil
   end
@@ -152,7 +144,7 @@ function M.preview_colorscheme(name, scheme_type, duration)
   store_original()
   local success = loader.apply_colorscheme(name, scheme_type)
   if not success then
-    notify("Failed to preview colorscheme: " .. name, log.levels.ERROR)
+    vim.notify("Failed to preview colorscheme: " .. name, vim.log.levels.ERROR)
     return false
   end
 
@@ -162,7 +154,7 @@ function M.preview_colorscheme(name, scheme_type, duration)
   preview_state.active_previews[preview_id] = { buf = buf, win = win, name = name, type = scheme_type }
 
   if duration and duration > 0 then
-    defer_fn(function() M.close_preview(preview_id) end, duration)
+    vim.defer_fn(function() M.close_preview(preview_id) end, duration)
   end
 
   set_preview_keymaps(buf,
@@ -170,23 +162,23 @@ function M.preview_colorscheme(name, scheme_type, duration)
     function()
       loader.apply_colorscheme(name, scheme_type)
       M.close_all_previews()
-      notify("Applied colorscheme: " .. colors_config.get_display_name(name, scheme_type), log.levels.INFO)
+      vim.notify("Applied colorscheme: " .. colors_config.get_display_name(name, scheme_type), vim.log.levels.INFO)
     end
   )
 
-  notify("Preview: " .. colors_config.get_display_name(name, scheme_type) .. " (q to close, Enter to apply)",
-    log.levels.INFO)
+  vim.notify("Preview: " .. colors_config.get_display_name(name, scheme_type) .. " (q to close, Enter to apply)",
+    vim.log.levels.INFO)
   return true
 end
 
 -- Quick preview
 function M.quick_preview(name, scheme_type, timeout)
   timeout = timeout or 2000
-  if preview_state.preview_timeout then fn.timer_stop(preview_state.preview_timeout) end
+  if preview_state.preview_timeout then vim.fn.timer_stop(preview_state.preview_timeout) end
   store_original()
   if loader.apply_colorscheme(name, scheme_type) then
-    notify("Quick preview: " .. colors_config.get_display_name(name, scheme_type), log.levels.INFO)
-    preview_state.preview_timeout = defer_fn(function()
+    vim.notify("Quick preview: " .. colors_config.get_display_name(name, scheme_type), vim.log.levels.INFO)
+    preview_state.preview_timeout = vim.defer_fn(function()
       if preview_state.original_colorscheme then
         loader.apply_colorscheme(preview_state.original_colorscheme.name, preview_state.original_colorscheme.type)
         preview_state.original_colorscheme = nil
@@ -200,17 +192,17 @@ end
 
 function M.cancel_quick_preview()
   if preview_state.preview_timeout then
-    fn.timer_stop(preview_state.preview_timeout)
+    vim.fn.timer_stop(preview_state.preview_timeout)
     preview_state.preview_timeout = nil
     preview_state.original_colorscheme = nil
-    notify("Quick preview cancelled", log.levels.INFO)
+    vim.notify("Quick preview cancelled", vim.log.levels.INFO)
   end
 end
 
 -- Get preview status
 function M.get_preview_status()
   return {
-    active_previews = tbl_count(preview_state.active_previews),
+    active_previews = vim.tbl_count(preview_state.active_previews),
     original_colorscheme = preview_state.original_colorscheme,
     has_quick_preview = preview_state.preview_timeout ~= nil
   }
@@ -230,16 +222,16 @@ function M.slideshow_preview(colorschemes, interval, loop)
     if index <= #colorschemes then
       local cs = colorschemes[index]
       loader.apply_colorscheme(cs.name, cs.type)
-      notify("Slideshow: " .. colors_config.get_display_name(cs.name, cs.type) .. " (" .. index ..
-      "/" .. #colorschemes .. ")", log.levels.INFO)
+      vim.notify("Slideshow: " .. colors_config.get_display_name(cs.name, cs.type) .. " (" .. index ..
+      "/" .. #colorschemes .. ")", vim.log.levels.INFO)
       index = index + 1
       if index > #colorschemes and loop then index = 1 end
       if index <= #colorschemes or loop then
-        timer = defer_fn(next_slide, interval)
+        timer = vim.defer_fn(next_slide, interval)
       else
-        notify("Slideshow completed", log.levels.INFO)
+        vim.notify("Slideshow completed", vim.log.levels.INFO)
         if preview_state.original_colorscheme then
-          defer_fn(function()
+          vim.defer_fn(function()
             loader.apply_colorscheme(preview_state.original_colorscheme.name, preview_state.original_colorscheme.type)
             preview_state.original_colorscheme = nil
           end, 1000)
@@ -248,16 +240,16 @@ function M.slideshow_preview(colorschemes, interval, loop)
     end
   end
 
-  notify("Starting slideshow with " .. #colorschemes .. " colorschemes", log.levels.INFO)
+  vim.notify("Starting slideshow with " .. #colorschemes .. " colorschemes", vim.log.levels.INFO)
   next_slide()
 
   return function()
-    if timer then fn.timer_stop(timer) end
+    if timer then vim.fn.timer_stop(timer) end
     if preview_state.original_colorscheme then
       loader.apply_colorscheme(preview_state.original_colorscheme.name, preview_state.original_colorscheme.type)
       preview_state.original_colorscheme = nil
     end
-    notify("Slideshow stopped", log.levels.INFO)
+    vim.notify("Slideshow stopped", vim.log.levels.INFO)
   end
 end
 

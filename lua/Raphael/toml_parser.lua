@@ -1,5 +1,3 @@
-local tbl_contains = vim.tbl_contains
-
 local M = {}
 
 local function trim(str)
@@ -338,7 +336,7 @@ function M.export(data)
   end
 
   for section_name, section_data in pairs(data) do
-    if not tbl_contains(section_order, section_name) and section_name ~= "root" then
+    if not vim.tbl_contains(section_order, section_name) and section_name ~= "root" then
       export_table(section_data, section_name)
     end
   end

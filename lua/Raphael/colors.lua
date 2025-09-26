@@ -190,10 +190,6 @@ function M.get_dark_colorschemes()
   return M.get_all_colorschemes() -- Assume all dark; extend with metadata if available
 end
 
-function M.get_light_colorschemes()
-  return {} -- No light themes defined
-end
-
 function M.is_toml_colorscheme(name)
   for _, cs in ipairs(M.get_toml_colorschemes()) do
     if cs.name == name then return true end

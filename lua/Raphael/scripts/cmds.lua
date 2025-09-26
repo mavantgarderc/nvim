@@ -1,12 +1,6 @@
 -- File: Raphael/scripts/cmds.lua
-local vim = vim
-local api = vim.api
+
 local map = vim.keymap.set
-local log = vim.log
-local notify = vim.notify
-local g = vim.g
-local o = vim.o
-local split = vim.split
 
 local colors_config = require("Raphael.colors")
 local loader = require("Raphael.scripts.loader")
@@ -45,7 +39,7 @@ end
 
 -- Helper: parse args into name, type, number
 local function parse_args(args_str)
-  local args = split(args_str, "%s+")
+  local args = vim.split(args_str, "%s+")
   return args
 end
 
@@ -56,7 +50,7 @@ end
 
 -- Helper: create user command
 local function user_cmd(name, fn, opts)
-  api.nvim_create_user_command(name, fn, opts)
+  vim.api.nvim_create_user_command(name, fn, opts)
 end
 
 -- Helper: get colorschemes by type
@@ -88,13 +82,13 @@ function M.setup_commands()
     local name, scheme_type = args[1], args[2]
 
     if not name then
-      notify("Usage: RaphaelApply <colorscheme_name> [type]", log.levels.ERROR)
+      vim.notify("Usage: RaphaelApply <colorscheme_name> [type]", vim.log.levels.ERROR)
       return
     end
 
     scheme_type = scheme_type or detect_type(name)
     if loader.apply_colorscheme(name, scheme_type) then
-      notify("Applied colorscheme: " .. colors_config.get_display_name(name, scheme_type), log.levels.INFO)
+      vim.notify("Applied colorscheme: " .. colors_config.get_display_name(name, scheme_type), vim.log.levels.INFO)
     end
   end, { nargs = "+", complete = complete_colorschemes, desc = "Apply a specific colorscheme" })
 
@@ -118,7 +112,7 @@ function M.setup_commands()
   user_cmd("RaphaelAutoCycle", function(opts) handle_auto_cycle(cycler.start_auto_cycle, opts) end, {
     nargs = "*",
     complete = function(arg_lead, cmd_line)
-      if #split(cmd_line, "%s+") <= 2 then return complete_colorscheme_types(arg_lead) end
+      if #vim.split(cmd_line, "%s+") <= 2 then return complete_colorscheme_types(arg_lead) end
       return {}
     end,
     desc = "Start auto-cycling colorschemes [type] [interval_seconds]"
@@ -128,7 +122,7 @@ function M.setup_commands()
   user_cmd("RaphaelToggleCycle", function(opts) handle_auto_cycle(cycler.toggle_auto_cycle, opts) end, {
     nargs = "*",
     complete = function(arg_lead, cmd_line)
-      if #split(cmd_line, "%s+") <= 2 then return complete_colorscheme_types(arg_lead) end
+      if #vim.split(cmd_line, "%s+") <= 2 then return complete_colorscheme_types(arg_lead) end
       return {}
     end,
     desc = "Toggle auto-cycling colorschemes"
@@ -141,7 +135,7 @@ function M.setup_commands()
       local name, scheme_type, duration = args[1], args[2], tonumber(args[3]) or timeout_default
 
       if not name then
-        notify(("Usage: %s <colorscheme_name> [type] [timeout_ms]"):format(fn_name), log.levels.ERROR)
+        vim.notify(("Usage: %s <colorscheme_name> [type] [timeout_ms]"):format(fn_name), vim.log.levels.ERROR)
         return
       end
 

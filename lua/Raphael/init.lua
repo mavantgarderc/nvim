@@ -1,19 +1,11 @@
 -- init.lua - Raphael Theme System Main Module
 -- Entry point for the Raphael theme system with TOML support
 
-local vim = vim
-local fn = vim.fn
-local log = vim.log
-local notify = vim.notify
-local tbl_deep_extend = vim.tbl_deep_extend
-local defer_fn = vim.defer_fn
-local g = vim.g
-
 local M = {}
 
 -- Default configuration
 local default_config = {
-  toml_dir = fn.stdpath("config") .. "/lua/Raphael/colorschemes/",
+  toml_dir = vim.fn.stdpath("config") .. "/lua/Raphael/colorschemes/",
   default_colorscheme = { name = "kanagawa-paper-ink", type = "builtin" },
   auto_save = true,
   auto_switch_background = false,
@@ -28,22 +20,22 @@ local default_config = {
 
 -- Utilities
 local function merge_config(user_config)
-  return tbl_deep_extend("force", default_config, user_config or {})
+  return vim.tbl_deep_extend("force", default_config, user_config or {})
 end
 
 local function notify(msg, level)
-  notify(msg, level or log.levels.INFO)
+  vim.notify(msg, level or vim.log.levels.INFO)
 end
 
 -- Colorscheme directory
 local function ensure_dir(path)
-  if fn.isdirectory(path) == 0 then
-    fn.mkdir(path, "p")
+  if vim.fn.isdirectory(path) == 0 then
+    vim.fn.mkdir(path, "p")
   end
 end
 
 local function has_toml_files(path)
-  return #fn.glob(path .. "*.toml", false, true) > 0
+  return #vim.fn.glob(path .. "*.toml", false, true) > 0
 end
 
 -- Cached modules
@@ -84,9 +76,9 @@ purple = "#a78bfa"
   if f then
     f:write(sample_content)
     f:close()
-    notify("Created sample TOML colorscheme", log.levels.INFO)
+    notify("Created sample TOML colorscheme", vim.log.levels.INFO)
   else
-    notify("Failed to create sample TOML colorscheme", log.levels.ERROR)
+    notify("Failed to create sample TOML colorscheme", vim.log.levels.ERROR)
   end
 end
 
@@ -125,7 +117,7 @@ end
 
 -- Apply saved or default colorscheme
 local function load_initial_colorscheme(config)
-  defer_fn(function()
+  vim.defer_fn(function()
     local cs
     if config.auto_save and modules.autocmds and modules.autocmds.load_saved_colorscheme then
       cs = modules.autocmds.load_saved_colorscheme()
@@ -134,13 +126,13 @@ local function load_initial_colorscheme(config)
       if modules.loader and modules.loader.apply_colorscheme then
         modules.loader.apply_colorscheme(cs.name, cs.type)
       end
-      if config.debug then notify("Restored colorscheme: " .. cs.name, log.levels.DEBUG) end
+      if config.debug then notify("Restored colorscheme: " .. cs.name, vim.log.levels.DEBUG) end
     elseif config.default_colorscheme then
       local def = config.default_colorscheme
       if modules.loader and modules.loader.apply_colorscheme then
         modules.loader.apply_colorscheme(def.name, def.type or "toml")
       end
-      if config.debug then notify("Applied default colorscheme: " .. def.name, log.levels.DEBUG) end
+      if config.debug then notify("Applied default colorscheme: " .. def.name, vim.log.levels.DEBUG) end
     end
   end, 100)
 end
@@ -148,12 +140,12 @@ end
 -- Public API
 function M.setup(user_config)
   local config = merge_config(user_config)
-  modules.colors.config = tbl_deep_extend("force", modules.colors.config or {}, config)
+  modules.colors.config = vim.tbl_deep_extend("force", modules.colors.config or {}, config)
 
   prepare_colorschemes(config)
 
   if config.validate_on_load and modules.loader and modules.loader.validate_all_toml_colorschemes then
-    defer_fn(function()
+    vim.defer_fn(function()
       local results = modules.loader.validate_all_toml_colorschemes()
       if config.debug then
         local valid, total = 0, 0
@@ -161,7 +153,7 @@ function M.setup(user_config)
           total = total + 1
           if r.valid then valid = valid + 1 end
         end
-        notify("Validated " .. valid .. "/" .. total .. " TOML colorschemes", log.levels.INFO)
+        notify("Validated " .. valid .. "/" .. total .. " TOML colorschemes", vim.log.levels.INFO)
       end
     end, 500)
   end
@@ -171,8 +163,8 @@ function M.setup(user_config)
   if modules.cmds and modules.cmds.setup_commands then modules.cmds.setup_commands() end
   load_initial_colorscheme(config)
 
-  g.raphael_config = config
-  if config.debug then notify("Raphael Theme System initialized", log.levels.INFO) end
+  vim.g.raphael_config = config
+  if config.debug then notify("Raphael Theme System initialized", vim.log.levels.INFO) end
 end
 
 function M.quick_setup()
@@ -180,7 +172,7 @@ function M.quick_setup()
 end
 
 function M.get_config()
-  return g.raphael_config or default_config
+  return vim.g.raphael_config or default_config
 end
 
 -- Colorscheme management
@@ -209,7 +201,7 @@ function M.create_colorscheme_from_template(name, template_name)
   local template_file = dir .. template_name .. ".toml"
   local f = io.open(template_file, "r")
   if not f then
-    notify("Template not found: " .. template_name, log.levels.ERROR)
+    notify("Template not found: " .. template_name, vim.log.levels.ERROR)
     return false
   end
   local content = f:read("*a"):gsub(template_name, name)
@@ -223,7 +215,7 @@ function M.create_colorscheme_from_template(name, template_name)
     notify("Created new TOML colorscheme: " .. name)
     return true
   else
-    notify("Failed to create colorscheme file: " .. dir .. name .. ".toml", log.levels.ERROR)
+    notify("Failed to create colorscheme file: " .. dir .. name .. ".toml", vim.log.levels.ERROR)
     return false
   end
 end

@@ -1,17 +1,5 @@
 -- File: Raphael/scripts/autocmds.lua
 
-local vim = vim
-local api = vim.api
-local g = vim.g
-local o = vim.o
-local fn = vim.fn
-local cmd = vim.cmd
-local defer_fn = vim.defer_fn
-local schedule_wrap = vim.schedule_wrap
-local loop = vim.loop
-local notify = vim.notify
-local log = vim.log
-
 local colors_config = require("Raphael.colors")
 local loader = require("Raphael.scripts.loader")
 
@@ -26,17 +14,17 @@ local function get_current_colorscheme()
 end
 
 local function safe_defer(fnc, delay)
-  if type(fnc) == "function" then defer_fn(fnc, delay or 0) end
+  if type(fnc) == "function" then vim.defer_fn(fnc, delay or 0) end
 end
 
 -- Save current colorscheme state
 function M.save_current_colorscheme()
   local cur = get_current_colorscheme()
   if not cur.name then return end
-  local path = fn.stdpath("config") .. "/raphael_state.lua"
+  local path = vim.fn.stdpath("config") .. "/raphael_state.lua"
   local f, err = io.open(path, "w")
   if not f then
-    return notify("Failed to save colorscheme: " .. (err or ""), log.levels.ERROR)
+    return vim.notify("Failed to save colorscheme: " .. (err or ""), vim.log.levels.ERROR)
   end
   f:write(string.format(
     "return { last_colorscheme = { name = %q, type = %q, timestamp = %d } }",
@@ -46,7 +34,7 @@ function M.save_current_colorscheme()
 end
 
 function M.load_saved_colorscheme()
-  local path = fn.stdpath("config") .. "/raphael_state.lua"
+  local path = vim.fn.stdpath("config") .. "/raphael_state.lua"
   local ok, saved = pcall(dofile, path)
   if not ok or not saved or not saved.last_colorscheme then return nil end
 
@@ -72,18 +60,18 @@ function M.sync_terminal_colors(name)
     cs.bg, cs.red, cs.green, cs.yellow, cs.blue, cs.purple, cs.cyan, cs.fg,
     cs.comment, cs.red, cs.green, cs.yellow, cs.blue, cs.purple, cs.cyan, cs.fg
   }
-  for i, c in ipairs(t) do g["terminal_color_" .. (i - 1)] = c end
+  for i, c in ipairs(t) do vim.g["terminal_color_" .. (i - 1)] = c end
 end
 
 -- Main autocmd setup
 function M.setup_autocmds()
-  local augroup = api.nvim_create_augroup("Raphael", { clear = true })
+  local augroup = vim.api.nvim_create_augroup("Raphael", { clear = true })
 
   -- Track colorscheme changes
-  api.nvim_create_autocmd("ColorScheme", {
+  vim.api.nvim_create_autocmd("ColorScheme", {
     group = augroup,
     callback = function()
-      local current_name = g.colors_name
+      local current_name = vim.g.colors_name
       if not current_name then return end
 
       local is_toml = false
@@ -91,7 +79,7 @@ function M.setup_autocmds()
         is_toml = colors_config.is_toml_colorscheme(current_name)
       end
 
-      g.raphael_current_colorscheme = {
+      vim.g.raphael_current_colorscheme = {
         name = current_name,
         type = is_toml and "toml" or "builtin",
         timestamp = os.time(),
@@ -105,10 +93,10 @@ function M.setup_autocmds()
   })
 
   -- Load default colorscheme on startup
-  api.nvim_create_autocmd("VimEnter", {
+  vim.api.nvim_create_autocmd("VimEnter", {
     group = augroup,
     callback = function()
-      if not g.colors_name or g.colors_name == "default" then
+      if not vim.g.colors_name or vim.g.colors_name == "default" then
         local def = colors_config.config and colors_config.config.default_colorscheme
         if def and def.name and loader.apply_colorscheme then
           safe_defer(function() loader.apply_colorscheme(def.name, def.type or "toml") end, 100)
@@ -119,13 +107,13 @@ function M.setup_autocmds()
   })
 
   -- Auto-reload TOML colorschemes on save
-  api.nvim_create_autocmd("BufWritePost", {
+  vim.api.nvim_create_autocmd("BufWritePost", {
     group = augroup,
     pattern = (colors_config.config and colors_config.config.toml_dir or "") .. "*.toml",
     callback = function(event)
-      local filename = fn.fnamemodify(event.file, ":t:r")
+      local filename = vim.fn.fnamemodify(event.file, ":t:r")
       if loader.cache then loader.cache[filename] = nil end
-      notify("Reloaded TOML colorscheme: " .. filename, log.levels.INFO)
+      vim.notify("Reloaded TOML colorscheme: " .. filename, vim.log.levels.INFO)
       local current = get_current_colorscheme()
       if current.name == filename and current.type == "toml" and loader.apply_colorscheme then
         safe_defer(function() loader.apply_colorscheme(filename, "toml") end, 100)
@@ -135,7 +123,7 @@ function M.setup_autocmds()
   })
 
   -- Terminal sync
-  api.nvim_create_autocmd("TermOpen", {
+  vim.api.nvim_create_autocmd("TermOpen", {
     group = augroup,
     callback = function()
       local cs = get_current_colorscheme()
@@ -145,19 +133,19 @@ function M.setup_autocmds()
   })
 
   -- Refresh previews on window/buffer enter
-  api.nvim_create_autocmd({ "WinEnter", "BufEnter" }, {
+  vim.api.nvim_create_autocmd({ "WinEnter", "BufEnter" }, {
     group = augroup,
     callback = function()
       local preview = package.loaded["Raphael.scripts.preview"] and require("Raphael.scripts.preview")
       if preview and preview.get_preview_status and preview.get_preview_status().active_previews > 0 then
-        safe_defer(function() cmd("syntax sync fromstart") end, 10)
+        safe_defer(function() vim.cmd("syntax sync fromstart") end, 10)
       end
     end,
     desc = "Refresh preview highlighting",
   })
 
   -- Auto-switch background
-  api.nvim_create_autocmd("OptionSet", {
+  vim.api.nvim_create_autocmd("OptionSet", {
     group = augroup,
     pattern = "background",
     callback = function()
@@ -165,7 +153,7 @@ function M.setup_autocmds()
       local current = get_current_colorscheme()
       if current.type ~= "toml" then return end
 
-      local bg = o.background
+      local bg = vim.o.background
       local metadata = loader.get_colorscheme_metadata and loader.get_colorscheme_metadata(current.name)
       if metadata and metadata.background ~= bg then
         local schemes = {}
@@ -202,11 +190,11 @@ function M.setup_autocmds()
       end
     end
 
-    api.nvim_create_autocmd("VimEnter",
+    vim.api.nvim_create_autocmd("VimEnter",
       { group = augroup, callback = function() safe_defer(switch_time_based, 1000) end })
-    local timer = loop.new_timer()
-    timer:start(3600000, 3600000, schedule_wrap(switch_time_based))
-    api.nvim_create_autocmd("VimLeavePre", { group = augroup, callback = function()
+    local timer = vim.loop.new_timer()
+    timer:start(3600000, 3600000, vim.schedule_wrap(switch_time_based))
+    vim.api.nvim_create_autocmd("VimLeavePre", { group = augroup, callback = function()
       timer:stop(); timer:close()
     end })
   end

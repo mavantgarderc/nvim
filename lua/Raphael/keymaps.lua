@@ -1,17 +1,7 @@
 -- File: Raphael/keymaps.lua
 
-local vim = vim
-local o = vim.o
-local split = vim.split
-local ui = vim.ui
-local cmd = vim.cmd
 local map = vim.keymap.set
-local tbl_deep_extend = vim.tbl_deep_extend
-local log = vim.log
-local notify = vim.notify
-local g = vim.g
 local unmap = vim.keymap.del
-local api = vim.api
 
 local picker = require("Raphael.scripts.picker")
 local cycler = require("Raphael.scripts.cycler")
@@ -48,7 +38,7 @@ M.config = {
 
 function M.setup_keymaps(user_config)
   if user_config then
-    M.config = tbl_deep_extend("force", M.config, user_config)
+    M.config = vim.tbl_deep_extend("force", M.config, user_config)
   end
 
   local leader = M.config.leader
@@ -78,7 +68,7 @@ function M.setup_keymaps(user_config)
   end, { desc = "Preview current colorscheme in window" })
 
   map("n", leader .. mappings.quick_preview, function()
-    ui.input({ prompt = "Colorscheme to preview: " }, function(input)
+    vim.ui.input({ prompt = "Colorscheme to preview: " }, function(input)
       if input and input ~= "" then
         local colors_config = require("Raphael.colors")
         local scheme_type = colors_config.is_toml_colorscheme(input) and "toml" or "builtin"
@@ -88,9 +78,9 @@ function M.setup_keymaps(user_config)
   end, { desc = "Quick preview colorscheme" })
 
   map("n", leader .. mappings.compare, function()
-    ui.input({ prompt = "Colorschemes to compare (space-separated): " }, function(input)
+    vim.ui.input({ prompt = "Colorschemes to compare (space-separated): " }, function(input)
       if input and input ~= "" then
-        local names = split(input, "%s+")
+        local names = vim.split(input, "%s+")
         if #names >= 2 then
           local colorschemes = {}
           local all_colorschemes = require("Raphael.colors").get_all_colorschemes()
@@ -104,7 +94,7 @@ function M.setup_keymaps(user_config)
           end
           preview.compare_colorschemes(colorschemes)
         else
-          notify("Need at least 2 colorschemes to compare", log.levels.WARN)
+          vim.notify("Need at least 2 colorschemes to compare", vim.log.levels.WARN)
         end
       end
     end)
@@ -113,14 +103,14 @@ function M.setup_keymaps(user_config)
   map("n", leader .. mappings.slideshow, function()
     local colorschemes = require("Raphael.colors").get_all_colorschemes()
     local stop_fn = preview.slideshow_preview(colorschemes, 3000, true)
-    g.raphael_slideshow_stop = stop_fn
+    vim.g.raphael_slideshow_stop = stop_fn
   end, { desc = "Start colorscheme slideshow" })
 
   -- Info & management
-  map("n", leader .. mappings.info, function() cmd("RaphaelInfo") end, { desc = "Show current colorscheme info" })
-  map("n", leader .. mappings.status, function() cmd("RaphaelStatus") end, { desc = "Show system status" })
-  map("n", leader .. mappings.reload, function() cmd("RaphaelReload") end, { desc = "Reload TOML colorschemes" })
-  map("n", leader .. mappings.validate, function() cmd("RaphaelValidate") end, { desc = "Validate TOML colorschemes" })
+  map("n", leader .. mappings.info, function() vim.cmd("RaphaelInfo") end, { desc = "Show current colorscheme info" })
+  map("n", leader .. mappings.status, function() vim.cmd("RaphaelStatus") end, { desc = "Show system status" })
+  map("n", leader .. mappings.reload, function() vim.cmd("RaphaelReload") end, { desc = "Reload TOML colorschemes" })
+  map("n", leader .. mappings.validate, function() vim.cmd("RaphaelValidate") end, { desc = "Validate TOML colorschemes" })
 
   -- Global mappings
   if global.cycle_forward then
@@ -140,10 +130,10 @@ function M.setup_keymaps(user_config)
       local default_config = require("Raphael.colors").config.default_colorscheme
       if default_config then
         require("Raphael.scripts.loader").apply_colorscheme(default_config.name, default_config.type or "toml")
-        notify("Reset to default colorscheme", log.levels.INFO)
+        vim.notify("Reset to default colorscheme", vim.log.levels.INFO)
       else
-        cmd("colorscheme default")
-        notify("Reset to Vim default colorscheme", log.levels.INFO)
+        vim.cmd("colorscheme default")
+        vim.notify("Reset to Vim default colorscheme", vim.log.levels.INFO)
       end
     end, { desc = "Emergency reset to default theme" })
   end
@@ -152,7 +142,7 @@ end
 -- Expose keymap config
 function M.get_keymap_config() return M.config end
 
-function M.update_keymap_config(new_config) M.config = tbl_deep_extend("force", M.config, new_config) end
+function M.update_keymap_config(new_config) M.config = vim.tbl_deep_extend("force", M.config, new_config) end
 
 function M.remove_keymaps()
   local leader, mappings, global = M.config.leader, M.config.mappings, M.config.global
@@ -174,22 +164,22 @@ function M.show_keymaps()
   for _, k in ipairs({ "next", "previous", "random" }) do
     table.insert(lines, "  " .. leader .. mappings[k] .. " - " .. k)
   end
-  local buf = api.nvim_create_buf(false, true)
-  api.nvim_buf_set_lines(buf, 0, -1, false, lines)
-  local win = api.nvim_open_win(buf, true, {
+  local buf = vim.api.nvim_create_buf(false, true)
+  vim.api.nvim_buf_set_lines(buf, 0, -1, false, lines)
+  local win = vim.api.nvim_open_win(buf, true, {
     relative = "editor",
     width = 60,
-    height = math.min(#lines + 2, o.lines - 4),
-    row = math.floor((o.lines - math.min(#lines + 2, o.lines - 4)) / 2),
-    col = math.floor((o.columns - 60) / 2),
+    height = math.min(#lines + 2, vim.o.lines - 4),
+    row = math.floor((vim.o.lines - math.min(#lines + 2, vim.o.lines - 4)) / 2),
+    col = math.floor((vim.o.columns - 60) / 2),
     style = "minimal",
     border = "rounded",
     title = " Raphael Key Mappings ",
     title_pos = "center"
   })
-  api.nvim_set_option_value("bufhidden", "wipe", { buf = buf })
-  map("n", "q", function() api.nvim_win_close(win, true) end, { buffer = buf })
-  map("n", "<Esc>", function() api.nvim_win_close(win, true) end, { buffer = buf })
+  vim.api.nvim_set_option_value("bufhidden", "wipe", { buf = buf })
+  map("n", "q", function() vim.api.nvim_win_close(win, true) end, { buffer = buf })
+  map("n", "<Esc>", function() vim.api.nvim_win_close(win, true) end, { buffer = buf })
 end
 
 return M

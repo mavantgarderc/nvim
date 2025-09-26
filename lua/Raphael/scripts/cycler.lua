@@ -1,12 +1,6 @@
 -- File: Raphael/scripts/cycler.lua
-local vim = vim
-local defer_fn = vim.defer_fn
-local notify = vim.notify
-local log = vim.log
-local api = vim.api
-local fn = vim.fn
+
 local map = vim.keymap.set
-local fetch_fn = vim.fetch_fn
 
 local colors_config = require("Raphael.colors")
 local loader = require("Raphael.scripts.loader")
@@ -62,7 +56,7 @@ local function apply_colorscheme(cs)
   if not cs then return nil end
   local success = loader.apply_colorscheme(cs.name, cs.type)
   if success then
-    notify("Switched to: " .. cs.display_name, log.levels.INFO)
+    vim.notify("Switched to: " .. cs.display_name, vim.log.levels.INFO)
     return cs
   end
 end
@@ -105,7 +99,7 @@ function M.cycle_to(name, scheme_type)
       return apply_colorscheme(cs)
     end
   end
-  notify("Colorscheme not found: " .. name, log.levels.WARN)
+  vim.notify("Colorscheme not found: " .. name, vim.log.levels.WARN)
   return nil
 end
 
@@ -114,7 +108,7 @@ local function auto_cycle_fn()
   if not cycler_state.auto_cycle then return end
   local cs = cycle_index(1)
   if cs then loader.apply_colorscheme(cs.name, cs.type) end
-  cycler_state.auto_cycle_timer = defer_fn(auto_cycle_fn, cycler_state.auto_cycle_interval)
+  cycler_state.auto_cycle_timer = vim.defer_fn(auto_cycle_fn, cycler_state.auto_cycle_interval)
 end
 
 function M.start_auto_cycle(cycle_type, interval)
@@ -122,18 +116,18 @@ function M.start_auto_cycle(cycle_type, interval)
   init_cycler(cycle_type)
   cycler_state.auto_cycle = true
   cycler_state.auto_cycle_interval = interval or 5000
-  cycler_state.auto_cycle_timer = defer_fn(auto_cycle_fn, cycler_state.auto_cycle_interval)
-  notify("Auto-cycle started (" .. cycle_type .. ", " .. (cycler_state.auto_cycle_interval / 1000) .. "s interval)",
-    log.levels.INFO)
+  cycler_state.auto_cycle_timer = vim.defer_fn(auto_cycle_fn, cycler_state.auto_cycle_interval)
+  vim.notify("Auto-cycle started (" .. cycle_type .. ", " .. (cycler_state.auto_cycle_interval / 1000) .. "s interval)",
+    vim.log.levels.INFO)
 end
 
 function M.stop_auto_cycle()
   cycler_state.auto_cycle = false
   if cycler_state.auto_cycle_timer then
-    fn.timer_stop(cycler_state.auto_cycle_timer)
+    vim.fn.timer_stop(cycler_state.auto_cycle_timer)
     cycler_state.auto_cycle_timer = nil
   end
-  notify("Auto-cycle stopped", log.levels.INFO)
+  vim.notify("Auto-cycle stopped", vim.log.levels.INFO)
 end
 
 function M.toggle_auto_cycle(cycle_type, interval)
@@ -159,7 +153,7 @@ end
 -- List cycling through a given list
 function M.cycle_through_list(names, forward)
   if not names or #names == 0 then
-    notify("No colorschemes provided for cycling", log.levels.WARN)
+    vim.notify("No colorschemes provided for cycling", vim.log.levels.WARN)
     return
   end
 
@@ -177,7 +171,7 @@ function M.cycle_through_list(names, forward)
     end
   end
 
-  notify("Colorscheme not found: " .. target_name, log.levels.WARN)
+  vim.notify("Colorscheme not found: " .. target_name, vim.log.levels.WARN)
   return nil
 end
 
@@ -208,14 +202,14 @@ function M.show_cycle_info()
     table.insert(lines, prefix .. cs.display_name .. type_indicator)
   end
 
-  local buf = api.nvim_create_buf(false, true)
-  api.nvim_buf_set_lines(buf, 0, -1, false, lines)
+  local buf = vim.api.nvim_create_buf(false, true)
+  vim.api.nvim_buf_set_lines(buf, 0, -1, false, lines)
 
   local o = vim.o
   local width = math.min(60, o.columns - 4)
   local height = math.min(#lines + 2, o.lines - 4)
 
-  local win = api.nvim_open_win(buf, true, {
+  local win = vim.api.nvim_open_win(buf, true, {
     relative = "editor",
     width = width,
     height = height,
@@ -227,12 +221,12 @@ function M.show_cycle_info()
     title_pos = "center",
   })
 
-  api.nvim_buf_set_option(buf, "bufhidden", "wipe")
-  api.nvim_buf_set_option(buf, "buftype", "nofile")
-  api.nvim_buf_set_option(buf, "swapfile", false)
-  api.nvim_buf_set_option(buf, "modifiable", false)
+  vim.api.nvim_buf_set_option(buf, "bufhidden", "wipe")
+  vim.api.nvim_buf_set_option(buf, "buftype", "nofile")
+  vim.api.nvim_buf_set_option(buf, "swapfile", false)
+  vim.api.nvim_buf_set_option(buf, "modifiable", false)
 
-  local close_win = function() api.nvim_win_close(win, true) end
+  local close_win = function() vim.api.nvim_win_close(win, true) end
   map("n", "<buffer>", close_win, { buffer = buf })
   map("n", "q", close_win, { buffer = buf })
   map("n", "<Esc>", close_win, { buffer = buf })
