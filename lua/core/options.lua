@@ -1,14 +1,9 @@
 local opt = vim.opt
 local g = vim.g
 local o = vim.o
-local fn = vim.fn
-local env = vim.env
 local schedule = vim.schedule
 local map = vim.keymap
 local opt_local = vim.opt_local
-local wo = vim.wo
-local api = vim.api
-local w = vim.w
 
 map.set("n", "<leader>J", "<Nop>")
 map.set("n", "gc", "<Nop>")
@@ -28,46 +23,46 @@ g.loaded_ruby_provider = 0
 g.markdown_recommended_style = 0
 
 -- add binaries installed by mason.nvim to path
-local mason_bin = fn.stdpath("data") .. "/mason/bin"
+local mason_bin = vim.fn.stdpath("data") .. "/mason/bin"
 
-if fn.has("win32") == 1 then
+if vim.fn.has("win32") == 1 then
     mason_bin = mason_bin:gsub("/", "\\")
-    env.PATH = mason_bin .. ";" .. env.PATH
+    vim.env.PATH = mason_bin .. ";" .. vim.env.PATH
 else
-    env.PATH = mason_bin .. ":" .. env.PATH
+    vim.env.PATH = mason_bin .. ":" .. vim.env.PATH
 end
 
 opt_local.wrap = false        -- disable line wrapping by default
 opt_local.linebreak = false   -- disable word-boundary wrapping by default
 opt_local.textwidth = 135     -- recommended column width
 opt_local.colorcolumn = ""    -- disable visual marker by default
-local grp = api.nvim_create_augroup("GlobalWrap", { clear = true })
-api.nvim_create_autocmd({ "BufWinEnter", "WinNew" }, {
+local grp = vim.api.nvim_create_augroup("GlobalWrap", { clear = true })
+vim.api.nvim_create_autocmd({ "BufWinEnter", "WinNew" }, {
     group = grp,
     callback = function()
-        if w.__wrap_user_enabled then
-            wo.wrap = true
-            wo.linebreak = true
-            wo.colorcolumn = "135"
+        if vim.w.__wrap_user_enabled then
+            vim.wo.wrap = true
+            vim.wo.linebreak = true
+            vim.wo.colorcolumn = "135"
         else
-            wo.wrap = false
-            wo.linebreak = false
-            wo.colorcolumn = ""
+            vim.wo.wrap = false
+            vim.wo.linebreak = false
+            vim.wo.colorcolumn = ""
         end
     end,
 })
 local function toggle_wrap()
-    if w.__wrap_user_enabled then
-        w.__wrap_user_enabled = nil
-        wo.wrap = false
-        wo.linebreak = false
-        wo.colorcolumn = ""
+    if vim.w.__wrap_user_enabled then
+        vim.w.__wrap_user_enabled = nil
+        vim.wo.wrap = false
+        vim.wo.linebreak = false
+        vim.wo.colorcolumn = ""
         print("Wrap OFF")
     else
-        w.__wrap_user_enabled = true
-        wo.wrap = true
-        wo.linebreak = true
-        wo.colorcolumn = "135"
+        vim.w.__wrap_user_enabled = true
+        vim.wo.wrap = true
+        vim.wo.linebreak = true
+        vim.wo.colorcolumn = "135"
         print("Wrap ON (sticky for this window)")
     end
 end

@@ -8,15 +8,6 @@ local M = {}
 --       opens quickfix window with all results; navigate by `[q` & `]q`
 
 local ver = vim.version()
-local fn = vim.fn
-local cmd = vim.cmd
-local api = vim.api
-local g = vim.g
-local loop = vim.loop
-local tbl_deep_extend = vim.tbl_deep_extend
-local defer_fn = vim.defer_fn
-local log = vim.log
-local notify = vim.notify
 
 -- CONFIGURATION - MODIFY THIS SECTION TO CUSTOMIZE
 local config = {
@@ -65,15 +56,15 @@ end
 
 local function get_plugin_manager()
   local managers = {
-    { name = "lazy.nvim",   path = fn.stdpath("data") .. "/lazy" },
-    { name = "packer.nvim", path = fn.stdpath("data") .. "/site/pack/packer" },
-    { name = "vim-plug",    check = function() return g.loaded_plug ~= nil end }
+    { name = "lazy.nvim",   path = vim.fn.stdpath("data") .. "/lazy" },
+    { name = "packer.nvim", path = vim.fn.stdpath("data") .. "/site/pack/packer" },
+    { name = "vim-plug",    check = function() return vim.g.loaded_plug ~= nil end }
   }
 
   for _, manager in ipairs(managers) do
     if manager.check and manager.check() then
       return manager.name
-    elseif manager.path and fn.isdirectory(manager.path) == 1 then
+    elseif manager.path and vim.fn.isdirectory(manager.path) == 1 then
       return manager.name
     end
   end
@@ -105,7 +96,7 @@ local function check_external_deps()
   local results = {}
 
   for _, exe in ipairs(config.external_deps.required) do -- Required dependencies
-    local ok = fn.executable(exe) == 1
+    local ok = vim.fn.executable(exe) == 1
     table.insert(results, {
       ok = ok,
       critical = true,
@@ -113,7 +104,7 @@ local function check_external_deps()
     })
   end
   for _, exe in ipairs(config.external_deps.optional) do -- Optional dependencies
-    local ok = fn.executable(exe) == 1
+    local ok = vim.fn.executable(exe) == 1
     table.insert(results, {
       ok = ok,
       critical = false,
@@ -126,11 +117,11 @@ end
 
 local function plugin_installed(name, manager)
   if manager == "lazy.nvim" then
-    local lazy_path = fn.stdpath("data") .. "/lazy/" .. name
-    return fn.isdirectory(lazy_path) == 1
+    local lazy_path = vim.fn.stdpath("data") .. "/lazy/" .. name
+    return vim.fn.isdirectory(lazy_path) == 1
   elseif manager == "packer.nvim" then
-    local packer_path = fn.stdpath("data") .. "/site/pack/packer/start/" .. name
-    return fn.isdirectory(packer_path) == 1
+    local packer_path = vim.fn.stdpath("data") .. "/site/pack/packer/start/" .. name
+    return vim.fn.isdirectory(packer_path) == 1
   end
   return false
 end
@@ -193,9 +184,9 @@ local function check_lsp_servers()
 
   for _, server in ipairs(config.language_servers) do
     local server_available = false
-    if lspconfig[server] and lspconfig[server].cmd then
-      local cmd_name = lspconfig[server].cmd[1]
-      if fn.executable(cmd_name) == 1 then
+    if lspconfig[server] and lspconfig[server].vim.cmd then
+      local cmd_name = lspconfig[server].vim.cmd[1]
+      if vim.fn.executable(cmd_name) == 1 then
         server_available = true
         table.insert(available_servers, server)
       end
@@ -233,7 +224,7 @@ end
 local function check_config()
   local results = {}
 
-  local config_ok, config_err = pcall(cmd, "source $MYVIMRC")
+  local config_ok, config_err = pcall(vim.cmd, "source $MYVIMRC")
   table.insert(results, {
     ok = config_ok,
     message = config_ok and "Configuration loads successfully OK"
@@ -241,13 +232,13 @@ local function check_config()
   })
 
   local config_files = {
-    { path = fn.stdpath("config") .. "/init.lua", name = "init.lua" },
-    { path = fn.stdpath("config") .. "/init.vim", name = "init.vim" },
+    { path = vim.fn.stdpath("config") .. "/init.lua", name = "init.lua" },
+    { path = vim.fn.stdpath("config") .. "/init.vim", name = "init.vim" },
   }
 
   local found_config = false
   for _, file in ipairs(config_files) do
-    if fn.filereadable(file.path) == 1 then
+    if vim.fn.filereadable(file.path) == 1 then
       table.insert(results, {
         ok = true,
         message = string.format("Found config file: %s OK", file.name)
@@ -263,8 +254,8 @@ local function check_config()
     })
   end
 
-  local data_dir = fn.stdpath("data")
-  local data_writable = fn.filewritable(data_dir) == 2
+  local data_dir = vim.fn.stdpath("data")
+  local data_writable = vim.fn.filewritable(data_dir) == 2
   table.insert(results, {
     ok = data_writable,
     message = string.format("Data directory writable: %s %s",
@@ -277,10 +268,10 @@ end
 
 local function get_system_info()
   return {
-    os = loop.os_uname().sysname,
+    os = vim.loop.os_uname().sysname,
     nvim_version = format_version(ver),
-    config_dir = fn.stdpath("config"),
-    data_dir = fn.stdpath("data"),
+    config_dir = vim.fn.stdpath("config"),
+    data_dir = vim.fn.stdpath("data"),
     plugin_manager = get_plugin_manager() or "none detected"
   }
 end
@@ -383,19 +374,19 @@ function M.get_results()
 end
 
 local function setup_commands()
-  if g.loaded_nvim_healthcheck then
+  if vim.g.loaded_nvim_healthcheck then
     return
   end
 
-  api.nvim_create_user_command("HealthCheck", M.run, {
+  vim.api.nvim_create_user_command("HealthCheck", M.run, {
     desc = "Run comprehensive Neovim configuration health check"
   })
 
-  api.nvim_create_user_command("HealthSummary", M.summary, {
+  vim.api.nvim_create_user_command("HealthSummary", M.summary, {
     desc = "Show health check summary"
   })
 
-  api.nvim_create_user_command("HealthQuickfix", function()
+  vim.api.nvim_create_user_command("HealthQuickfix", function()
     local results = M.check()
     local qf_list = {}
 
@@ -413,13 +404,13 @@ local function setup_commands()
       end
     end
 
-    fn.setqflist(qf_list, 'r')
-    cmd("copen")
+    vim.fn.setqflist(qf_list, 'r')
+    vim.cmd("copen")
     print("Health check results loaded in quickfix list")
   end, { desc = "Load health check results in quickfix list" })
 
-  api.nvim_create_user_command("HealthAutoCheck", function()
-    defer_fn(function()
+  vim.api.nvim_create_user_command("HealthAutoCheck", function()
+    vim.defer_fn(function()
       local results = M.check()
       local has_critical_issues = false
 
@@ -431,25 +422,25 @@ local function setup_commands()
       end
 
       if has_critical_issues then
-        notify("WARNING: Critical configuration issues detected! Run :HealthCheck for details",
-          log.levels.WARN)
+        vim.notify("WARNING: Critical configuration issues detected! Run :HealthCheck for details",
+          vim.log.levels.WARN)
       end
     end, 1000)
   end, { desc = "Run automatic health check on startup" })
 
-  g.loaded_nvim_healthcheck = true
+  vim.g.loaded_nvim_healthcheck = true
 end
 
 local function check_custom_config()
   local results = {}
 
-  local colorscheme_ok = pcall(cmd, "colorscheme catppuccin")
+  local colorscheme_ok = pcall(vim.cmd, "colorscheme catppuccin")
   table.insert(results, {
     ok = colorscheme_ok,
     message = colorscheme_ok and "Colorscheme available" or "Default colorscheme missing"
   })
 
-  local leader = g.mapleader or "\\"
+  local leader = vim.g.mapleader or "\\"
   table.insert(results, {
     ok = leader ~= "\\",
     message = string.format("Leader key: '%s' %s", leader, leader ~= "\\" and "OK" or "(default)")
@@ -460,7 +451,7 @@ end
 
 function M.setup(user_config)
   if user_config then
-    config = tbl_deep_extend("force", config, user_config)
+    config = vim.tbl_deep_extend("force", config, user_config)
   end
   setup_commands()
 end
