@@ -1,29 +1,34 @@
 local M = {}
 
-local fn = vim.fn
 local fs = vim.fs
-local env = vim.fn
-local log = vim.log
-local notify = vim.notify
+local fn = vim.fn
 local lsp = vim.lsp
-local defer_fn, tbl_deep_extend = vim.defer_fn, vim.tbl_deep_extend
+local defer_fn = vim.defer_fn
+local notify, log = vim.notify, vim.log
 
--- helper: find project root
-local function find_project_root(bufname)
-  local patterns = { "*.sln", "*.csproj", "*.fsproj", "*.vbproj", "project.json", "omnisharp.json" }
-  local result = fs.find(patterns, { upward = true, path = bufname })
-  if result and result[1] then
-    return fs.dirname(result[1])
+-- Find project root safely
+local function find_project_root(arg)
+  local fname = arg
+  if type(fname) == "number" then
+    fname = vim.api.nvim_buf_get_name(fname)
+  end
+  if not fname or fname == "" then
+    return nil
+  end
+
+  local patterns = {
+    "*.sln", "*.csproj", "*.fsproj", "*.vbproj",
+    "project.json", "omnisharp.json",
+  }
+  local match = fs.find(patterns, { upward = true, path = fname })
+  if match and match[1] then
+    return fs.dirname(match[1])
   end
   return nil
 end
 
--- helper: get omnisharp command
+-- Resolve OmniSharp executable
 local function get_omnisharp_cmd()
-  local fn = vim.fn
-  local notify = vim.notify
-  local log = vim.log
-
   local pid = tostring(fn.getpid())
   local home = os.getenv("HOME")
   local candidates = {
@@ -57,18 +62,16 @@ function M.setup(capabilities)
     return { success = false, error = "OmniSharp not found" }
   end
 
-  vim.lsp.config["omnisharp"] = {
+  require("lspconfig").omnisharp.setup({
     cmd = cmd,
-    capabilities = tbl_deep_extend("force", capabilities or {}, extended.capabilities or {}),
+    capabilities = vim.tbl_deep_extend(
+      "force",
+      capabilities or {},
+      extended.capabilities or {}
+    ),
 
-    root_markers = { "*.sln", "*.csproj", "*.fsproj", "*.vbproj", "project.json", "omnisharp.json" },
-    root_dir = function(fname)
-      return find_project_root(fname)
-    end,
-
+    root_dir = find_project_root,
     filetypes = { "cs", "vb", "razor", "cshtml" },
-
-    flags = { debounce_text_changes = 150 },
 
     init_options = {
       AutomaticWorkspaceInit = true,
@@ -120,7 +123,7 @@ function M.setup(capabilities)
     end,
 
     handlers = extended.handlers,
-  }
+  })
 
   return { success = true, message = "OmniSharp LSP configured successfully" }
 end
