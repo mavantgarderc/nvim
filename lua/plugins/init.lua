@@ -126,8 +126,6 @@ return {
       { "nvim-tree/nvim-web-devicons",            enabled = g.have_nerd_font },
     },
   },
-  -- harpoon
-  "ThePrimeagen/harpoon",
   -- undotree
   "mbbill/undotree",
   -- terminal multiplexer navigations
