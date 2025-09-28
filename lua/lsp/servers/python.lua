@@ -1,9 +1,7 @@
-local lsp = vim.lsp
-
 local M = {}
 
 function M.setup(capabilities)
-  lsp.config["pyright"] = {
+  require('lspconfig').pyright.setup({
     capabilities = capabilities,
     settings = {
       python = {
@@ -14,7 +12,7 @@ function M.setup(capabilities)
         },
       },
     },
-  }
+  })
 end
 
 return M

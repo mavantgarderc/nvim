@@ -1,32 +1,26 @@
 local shared = require("lsp.shared")
 
 local M = {}
-local api = vim.api
-local lsp = vim.lsp
-local log = vim.log
-local notify = vim.notify
 
 function M.setup()
   local capabilities = shared.get_capabilities()
 
-  -- define server config once
-  lsp.config["solidity_ls"] = {
+  require('lspconfig').solidity_ls.setup({
     capabilities = capabilities,
-
     on_attach = function(client, bufnr)
       if shared.setup_keymaps then
         pcall(shared.setup_keymaps, bufnr)
       end
 
       if client.supports_method("textDocument/formatting") then
-        api.nvim_create_autocmd("BufWritePre", {
+        vim.api.nvim_create_autocmd("BufWritePre", {
           buffer = bufnr,
           callback = function()
-            local ok, val = pcall(api.nvim_buf_get_var, bufnr, "lsp_format_on_save")
+            local ok, val = pcall(vim.api.nvim_buf_get_var, bufnr, "lsp_format_on_save")
             if ok and val == false then
               return
             end
-            lsp.buf.format({
+            vim.lsp.buf.format({
               bufnr = bufnr,
               filter = function(c) return c.name == "solidity_ls" end,
             })
@@ -34,7 +28,6 @@ function M.setup()
         })
       end
     end,
-
     settings = {
       solidity = {
         compileUsingRemoteVersion = "latest",
@@ -48,9 +41,7 @@ function M.setup()
         enableIncrementalCompilation = true,
       },
     },
-
     filetypes = { "solidity" },
-
     root_markers = {
       "hardhat.config.js",
       "hardhat.config.ts",
@@ -60,23 +51,19 @@ function M.setup()
       "remappings.txt",
       ".git",
     },
-
     single_file_support = true,
-
     init_options = {
       enableTelemetry = false,
     },
-  }
+  })
 
-  -- with the new API you don’t call lsp.start manually,
-  -- nvim-lspconfig auto-starts the server when conditions match.
   M.setup_solidity_autocmds()
 end
 
 function M.setup_solidity_autocmds()
-  local augroup = api.nvim_create_augroup("SolidityLSP", { clear = true })
+  local augroup = vim.api.nvim_create_augroup("SolidityLSP", { clear = true })
 
-  api.nvim_create_autocmd("FileType", {
+  vim.api.nvim_create_autocmd("FileType", {
     group = augroup,
     pattern = "solidity",
     callback = function()
@@ -89,7 +76,7 @@ function M.setup_solidity_autocmds()
     end,
   })
 
-  api.nvim_create_autocmd({ "BufRead", "BufNewFile" }, {
+  vim.api.nvim_create_autocmd({ "BufRead", "BufNewFile" }, {
     group = augroup,
     pattern = { "*.sol" },
     callback = function(args)
@@ -101,7 +88,7 @@ end
 function M.mason_setup()
   local ok, mason_lspconfig = pcall(require, "mason-lspconfig")
   if not ok then
-    notify("mason-lspconfig not found", log.levels.ERROR)
+    vim.notify("mason-lspconfig not found", vim.log.levels.ERROR)
     return
   end
 

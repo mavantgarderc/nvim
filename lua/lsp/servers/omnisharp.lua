@@ -1,12 +1,5 @@
 local M = {}
 
-local fs = vim.fs
-local fn = vim.fn
-local lsp = vim.lsp
-local defer_fn = vim.defer_fn
-local notify, log = vim.notify, vim.log
-
--- Find project root safely
 local function find_project_root(arg)
   local fname = arg
   if type(fname) == "number" then
@@ -20,22 +13,21 @@ local function find_project_root(arg)
     "*.sln", "*.csproj", "*.fsproj", "*.vbproj",
     "project.json", "omnisharp.json",
   }
-  local match = fs.find(patterns, { upward = true, path = fname })
+  local match = vim.fs.find(patterns, { upward = true, path = fname })
   if match and match[1] then
-    return fs.dirname(match[1])
+    return vim.fs.dirname(match[1])
   end
   return nil
 end
 
--- Resolve OmniSharp executable
 local function get_omnisharp_cmd()
-  local pid = tostring(fn.getpid())
+  local pid = tostring(vim.fn.getpid())
   local home = os.getenv("HOME")
   local candidates = {
     "omnisharp",
     "OmniSharp",
-    fn.stdpath("data") .. "/mason/bin/omnisharp",
-    fn.stdpath("data") .. "/mason/packages/omnisharp/omnisharp",
+    vim.fn.stdpath("data") .. "/mason/bin/omnisharp",
+    vim.fn.stdpath("data") .. "/mason/packages/omnisharp/omnisharp",
     "/usr/local/bin/omnisharp",
     "/usr/bin/omnisharp",
     home .. "/.local/bin/omnisharp",
@@ -43,14 +35,14 @@ local function get_omnisharp_cmd()
   }
 
   for _, path in ipairs(candidates) do
-    if fn.executable(path) == 1 then
+    if vim.fn.executable(path) == 1 then
       return { path, "--languageserver", "--hostPID", pid }
     end
   end
 
-  notify(
+  vim.notify(
     "OmniSharp executable not found. Install via: dotnet tool install -g omnisharp",
-    log.levels.ERROR
+    vim.log.levels.ERROR
   )
   return nil
 end
@@ -107,16 +99,16 @@ function M.setup(capabilities)
     },
 
     on_init = function(client)
-      defer_fn(function()
+      vim.defer_fn(function()
         client.initialized = true
       end, 1000)
     end,
 
     on_attach = function(client, bufnr)
       if client.server_capabilities.semanticTokensProvider then
-        lsp.semantic_tokens.start(bufnr, client.id)
+        vim.lsp.semantic_tokens.start(bufnr, client.id)
       end
-      defer_fn(function()
+      vim.defer_fn(function()
         client.initialized = true
         print("OmniSharp ready for buffer " .. bufnr)
       end, 2000)

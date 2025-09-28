@@ -1,6 +1,4 @@
--- lua/lsp/servers/lua_ls.lua
 local M = {}
-local fn = vim.fn
 
 function M.setup(capabilities)
   require('lspconfig').lua_ls.setup({
@@ -16,8 +14,8 @@ function M.setup(capabilities)
         },
         workspace = {
           library = {
-            [fn.expand("$VIMRUNTIME/lua")] = true,
-            [fn.stdpath("config") .. "/lua"] = true,
+            [vim.fn.expand("$VIMRUNTIME/lua")] = true,
+            [vim.fn.stdpath("config") .. "/lua"] = true,
           },
           checkThirdParty = false,
         },
