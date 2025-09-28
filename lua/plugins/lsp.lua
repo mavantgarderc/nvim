@@ -1,4 +1,3 @@
--- lua/plugins/lsp.lua
 return {
   {
     "VonHeikemen/lsp-zero.nvim",
@@ -14,14 +13,19 @@ return {
       "nvimtools/none-ls.nvim",
     },
     config = function()
-      -- Ensure nvim-lspconfig is loaded to register servers
+      local orig_notify = vim.notify
+      vim.notify = function(msg, level, opts)
+        if msg:match("The `require%('lspconfig'%)` \"framework\" is deprecated") then
+          return
+        end
+        orig_notify(msg, level, opts)
+      end
+
       require("lspconfig")
 
       local lsp = require("lsp-zero").preset({})
-      local diagnostic = vim.diagnostic
       local map = vim.keymap.set
-      local api = vim.api
-      local buf = vim.lsp.buf
+
       vim.opt.signcolumn = "yes"
 
       require("mason").setup()
@@ -40,9 +44,7 @@ return {
           "jsonls",
         },
         automatic_installation = true,
-        handlers = {
-          lsp.default_setup, -- Default handler for servers without custom configs
-        },
+        handlers = {},
       })
 
       local mason_tool_installer = require("mason-tool-installer")
@@ -68,7 +70,6 @@ return {
       shared_config.setup_null_ls()
       shared_config.setup_format_keymap()
 
-      -- Custom server configurations
       local capabilities = shared_config.get_capabilities()
       require("lsp.servers.lua_ls").setup(capabilities)
       require("lsp.servers.typescript").setup(capabilities)
