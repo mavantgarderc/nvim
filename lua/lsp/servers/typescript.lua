@@ -1,7 +1,7 @@
 local M = {}
 
 function M.setup(capabilities)
-  vim.lsp.config["ts_ls"] = {
+  require('lspconfig').ts_ls.setup({
     capabilities = capabilities,
     filetypes = { "typescript", "typescriptreact", "javascript", "javascriptreact" },
     settings = {
@@ -28,9 +28,7 @@ function M.setup(capabilities)
         },
       },
     },
-  }
-
-  -- no need for vim.lsp.start()
+  })
 end
 
 return M

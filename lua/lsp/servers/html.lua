@@ -1,7 +1,7 @@
 local M = {}
 
 function M.setup(capabilities)
-  vim.lsp.config["html"] = {
+  require('lspconfig').html.setup({
     capabilities = capabilities,
     filetypes = { "html", "templ" },
     settings = {
@@ -17,7 +17,7 @@ function M.setup(capabilities)
         },
       },
     },
-  }
+  })
 end
 
 return M

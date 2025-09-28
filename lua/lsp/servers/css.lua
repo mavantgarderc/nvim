@@ -1,7 +1,7 @@
 local M = {}
 
 function M.setup(capabilities)
-  vim.lsp.config["cssls"] = {
+  require('lspconfig').cssls.setup({
     capabilities = capabilities,
     settings = {
       css = {
@@ -23,7 +23,7 @@ function M.setup(capabilities)
         },
       },
     },
-  }
+  })
 end
 
 return M
