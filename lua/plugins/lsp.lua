@@ -1,3 +1,4 @@
+-- lua/plugins/lsp.lua
 return {
   {
     "VonHeikemen/lsp-zero.nvim",
@@ -12,13 +13,12 @@ return {
       "L3MON4D3/LuaSnip",
       "nvimtools/none-ls.nvim",
     },
-
     config = function()
+      -- Ensure nvim-lspconfig is loaded to register servers
+      require("lspconfig")
+
       local lsp = require("lsp-zero").preset({})
-      local cmp = require("cmp")
-      local luasnip = require("luasnip")
       local diagnostic = vim.diagnostic
-      local g = vim.g
       local map = vim.keymap.set
       local api = vim.api
       local buf = vim.lsp.buf
@@ -41,7 +41,7 @@ return {
         },
         automatic_installation = true,
         handlers = {
-          lsp.default_setup,
+          lsp.default_setup, -- Default handler for servers without custom configs
         },
       })
 
@@ -64,13 +64,12 @@ return {
       end)
 
       shared_config.setup_keymaps()
-
       shared_config.setup_diagnostics()
+      shared_config.setup_null_ls()
+      shared_config.setup_format_keymap()
 
-      shared_config.setup_completion(cmp, luasnip)
-
+      -- Custom server configurations
       local capabilities = shared_config.get_capabilities()
-
       require("lsp.servers.lua_ls").setup(capabilities)
       require("lsp.servers.typescript").setup(capabilities)
       require("lsp.servers.python").setup(capabilities)
@@ -79,11 +78,7 @@ return {
       require("lsp.servers.css").setup(capabilities)
       require("lsp.servers.latex").setup(capabilities)
       require("lsp.servers.sql").setup(capabilities)
-      require("lsp.servers.solidity").setup()
-
-      shared_config.setup_null_ls()
-
-      shared_config.setup_format_keymap()
+      require("lsp.servers.solidity").setup(capabilities)
 
       lsp.setup()
     end,
