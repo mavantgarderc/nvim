@@ -27,13 +27,15 @@ function M.setup_lsp_keymaps()
       map("n", "<leader>[d", function() vim.diagnostic.jump({ count = -1 }) end, opts)
       map("n", "<leader>]d", function() vim.diagnostic.jump({ count = 1 }) end, opts)
 
-      map("n", "<leader>[e", function() vim.diagnostic.jump({ count = -1, severity = vim.diagnostic.severity.ERROR }) end, opts)
-      map("n", "<leader>]e", function() vim.diagnostic.jump({ count = 1, severity = vim.diagnostic.severity.ERROR }) end, opts)
+      map("n", "<leader>[e", function() vim.diagnostic.jump({ count = -1, severity = vim.diagnostic.severity.ERROR }) end,
+        opts)
+      map("n", "<leader>]e", function() vim.diagnostic.jump({ count = 1, severity = vim.diagnostic.severity.ERROR }) end,
+        opts)
 
       map("n", "<leader>wa", buff.add_workspace_folder, opts)
       map("n", "<leader>wr", buff.remove_workspace_folder, opts)
       map("n", "<leader>wl", function()
-        print(vim.inspect(buff.list_workspace_folders()))
+        print(vim.inspect(vim.ls.buf.list_workspace_folders()))
       end, opts)
 
       local has_telescope, telescope = pcall(require, "telescope.builtin")
@@ -104,7 +106,7 @@ function M.setup_lsp_keymaps()
           -- Add missing usings
           map("n", "<leader>cu", function()
             if is_omnisharp_ready() then
-              buff.code_action({
+              vim.lsp.buf.code_action({
                 context = {
                   only = { "source.addMissingImports" },
                   diagnostics = vim.diagnostic.get(0),
@@ -119,7 +121,7 @@ function M.setup_lsp_keymaps()
           -- Organize imports
           map("n", "<leader>co", function()
             if is_omnisharp_ready() then
-              buff.code_action({
+              vim.lsp.buf.code_action({
                 context = {
                   only = { "source.organizeImports" },
                   diagnostics = vim.diagnostic.get(0),
@@ -134,7 +136,7 @@ function M.setup_lsp_keymaps()
           -- Remove unnecessary usings
           map("n", "<leader>cr", function()
             if is_omnisharp_ready() then
-              buff.code_action({
+              vim.lsp.buf.code_action({
                 context = {
                   only = { "source.removeUnnecessaryImports" },
                   diagnostics = vim.diagnostic.get(0),
@@ -180,7 +182,7 @@ function M.setup_lsp_keymaps()
           if vim.fn.executable("netcoredbg") == 1 then
             map("n", "<leader>rt", function()
               if is_omnisharp_ready() then
-                buff.code_action({
+                vim.lsp.buf.code_action({
                   context = {
                     only = { "source.runTest" },
                     diagnostics = vim.diagnostic.get(0),
@@ -194,7 +196,7 @@ function M.setup_lsp_keymaps()
 
             map("n", "<leader>dt", function()
               if is_omnisharp_ready() then
-                buff.code_action({
+                vim.lsp.buf.code_action({
                   context = {
                     only = { "source.debugTest" },
                     diagnostics = vim.diagnostic.get(0),

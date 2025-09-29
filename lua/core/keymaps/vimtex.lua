@@ -42,6 +42,5 @@ vim.api.nvim_create_autocmd("FileType", {
     -- Insert mode mappings (examples for common LaTeX shortcuts)
     map("i", "[[", "\\begin{}<Left>")
     map("i", "]]", "\\end{}<Left>")
-
   end,
 })
