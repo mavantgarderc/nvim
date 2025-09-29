@@ -1,6 +1,5 @@
 local M = {}
 
-
 local function map(mode, lhs, rhs, opts)
   local options = { noremap = true, silent = true }
   if opts then options = vim.tbl_extend("force", options, opts) end
@@ -8,7 +7,6 @@ local function map(mode, lhs, rhs, opts)
 end
 
 function M.setup_ui_keymaps()
-  -- map("n", "<leader>db", ":DBUI<CR>", { desc = "Open Database UI" })
   map("n", "<leader>dt", ":DBUIToggle<CR>", { desc = "Toggle Database UI" })
   map("n", "<leader>da", ":DBUIAddConnection<CR>", { desc = "Add DB Connection" })
   map("n", "<leader>df", ":DBUIFindBuffer<CR>", { desc = "Find DB Buffer" })
@@ -25,10 +23,14 @@ function M.setup_ui_keymaps()
       if choice then vim.cmd("DB " .. choice) end
     end)
   end, { desc = "Quick Connect to DB" })
+
+  map("n", "<leader>dm", function()
+    vim.cmd("DB DB_DEV_MYSQL") -- replace with your default DB key from .env
+    vim.notify("Connected to DB_DEV_MYSQL", vim.log.levels.INFO)
+  end, { desc = "Connect to default MySQL DB" })
 end
 
 function M.setup_sql_keymaps()
-  -- Execute
   map("n", "<leader>ss", ":DB<CR>", { desc = "Execute SQL line" })
   map("v", "<leader>ss", ":DB<CR>", { desc = "Execute SQL selection" })
   map("n", "<leader>sf", ":%DB<CR>", { desc = "Execute entire SQL file" })
@@ -51,14 +53,16 @@ end
 function M.setup_dbui_buffer_keymaps()
   local dbui = {
     ["<CR>"] = "<Plug>(DBUI_SelectLine)",
-    ["o"]    = "<Plug>(DBUI_SelectLine)",
-    ["S"]    = "<Plug>(DBUI_SelectLineVsplit)",
-    ["R"]    = "<Plug>(DBUI_Redraw)",
-    ["d"]    = "<Plug>(DBUI_DeleteLine)",
-    ["A"]    = "<Plug>(DBUI_AddConnection)",
-    ["H"]    = "<Plug>(DBUI_ToggleDetails)",
-    ["r"]    = "<Plug>(DBUI_RenameLine)",
-    ["q"]    = "<Plug>(DBUI_Quit)",
+    ["o"] = "<Plug>(DBUI_SelectLine)",
+    ["S"] = "<Plug>(DBUI_SelectLineVsplit)",
+    ["R"] = "<Plug>(DBUI_Redraw)",
+    ["d"] = "<Plug>(DBUI_DeleteLine)",
+    ["A"] = "<Plug>(DBUI_AddConnection)",
+    ["H"] = "<Plug>(DBUI_ToggleDetails)",
+    ["r"] = "<Plug>(DBUI_RenameLine)",
+    ["q"] = "<Plug>(DBUI_Quit)",
+    ["<C-p>"] = "<Plug>(DBUI_GotoPreviousQuery)",
+    ["<C-n>"] = "<Plug>(DBUI_GotoNextQuery)",
   }
 
   vim.api.nvim_create_autocmd("FileType", {
@@ -81,12 +85,12 @@ function M.setup_sql_buffer_keymaps()
       map("n", "<localleader>r", ":DB<CR>", vim.tbl_extend("force", opts, { desc = "Execute current line" }))
       map("v", "<localleader>r", ":DB<CR>", vim.tbl_extend("force", opts, { desc = "Execute selection" }))
       map("n", "<localleader>R", ":%DB<CR>", vim.tbl_extend("force", opts, { desc = "Execute entire buffer" }))
-      map("n", "<localleader>h", function() -- help on word
+      map("n", "<localleader>h", function()
         local w = vim.fn.expand("<cword>")
         vim.cmd("help " .. w)
       end, vim.tbl_extend("force", opts, { desc = "Help for word under cursor" }))
 
-      map("n", "<localleader>f", function() -- format SQL
+      map("n", "<localleader>f", function()
         if vim.fn.executable("sqlformat") == 1 then
           vim.cmd("%!sqlformat --reindent --keywords upper --identifiers lower -")
         else
@@ -94,12 +98,12 @@ function M.setup_sql_buffer_keymaps()
         end
       end, vim.tbl_extend("force", opts, { desc = "Format SQL" }))
 
-      map("n", "<localleader>e", function() -- explain
+      map("n", "<localleader>e", function()
         local line = vim.api.nvim_get_current_line()
         vim.cmd("DB EXPLAIN " .. line)
       end, vim.tbl_extend("force", opts, { desc = "Explain current query" }))
 
-      map("n", "<localleader>d", function() -- describe table
+      map("n", "<localleader>d", function()
         local tbl = vim.fn.expand("<cword>")
         vim.cmd("DB DESCRIBE " .. tbl)
       end, vim.tbl_extend("force", opts, { desc = "Describe table under cursor" }))
@@ -115,7 +119,7 @@ function M.setup_lsp_integration()
       local o = { buffer = bufnr, noremap = true, silent = true }
       map("n", "gd", vim.lsp.buf.definition, vim.tbl_extend("force", o, { desc = "Go to definition" }))
       map("n", "gr", vim.lsp.buf.references, vim.tbl_extend("force", o, { desc = "Show references" }))
-      map("n", "K",  vim.lsp.buf.hover, vim.tbl_extend("force", o, { desc = "Show hover info" }))
+      map("n", "K", vim.lsp.buf.hover, vim.tbl_extend("force", o, { desc = "Show hover info" }))
       map("n", "<leader>rn", vim.lsp.buf.rename, vim.tbl_extend("force", o, { desc = "Rename symbol" }))
       map("n", "<leader>ca", vim.lsp.buf.code_action, vim.tbl_extend("force", o, { desc = "Code actions" }))
       map("n", "<C-k>", vim.lsp.buf.signature_help, vim.tbl_extend("force", o, { desc = "Signature help" }))
@@ -124,7 +128,7 @@ function M.setup_lsp_integration()
 end
 
 function M.setup_utility_keymaps()
-  map("n", "<leader>dw", function() -- switch buffer DB
+  map("n", "<leader>dw", function()
     local conns = vim.g.dbs or {}
     local names = vim.tbl_keys(conns)
     if vim.tbl_isempty(names) then
@@ -139,20 +143,20 @@ function M.setup_utility_keymaps()
     end)
   end, { desc = "Switch database for current buffer" })
 
-  map("n", "<leader>di", function() -- show current DB
+  map("n", "<leader>di", function()
     local cur = vim.b.db or vim.g.db or "No database set"
     vim.notify("Current database: " .. cur, vim.log.levels.INFO)
   end, { desc = "Show current database" })
 
-  map("n", "<leader>ds", function() -- scratch buffer
+  map("n", "<leader>ds", function()
     vim.cmd("enew")
-    vim.bo.filetype  = "sql"
-    vim.bo.buftype   = "nofile"
+    vim.bo.filetype = "sql"
+    vim.bo.buftype = "nofile"
     vim.bo.bufhidden = "hide"
-    vim.bo.swapfile  = false
+    vim.bo.swapfile = false
   end, { desc = "Open SQL scratch buffer" })
 
-  map("n", "<leader>dq", function() -- save query
+  map("n", "<leader>dq", function()
     vim.ui.input({ prompt = "Query name: " }, function(name)
       if name and name ~= "" then
         local dir = vim.fn.stdpath("config") .. "/db_ui/saved_queries"
