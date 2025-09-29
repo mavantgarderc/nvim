@@ -1,47 +1,64 @@
-local g       = vim.g
-local fn      = vim.fn
-local api     = vim.api
-local opt_loc = vim.opt_local
+local g = vim.g
+
+-- Load .env file for database connections
+local dotenv = require("core.dotenv")
+local env_file = vim.fn.stdpath("config") .. "/.env"
+vim.g.dbs = dotenv.load_dotenv(env_file)
+
+-- Validate database connections
+local function validate_dbs()
+  local conns = vim.g.dbs or {}
+  if vim.tbl_isempty(conns) then
+    vim.notify("No database connections loaded from .env", vim.log.levels.WARN)
+    return
+  end
+  for name, url in pairs(conns) do
+    if not url:match("^%w+://") and not url:match("^sqlite:") then
+      vim.notify("Invalid connection string for " .. name, vim.log.levels.ERROR)
+    end
+  end
+end
+
+vim.api.nvim_create_autocmd("VimEnter", {
+  callback = validate_dbs,
+  desc = "Validate database connections on startup",
+})
 
 return {
   {
     "tpope/vim-dadbod",
     lazy = true,
-    cmd  = { "DB" },
+    cmd = { "DB" },
+    dependencies = { "core.dotenv" },
   },
 
   {
     "kristijanhusak/vim-dadbod-ui",
     dependencies = {
-      {
-        "tpope/vim-dadbod",
-        lazy = true
-      },
-      {
-        "kristijanhusak/vim-dadbod-completion",
-        ft = { "sql", "mysql", "plsql", "sqlite", "postgresql", "psql" },
-        lazy = true
-      },
+      { "tpope/vim-dadbod",                     lazy = true },
+      { "kristijanhusak/vim-dadbod-completion", ft = { "sql", "mysql", "plsql", "sqlite", "postgresql", "psql" }, lazy = true },
+      { "core.dotenv" },
     },
     cmd = {
       "DBUI", "DBUIToggle", "DBUIAddConnection", "DBUIFindBuffer", "DBUIRenameBuffer", "DBUILastQueryInfo",
     },
     init = function()
       -- UI settings
-      g.db_ui_use_nerd_fonts             = 1
-      g.db_ui_show_database_icon         = 1
-      g.db_ui_force_echo_notifications   = 1
-      g.db_ui_win_position               = "left"
-      g.db_ui_winwidth                   = 40
+      g.db_ui_use_nerd_fonts = 1
+      g.db_ui_show_database_icon = 1
+      g.db_ui_force_echo_notifications = 1
+      g.db_ui_win_position = "left"
+      g.db_ui_winwidth = 40
       g.db_ui_auto_execute_table_helpers = 1
-      g.db_ui_execute_on_save            = 0
-      g.db_ui_use_nvim_notify            = 1
+      g.db_ui_execute_on_save = 0
+      g.db_ui_use_nvim_notify = 1
 
-      -- Saved-queries directory (create if missing)
-      local save_dir                     = fn.stdpath("config") .. "/db_ui/saved_queries"
-      if fn.isdirectory(save_dir) == 0 then fn.mkdir(save_dir, "p") end
+      -- Saved-queries directory
+      local save_dir = vim.fn.stdpath("config") .. "/db_ui/saved_queries"
+      if vim.fn.isdirectory(save_dir) == 0 then vim.fn.mkdir(save_dir, "p") end
       g.db_ui_save_location = save_dir
 
+      -- Custom icons
       g.db_ui_icons = {
         expanded = {
           db = " ",
@@ -70,28 +87,29 @@ return {
         connection_error = "",
       }
 
+      -- Table helpers for supported databases
       g.db_ui_table_helpers = {
         mysql = {
-          Count   = "select count(1) from \"{table}\"",
+          Count = "select count(1) from \"{table}\"",
           Explain = "explain {last_query}",
         },
         sqlite = {
           Describe = "PRAGMA table_info(\"{table}\")",
         },
         postgresql = {
-          Count    = "select count(1) from \"{table}\"",
-          Explain  = "explain (analyze, buffers) {last_query}",
+          Count = "select count(1) from \"{table}\"",
+          Explain = "explain (analyze, buffers) {last_query}",
           Describe = "\\d+ \"{table}\"",
         },
         oracle = {
-          Count    = "SELECT COUNT(1) FROM \"{table}\"",
+          Count = "SELECT COUNT(1) FROM \"{table}\"",
           Describe = "DESC \"{table}\"",
-          Explain  = "EXPLAIN PLAN FOR {last_query}",
+          Explain = "EXPLAIN PLAN FOR {last_query}",
         },
         plsql = {
-          Count    = "SELECT COUNT(1) FROM \"{table}\"",
+          Count = "SELECT COUNT(1) FROM \"{table}\"",
           Describe = "DESC \"{table}\"",
-          Explain  = "EXPLAIN PLAN FOR {last_query}",
+          Explain = "EXPLAIN PLAN FOR {last_query}",
         },
       }
 
@@ -100,50 +118,36 @@ return {
     config = function()
       require("core.keymaps.dadbod")
 
-      api.nvim_create_autocmd("FileType", {
+      -- Autocompletion for SQL filetypes
+      vim.api.nvim_create_autocmd("FileType", {
         pattern = { "sql", "mysql", "plsql", "sqlite", "postgresql", "psql" },
         callback = function()
           require("cmp").setup.buffer({
             sources = {
-              { name = "vim-dadbod-completion" },
-              { name = "buffer" },
-              { name = "luasnip" },
+              { name = "vim-dadbod-completion", priority = 1000 },
+              { name = "luasnip",               priority = 750 },
+              { name = "buffer",                priority = 500, keyword_length = 3 },
             },
           })
         end,
       })
 
-      api.nvim_create_autocmd("FileType", {
+      -- SQL buffer settings
+      vim.api.nvim_create_autocmd("FileType", {
         pattern = { "sql", "mysql", "plsql", "sqlite", "postgresql", "psql" },
         callback = function()
-          opt_loc.commentstring = "-- %s"
-          opt_loc.expandtab     = true
-          opt_loc.shiftwidth    = 2
-          opt_loc.tabstop       = 2
-          opt_loc.softtabstop   = 2
+          vim.opt_local.commentstring = "-- %s"
+          vim.opt_local.expandtab = true
+          vim.opt_local.shiftwidth = 2
+          vim.opt_local.tabstop = 2
+          vim.opt_local.softtabstop = 2
         end,
       })
 
+      -- Enable nvim-notify if available
       if pcall(require, "notify") then
         g.db_ui_use_nvim_notify = 1
       end
-    end,
-  },
-
-  {
-    "kristijanhusak/vim-dadbod-completion",
-    ft     = { "sql", "mysql", "plsql", "sqlite", "postgresql", "psql" },
-    lazy   = true,
-    config = function()
-      local ok, cmp = pcall(require, "cmp")
-      if not ok then return end
-      cmp.setup.filetype({ "sql", "mysql", "plsql", "sqlite", "postgresql", "psql" }, {
-        sources = cmp.config.sources({
-          { name = "vim-dadbod-completion" },
-          { name = "buffer" },
-          { name = "path" },
-        }),
-      })
     end,
   },
 }
