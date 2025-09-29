@@ -29,7 +29,6 @@ return {
     "tpope/vim-dadbod",
     lazy = true,
     cmd = { "DB" },
-    dependencies = { "core.dotenv" },
   },
 
   {
@@ -37,7 +36,6 @@ return {
     dependencies = {
       { "tpope/vim-dadbod", lazy = true },
       { "kristijanhusak/vim-dadbod-completion", ft = { "sql", "mysql", "plsql", "sqlite", "postgresql", "psql" }, lazy = true },
-      { "core.dotenv" },
     },
     cmd = {
       "DBUI", "DBUIToggle", "DBUIAddConnection", "DBUIFindBuffer", "DBUIRenameBuffer", "DBUILastQueryInfo",

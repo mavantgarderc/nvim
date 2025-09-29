@@ -1,7 +1,3 @@
-local vim = vim
-local g = vim.g
-local fn = vim.fn
-
 return {
   -- ==================================================
   -- Oil file explorer
@@ -62,6 +58,8 @@ return {
       },
       -- dadbod
       "tpope/vim-dadbod",
+      "kristijanhusak/vim-dadbod-completion",
+      "kristijanhusak/vim-dadbod-ui",
       -- Utilities
       -- indent automation; no config needed
       "NMAC427/guess-indent.nvim",
@@ -99,8 +97,8 @@ return {
   {
     "lervag/vimtex",
     init = function()
-      g.vimtex_view_method = "zathura" -- the PDF live viewer
-      g.vimtex_compiler_method = "latexmk"
+      vim.g.vimtex_view_method = "zathura" -- the PDF live viewer
+      vim.g.vimtex_compiler_method = "latexmk"
     end
   },
   -- ==================================================
@@ -118,12 +116,12 @@ return {
       {
         "nvim-telescope/telescope-fzf-native.nvim",
         build = "make",
-        cond = function() return fn.executable("make") == 1 end,
+        cond = function() return vim.fn.executable("make") == 1 end,
       },
       { "nvim-telescope/telescope-ui-select.nvim" },
 
       -- Useful for getting pretty icons, but requires a Nerd Font.
-      { "nvim-tree/nvim-web-devicons",            enabled = g.have_nerd_font },
+      { "nvim-tree/nvim-web-devicons",            enabled = vim.g.have_nerd_font },
     },
   },
   -- undotree
