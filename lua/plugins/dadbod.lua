@@ -35,7 +35,7 @@ return {
   {
     "kristijanhusak/vim-dadbod-ui",
     dependencies = {
-      { "tpope/vim-dadbod",                     lazy = true },
+      { "tpope/vim-dadbod", lazy = true },
       { "kristijanhusak/vim-dadbod-completion", ft = { "sql", "mysql", "plsql", "sqlite", "postgresql", "psql" }, lazy = true },
       { "core.dotenv" },
     },
@@ -125,8 +125,8 @@ return {
           require("cmp").setup.buffer({
             sources = {
               { name = "vim-dadbod-completion", priority = 1000 },
-              { name = "luasnip",               priority = 750 },
-              { name = "buffer",                priority = 500, keyword_length = 3 },
+              { name = "luasnip", priority = 750 },
+              { name = "buffer", priority = 500, keyword_length = 3 },
             },
           })
         end,
