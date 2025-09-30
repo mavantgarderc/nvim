@@ -3,9 +3,11 @@
 
 local Raphael = {}
 
+local default_theme = "kanagawa-wave"
+
 -- defaults
 Raphael.state = {
-  current = "kanagawa-wave",
+  current = default_theme,
   previous = nil,
   auto_apply = false,
   bookmarks = {},
@@ -96,9 +98,9 @@ function Raphael.apply(theme)
   if not ok then
     vim.notify("Raphael: failed to apply theme '" .. tostring(theme) .. "': " .. tostring(err), vim.log.levels.ERROR)
     -- fallback to default if available
-    if Raphael.themes.is_available("kanagawa-paper-ink") then
-      pcall(vim.cmd.colorscheme, "kanagawa-paper-ink")
-      Raphael.state.current = "kanagawa-paper-ink"
+    if Raphael.themes.is_available(default_theme) then
+      pcall(vim.cmd.colorscheme, default_theme)
+      Raphael.state.current = default_theme
     end
     Raphael.save_state()
     return
@@ -157,12 +159,12 @@ vim.schedule(function()
   if Raphael.themes.is_available(Raphael.state.current) then
     pcall(vim.cmd.colorscheme, Raphael.state.current)
   else
-    if Raphael.themes.is_available("kanagawa-paper-ink") then
-      pcall(vim.cmd.colorscheme, "kanagawa-paper-ink")
-      Raphael.state.current = "kanagawa-paper-ink"
+    if Raphael.themes.is_available(default_theme) then
+      pcall(vim.cmd.colorscheme, default_theme)
+      Raphael.state.current = default_theme
       Raphael.save_state()
     else
-      vim.notify("Raphael: fallback theme 'kanagawa-paper-ink' not found", vim.log.levels.WARN)
+      vim.notify("Raphael: fallback theme not found", vim.log.levels.WARN)
     end
   end
 end)
