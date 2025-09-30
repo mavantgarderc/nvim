@@ -1,12 +1,11 @@
 -- lua/Raphael/init.lua
 -- Core for Raphael: state, persistence, safe loading order.
-local uv = vim.loop
 
 local Raphael = {}
 
 -- defaults
 Raphael.state = {
-  current = "kanagawa-paper-ink",
+  current = "kanagawa-wave",
   previous = nil,
   auto_apply = false,
   bookmarks = {},
@@ -22,16 +21,16 @@ local state_file = vim.fn.stdpath("data") .. "/raphael/state.json"
 
 -- async write helper
 local function async_write(path, contents)
-  uv.fs_open(path, "w", 438, function(err, fd)
+  vim.loop.fs_open(path, "w", 438, function(err, fd)
     if err then
       vim.schedule(function() vim.notify("Raphael: failed to write state: " .. tostring(err), vim.log.levels.WARN) end)
       return
     end
-    uv.fs_write(fd, contents, -1, function(write_err)
+    vim.loop.fs_write(fd, contents, -1, function(write_err)
       if write_err and write_err ~= 0 then
         vim.schedule(function() vim.notify("Raphael: failed to write state (write): " .. tostring(write_err), vim.log.levels.WARN) end)
       end
-      uv.fs_close(fd)
+      vim.loop.fs_close(fd)
     end)
   end)
 end
