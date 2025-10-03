@@ -1,4 +1,5 @@
 local M = {}
+
 local colors = require("Raphael.colors")
 
 M.theme_map = colors.theme_map
@@ -20,7 +21,7 @@ function M.refresh()
   for _, p in ipairs(rtp) do
     local glob1 = vim.fn.globpath(p, "colors/*.vim", 0, 1)
     local glob2 = vim.fn.globpath(p, "colors/*.lua", 0, 1)
-    for _, f in ipairs(vim.tbl_flatten({glob1, glob2})) do
+    for _, f in ipairs(vim.tbl_flatten({ glob1, glob2 })) do
       M.installed[vim.fn.fnamemodify(f, ":t:r")] = true
     end
   end

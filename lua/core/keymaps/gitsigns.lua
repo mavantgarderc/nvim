@@ -6,7 +6,7 @@ local function map(mode, lhs, rhs, opts)
 end
 
 local function in_git_repo()
-  local git_dir = vim.vim.fn.system("git rev-parse --git-dir 2>/dev/null")
+  local git_dir = vim.fn.system("git rev-parse --git-dir 2>/dev/null")
   return vim.v.shell_error == 0 and git_dir:match("%.git")
 end
 
@@ -52,12 +52,12 @@ function M.setup()
   map("n", "<leader>gd", gitsigns.toggle_deleted, { desc = "Toggle deleted" })
 
   map("v", "<leader>ghs", function()
-    local s, e = vim.vim.fn.line("v"), vim.vim.fn.line(".")
+    local s, e = vim.fn.line("v"), vim.fn.line(".")
     gitsigns.stage_hunk({ math.min(s, e), math.max(s, e) })
   end, { desc = "Stage hunk (visual)" })
 
   map("v", "<leader>ghr", function()
-    local s, e = vim.vim.fn.line("v"), vim.vim.fn.line(".")
+    local s, e = vim.fn.line("v"), vim.fn.line(".")
     gitsigns.reset_hunk({ math.min(s, e), math.max(s, e) })
   end, { desc = "Reset hunk (visual)" })
 
@@ -75,7 +75,7 @@ function M.setup()
     end
     vim.ui.input({ prompt = "Branch to checkout: " }, function(input)
       if input and input ~= "" then
-        git_term("git checkout " .. vim.vim.fn.shellescape(input))
+        git_term("git checkout " .. vim.fn.shellescape(input))
       end
     end)
   end, { desc = "Git checkout (branch)" })

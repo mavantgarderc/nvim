@@ -1,5 +1,3 @@
-local fn = vim.fn
-
 local components = require("plugins.lualine.components.init")
 local utils = require("plugins.lualine.utils.init")
 

@@ -1,5 +1,3 @@
-local loop = vim.loop
-
 local M = {}
 
 M.cache = {
@@ -13,7 +11,7 @@ M.cache = {
 
 function M.get_cached_value(key, update_fn, ttl)
   ttl = ttl or 500
-  local now = loop.hrtime() / 1000000
+  local now = vim.loop.hrtime() / 1000000
   local cached = M.cache[key]
 
   if not cached or (now - cached.last_update) > ttl then

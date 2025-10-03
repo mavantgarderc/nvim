@@ -1,9 +1,4 @@
-local opt = vim.opt
-local g = vim.g
-local o = vim.o
-local schedule = vim.schedule
-local map = vim.keymap
-local opt_local = vim.opt_local
+local opt, g, o, schedule, map, opt_local = vim.opt, vim.g, vim.o, vim.schedule, vim.keymap, vim.opt_local
 
 map.set("n", "<leader>J", "<Nop>")
 map.set("n", "gc", "<Nop>")

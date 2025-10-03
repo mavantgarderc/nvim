@@ -54,13 +54,13 @@ map("n", "<leader>ms", vm_status, { desc = "Multi-cursor: Show status" })
 map("n", "<leader>mx", vm_clear_all, { desc = "Multi-cursor: Clear all cursors" })
 
 -- === Keymaps ===
--- Quick access to common vim-visual-multi operations
+-- -- Quick access to common vim-visual-multi operations
 -- map("n", "<leader>mc", "<Plug>(VM-Find-Under)",         { desc = "Multi-cursor: Find word under cursor" })
 -- map("v", "<leader>mc", "<Plug>(VM-Find-Subword-Under)", { desc = "Multi-cursor: Find selection"         })
 -- map("n", "<leader>M",  "<Plug>(VM-Select-All)",         { desc = "Multi-cursor: Select all occurrences" })
 -- map("n", "<leader>/",  "<Plug>(VM-Start-Regex-Search)", { desc = "Multi-cursor: Start regex search"     })
 
--- Alternative mappings
+-- -- Alternative mappings
 -- map("n", "<leader>mc", "<Plug>(VM-Find-Under)",         { desc = "Multi-cursor: Find word under cursor" })
 -- map("v", "<leader>mc", "<Plug>(VM-Find-Subword-Under)", { desc = "Multi-cursor: Find selection"         })
 -- map("n", "<leader>ma", "<Plug>(VM-Select-All)",         { desc = "Multi-cursor: Select all occurrences" })
@@ -68,12 +68,12 @@ map("n", "<leader>mx", vm_clear_all, { desc = "Multi-cursor: Clear all cursors" 
 -- map("n", "<leader>mv", "<Plug>(VM-Add-Cursor-At-Pos)",  { desc = "Multi-cursor: Add cursor at position" })
 -- map("n", "<leader>mw", "<Plug>(VM-Add-Cursor-At-Word)", { desc = "Multi-cursor: Add cursor at word"     })
 
--- Visual mode mappings
+-- -- Visual mode mappings
 -- map("v", "<C-n>",      "<Plug>(VM-Find-Subword-Under)", { desc = "Multi-cursor: Find selection"             })
 -- map("v", "<leader>a",  "<Plug>(VM-Visual-Add)",         { desc = "Multi-cursor: Add visual selection"       })
 -- map("v", "<leader>cf", "<Plug>(VM-Visual-Find)",        { desc = "Multi-cursor: Find visual selection"      })
 -- map("v", "<leader>c",  "<Plug>(VM-Visual-Cursors)",     { desc = "Multi-cursor: Create cursors from visual" })
 
--- Column selection helpers
+-- -- Column selection helpers
 -- map("n", "<leader>mb", "<Plug>(VM-Select-BBW)",  { desc = "Multi-cursor: Select by brackets/braces/words" })
 -- map("n", "<leader>ml", "<Plug>(VM-Select-Line)", { desc = "Multi-cursor: Select whole lines"              })

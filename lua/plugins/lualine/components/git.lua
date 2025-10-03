@@ -1,13 +1,9 @@
-local fn = vim.fn
-local v = vim.v
-local notify = vim.notify
-local cmd = vim.cmd
 local glyphs = require("plugins.lualine.utils.glyphs")
 local cache = require("plugins.lualine.utils.cache")
 
 local M = {}
 
-local hide_in_width = function() return fn.winwidth(0) > 80 end
+local hide_in_width = function() return vim.fn.winwidth(0) > 80 end
 local last_commit_enabled = true
 
 M.branch = {
@@ -16,9 +12,9 @@ M.branch = {
   --icon = glyphs.git.branch_alt,
   icon = glyphs.git.branch,
   cond = function()
-    return fn.executable("git") == 1
-        and (fn.isdirectory(".git") == 1 or
-          fn.system("git rev-parse --git-dir 2>/dev/null"):match("%.git"))
+    return vim.fn.executable("git") == 1
+        and (vim.fn.isdirectory(".git") == 1 or
+          vim.fn.system("git rev-parse --git-dir 2>/dev/null"):match("%.git"))
   end,
   fmt = function(str)
     if str == "" or str == nil then return "" end
@@ -59,8 +55,8 @@ end
 
 M.ahead_behind = function()
   return cache.get_cached_value("git_aheadbehind", function()
-    local out = fn.system("git rev-list --left-right --count @{upstream}...HEAD 2>/dev/null")
-    if v.shell_error ~= 0 or out == "" then return "" end
+    local out = vim.fn.system("git rev-list --left-right --count @{upstream}...HEAD 2>/dev/null")
+    if vim.v.shell_error ~= 0 or out == "" then return "" end
     local behind_count, ahead_count = out:match("^(%d+)%s+(%d+)")
     if not behind_count then return "" end
     behind_count, ahead_count = tonumber(behind_count), tonumber(ahead_count)

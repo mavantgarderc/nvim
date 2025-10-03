@@ -1,9 +1,3 @@
-local fn = vim.fn
-local lsp = vim.lsp
-local v = vim.v
-local bo = vim.bo
-local treesitter = vim.treesitter
-
 local cache = require("plugins.lualine.utils.cache")
 local glyphs = require("plugins.lualine.utils.glyphs")
 
@@ -11,7 +5,7 @@ local M = {}
 
 function M.get_lsp_clients()
   return cache.get_cached_value("lsp_clients", function()
-    local clients = lsp.get_clients({ bufnr = 0 })
+    local clients = vim.lsp.get_clients({ bufnr = 0 })
     if #clients == 0 then return "" end
 
     local names = {}
@@ -26,7 +20,7 @@ function M.get_python_env()
   return cache.get_cached_value("python_env", function()
     local venv = os.getenv("VIRTUAL_ENV")
     if venv then
-      return glyphs.language.python .. fn.fnamemodify(venv, ":t")
+      return glyphs.language.python .. vim.fn.fnamemodify(venv, ":t")
     end
 
     local conda_env = os.getenv("CONDA_DEFAULT_ENV")
@@ -40,14 +34,14 @@ end
 
 function M.get_dotnet_project()
   return cache.get_cached_value("dotnet_project", function()
-    local cwd = fn.getcwd()
-    local sln_files = fn.glob(cwd .. "/*.sln", false, true)
-    local csproj_files = fn.glob(cwd .. "/**/*.csproj", false, true)
+    local cwd = vim.fn.getcwd()
+    local sln_files = vim.fn.glob(cwd .. "/*.sln", false, true)
+    local csproj_files = vim.fn.glob(cwd .. "/**/*.csproj", false, true)
 
     if #sln_files > 0 then
-      return glyphs.language.dotnet .. fn.fnamemodify(sln_files[1], ":t:r")
+      return glyphs.language.dotnet .. vim.fn.fnamemodify(sln_files[1], ":t:r")
     elseif #csproj_files > 0 then
-      return glyphs.language.dotnet .. fn.fnamemodify(csproj_files[1], ":t:r")
+      return glyphs.language.dotnet .. vim.fn.fnamemodify(csproj_files[1], ":t:r")
     end
 
     return ""
@@ -56,13 +50,13 @@ end
 
 function M.get_test_status()
   return cache.get_cached_value("test_status", function()
-    local pytest_job = fn.system("pgrep -f pytest 2>/dev/null")
-    if pytest_job ~= "" and v.shell_error == 0 then
+    local pytest_job = vim.fn.system("pgrep -f pytest 2>/dev/null")
+    if pytest_job ~= "" and vim.v.shell_error == 0 then
       return glyphs.status.test .. " pytest"
     end
 
-    local dotnet_job = fn.system("pgrep -f \"dotnet test\" 2>/dev/null")
-    if dotnet_job ~= "" and v.shell_error == 0 then
+    local dotnet_job = vim.fn.system("pgrep -f \"dotnet test\" 2>/dev/null")
+    if dotnet_job ~= "" and vim.v.shell_error == 0 then
       return glyphs.status.test .. " dotnet"
     end
 
@@ -89,7 +83,7 @@ function M.get_debug_status()
 end
 
 function M.get_database_status()
-  local ft = bo.filetype
+  local ft = vim.bo.filetype
   if ft == "sql" or ft == "mysql" or ft == "postgresql" then
     return glyphs.language.database .. "DB"
   end
@@ -97,16 +91,16 @@ function M.get_database_status()
 end
 
 function M.get_cwd()
-  local cwd = fn.getcwd()
+  local cwd = vim.fn.getcwd()
   local home = os.getenv("HOME")
   if home and cwd:sub(1, #home) == home then
     cwd = "~" .. cwd:sub(#home + 1)
   end
-  return glyphs.file.folder .. fn.pathshorten(cwd)
+  return glyphs.file.folder .. vim.fn.pathshorten(cwd)
 end
 
 function M.get_file_info()
-  local get_type = bo.filetype ~= "" and bo.filetype or "no ft"
+  local get_type = vim.bo.filetype ~= "" and vim.bo.filetype or "no ft"
   return string.format("%s", get_type)
 end
 
@@ -135,7 +129,7 @@ function M.get_current_symbol()
           node_type == "method_declaration" then
         local name_node = function_node:field("name")[1]
         if name_node then
-          local name = treesitter.get_node_text(name_node, 0)
+          local name = vim.treesitter.get_node_text(name_node, 0)
           return glyphs.status.func .. name
         end
         break

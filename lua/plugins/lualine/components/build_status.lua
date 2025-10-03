@@ -1,6 +1,3 @@
-local fn = vim.fn
-local v = vim.v
-
 local M = {}
 
 local cache = require("plugins.lualine.utils.cache")
@@ -14,8 +11,8 @@ local patterns = {
 function M.build_status()
   return cache.get("build_status", function()
     for _, p in ipairs(patterns) do
-      local out = fn.system("pgrep -f '" .. p .. "' 2>/dev/null")
-      if out ~= "" and v.shell_error == 0 then
+      local out = vim.fn.system("pgrep -f '" .. p .. "' 2>/dev/null")
+      if out ~= "" and vim.v.shell_error == 0 then
         return "󰣖 BUILD"
       end
     end

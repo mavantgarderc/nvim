@@ -1,12 +1,9 @@
-local lsp = vim.lsp
-local bo = vim.bo
-
 local getters = require("plugins.lualine.utils.getters")
 
 local M = {}
 
 function M.has_lsp()
-  return #lsp.get_clients({ bufnr = 0 }) > 0
+  return #vim.lsp.get_clients({ bufnr = 0 }) > 0
 end
 
 function M.has_python_env()
@@ -30,7 +27,7 @@ function M.has_symbol()
 end
 
 function M.is_sql_file()
-  local ft = bo.filetype
+  local ft = vim.bo.filetype
   return ft == "sql" or ft == "mysql" or ft == "postgresql"
 end
 

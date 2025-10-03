@@ -1,4 +1,3 @@
-local uv = vim.loop
 local util = require("Raphael.util")
 
 local M = {}
@@ -30,10 +29,10 @@ function M.load_state(state)
     -- create default file asynchronously
     local payload = vim.fn.json_encode(default_state())
     -- write async
-    uv.fs_open(state_file, "w", 438, function(err, fdw)
+    vim.loop.fs_open(state_file, "w", 438, function(err, fdw)
       if err then return end
-      uv.fs_write(fdw, payload, -1, function()
-        uv.fs_close(fdw)
+      vim.loop.fs_write(fdw, payload, -1, function()
+        vim.loop.fs_close(fdw)
       end)
     end)
     -- merge defaults into provided state
@@ -54,10 +53,10 @@ function M.load_state(state)
   else
     -- failed decode: write defaults back
     local payload = vim.fn.json_encode(default_state())
-    uv.fs_open(state_file, "w", 438, function(err, fdw)
+    vim.loop.fs_open(state_file, "w", 438, function(err, fdw)
       if err then return end
-      uv.fs_write(fdw, payload, -1, function()
-        uv.fs_close(fdw)
+      vim.loop.fs_write(fdw, payload, -1, function()
+        vim.loop.fs_close(fdw)
       end)
     end)
     local d = default_state()
@@ -68,10 +67,10 @@ end
 function M.save_state(state)
   ensure_dir()
   local payload = vim.fn.json_encode(state)
-  uv.fs_open(state_file, "w", 438, function(err, fd)
+  vim.loop.fs_open(state_file, "w", 438, function(err, fd)
     if err then return end
-    uv.fs_write(fd, payload, -1, function()
-      uv.fs_close(fd)
+    vim.loop.fs_write(fd, payload, -1, function()
+      vim.loop.fs_close(fd)
     end)
   end)
 end
