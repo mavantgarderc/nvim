@@ -2,8 +2,8 @@
 -- Raphael picker: palette floating window, inline fuzzy search, collapsible categories, bookmarks, preview (debounced)
 -- Compatible with Neovim 0.11.x
 
-local themes = require("Raphael.themes")
-local M = {}
+local themes           = require("Raphael.themes")
+local M                = {}
 
 -- windows / buffers
 local picker_buf, picker_win
@@ -16,21 +16,21 @@ local picker_w, picker_h, picker_row, picker_col
 -- state references
 local core_ref, state_ref
 local previewed
-local collapsed = {}
-local bookmarks = {}
-local search_query = ""
+local collapsed        = {}
+local bookmarks        = {}
+local search_query     = ""
 
 -- icons / glyphs
-local ICON_BOOKMARK   = ""
-local ICON_CURRENT_ON = ""
-local ICON_CURRENT_OFF= ""
-local ICON_GROUP_EXP  = ""
-local ICON_GROUP_COL  = ""
-local BLOCK_CHAR      = "▇"
-local ICON_SEARCH     = ""
+local ICON_BOOKMARK    = ""
+local ICON_CURRENT_ON  = ""
+local ICON_CURRENT_OFF = ""
+local ICON_GROUP_EXP   = ""
+local ICON_GROUP_COL   = ""
+local BLOCK_CHAR       = "▇"
+local ICON_SEARCH      = ""
 
 -- palette hl groups
-local PALETTE_HL = { "Normal", "Comment", "String", "Identifier", "Function", "Type" }
+local PALETTE_HL       = { "Normal", "Comment", "String", "Identifier", "Function", "Type" }
 
 local palette_hl_cache = {}
 
@@ -43,7 +43,9 @@ local function parse_line_theme(line)
   if theme and theme ~= "" then return theme end
   local last
   for token in line:gmatch("%S+") do last = token end
-  if last then last = last:gsub("^[^%w_%-]+", ""):gsub("[^%w_%-]+$", ""); if last ~= "" then return last end end
+  if last then
+    last = last:gsub("^[^%w_%-]+", ""):gsub("[^%w_%-]+$", ""); if last ~= "" then return last end
+  end
   return nil
 end
 
@@ -51,8 +53,12 @@ local function debounce(ms, fn)
   local timer = nil
   return function(...)
     local args = { ... }
-    if timer then pcall(vim.loop.timer_stop, timer); pcall(vim.loop.close, timer); timer = nil end
-    timer = vim.defer_fn(function() pcall(fn, unpack(args)); timer = nil end, ms)
+    if timer then
+      pcall(vim.loop.timer_stop, timer); pcall(vim.loop.close, timer); timer = nil
+    end
+    timer = vim.defer_fn(function()
+      pcall(fn, unpack(args)); timer = nil
+    end, ms)
   end
 end
 
@@ -116,7 +122,9 @@ function M.update_palette(theme)
           local s, e = string.find(bufline, BLOCK_CHAR, start_pos, true)
           if not s then break end
           count = count + 1
-          if count == i then start_pos = s; break end
+          if count == i then
+            start_pos = s; break
+          end
           start_pos = e + 1
         end
         if start_pos then pcall(vim.api.nvim_buf_add_highlight, palette_buf, 0, gname, 0, start_pos - 1, start_pos) end
@@ -131,13 +139,22 @@ function M.update_palette(theme)
   if palette_win and vim.api.nvim_win_is_valid(palette_win) then
     pcall(vim.api.nvim_win_set_buf, palette_win, palette_buf)
     pcall(vim.api.nvim_win_set_config, palette_win, {
-      relative = "editor", width = pal_width, height = 1, row = pal_row, col = pal_col,
+      relative = "editor",
+      width = pal_width,
+      height = 1,
+      row = pal_row,
+      col = pal_col,
       style = "minimal",
     })
   else
     palette_win = vim.api.nvim_open_win(palette_buf, false, {
-      relative = "editor", width = pal_width, height = 1, row = pal_row, col = pal_col,
-      style = "minimal", zindex = 50,
+      relative = "editor",
+      width = pal_width,
+      height = 1,
+      row = pal_row,
+      col = pal_col,
+      style = "minimal",
+      zindex = 50,
     })
   end
 end
@@ -171,7 +188,8 @@ end
 
 -- close picker
 local function close_picker(revert)
-  if revert and state_ref and state_ref.previous and themes.is_available(state_ref.previous) then pcall(vim.cmd.colorscheme, state_ref.previous) end
+  if revert and state_ref and state_ref.previous and themes.is_available(state_ref.previous) then pcall(
+    vim.cmd.colorscheme, state_ref.previous) end
   if picker_win and vim.api.nvim_win_is_valid(picker_win) then pcall(vim.api.nvim_win_close, picker_win, true) end
   if palette_win and vim.api.nvim_win_is_valid(palette_win) then pcall(vim.api.nvim_win_close, palette_win, true) end
   if search_win and vim.api.nvim_win_is_valid(search_win) then pcall(vim.api.nvim_win_close, search_win, true) end
@@ -201,8 +219,13 @@ local function open_search()
   search_buf = vim.api.nvim_create_buf(false, true)
   local s_row = picker_row + picker_h - 1
   search_win = vim.api.nvim_open_win(search_buf, true, {
-    relative = "editor", width = picker_w, height = 1, row = s_row, col = picker_col,
-    style = "minimal", border = "rounded",
+    relative = "editor",
+    width = picker_w,
+    height = 1,
+    row = s_row,
+    col = picker_col,
+    style = "minimal",
+    border = "rounded",
   })
   pcall(vim.api.nvim_buf_set_option, search_buf, "buftype", "prompt")
   vim.fn.prompt_setprompt(search_buf, ICON_SEARCH .. " ")

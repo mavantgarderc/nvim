@@ -71,17 +71,6 @@ return {
   -- Pair Character Completion
   "windwp/nvim-autopairs",
   -- ==================================================
-  -- -- === Refactoring.nvim ===
-  {
-    "ThePrimeagen/refactoring.nvim",
-    dependencies = {
-      "nvim-lua/plenary.nvim",
-      "nvim-treesitter/nvim-treesitter",
-    },
-    lazy = false,
-    opts = {},
-  },
-  -- ==================================================
   -- === Obsidian Integration ===
   {
     "epwalsh/obsidian.nvim",
