@@ -6,8 +6,6 @@ CREATE TABLE IF NOT EXISTS users (
   credits INTEGER DEFAULT 0
 );
 
-INSERT INTO users (name, credits) VALUES ('Mava', 10), ('Alex', 5), ('Sam', 7);
-
 -- report: active users and average credits
 SELECT COUNT(*) AS total_users, ROUND(AVG(credits),2) AS avg_credits FROM users;
 
