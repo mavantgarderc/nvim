@@ -9,8 +9,14 @@ return {
   "nvim-lualine/lualine.nvim",
   -- startup dashboard
   "goolord/alpha-nvim",
-  -- Colorizer
-  "NvChad/nvim-colorizer.lua",
+  -- text coloring
+  {
+    "echasnovski/mini.hipatterns",
+    version = "*",
+    config = function()
+      require("core.mini-hipatterns")
+    end,
+  },
   -- themes
   {
     "RRethy/base16-nvim",
@@ -24,7 +30,6 @@ return {
     "whatyouhide/vim-gotham",
     "everviolet/nvim",
   },
-  "dharmx/toml.nvim",
   -- ==================================================
   -- === LSP ===
   {
@@ -124,15 +129,6 @@ return {
   -- ==================================================
   -- which-key; to show pending keybinds
   "folke/which-key.nvim",
-  -- nice-ass comments
-  {
-    "folke/todo-comments.nvim",
-    event = "VimEnter",
-    dependencies = {
-      "nvim-lua/plenary.nvim",
-    },
-    opts = { signs = false },
-  },
   -- keymaps of vscode
   "mg979/vim-visual-multi",
   -- Flash
