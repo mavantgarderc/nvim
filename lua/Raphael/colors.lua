@@ -7,6 +7,9 @@ local M = {}
 M.config = {}
 
 M.theme_map = {
+  pantheon    = {
+    "lantern-corps/green",
+  },
   everviolet  = {
     "evergarden-fall",
   },
@@ -82,7 +85,7 @@ M.theme_map = {
   },
 
   kanagawa    = {
-    "kanagawa-paper-ink", -- nvim section
+    "kanagawa-paper-ink",     -- nvim section
     "base16-kanagawa",
     "base16-kanagawa-dragon", -- sql
     "kanagawa-wave",
