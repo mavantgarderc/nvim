@@ -75,70 +75,6 @@ return {
           end,
         },
 
-        -- Highlight shorthand hex colors like #RGB
-        hex_short      = {
-          pattern = '#%x%x%x%f[%X]',
-          group = function(_, match)
-            local r, g, b = match:match('#(%x)(%x)(%x)')
-            r, g, b = r .. r, g .. g, b .. b
-            return MiniHipatterns.compute_hex_color_group('#' .. r .. g .. b, 'bg')
-          end,
-        },
-
-        -- Highlight trailing whitespace
-        trailing_space = { pattern = '%s+$', group = 'Error' },
-
-        -- Highlight URLs
-        url            = {
-          pattern = 'https?://[%w-._~:/?#%[%]@!$&\'()*+,;=]+',
-          group = 'MiniHipatternsNote',
-        },
-
-        -- Highlight email addresses
-        email          = {
-          pattern = '[%w%._%+-]+@[%w%._%+-]+%.%a%a+',
-          group = 'MiniHipatternsNote',
-        },
-
-        -- Highlight issue/PR references like #123, GH-456
-        issue_ref      = {
-          pattern = '[#@]%d+',
-          group = 'MiniHipatternsTodo',
-        },
-
-        gh_ref         = {
-          pattern = 'GH%-(%d+)',
-          group = 'MiniHipatternsTodo',
-        },
-
-        -- Highlight dates in YYYY-MM-DD format
-        date           = {
-          pattern = '%d%d%d%d%-%d%d%-%d%d',
-          group = 'MiniHipatternsNote',
-        },
-
-        -- Highlight ANSI color codes like \033[31m or \e[0m
-        ansi_code      = {
-          pattern = '\\0?33%[[%d;]+m',
-          group = 'MiniHipatternsHack',
-        },
-
-        ansi_code_e    = {
-          pattern = '\\e%[[%d;]+m',
-          group = 'MiniHipatternsHack',
-        },
-
-        -- Highlight file paths (Unix-style and relative)
-        unix_path      = {
-          pattern = '/[%w%./_%-]+',
-          group = 'Directory',
-        },
-
-        relative_path  = {
-          pattern = '%./[%w%./_%-]+',
-          group = 'Directory',
-        },
-
         -- Highlight IP addresses
         ip_address     = {
           pattern = '%d+%.%d+%.%d+%.%d+',
@@ -150,6 +86,7 @@ return {
           pattern = 'v?%d+%.%d+%.%d+[%w%-]*',
           group = 'Number',
         },
+
       },
     })
   end,
