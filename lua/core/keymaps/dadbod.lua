@@ -45,9 +45,7 @@ function M.setup_sql_keymaps()
     vim.cmd("%DB")
   end, { desc = "Save and execute SQL file" })
 
-  map("v", "<leader>se", function()
-    vim.cmd("'<,'>DB")
-  end, { desc = "Execute visual selection" })
+  map("v", "<leader>se", function() vim.cmd("'<,'>DB") end, { desc = "Execute visual selection" })
 end
 
 function M.setup_dbui_buffer_keymaps()

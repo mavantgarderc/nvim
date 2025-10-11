@@ -179,9 +179,7 @@ return {
       -- Safe highlight setting with fallbacks
       local function safe_set_hl(name, opts)
         local ok, err = pcall(api.nvim_set_hl, 0, name, opts)
-        if not ok then
-          vim.notify("Failed to set highlight " .. name .. ": " .. tostring(err), vim.log.levels.WARN)
-        end
+        if not ok then vim.notify("Failed to set highlight " .. name .. ": " .. tostring(err), vim.log.levels.WARN) end
       end
 
       -- Extract colors with fallbacks
@@ -216,26 +214,23 @@ return {
     -- Set up category-specific highlight groups
     local function setup_category_highlights()
       local categories = {
-        { "FlashClass",        "Type" },
-        { "FlashMethod",       "Function" },
-        { "FlashAccess",       "StorageClass" },
-        { "FlashModifier",     "Keyword" },
-        { "FlashVariable",     "Identifier" },
+        { "FlashClass", "Type" },
+        { "FlashMethod", "Function" },
+        { "FlashAccess", "StorageClass" },
+        { "FlashModifier", "Keyword" },
+        { "FlashVariable", "Identifier" },
         { "FlashConditionals", "Conditional" },
-        { "FlashIterators",    "Repeat" },
-        { "FlashOperators",    "Operator" },
-        { "FlashConstants",    "Constant" },
-        { "FlashStorage",      "StorageClass" },
-        { "FlashComments",     "Todo" },
+        { "FlashIterators", "Repeat" },
+        { "FlashOperators", "Operator" },
+        { "FlashConstants", "Constant" },
+        { "FlashStorage", "StorageClass" },
+        { "FlashComments", "Todo" },
       }
 
       for _, category in ipairs(categories) do
         local ok, err = pcall(api.nvim_set_hl, 0, category[1], { link = category[2] })
         if not ok then
-          vim.notify(
-            "Failed to link " .. category[1] .. " to " .. category[2] .. ": " .. tostring(err),
-            vim.log.levels.WARN
-          )
+          vim.notify("Failed to link " .. category[1] .. " to " .. category[2] .. ": " .. tostring(err), vim.log.levels.WARN)
         end
       end
     end

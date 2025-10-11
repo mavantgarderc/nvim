@@ -30,7 +30,9 @@ local function async_write(path, contents)
     end
     vim.loop.fs_write(fd, contents, -1, function(write_err)
       if write_err and write_err ~= 0 then
-        vim.schedule(function() vim.notify("Raphael: failed to write state (write): " .. tostring(write_err), vim.log.levels.WARN) end)
+        vim.schedule(
+          function() vim.notify("Raphael: failed to write state (write): " .. tostring(write_err), vim.log.levels.WARN) end
+        )
       end
       vim.loop.fs_close(fd)
     end)
@@ -134,9 +136,7 @@ function Raphael.toggle_bookmark(theme)
 end
 
 -- open picker
-function Raphael.open_picker()
-  Raphael.picker.open(Raphael)
-end
+function Raphael.open_picker() Raphael.picker.open(Raphael) end
 
 -- FileType autocmd: dynamic switching when auto_apply is on
 vim.api.nvim_create_autocmd("FileType", {
@@ -144,14 +144,17 @@ vim.api.nvim_create_autocmd("FileType", {
     if not Raphael.state.auto_apply then return end
     local ft = args.match
     local theme = Raphael.themes.filetype_themes[ft]
-    if theme and Raphael.themes.is_available(theme) then
-      Raphael.apply(theme)
-    end
+    if theme and Raphael.themes.is_available(theme) then Raphael.apply(theme) end
   end,
 })
 
 -- keymaps (picker + toggle)
-vim.keymap.set("n", Raphael.config.leader .. Raphael.config.mappings.picker, function() Raphael.open_picker() end, { desc = "Raphael: theme picker" })
+vim.keymap.set(
+  "n",
+  Raphael.config.leader .. Raphael.config.mappings.picker,
+  function() Raphael.open_picker() end,
+  { desc = "Raphael: theme picker" }
+)
 vim.keymap.set("n", Raphael.config.leader .. "ta", function() Raphael.toggle_auto() end, { desc = "Raphael: toggle auto-theme" })
 
 -- apply the saved current theme on startup (scheduled)

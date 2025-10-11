@@ -13,9 +13,7 @@ return {
   {
     "echasnovski/mini.hipatterns",
     version = "*",
-    config = function()
-      require("core.mini-hipatterns")
-    end,
+    config = function() require("core.mini-hipatterns") end,
   },
   -- themes
   {
@@ -93,7 +91,7 @@ return {
     init = function()
       vim.g.vimtex_view_method = "zathura" -- the PDF live viewer
       vim.g.vimtex_compiler_method = "latexmk"
-    end
+    end,
   },
   -- ==================================================
   -- === nvim plugins ===
@@ -115,7 +113,7 @@ return {
       { "nvim-telescope/telescope-ui-select.nvim" },
 
       -- Useful for getting pretty icons, but requires a Nerd Font.
-      { "nvim-tree/nvim-web-devicons",            enabled = vim.g.have_nerd_font },
+      { "nvim-tree/nvim-web-devicons", enabled = vim.g.have_nerd_font },
     },
   },
   -- undotree

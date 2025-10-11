@@ -18,9 +18,7 @@ function M.get_cwd()
   return " " .. vim.fn.pathshorten(cwd)
 end
 
-function Mgit_in_repo()
-  return vim.fn.system("git rev-parse --is-inside-work-tree 2>/dev/null"):match("true") ~= nil
-end
+function Mgit_in_repo() return vim.fn.system("git rev-parse --is-inside-work-tree 2>/dev/null"):match("true") ~= nil end
 
 function M.git_branch()
   local b = vim.fn.system("git rev-parse --abbrev-ref HEAD 2>/dev/null"):gsub("%s+$", "")

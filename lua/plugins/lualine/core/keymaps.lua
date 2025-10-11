@@ -20,9 +20,12 @@ function M.setup(lualine_opts)
     require("lualine").refresh()
   end, { silent = true })
 
-  map("n", "<leader>tg", function()
-    require("plugins.lualine.components.git").toggle_last_commit()
-  end, { desc = "Toggle last commit in lualine" })
+  map(
+    "n",
+    "<leader>tg",
+    function() require("plugins.lualine.components.git").toggle_last_commit() end,
+    { desc = "Toggle last commit in lualine" }
+  )
 end
 
 return M

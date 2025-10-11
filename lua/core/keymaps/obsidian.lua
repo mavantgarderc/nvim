@@ -22,7 +22,7 @@ function M.set_keymaps(bufnr)
 
   if wk then
     wk.add({
-      { "<leader>ob",  buffer = bufnr, group = "Obsidian" },
+      { "<leader>ob", buffer = bufnr, group = "Obsidian" },
       { "<leader>obo", buffer = bufnr, desc = "Open vault" },
       { "<leader>obn", buffer = bufnr, desc = "New note" },
       { "<leader>obq", buffer = bufnr, desc = "Quick switch" },
@@ -32,7 +32,7 @@ function M.set_keymaps(bufnr)
       { "<leader>obs", buffer = bufnr, desc = "Search notes" },
       { "<leader>obf", buffer = bufnr, desc = "Follow link" },
       { "<leader>obd", buffer = bufnr, desc = "List dailies" },
-      { "<leader>obl", buffer = bufnr, desc = "Link to note",    mode = { "n", "v" } },
+      { "<leader>obl", buffer = bufnr, desc = "Link to note", mode = { "n", "v" } },
       { "<leader>obr", buffer = bufnr, desc = "Rename note" },
       { "<leader>obm", buffer = bufnr, desc = "Insert template" },
       { "<leader>obi", buffer = bufnr, desc = "Paste image" },

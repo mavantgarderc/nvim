@@ -98,25 +98,25 @@ return {
       watch_for_changes = fn.has("nvim-0.10") == 1,
 
       keymaps = {
-        ["g?"]    = "actions.show_help",
-        ["<CR>"]  = "actions.select",
+        ["g?"] = "actions.show_help",
+        ["<CR>"] = "actions.select",
         ["<C-s>"] = { "actions.select", opts = { vertical = true } },
         ["<C-x>"] = { "actions.select", opts = { horizontal = true } },
         ["<C-t>"] = { "actions.select", opts = { tab = true } },
         ["<C-p>"] = "actions.preview",
         ["<C-c>"] = "actions.close",
         ["<C-l>"] = "actions.refresh",
-        ["-"]     = "actions.parent",
-        ["_"]     = "actions.open_cwd",
-        ["`"]     = "actions.cd",
-        ["~"]     = { "actions.cd", opts = { scope = "tab" } },
-        ["gs"]    = "actions.change_sort",
-        ["gx"]    = "actions.open_external",
-        ["g."]    = "actions.toggle_hidden",
-        ["g\\"]   = "actions.toggle_trash",
-        ["gh"]    = "actions.toggle_hidden",
-        ["q"]     = "actions.close",
-        ["gp"]    = function() oil.open(fn.expand("%:p:h")) end,
+        ["-"] = "actions.parent",
+        ["_"] = "actions.open_cwd",
+        ["`"] = "actions.cd",
+        ["~"] = { "actions.cd", opts = { scope = "tab" } },
+        ["gs"] = "actions.change_sort",
+        ["gx"] = "actions.open_external",
+        ["g."] = "actions.toggle_hidden",
+        ["g\\"] = "actions.toggle_trash",
+        ["gh"] = "actions.toggle_hidden",
+        ["q"] = "actions.close",
+        ["gp"] = function() oil.open(fn.expand("%:p:h")) end,
       },
 
       use_default_keymaps = true,
@@ -158,9 +158,7 @@ return {
     api.nvim_create_autocmd("VimEnter", {
       callback = function()
         local arg = fn.argv(0)
-        if arg ~= "" and fn.isdirectory(arg) == 1 then
-          oil.open()
-        end
+        if arg ~= "" and fn.isdirectory(arg) == 1 then oil.open() end
       end,
     })
 

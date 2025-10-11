@@ -42,9 +42,7 @@ vim.api.nvim_create_autocmd("User", {
   desc = "VM mode exited",
 })
 
-local function create_vm_mapping(mode, lhs, rhs, desc)
-  map(mode, lhs, rhs, { desc = "Multi-cursor: " .. desc, silent = true })
-end
+local function create_vm_mapping(mode, lhs, rhs, desc) map(mode, lhs, rhs, { desc = "Multi-cursor: " .. desc, silent = true }) end
 
 create_vm_mapping("n", "<leader>mq", "<Esc>", "Exit multi-cursor mode")
 create_vm_mapping("n", "<leader>mt", "<Plug>(VM-Toggle-Mappings)", "Toggle VM mappings")

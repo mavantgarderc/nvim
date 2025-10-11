@@ -9,8 +9,6 @@ M.filetype = function()
   return show_filetype_text and (icon .. " " .. ft) or icon
 end
 
-M.toggle_filetype_text = function()
-  show_filetype_text = not show_filetype_text
-end
+M.toggle_filetype_text = function() show_filetype_text = not show_filetype_text end
 
 return M

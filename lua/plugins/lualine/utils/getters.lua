@@ -19,14 +19,10 @@ end
 function M.get_python_env()
   return cache.get_cached_value("python_env", function()
     local venv = os.getenv("VIRTUAL_ENV")
-    if venv then
-      return glyphs.language.python .. vim.fn.fnamemodify(venv, ":t")
-    end
+    if venv then return glyphs.language.python .. vim.fn.fnamemodify(venv, ":t") end
 
     local conda_env = os.getenv("CONDA_DEFAULT_ENV")
-    if conda_env and conda_env ~= "base" then
-      return glyphs.language.python .. conda_env
-    end
+    if conda_env and conda_env ~= "base" then return glyphs.language.python .. conda_env end
 
     return ""
   end, 30000) -- cache: 30 sec
@@ -51,14 +47,10 @@ end
 function M.get_test_status()
   return cache.get_cached_value("test_status", function()
     local pytest_job = vim.fn.system("pgrep -f pytest 2>/dev/null")
-    if pytest_job ~= "" and vim.v.shell_error == 0 then
-      return glyphs.status.test .. " pytest"
-    end
+    if pytest_job ~= "" and vim.v.shell_error == 0 then return glyphs.status.test .. " pytest" end
 
-    local dotnet_job = vim.fn.system("pgrep -f \"dotnet test\" 2>/dev/null")
-    if dotnet_job ~= "" and vim.v.shell_error == 0 then
-      return glyphs.status.test .. " dotnet"
-    end
+    local dotnet_job = vim.fn.system('pgrep -f "dotnet test" 2>/dev/null')
+    if dotnet_job ~= "" and vim.v.shell_error == 0 then return glyphs.status.test .. " dotnet" end
 
     return ""
   end, 15000) -- cache: 15 sec
@@ -84,18 +76,14 @@ end
 
 function M.get_database_status()
   local ft = vim.bo.filetype
-  if ft == "sql" or ft == "mysql" or ft == "postgresql" then
-    return glyphs.language.database .. "DB"
-  end
+  if ft == "sql" or ft == "mysql" or ft == "postgresql" then return glyphs.language.database .. "DB" end
   return ""
 end
 
 function M.get_cwd()
   local cwd = vim.fn.getcwd()
   local home = os.getenv("HOME")
-  if home and cwd:sub(1, #home) == home then
-    cwd = "~" .. cwd:sub(#home + 1)
-  end
+  if home and cwd:sub(1, #home) == home then cwd = "~" .. cwd:sub(#home + 1) end
   return glyphs.file.folder .. vim.fn.pathshorten(cwd)
 end
 
@@ -106,9 +94,7 @@ end
 
 function M.get_navic_breadcrumbs()
   local ok, navic = pcall(require, "nvim-navic")
-  if ok and navic.is_available() then
-    return navic.get_location()
-  end
+  if ok and navic.is_available() then return navic.get_location() end
   return ""
 end
 
@@ -123,10 +109,12 @@ function M.get_current_symbol()
     local function_node = current_node
     while function_node do
       local node_type = function_node:type()
-      if node_type == "function_definition" or
-          node_type == "method_definition" or
-          node_type == "function_declaration" or
-          node_type == "method_declaration" then
+      if
+        node_type == "function_definition"
+        or node_type == "method_definition"
+        or node_type == "function_declaration"
+        or node_type == "method_declaration"
+      then
         local name_node = function_node:field("name")[1]
         if name_node then
           local name = vim.treesitter.get_node_text(name_node, 0)

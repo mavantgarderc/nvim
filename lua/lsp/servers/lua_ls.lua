@@ -1,7 +1,7 @@
 local M = {}
 
 function M.setup(capabilities)
-  require('lspconfig').lua_ls.setup({
+  require("lspconfig").lua_ls.setup({
     capabilities = capabilities,
     on_attach = function(client, bufnr)
       client.server_capabilities.documentFormattingProvider = false

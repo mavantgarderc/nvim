@@ -6,9 +6,7 @@ local state_file = vim.fn.stdpath("data") .. "/raphael/state.json"
 
 local function ensure_dir()
   local dir = vim.fn.fnamemodify(state_file, ":h")
-  if vim.fn.isdirectory(dir) == 0 then
-    vim.fn.mkdir(dir, "p")
-  end
+  if vim.fn.isdirectory(dir) == 0 then vim.fn.mkdir(dir, "p") end
 end
 
 -- default state generator
@@ -31,13 +29,13 @@ function M.load_state(state)
     -- write async
     vim.loop.fs_open(state_file, "w", 438, function(err, fdw)
       if err then return end
-      vim.loop.fs_write(fdw, payload, -1, function()
-        vim.loop.fs_close(fdw)
-      end)
+      vim.loop.fs_write(fdw, payload, -1, function() vim.loop.fs_close(fdw) end)
     end)
     -- merge defaults into provided state
     local d = default_state()
-    for k, v in pairs(d) do state[k] = v end
+    for k, v in pairs(d) do
+      state[k] = v
+    end
     return
   end
 
@@ -55,12 +53,12 @@ function M.load_state(state)
     local payload = vim.fn.json_encode(default_state())
     vim.loop.fs_open(state_file, "w", 438, function(err, fdw)
       if err then return end
-      vim.loop.fs_write(fdw, payload, -1, function()
-        vim.loop.fs_close(fdw)
-      end)
+      vim.loop.fs_write(fdw, payload, -1, function() vim.loop.fs_close(fdw) end)
     end)
     local d = default_state()
-    for k, v in pairs(d) do state[k] = v end
+    for k, v in pairs(d) do
+      state[k] = v
+    end
   end
 end
 
@@ -69,17 +67,13 @@ function M.save_state(state)
   local payload = vim.fn.json_encode(state)
   vim.loop.fs_open(state_file, "w", 438, function(err, fd)
     if err then return end
-    vim.loop.fs_write(fd, payload, -1, function()
-      vim.loop.fs_close(fd)
-    end)
+    vim.loop.fs_write(fd, payload, -1, function() vim.loop.fs_close(fd) end)
   end)
 end
 
 function M.add_history(theme, state)
   table.insert(state.history, 1, theme)
-  if #state.history > 5 then
-    table.remove(state.history)
-  end
+  if #state.history > 5 then table.remove(state.history) end
 end
 
 function M.toggle_bookmark(theme, state)

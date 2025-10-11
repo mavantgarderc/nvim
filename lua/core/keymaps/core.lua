@@ -1,9 +1,7 @@
-local function map(mode, lhs, rhs, desc)
-  vim.keymap.set(mode, lhs, rhs, { noremap = true, silent = true, desc = desc })
-end
+local function map(mode, lhs, rhs, desc) vim.keymap.set(mode, lhs, rhs, { noremap = true, silent = true, desc = desc }) end
 
 local set = vim.keymap.set
-local opts = { noremap = true, silent = true, }
+local opts = { noremap = true, silent = true }
 
 -- Paste from OS-Integrated Clipboard
 -- map("n", "<leader>p", "\"_dp", opts)
@@ -19,9 +17,10 @@ map("n", "<leader>x", function()
     return
   end
   vim.api.nvim_feedkeys(
-    ":%s/" ..
-    vim.fn.escape(word, "/\\") .. "//gc" .. string.rep(vim.api.nvim_replace_termcodes("<Left>", true, false, true), 3),
-    "n", false)
+    ":%s/" .. vim.fn.escape(word, "/\\") .. "//gc" .. string.rep(vim.api.nvim_replace_termcodes("<Left>", true, false, true), 3),
+    "n",
+    false
+  )
 end, "Replace word under cursor interactively")
 
 map({ "n", "v", "i" }, "<Find>", "0")
@@ -76,7 +75,7 @@ map("n", "<A-S-k>", "<Plug>(VM-Add-Cursor-Up)", "Add cursor up")
 map("n", "<leader>g(", "ciw()<C-[>P", "Surround word with (); Normal")
 map("n", "<leader>g[", "ciw[]<C-[>P", "Surround word with []; Normal")
 map("n", "<leader>g{", "ciw{}<C-[>P", "Surround word with {}; Normal")
-map("n", "<leader>g\"", "ciw\"\"<C-[>P", "Surround word with \"\"; Normal")
+map("n", '<leader>g"', 'ciw""<C-[>P', 'Surround word with ""; Normal')
 map("n", "<leader>g'", "ciw''<C-[>P", "Surround word with ''; Normal")
 map("n", "<leader>g*", "ciw**<C-[>P", "Surround word with **; Normal")
 map("n", "<leader>g<", "ciw<><C-[>P", "Surround word with <>; Normal")
@@ -84,7 +83,7 @@ map("n", "<leader>g<", "ciw<><C-[>P", "Surround word with <>; Normal")
 map("v", "<leader>g(", "c()<C-[>P", "Surround word with (); Visual")
 map("v", "<leader>g[", "c[]<C-[>P", "Surround word with []; Visual")
 map("v", "<leader>g{", "c{}<C-[>P", "Surround word with {}; Visual")
-map("v", "<leader>g\"", "c\"\"<C-[>P", "Surround word with \"\"; Visual")
+map("v", '<leader>g"', 'c""<C-[>P', 'Surround word with ""; Visual')
 map("v", "<leader>g'", "c''<C-[>P", "Surround word with ''; Visual")
 map("v", "<leader>g*", "c**<C-[>P", "Surround word with **; Visual")
 map("n", "<leader>g<", "c<><C-[>P", "Surround word with <>; Normal")

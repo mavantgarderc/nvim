@@ -7,10 +7,66 @@ local M = {}
 M.config = {}
 
 M.theme_map = {
-  pantheon    = {
-    "lantern-corps/green",
+  pantheon = {
+    "bat-family-alfred-penyworth",
+    "bat-family-batgirl",
+    "bat-family-batman-beyond",
+    "bat-family-batman-classic",
+    "bat-family-batman-dark-knight",
+    "bat-family-batwing",
+    "bat-family-bruce-wayne",
+    "bat-family-cat-woman",
+    "bat-family-huntress",
+    "bat-family-james-gordon",
+    "bat-family-lucious-fox",
+    "bat-family-martha-wayne",
+    "bat-family-nightwing",
+    "bat-family-red-hood",
+    "bat-family-red-robin",
+    "bat-family-robin",
+    "bat-family-selina-kyle",
+    "bat-family-terry-mcginnis",
+    "bat-family-thomas-wayne",
+    "justice-league-aquaman",
+    "justice-league-batman",
+    "justice-league-black-canary",
+    "justice-league-blue-beetle",
+    "justice-league-booster-gold",
+    "justice-league-captain-atom",
+    "justice-league-cyborg",
+    "justice-league-dr-fate",
+    "justice-league-flash",
+    "justice-league-green-arrow",
+    "justice-league-green-lantern-john-stewart",
+    "justice-league-hawkgirl",
+    "justice-league-hawkman",
+    "justice-league-martian-manhunter",
+    "justice-league-superman",
+    "justice-league-wonder-woman",
+    "lantern-corps-black",
+    "lantern-corps-blue",
+    "lantern-corps-gold",
+    "lantern-corps-green",
+    "lantern-corps-indigo",
+    "lantern-corps-orange",
+    "lantern-corps-phantom-balanced",
+    "lantern-corps-phantom-choas",
+    "lantern-corps-phantom-corrupted",
+    "lantern-corps-red",
+    "lantern-corps-ultraviolet-spectral",
+    "lantern-corps-ultraviolet-veiled",
+    "lantern-corps-violet",
+    "lantern-corps-white",
+    "lantern-corps-yellow",
+    "society-of-shadows-athanasia-al-ghul",
+    "society-of-shadows-bane",
+    "society-of-shadows-nyssa-raatko",
+    "society-of-shadows-ras-al-ghul",
+    "society-of-shadows-talia-al-ghul",
+    "society-of-shadows-ubu",
   },
-  everviolet  = {
+
+  everviolet = {
     "evergarden-fall",
   },
 
@@ -21,12 +77,12 @@ M.theme_map = {
     "base16-black-metal-khold",
   },
 
-  gotham      = {
+  gotham = {
     "gotham",
     "base16-gotham",
   },
 
-  zen         = {
+  zen = {
     "base16-grayscale-dark",
     "base16-icy",
     "base16-mountain",
@@ -34,7 +90,7 @@ M.theme_map = {
     "base16-vulcan",
   },
 
-  jukebox     = {
+  jukebox = {
     "base16-atelier-dune",
     "base16-atelier-forest",
     "base16-atelier-heath",
@@ -55,7 +111,7 @@ M.theme_map = {
     "base16-ia-dark",
   },
 
-  softs       = {
+  softs = {
     "base16-nord",
     "base16-eighties",
     "base16-everforest",
@@ -64,35 +120,35 @@ M.theme_map = {
     "base16-onedark",
   },
 
-  tokyonight  = {
-    "tokyonight-moon",  -- html, css
+  tokyonight = {
+    "tokyonight-moon", -- html, css
     "tokyonight-night", -- json, jsonc
   },
 
-  catppuccin  = {
+  catppuccin = {
     "base16-catppuccin",
-    "base16-catppuccin-mocha",     -- tex
+    "base16-catppuccin-mocha", -- tex
     "base16-catppuccin-macchiato", -- md
     "base16-da-one-ocean",
   },
 
-  carbonfox   = {
+  carbonfox = {
     "nightfox", -- py
-    "duskfox",  -- ts
-    "nordfox",  -- js
+    "duskfox", -- ts
+    "nordfox", -- js
     "terafox",
     "carbonfox",
   },
 
-  kanagawa    = {
-    "kanagawa-paper-ink",     -- nvim section
+  kanagawa = {
+    "kanagawa-paper-ink", -- nvim section
     "base16-kanagawa",
     "base16-kanagawa-dragon", -- sql
     "kanagawa-wave",
     "kanagawa-dragon",
   },
 
-  gruvbox     = { -- dotnet
+  gruvbox = { -- dotnet
     "gruvbox",
     "base16-gruvbox-dark-hard",
     "base16-gruvbox-dark-pale",
@@ -100,62 +156,46 @@ M.theme_map = {
   },
 }
 
-M.toml_map = {
-  Claude_Made = {
-    "kanagawa_paper_ink",
-    "nordic_frost",
-    "autumn_maple",
-    "desert_sunset",
-    "midnight_city",
-    "foggy_london",
-    "vintage_film",
-    "neon_synthwave",
-    "fireside",
-    "winter_pine",
-    "weathered_bark",
-  },
-}
-
 M.filetype_themes = {
-  alpha      = "kanagawa-paper-ink",
-  netrw      = "kanagawa-paper-ink",
-  oil        = "kanagawa-paper-ink",
-  lazy       = "kanagawa-paper-ink",
-  help       = "kanagawa-paper-ink",
-  lua        = "kanagawa-paper-ink",
-  mason      = "kanagawa-paper-ink",
-  tmux       = "kanagawa-paper-ink",
-  kdl        = "kanagawa-paper-ink",
-  toml       = "kanagawa-paper-ink",
-  conf       = "kanagawa-paper-ink",
+  alpha = "kanagawa-paper-ink",
+  netrw = "kanagawa-paper-ink",
+  oil = "kanagawa-paper-ink",
+  lazy = "kanagawa-paper-ink",
+  help = "kanagawa-paper-ink",
+  lua = "kanagawa-paper-ink",
+  mason = "kanagawa-paper-ink",
+  tmux = "kanagawa-paper-ink",
+  kdl = "kanagawa-paper-ink",
+  toml = "kanagawa-paper-ink",
+  conf = "kanagawa-paper-ink",
 
-  sh         = "kanagawa-paper-ink",
-  zsh        = "kanagawa-paper-ink",
-  hyprlang   = "kanagawa-paper-ink",
-  csv        = "kanagawa-paper-ink",
+  sh = "kanagawa-paper-ink",
+  zsh = "kanagawa-paper-ink",
+  hyprlang = "kanagawa-paper-ink",
+  csv = "kanagawa-paper-ink",
 
-  md         = "base16-catppuccin-frappe",
-  tex        = "base16-catppuccin-mocha",
+  md = "base16-catppuccin-frappe",
+  tex = "base16-catppuccin-mocha",
 
-  cs         = "gruvbox",
-  csx        = "base16-gruvbox-dark-hard",
-  csproj     = "base16-gruvbox-dark-pale",
-  xml        = "base16-gruvbox-dark-pale",
-  solution   = "base16-gruvbox-material-dark-hard",
+  cs = "gruvbox",
+  csx = "base16-gruvbox-dark-hard",
+  csproj = "base16-gruvbox-dark-pale",
+  xml = "base16-gruvbox-dark-pale",
+  solution = "base16-gruvbox-material-dark-hard",
 
-  python     = "kanagawa-wave",
+  python = "kanagawa-wave",
 
-  solidity   = "base16-darkmoss",
+  solidity = "base16-darkmoss",
 
-  sql        = "kanagawa-dragon",
-  sqls       = "kanagawa-dragon",
+  sql = "kanagawa-dragon",
+  sqls = "kanagawa-dragon",
 
-  html       = "tokyonight",
-  css        = "tokyonight",
+  html = "tokyonight",
+  css = "tokyonight",
   javascript = "nordfox",
   typescript = "duskfox",
-  json       = "base16-rose-pine",
-  jsonc      = "base16-rose-pine",
+  json = "base16-rose-pine",
+  jsonc = "base16-rose-pine",
 }
 
 return M

@@ -38,7 +38,12 @@ return {
       { "kristijanhusak/vim-dadbod-completion", ft = { "sql", "mysql", "plsql", "sqlite", "postgresql", "psql" }, lazy = true },
     },
     cmd = {
-      "DBUI", "DBUIToggle", "DBUIAddConnection", "DBUIFindBuffer", "DBUIRenameBuffer", "DBUILastQueryInfo",
+      "DBUI",
+      "DBUIToggle",
+      "DBUIAddConnection",
+      "DBUIFindBuffer",
+      "DBUIRenameBuffer",
+      "DBUILastQueryInfo",
     },
     init = function()
       -- UI settings
@@ -88,25 +93,25 @@ return {
       -- Table helpers for supported databases
       g.db_ui_table_helpers = {
         mysql = {
-          Count = "select count(1) from \"{table}\"",
+          Count = 'select count(1) from "{table}"',
           Explain = "explain {last_query}",
         },
         sqlite = {
-          Describe = "PRAGMA table_info(\"{table}\")",
+          Describe = 'PRAGMA table_info("{table}")',
         },
         postgresql = {
-          Count = "select count(1) from \"{table}\"",
+          Count = 'select count(1) from "{table}"',
           Explain = "explain (analyze, buffers) {last_query}",
-          Describe = "\\d+ \"{table}\"",
+          Describe = '\\d+ "{table}"',
         },
         oracle = {
-          Count = "SELECT COUNT(1) FROM \"{table}\"",
-          Describe = "DESC \"{table}\"",
+          Count = 'SELECT COUNT(1) FROM "{table}"',
+          Describe = 'DESC "{table}"',
           Explain = "EXPLAIN PLAN FOR {last_query}",
         },
         plsql = {
-          Count = "SELECT COUNT(1) FROM \"{table}\"",
-          Describe = "DESC \"{table}\"",
+          Count = 'SELECT COUNT(1) FROM "{table}"',
+          Describe = 'DESC "{table}"',
           Explain = "EXPLAIN PLAN FOR {last_query}",
         },
       }
@@ -143,9 +148,7 @@ return {
       })
 
       -- Enable nvim-notify if available
-      if pcall(require, "notify") then
-        g.db_ui_use_nvim_notify = 1
-      end
+      if pcall(require, "notify") then g.db_ui_use_nvim_notify = 1 end
     end,
   },
 }

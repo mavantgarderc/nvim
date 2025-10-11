@@ -2,8 +2,8 @@
 -- Raphael picker: palette floating window, inline fuzzy search, collapsible categories, bookmarks, preview (debounced)
 -- Compatible with Neovim 0.11.x
 
-local themes           = require("Raphael.themes")
-local M                = {}
+local themes = require("Raphael.themes")
+local M = {}
 
 -- windows / buffers
 local picker_buf, picker_win
@@ -16,21 +16,21 @@ local picker_w, picker_h, picker_row, picker_col
 -- state references
 local core_ref, state_ref
 local previewed
-local collapsed        = {}
-local bookmarks        = {}
-local search_query     = ""
+local collapsed = {}
+local bookmarks = {}
+local search_query = ""
 
 -- icons / glyphs
-local ICON_BOOKMARK    = ""
-local ICON_CURRENT_ON  = ""
+local ICON_BOOKMARK = ""
+local ICON_CURRENT_ON = ""
 local ICON_CURRENT_OFF = ""
-local ICON_GROUP_EXP   = ""
-local ICON_GROUP_COL   = ""
-local BLOCK_CHAR       = "▇"
-local ICON_SEARCH      = ""
+local ICON_GROUP_EXP = ""
+local ICON_GROUP_COL = ""
+local BLOCK_CHAR = "▇"
+local ICON_SEARCH = ""
 
 -- palette hl groups
-local PALETTE_HL       = { "Normal", "Comment", "String", "Identifier", "Function", "Type" }
+local PALETTE_HL = { "Normal", "Comment", "String", "Identifier", "Function", "Type" }
 
 local palette_hl_cache = {}
 
@@ -42,9 +42,12 @@ local function parse_line_theme(line)
   local theme = line:match("([%w_%-]+)%s*$")
   if theme and theme ~= "" then return theme end
   local last
-  for token in line:gmatch("%S+") do last = token end
+  for token in line:gmatch("%S+") do
+    last = token
+  end
   if last then
-    last = last:gsub("^[^%w_%-]+", ""):gsub("[^%w_%-]+$", ""); if last ~= "" then return last end
+    last = last:gsub("^[^%w_%-]+", ""):gsub("[^%w_%-]+$", "")
+    if last ~= "" then return last end
   end
   return nil
 end
@@ -54,10 +57,13 @@ local function debounce(ms, fn)
   return function(...)
     local args = { ... }
     if timer then
-      pcall(vim.loop.timer_stop, timer); pcall(vim.loop.close, timer); timer = nil
+      pcall(vim.loop.timer_stop, timer)
+      pcall(vim.loop.close, timer)
+      timer = nil
     end
     timer = vim.defer_fn(function()
-      pcall(fn, unpack(args)); timer = nil
+      pcall(fn, unpack(args))
+      timer = nil
     end, ms)
   end
 end
@@ -98,7 +104,9 @@ function M.update_palette(theme)
 
   -- build centered blocks line
   local blocks = {}
-  for i = 1, #PALETTE_HL do blocks[i] = BLOCK_CHAR end
+  for i = 1, #PALETTE_HL do
+    blocks[i] = BLOCK_CHAR
+  end
   local blocks_str = table.concat(blocks, " ")
   local display_w = vim.fn.strdisplaywidth(blocks_str)
   local pad = math.max(math.floor((picker_w - display_w) / 2), 0)
@@ -123,7 +131,8 @@ function M.update_palette(theme)
           if not s then break end
           count = count + 1
           if count == i then
-            start_pos = s; break
+            start_pos = s
+            break
           end
           start_pos = e + 1
         end
@@ -188,8 +197,9 @@ end
 
 -- close picker
 local function close_picker(revert)
-  if revert and state_ref and state_ref.previous and themes.is_available(state_ref.previous) then pcall(
-    vim.cmd.colorscheme, state_ref.previous) end
+  if revert and state_ref and state_ref.previous and themes.is_available(state_ref.previous) then
+    pcall(vim.cmd.colorscheme, state_ref.previous)
+  end
   if picker_win and vim.api.nvim_win_is_valid(picker_win) then pcall(vim.api.nvim_win_close, picker_win, true) end
   if palette_win and vim.api.nvim_win_is_valid(palette_win) then pcall(vim.api.nvim_win_close, palette_win, true) end
   if search_win and vim.api.nvim_win_is_valid(search_win) then pcall(vim.api.nvim_win_close, search_win, true) end
@@ -262,7 +272,9 @@ function M.open(core)
   state_ref = core.state
 
   bookmarks = {}
-  for _, b in ipairs(state_ref.bookmarks or {}) do bookmarks[b] = true end
+  for _, b in ipairs(state_ref.bookmarks or {}) do
+    bookmarks[b] = true
+  end
   collapsed = type(state_ref.collapsed) == "table" and vim.deepcopy(state_ref.collapsed) or {}
 
   if not picker_buf or not vim.api.nvim_buf_is_valid(picker_buf) then

@@ -58,8 +58,8 @@ local function show_undo_stats()
   local stats = {
     undolevels = vim.o.undolevels,
     undoreload = vim.o.undoreload,
-    undofile   = vim.o.undofile,
-    undodir    = vim.o.undodir,
+    undofile = vim.o.undofile,
+    undodir = vim.o.undodir,
   }
 
   print("Undo Configuration:")

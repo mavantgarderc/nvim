@@ -27,16 +27,12 @@ function M.setup_lsp_keymaps()
       map("n", "<leader>[d", function() vim.diagnostic.jump({ count = -1 }) end, opts)
       map("n", "<leader>]d", function() vim.diagnostic.jump({ count = 1 }) end, opts)
 
-      map("n", "<leader>[e", function() vim.diagnostic.jump({ count = -1, severity = vim.diagnostic.severity.ERROR }) end,
-        opts)
-      map("n", "<leader>]e", function() vim.diagnostic.jump({ count = 1, severity = vim.diagnostic.severity.ERROR }) end,
-        opts)
+      map("n", "<leader>[e", function() vim.diagnostic.jump({ count = -1, severity = vim.diagnostic.severity.ERROR }) end, opts)
+      map("n", "<leader>]e", function() vim.diagnostic.jump({ count = 1, severity = vim.diagnostic.severity.ERROR }) end, opts)
 
       map("n", "<leader>wa", buff.add_workspace_folder, opts)
       map("n", "<leader>wr", buff.remove_workspace_folder, opts)
-      map("n", "<leader>wl", function()
-        print(vim.inspect(vim.ls.buf.list_workspace_folders()))
-      end, opts)
+      map("n", "<leader>wl", function() print(vim.inspect(vim.ls.buf.list_workspace_folders())) end, opts)
 
       local has_telescope, telescope = pcall(require, "telescope.builtin")
       if has_telescope then
@@ -65,9 +61,7 @@ function M.setup_lsp_keymaps()
       map("n", "<leader>glb", function()
         vim.lsp.buf.format({
           async = false,
-          filter = function(client)
-            return client.name == "null-ls"
-          end
+          filter = function(client) return client.name == "null-ls" end,
         })
         vim.lsp.buf.code_action({
           context = {
@@ -99,9 +93,7 @@ function M.setup_lsp_keymaps()
 
         if omnisharp_client then
           -- Helper function to check if OmniSharp is ready
-          local function is_omnisharp_ready()
-            return omnisharp_client.initialized or false
-          end
+          local function is_omnisharp_ready() return omnisharp_client.initialized or false end
 
           -- Add missing usings
           map("n", "<leader>cu", function()
@@ -126,7 +118,7 @@ function M.setup_lsp_keymaps()
                   only = { "source.organizeImports" },
                   diagnostics = vim.diagnostic.get(0),
                 },
-                apply = true
+                apply = true,
               })
             else
               vim.notify("OmniSharp still initializing, please wait...", vim.log.levels.WARN)
@@ -157,10 +149,10 @@ function M.setup_lsp_keymaps()
 
             local params = vim.lsp.util.make_range_params(event.buf, "utf-16")
             params.context = {
-              diagnostics = vim.diagnostic.get(event.buf, { lnum = vim.fn.line('.') - 1 }),
+              diagnostics = vim.diagnostic.get(event.buf, { lnum = vim.fn.line(".") - 1 }),
             }
 
-            vim.lsp.buf_request(event.buf, 'textDocument/codeAction', params, function(err, result, ctx, config)
+            vim.lsp.buf_request(event.buf, "textDocument/codeAction", params, function(err, result, ctx, config)
               if err then
                 vim.notify("Error getting code actions: " .. err.message, vim.log.levels.ERROR)
                 return

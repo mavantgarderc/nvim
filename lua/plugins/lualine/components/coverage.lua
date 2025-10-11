@@ -1,7 +1,7 @@
 local cache = require("plugins.lualine.utils.cache")
-local misc  = require("plugins.lualine.utils.misc")
+local misc = require("plugins.lualine.utils.misc")
 
-local M     = {}
+local M = {}
 
 local function parse_lcov(s)
   local total, hit = 0, 0
@@ -20,9 +20,7 @@ local function parse_xml(s)
   if rate then return math.floor(tonumber(rate) * 100 + 0.5) end
 
   local valid, covered = s:match('lines%-valid="(%d+)".-lines%-covered="(%d+)"')
-  if valid and covered and tonumber(valid) > 0 then
-    return math.floor((tonumber(covered) / tonumber(valid)) * 100 + 0.5)
-  end
+  if valid and covered and tonumber(valid) > 0 then return math.floor((tonumber(covered) / tonumber(valid)) * 100 + 0.5) end
 
   return nil
 end
@@ -30,17 +28,17 @@ end
 function M.coverage()
   return cache.get("coverage", function()
     local paths = {
-      "coverage/lcov.info", "lcov.info",
-      "coverage/coverage.xml", "coverage.xml",
+      "coverage/lcov.info",
+      "lcov.info",
+      "coverage/coverage.xml",
+      "coverage.xml",
     }
 
     for _, p in ipairs(paths) do
       local s = misc.read_file_safe(p, 2 * 1024 * 1024) -- 2MB max
       if s then
         local pct = p:match("lcov%.info") and parse_lcov(s) or parse_xml(s)
-        if pct and pct >= 0 then
-          return " " .. pct .. "%%"
-        end
+        if pct and pct >= 0 then return " " .. pct .. "%%" end
       end
     end
 

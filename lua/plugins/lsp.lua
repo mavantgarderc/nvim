@@ -15,9 +15,7 @@ return {
     config = function()
       local orig_notify = vim.notify
       vim.notify = function(msg, level, opts)
-        if msg:match("The `require%('lspconfig'%)` \"framework\" is deprecated") then
-          return
-        end
+        if msg:match("The `require%('lspconfig'%)` \"framework\" is deprecated") then return end
         orig_notify(msg, level, opts)
       end
 
@@ -61,9 +59,7 @@ return {
 
       local shared_config = require("lsp.shared")
 
-      lsp.on_attach(function(_, bufnr)
-        lsp.default_keymaps({ buffer = bufnr })
-      end)
+      lsp.on_attach(function(_, bufnr) lsp.default_keymaps({ buffer = bufnr }) end)
 
       shared_config.setup_keymaps()
       shared_config.setup_diagnostics()

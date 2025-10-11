@@ -1,46 +1,46 @@
 return {
-  'echasnovski/mini.hipatterns',
-  version = '*',
+  "echasnovski/mini.hipatterns",
+  version = "*",
   config = function()
-    local hipatterns = require('mini.hipatterns')
+    local hipatterns = require("mini.hipatterns")
 
     hipatterns.setup({
       highlighters = {
         -- Highlight standalone 'FIXME', 'HACK', 'TODO', 'NOTE', 'XXX', 'WARNING', 'BUG'
-        fixme          = { pattern = '%f[%w]()FIXME()%f[%W]', group = 'MiniHipatternsFixme' },
-        hack           = { pattern = '%f[%w]()HACK()%f[%W]', group = 'MiniHipatternsHack' },
-        todo           = { pattern = '%f[%w]()TODO()%f[%W]', group = 'MiniHipatternsTodo' },
-        note           = { pattern = '%f[%w]()NOTE()%f[%W]', group = 'MiniHipatternsNote' },
-        xxx            = { pattern = '%f[%w]()XXX()%f[%W]', group = 'MiniHipatternsFixme' },
-        warning        = { pattern = '%f[%w]()WARNING()%f[%W]', group = 'MiniHipatternsHack' },
-        bug            = { pattern = '%f[%w]()BUG()%f[%W]', group = 'MiniHipatternsFixme' },
+        fixme = { pattern = "%f[%w]()FIXME()%f[%W]", group = "MiniHipatternsFixme" },
+        hack = { pattern = "%f[%w]()HACK()%f[%W]", group = "MiniHipatternsHack" },
+        todo = { pattern = "%f[%w]()TODO()%f[%W]", group = "MiniHipatternsTodo" },
+        note = { pattern = "%f[%w]()NOTE()%f[%W]", group = "MiniHipatternsNote" },
+        xxx = { pattern = "%f[%w]()XXX()%f[%W]", group = "MiniHipatternsFixme" },
+        warning = { pattern = "%f[%w]()WARNING()%f[%W]", group = "MiniHipatternsHack" },
+        bug = { pattern = "%f[%w]()BUG()%f[%W]", group = "MiniHipatternsFixme" },
 
         -- Highlight hex color strings (`#rrggbb`) using that color
-        hex_color      = hipatterns.gen_highlighter.hex_color(),
+        hex_color = hipatterns.gen_highlighter.hex_color(),
 
         -- Highlight RGB colors like rgb(255, 128, 0)
-        rgb_color      = {
-          pattern = 'rgb%(%d+,? %d+,? %d+%)',
+        rgb_color = {
+          pattern = "rgb%(%d+,? %d+,? %d+%)",
           group = function(_, match)
-            local r, g, b = match:match('rgb%((%d+),? (%d+),? (%d+)%)')
-            return MiniHipatterns.compute_hex_color_group('#' .. string.format('%02x%02x%02x', r, g, b), 'bg')
+            local r, g, b = match:match("rgb%((%d+),? (%d+),? (%d+)%)")
+            return MiniHipatterns.compute_hex_color_group("#" .. string.format("%02x%02x%02x", r, g, b), "bg")
           end,
         },
 
         -- Highlight RGBA colors like rgba(255, 128, 0, 0.5)
-        rgba_color     = {
-          pattern = 'rgba%(%d+,? %d+,? %d+,? [%d%.]+%)',
+        rgba_color = {
+          pattern = "rgba%(%d+,? %d+,? %d+,? [%d%.]+%)",
           group = function(_, match)
-            local r, g, b = match:match('rgba%((%d+),? (%d+),? (%d+)')
-            return MiniHipatterns.compute_hex_color_group('#' .. string.format('%02x%02x%02x', r, g, b), 'bg')
+            local r, g, b = match:match("rgba%((%d+),? (%d+),? (%d+)")
+            return MiniHipatterns.compute_hex_color_group("#" .. string.format("%02x%02x%02x", r, g, b), "bg")
           end,
         },
 
         -- Highlight HSL colors like hsl(120, 100%, 50%)
-        hsl_color      = {
-          pattern = 'hsl%(%d+,? %d+%%?,? %d+%%?%)',
+        hsl_color = {
+          pattern = "hsl%(%d+,? %d+%%?,? %d+%%?%)",
           group = function(_, match)
-            local h, s, l = match:match('hsl%((%d+),? (%d+)%%?,? (%d+)%%?%)')
+            local h, s, l = match:match("hsl%((%d+),? (%d+)%%?,? (%d+)%%?%)")
             h, s, l = tonumber(h), tonumber(s) / 100, tonumber(l) / 100
 
             -- HSL to RGB conversion
@@ -71,22 +71,21 @@ return {
             end
 
             local r, g, b = hsl_to_rgb(h, s, l)
-            return MiniHipatterns.compute_hex_color_group('#' .. string.format('%02x%02x%02x', r, g, b), 'bg')
+            return MiniHipatterns.compute_hex_color_group("#" .. string.format("%02x%02x%02x", r, g, b), "bg")
           end,
         },
 
         -- Highlight IP addresses
-        ip_address     = {
-          pattern = '%d+%.%d+%.%d+%.%d+',
-          group = 'Number',
+        ip_address = {
+          pattern = "%d+%.%d+%.%d+%.%d+",
+          group = "Number",
         },
 
         -- Highlight semantic versioning like v1.2.3 or 1.2.3
-        semver         = {
-          pattern = 'v?%d+%.%d+%.%d+[%w%-]*',
-          group = 'Number',
+        semver = {
+          pattern = "v?%d+%.%d+%.%d+[%w%-]*",
+          group = "Number",
         },
-
       },
     })
   end,

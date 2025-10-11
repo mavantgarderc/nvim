@@ -21,45 +21,45 @@ g.markdown_recommended_style = 0
 local mason_bin = vim.fn.stdpath("data") .. "/mason/bin"
 
 if vim.fn.has("win32") == 1 then
-    mason_bin = mason_bin:gsub("/", "\\")
-    vim.env.PATH = mason_bin .. ";" .. vim.env.PATH
+  mason_bin = mason_bin:gsub("/", "\\")
+  vim.env.PATH = mason_bin .. ";" .. vim.env.PATH
 else
-    vim.env.PATH = mason_bin .. ":" .. vim.env.PATH
+  vim.env.PATH = mason_bin .. ":" .. vim.env.PATH
 end
 
-opt_local.wrap = false        -- disable line wrapping by default
-opt_local.linebreak = false   -- disable word-boundary wrapping by default
-opt_local.textwidth = 135     -- recommended column width
-opt_local.colorcolumn = ""    -- disable visual marker by default
+opt_local.wrap = false -- disable line wrapping by default
+opt_local.linebreak = false -- disable word-boundary wrapping by default
+opt_local.textwidth = 135 -- recommended column width
+opt_local.colorcolumn = "" -- disable visual marker by default
 local grp = vim.api.nvim_create_augroup("GlobalWrap", { clear = true })
 vim.api.nvim_create_autocmd({ "BufWinEnter", "WinNew" }, {
-    group = grp,
-    callback = function()
-        if vim.w.__wrap_user_enabled then
-            vim.wo.wrap = true
-            vim.wo.linebreak = true
-            vim.wo.colorcolumn = "135"
-        else
-            vim.wo.wrap = false
-            vim.wo.linebreak = false
-            vim.wo.colorcolumn = ""
-        end
-    end,
+  group = grp,
+  callback = function()
+    if vim.w.__wrap_user_enabled then
+      vim.wo.wrap = true
+      vim.wo.linebreak = true
+      vim.wo.colorcolumn = "135"
+    else
+      vim.wo.wrap = false
+      vim.wo.linebreak = false
+      vim.wo.colorcolumn = ""
+    end
+  end,
 })
 local function toggle_wrap()
-    if vim.w.__wrap_user_enabled then
-        vim.w.__wrap_user_enabled = nil
-        vim.wo.wrap = false
-        vim.wo.linebreak = false
-        vim.wo.colorcolumn = ""
-        print("Wrap OFF")
-    else
-        vim.w.__wrap_user_enabled = true
-        vim.wo.wrap = true
-        vim.wo.linebreak = true
-        vim.wo.colorcolumn = "135"
-        print("Wrap ON (sticky for this window)")
-    end
+  if vim.w.__wrap_user_enabled then
+    vim.w.__wrap_user_enabled = nil
+    vim.wo.wrap = false
+    vim.wo.linebreak = false
+    vim.wo.colorcolumn = ""
+    print("Wrap OFF")
+  else
+    vim.w.__wrap_user_enabled = true
+    vim.wo.wrap = true
+    vim.wo.linebreak = true
+    vim.wo.colorcolumn = "135"
+    print("Wrap ON (sticky for this window)")
+  end
 end
 map.set("n", "<leader>ww", toggle_wrap, { desc = "Toggle line wrap, linebreak, and colorcolumn" })
 
@@ -73,10 +73,10 @@ opt.softtabstop = 4
 opt.tabstop = 4
 
 schedule(function() -- OS-Nvim clipboard sync
-    o.clipboard = "unnamedplus"
+  o.clipboard = "unnamedplus"
 end)
 
-o.showmode = false   -- don not show the mode (shown in commandline)
+o.showmode = false -- don not show the mode (shown in commandline)
 
 o.cursorline = false -- show which line cursor is on
 -- opt.guicursor = ""

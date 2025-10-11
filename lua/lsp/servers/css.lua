@@ -1,7 +1,7 @@
 local M = {}
 
 function M.setup(capabilities)
-  require('lspconfig').cssls.setup({
+  require("lspconfig").cssls.setup({
     capabilities = capabilities,
     settings = {
       css = {

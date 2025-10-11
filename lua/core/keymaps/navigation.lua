@@ -2,18 +2,14 @@ local map = vim.keymap.set
 local opt = vim.opt
 local cmd = vim.cmd
 local tbl_extend = vim.tbl_extend
-local opts = { noremap = true, silent = true, }
+local opts = { noremap = true, silent = true }
 
 -- === === ===  ===  === === ===
 -- === Terminal Multiplexer  ===
 -- === === ===  ===  === === ===
 local function detect_multiplexer()
-  if vim.env.TMUX then
-    return "tmux"
-  end
-  if vim.env.ZELLIJ then
-    return "zellij"
-  end
+  if vim.env.TMUX then return "tmux" end
+  if vim.env.ZELLIJ then return "zellij" end
   local term = vim.env.TERM or ""
   if term:match("screen") then
     return "screen"
@@ -64,12 +60,12 @@ map("n", "<leader>ll", "<C-w>l", opts)
 map("n", "<leader>jj", "<C-w>j", opts)
 map("n", "<leader>kk", "<C-w>k", opts)
 
-map("n", "<leader>HH", "<C-w>H", opts)    -- Move Window to Left
-map("n", "<leader>LL", "<C-w>L", opts)    -- Move Window to Right
-map("n", "<leader>JJ", "<C-w>J", opts)    -- Move Window to Down
-map("n", "<leader>KK", "<C-w>K", opts)    -- Move Window to Up
+map("n", "<leader>HH", "<C-w>H", opts) -- Move Window to Left
+map("n", "<leader>LL", "<C-w>L", opts) -- Move Window to Right
+map("n", "<leader>JJ", "<C-w>J", opts) -- Move Window to Down
+map("n", "<leader>KK", "<C-w>K", opts) -- Move Window to Up
 
-map("n", "<leader>sph", cmd.split, opts)  -- split current window horizontally
+map("n", "<leader>sph", cmd.split, opts) -- split current window horizontally
 map("n", "<leader>spv", cmd.vsplit, opts) -- split current window vertically
 
 map("n", "<C-A-h>", ":vertical resize -1<CR>", opts)
@@ -86,34 +82,34 @@ map("n", "<leader>T", "<C-w>T", opts) -- move current pane to a NEW tab
 -- ===  === ===
 -- === Tabs ===
 -- ===  === ===
-map("n", "<leader>tn", cmd.tabnew, opts)                       -- New tab
-map("n", "<leader>tc", cmd.tabclose, opts)                     -- Close current tab
-map("n", "<leader>to", cmd.tabonly, opts)                      -- Close all other tabs
-map("n", "<leader>tt", cmd.tabnext, opts)                      -- Next tab
-map("n", "<leader>tp", cmd.tabprevious, opts)                  -- Previous tab
+map("n", "<leader>tn", cmd.tabnew, opts) -- New tab
+map("n", "<leader>tc", cmd.tabclose, opts) -- Close current tab
+map("n", "<leader>to", cmd.tabonly, opts) -- Close all other tabs
+map("n", "<leader>tt", cmd.tabnext, opts) -- Next tab
+map("n", "<leader>tp", cmd.tabprevious, opts) -- Previous tab
 
-map("n", "<leader>g1", "1gt", opts)                            -- Go to tab 1
-map("n", "<leader>g2", "2gt", opts)                            -- Go to tab 2
-map("n", "<leader>g3", "3gt", opts)                            -- Go to tab 3
-map("n", "<leader>g4", "4gt", opts)                            -- Go to tab 4
-map("n", "<leader>g5", "5gt", opts)                            -- Go to tab 5
-map("n", "<leader>g6", "6gt", opts)                            -- Go to tab 6
-map("n", "<leader>g7", "7gt", opts)                            -- Go to tab 7
-map("n", "<leader>g8", "8gt", opts)                            -- Go to tab 8
-map("n", "<leader>g9", "9gt", opts)                            -- Go to tab 9
-map("n", "<leader>g0", cmd.tablast, opts)                      -- Go to last tab
+map("n", "<leader>g1", "1gt", opts) -- Go to tab 1
+map("n", "<leader>g2", "2gt", opts) -- Go to tab 2
+map("n", "<leader>g3", "3gt", opts) -- Go to tab 3
+map("n", "<leader>g4", "4gt", opts) -- Go to tab 4
+map("n", "<leader>g5", "5gt", opts) -- Go to tab 5
+map("n", "<leader>g6", "6gt", opts) -- Go to tab 6
+map("n", "<leader>g7", "7gt", opts) -- Go to tab 7
+map("n", "<leader>g8", "8gt", opts) -- Go to tab 8
+map("n", "<leader>g9", "9gt", opts) -- Go to tab 9
+map("n", "<leader>g0", cmd.tablast, opts) -- Go to last tab
 
-map("n", "<leader>tm", cmd.tabmove, opts)                      -- Move tab (will prompt for position)
+map("n", "<leader>tm", cmd.tabmove, opts) -- Move tab (will prompt for position)
 map("n", "<leader>t<", function() cmd.tabmove("-1") end, opts) -- Move tab left
 map("n", "<leader>t>", function() cmd.tabmove("+1") end, opts) -- Move tab right
 
-map("n", "<C-t>", cmd.tabnew, opts)                            -- Quick new tab
-map("n", "<C-w>t", cmd.tabnew, opts)                           -- Alternative new tab
+map("n", "<C-t>", cmd.tabnew, opts) -- Quick new tab
+map("n", "<C-w>t", cmd.tabnew, opts) -- Alternative new tab
 
-map("n", "<leader>te", ":tabedit ", { noremap = true })        -- Edit file in new tab (no silent to see command)
-map("n", "<leader>tf", ":tabfind ", { noremap = true })        -- Find and open file in new tab
+map("n", "<leader>te", ":tabedit ", { noremap = true }) -- Edit file in new tab (no silent to see command)
+map("n", "<leader>tf", ":tabfind ", { noremap = true }) -- Find and open file in new tab
 
-map("n", "<leader>tT", ":tabnew | terminal<CR>", opts)         -- Open terminal in new tab
+map("n", "<leader>tT", ":tabnew | terminal<CR>", opts) -- Open terminal in new tab
 
 local function create_tab_with_file(filename) cmd("tabnew " .. filename) end
 
@@ -134,16 +130,16 @@ local function close_tabs_left()
   end
 end
 
-map("n", "<leader>tO", close_other_tabs, opts)                -- Close all other tabs (function)
-map("n", "<leader>tR", close_tabs_right, opts)                -- Close tabs to the right
-map("n", "<leader>tL", close_tabs_left, opts)                 -- Close tabs to the left
+map("n", "<leader>tO", close_other_tabs, opts) -- Close all other tabs (function)
+map("n", "<leader>tR", close_tabs_right, opts) -- Close tabs to the right
+map("n", "<leader>tL", close_tabs_left, opts) -- Close tabs to the left
 
-map("n", "<leader>ti", cmd.tabs, opts)                        -- List all tabs
+map("n", "<leader>ti", cmd.tabs, opts) -- List all tabs
 map("n", "<leader>tb", function() cmd("tab split") end, opts) -- Open current buffer in new tab
-map("n", "<leader>td", ":tab drop ", { noremap = true })      -- Drop file in tab (no silent to see command)
+map("n", "<leader>td", ":tab drop ", { noremap = true }) -- Drop file in tab (no silent to see command)
 
-map("n", "<leader>th", "1gt", opts)                           -- Go to first tab (home)
-map("n", "<leader>tl", cmd.tablast, opts)                     -- Go to last tab
+map("n", "<leader>th", "1gt", opts) -- Go to first tab (home)
+map("n", "<leader>tl", cmd.tablast, opts) -- Go to last tab
 
 -- === === ===  ===
 -- === Foldings ===
@@ -220,14 +216,17 @@ end, { desc = "Toggle fold column" })
 
 -- Show fold info
 map("n", "<leader>zi", function()
-  local foldlevel  = vim.opt.foldlevel:get()
+  local foldlevel = vim.opt.foldlevel:get()
   local foldmethod = vim.opt.foldmethod:get()
   local foldcolumn = vim.opt.foldcolumn:get()
   local foldenable = vim.opt.foldenable:get()
 
-  local info       = string.format(
+  local info = string.format(
     "Fold Info:\n• Method: %s\n• Level: %d\n• Column: %s\n• Enabled: %s",
-    foldmethod, foldlevel, foldcolumn, foldenable and "Yes" or "No"
+    foldmethod,
+    foldlevel,
+    foldcolumn,
+    foldenable and "Yes" or "No"
   )
   vim.notify(info)
 end, { desc = "Show fold info" })
@@ -248,7 +247,7 @@ end, { desc = "Toggle folding" })
 -- Fold all comments
 map("n", "<leader>zcc", function()
   cmd("normal! zE") -- Clear existing folds
-  cmd("g/^\\s*\\/\\*\\|^\\s*\\/\\/\\|^\\s*#\\|^\\s*\"/,/\\*\\/\\|$/fold")
+  cmd('g/^\\s*\\/\\*\\|^\\s*\\/\\/\\|^\\s*#\\|^\\s*"/,/\\*\\/\\|$/fold')
 end, { desc = "Fold all comments" })
 
 -- Save and restore fold state
@@ -327,7 +326,7 @@ map("n", "<leader>mC0", function() cmd("delmarks 0-9") end, opts, { desc = "Clea
 -- Enhanced navigation for automatic marks
 map("n", "<leader>j`", "``", tbl_extend("force", opts, { desc = "Jump to last jump position" }))
 map("n", "<leader>j'", "''", tbl_extend("force", opts, { desc = "Jump to last jump line" }))
-map("n", "<leader>j\"", "`\"", tbl_extend("force", opts, { desc = "Jump to last exit position" }))
+map("n", '<leader>j"', '`"', tbl_extend("force", opts, { desc = "Jump to last exit position" }))
 map("n", "<leader>j^", "`^", tbl_extend("force", opts, { desc = "Jump to last insert position" }))
 map("n", "<leader>j.", "`.", tbl_extend("force", opts, { desc = "Jump to last change position" }))
 map("n", "<leader>j[", "`[", tbl_extend("force", opts, { desc = "Jump to change/yank start" }))

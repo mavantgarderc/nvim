@@ -7,55 +7,47 @@ return {
       "nvim-neotest/nvim-nio",
     },
     config = function()
-      local dap = require('dap')
-      local dapui = require('dapui')
+      local dap = require("dap")
+      local dapui = require("dapui")
       local fn = vim.fn
       local notify = vim.notify
       local log = vim.log
       local v = vim.v
 
       dapui.setup()
-      dap.listeners.before.attach.dapui_config = function()
-        dapui.open()
-      end
-      dap.listeners.before.launch.dapui_config = function()
-        dapui.open()
-      end
-      dap.listeners.before.event_terminated.dapui_config = function()
-        dapui.close()
-      end
-      dap.listeners.before.event_exited.dapui_config = function()
-        dapui.close()
-      end
+      dap.listeners.before.attach.dapui_config = function() dapui.open() end
+      dap.listeners.before.launch.dapui_config = function() dapui.open() end
+      dap.listeners.before.event_terminated.dapui_config = function() dapui.close() end
+      dap.listeners.before.event_exited.dapui_config = function() dapui.close() end
 
-      require('core.keymaps.dap')
+      require("core.keymaps.dap")
 
       -- Python
-      local debugpy_path = fn.expand('~/.virtualenvs/debugpy/bin/python')
+      local debugpy_path = fn.expand("~/.virtualenvs/debugpy/bin/python")
       if fn.executable(debugpy_path) == 1 then
-        require('dap-python').setup(debugpy_path)
+        require("dap-python").setup(debugpy_path)
       else
         notify(
-          "debugpy not installed. Create with:\n" ..
-          "python3 -m venv ~/.virtualenvs/debugpy\n" ..
-          "~/.virtualenvs/debugpy/bin/python -m pip install debugpy",
+          "debugpy not installed. Create with:\n"
+            .. "python3 -m venv ~/.virtualenvs/debugpy\n"
+            .. "~/.virtualenvs/debugpy/bin/python -m pip install debugpy",
           log.levels.WARN
         )
       end
 
       -- ShiSherp 🇮🇳
       dap.adapters.coreclr = {
-        type = 'executable',
+        type = "executable",
         command = "/usr/bin/netcoredbg",
-        args = { '--interpreter=vscode' }
+        args = { "--interpreter=vscode" },
       }
 
       local function find_dll_path()
         local patterns = {
-          '**/bin/Debug/net*/!(*Test*).dll',           -- exclude test DLLs
-          '**/bin/Debug/net*/*.dll',                   -- any .NET DLL
-          'bin/Debug/net*/*.dll',                      -- relative path
-          '**/Debug/*.dll'                             -- alternative debug path
+          "**/bin/Debug/net*/!(*Test*).dll", -- exclude test DLLs
+          "**/bin/Debug/net*/*.dll", -- any .NET DLL
+          "bin/Debug/net*/*.dll", -- relative path
+          "**/Debug/*.dll", -- alternative debug path
         }
 
         for _, pattern in ipairs(patterns) do
@@ -63,14 +55,12 @@ return {
           if dll_files and #dll_files > 0 then
             -- multiple DLLs found? pick the one which matching project name
             if #dll_files > 1 then
-              local cwd_name = fn.fnamemodify(fn.getcwd(), ':t')
+              local cwd_name = fn.fnamemodify(fn.getcwd(), ":t")
               for _, dll in ipairs(dll_files) do
-                if string.match(dll, cwd_name) then
-                  return dll
-                end
+                if string.match(dll, cwd_name) then return dll end
               end
             end
-            return dll_files[1]             -- return first match
+            return dll_files[1] -- return first match
           end
         end
 
@@ -80,7 +70,7 @@ return {
       -- project build helper function
       local function build_dotnet_project()
         print("Building .NET project...")
-        local result = fn.system('dotnet build 2>&1')
+        local result = fn.system("dotnet build 2>&1")
         local exit_code = v.shell_error
 
         if exit_code == 0 then
@@ -95,32 +85,24 @@ return {
 
       dap.configurations.cs = {
         {
-          type = 'coreclr',
-          name = 'Launch - .NET Core',
-          request = 'launch',
+          type = "coreclr",
+          name = "Launch - .NET Core",
+          request = "launch",
           console = "integratedTerminal",
           program = function()
-            if fn.confirm('Should I recompile first?', '&yes\n&no', 2) == 1 then
+            if fn.confirm("Should I recompile first?", "&yes\n&no", 2) == 1 then
               if not build_dotnet_project() then
-                if fn.confirm('Build failed. Continue anyway?', '&yes\n&no', 2) ~= 1 then
-                  return nil
-                end
+                if fn.confirm("Build failed. Continue anyway?", "&yes\n&no", 2) ~= 1 then return nil end
               end
             end
             local dll_path = find_dll_path()
             if dll_path then
               print("Found DLL: " .. dll_path)
-              local choice = fn.confirm(
-                'Use found DLL?\n' .. dll_path,
-                '&yes\n&choose different',
-                1
-              )
-              if choice == 1 then
-                return dll_path
-              end
+              local choice = fn.confirm("Use found DLL?\n" .. dll_path, "&yes\n&choose different", 1)
+              if choice == 1 then return dll_path end
             end
-            local manual_path = fn.input('Path to dll: ', fn.getcwd() .. '/bin/Debug/', 'file')
-            if manual_path == '' then
+            local manual_path = fn.input("Path to dll: ", fn.getcwd() .. "/bin/Debug/", "file")
+            if manual_path == "" then
               print("No DLL specified, canceling debug session")
               return nil
             end
@@ -128,16 +110,14 @@ return {
           end,
         },
         {
-          type = 'coreclr',
-          name = 'Launch - .NET Core (No Build)',
-          request = 'launch',
+          type = "coreclr",
+          name = "Launch - .NET Core (No Build)",
+          request = "launch",
           console = "integratedTerminal",
           program = function()
             local dll_path = find_dll_path()
-            if dll_path then
-              return dll_path
-            end
-            return fn.input('Path to dll: ', fn.getcwd() .. '/bin/Debug/', 'file')
+            if dll_path then return dll_path end
+            return fn.input("Path to dll: ", fn.getcwd() .. "/bin/Debug/", "file")
           end,
         },
       }
@@ -163,6 +143,6 @@ return {
       --         },
       --     }
       -- end
-    end
-  }
+    end,
+  },
 }

@@ -5,21 +5,17 @@ local M = {}
 function M.setup()
   local capabilities = shared.get_capabilities()
 
-  require('lspconfig').solidity_ls.setup({
+  require("lspconfig").solidity_ls.setup({
     capabilities = capabilities,
     on_attach = function(client, bufnr)
-      if shared.setup_keymaps then
-        pcall(shared.setup_keymaps, bufnr)
-      end
+      if shared.setup_keymaps then pcall(shared.setup_keymaps, bufnr) end
 
       if client.supports_method("textDocument/formatting") then
         vim.api.nvim_create_autocmd("BufWritePre", {
           buffer = bufnr,
           callback = function()
             local ok, val = pcall(vim.api.nvim_buf_get_var, bufnr, "lsp_format_on_save")
-            if ok and val == false then
-              return
-            end
+            if ok and val == false then return end
             vim.lsp.buf.format({
               bufnr = bufnr,
               filter = function(c) return c.name == "solidity_ls" end,
@@ -79,9 +75,7 @@ function M.setup_solidity_autocmds()
   vim.api.nvim_create_autocmd({ "BufRead", "BufNewFile" }, {
     group = augroup,
     pattern = { "*.sol" },
-    callback = function(args)
-      vim.bo[args.buf].filetype = "solidity"
-    end,
+    callback = function(args) vim.bo[args.buf].filetype = "solidity" end,
   })
 end
 

@@ -19,22 +19,22 @@ end
 
 function M.get_options()
   return {
-    icons_enabled        = true,
-    theme                = get_lualine_theme(),
+    icons_enabled = true,
+    theme = get_lualine_theme(),
     component_separators = { left = "", right = "" },
-    section_separators   = { left = "", right = "" },
-    disabled_filetypes   = {
+    section_separators = { left = "", right = "" },
+    disabled_filetypes = {
       statusline = { "alpha", "dashboard", "lazy", "TelescopePrompt" },
       winbar = {},
     },
-    ignore_focus         = {},
+    ignore_focus = {},
     always_divide_middle = true,
-    always_show_tabline  = true,
-    globalstatus         = false,
-    refresh              = {
+    always_show_tabline = true,
+    globalstatus = false,
+    refresh = {
       statusline = 5000,
-      tabline    = 5000,
-      winbar     = 5000,
+      tabline = 5000,
+      winbar = 5000,
     },
   }
 end

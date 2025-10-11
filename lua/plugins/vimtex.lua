@@ -46,7 +46,7 @@ return {
 
     -- disable vimtex's built-in completion to avoid conflicts with LSP (texlab + cmp)
     g.vimtex_complete_enabled = 0
-    g.vimtex_complete_close_braces = 0  -- rely on LSP/cmp instead
+    g.vimtex_complete_close_braces = 0 -- rely on LSP/cmp instead
 
     -- Folding (enabled, but customize levels if needed)
     g.vimtex_fold_enabled = 1

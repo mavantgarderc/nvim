@@ -13,8 +13,7 @@ M.branch = {
   icon = glyphs.git.branch,
   cond = function()
     return vim.fn.executable("git") == 1
-        and (vim.fn.isdirectory(".git") == 1 or
-          vim.fn.system("git rev-parse --git-dir 2>/dev/null"):match("%.git"))
+      and (vim.fn.isdirectory(".git") == 1 or vim.fn.system("git rev-parse --git-dir 2>/dev/null"):match("%.git"))
   end,
   fmt = function(str)
     if str == "" or str == nil then return "" end
@@ -28,16 +27,14 @@ M.diff = {
   symbols = {
     added = glyphs.git.added,
     modified = glyphs.git.modified,
-    removed = glyphs.git.removed
+    removed = glyphs.git.removed,
   },
   cond = hide_in_width,
 }
 
 M.last_commit = {
   function()
-    if not last_commit_enabled then
-      return ""
-    end
+    if not last_commit_enabled then return "" end
     local handle = io.popen("git rev-parse --short HEAD 2>/dev/null")
     if not handle then return "" end
     local result = handle:read("*a")

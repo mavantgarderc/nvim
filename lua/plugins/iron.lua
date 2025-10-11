@@ -5,17 +5,17 @@ return {
   config = function()
     local iron = require("iron.core")
 
-    iron.setup {
+    iron.setup({
       config = {
         scratch_repl = true,
         repl_definition = {
           sh = {
-            command = { "zsh" }
+            command = { "zsh" },
           },
           python = {
             command = { "python3" }, -- or ipython
             format = require("iron.fts.common").bracketed_paste,
-          }
+          },
         },
         repl_open_cmd = require("iron.view").bottom(40),
       },
@@ -35,10 +35,10 @@ return {
         clear = "<leader>cl",
       },
       highlight = {
-        italic = true
+        italic = true,
       },
       ignore_blank_lines = true,
-    }
+    })
 
     map("n", "<leader>rs", ":IronRepl<CR>")
     map("n", "<leader>rr", ":IronRestart<CR>")

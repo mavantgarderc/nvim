@@ -5,9 +5,7 @@ local diagnostic = vim.diagnostic
 
 function M.setup_keymaps()
   local ok, keymaps = pcall(require, "core.keymaps.lsp")
-  if ok and keymaps.setup_lsp_keymaps then
-    keymaps.setup_lsp_keymaps()
-  end
+  if ok and keymaps.setup_lsp_keymaps then keymaps.setup_lsp_keymaps() end
 end
 
 function M.setup_diagnostics()
@@ -63,8 +61,7 @@ end
 
 function M.get_capabilities()
   local ok, cmp_nvim_lsp = pcall(require, "cmp_nvim_lsp")
-  local caps = ok and cmp_nvim_lsp.default_capabilities()
-      or vim.lsp.protocol.make_client_capabilities()
+  local caps = ok and cmp_nvim_lsp.default_capabilities() or vim.lsp.protocol.make_client_capabilities()
 
   caps.textDocument.completion.completionItem.snippetSupport = true
   caps.textDocument.completion.completionItem.resolveSupport = {
@@ -88,34 +85,30 @@ function M.setup_null_ls()
   local sources = {}
 
   if vim.fn.executable("stylua") == 1 then
-    table.insert(sources, null_ls.builtins.formatting.stylua.with({
-      extra_args = { "--config-path", "/home/mava/.config/stylua/stylua.toml" },
-    }))
+    table.insert(
+      sources,
+      null_ls.builtins.formatting.stylua.with({
+        extra_args = { "--config-path", "/home/mava/.config/stylua/stylua.toml" },
+      })
+    )
   end
 
-  if vim.fn.executable("csharpier") == 1 then
-    table.insert(sources, null_ls.builtins.formatting.csharpier)
-  end
+  if vim.fn.executable("csharpier") == 1 then table.insert(sources, null_ls.builtins.formatting.csharpier) end
 
-  if vim.fn.executable("sql-formatter") == 1 then
-    table.insert(sources, null_ls.builtins.formatting.sql_formatter)
-  end
+  if vim.fn.executable("sql-formatter") == 1 then table.insert(sources, null_ls.builtins.formatting.sql_formatter) end
   if vim.fn.executable("sqlfluff") == 1 then
     table.insert(sources, null_ls.builtins.formatting.sqlfluff)
-    table.insert(sources, null_ls.builtins.diagnostics.sqlfluff.with({
-      method = null_ls.methods.DIAGNOSTICS_ON_SAVE,
-    }))
+    table.insert(
+      sources,
+      null_ls.builtins.diagnostics.sqlfluff.with({
+        method = null_ls.methods.DIAGNOSTICS_ON_SAVE,
+      })
+    )
   end
 
-  if vim.fn.executable("prettier") == 1 then
-    table.insert(sources, null_ls.builtins.formatting.prettier)
-  end
-  if vim.fn.executable("black") == 1 then
-    table.insert(sources, null_ls.builtins.formatting.black)
-  end
-  if vim.fn.executable("isort") == 1 then
-    table.insert(sources, null_ls.builtins.formatting.isort)
-  end
+  if vim.fn.executable("prettier") == 1 then table.insert(sources, null_ls.builtins.formatting.prettier) end
+  if vim.fn.executable("black") == 1 then table.insert(sources, null_ls.builtins.formatting.black) end
+  if vim.fn.executable("isort") == 1 then table.insert(sources, null_ls.builtins.formatting.isort) end
 
   null_ls.setup({
     sources = sources,
@@ -129,9 +122,7 @@ function M.setup_null_ls()
             if vim.b.lsp_format_on_save ~= false then
               vim.lsp.buf.format({
                 bufnr = bufnr,
-                filter = function(c)
-                  return c.name == "null-ls"
-                end,
+                filter = function(c) return c.name == "null-ls" end,
               })
             end
           end,
@@ -145,9 +136,7 @@ function M.setup_format_keymap()
   map("n", "<leader>gf", function()
     vim.lsp.buf.format({
       async = true,
-      filter = function(client)
-        return client.name ~= "omnisharp"
-      end,
+      filter = function(client) return client.name ~= "omnisharp" end,
     })
   end, { desc = "Format with LSP/null-ls" })
 
@@ -155,9 +144,7 @@ function M.setup_format_keymap()
     vim.lsp.buf.format({
       async = true,
       range = { start = vim.fn.getpos("'<"), ["end"] = vim.fn.getpos("'>") },
-      filter = function(client)
-        return client.name ~= "omnisharp"
-      end,
+      filter = function(client) return client.name ~= "omnisharp" end,
     })
   end, { desc = "Format selection" })
 end
@@ -169,9 +156,7 @@ function M.setup_autoformat()
       if vim.b.lsp_format_on_save ~= false then
         vim.lsp.buf.format({
           async = false,
-          filter = function(client)
-            return client.name ~= "omnisharp"
-          end,
+          filter = function(client) return client.name ~= "omnisharp" end,
         })
       end
     end,

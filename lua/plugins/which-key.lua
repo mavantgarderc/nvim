@@ -38,8 +38,7 @@ return {
         separator = "➜",
         group = "+",
         mappings = g.have_nerd_font,
-        keys = g.have_nerd_font and {} or {
-        },
+        keys = g.have_nerd_font and {} or {},
       },
       win = {
         border = "rounded",
@@ -71,5 +70,5 @@ return {
       ["<leader>t"] = { name = "[T]oggle", mode = "n" },
       ["<leader>h"] = { name = "Git [H]unk", mode = { "n", "v" } },
     }
-  end
+  end,
 }

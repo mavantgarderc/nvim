@@ -1,7 +1,7 @@
 local M = {}
 
 function M.setup(capabilities)
-  require('lspconfig').html.setup({
+  require("lspconfig").html.setup({
     capabilities = capabilities,
     filetypes = { "html", "templ" },
     settings = {

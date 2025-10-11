@@ -21,9 +21,7 @@ return {
 
     mappings = {
       ["<leader>go"] = {
-        action = function()
-          return require("obsidian").util.gf_passthrough()
-        end,
+        action = function() return require("obsidian").util.gf_passthrough() end,
         opts = { noremap = false, expr = true, buffer = true },
       },
     },
@@ -38,9 +36,7 @@ return {
 
     api.nvim_create_autocmd("FileType", {
       pattern = "markdown",
-      callback = function(args)
-        keymaps.set_keymaps(args.buf)
-      end,
+      callback = function(args) keymaps.set_keymaps(args.buf) end,
     })
   end,
 }

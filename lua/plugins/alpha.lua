@@ -1,7 +1,7 @@
 return {
   {
-    'goolord/alpha-nvim',
-    dependencies = { 'echasnovski/mini.icons' },
+    "goolord/alpha-nvim",
+    dependencies = { "echasnovski/mini.icons" },
     lazy = false,
     config = function()
       local alpha = require("alpha")
@@ -61,7 +61,7 @@ return {
           "                                  - The Lay of Grimnir",
           " ",
           "             Plugins loaded: " .. lazy_stats.loaded .. " / " .. lazy_stats.count,
-          "           "
+          "           ",
         }
       end
 
@@ -82,6 +82,6 @@ return {
       cmd([[
              autocmd FileType alpha setlocal nofoldenable
              ]])
-    end
-  }
+    end,
+  },
 }

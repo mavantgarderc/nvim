@@ -1,7 +1,7 @@
 local M = {}
 
 function M.setup(capabilities)
-  require('lspconfig').texlab.setup({
+  require("lspconfig").texlab.setup({
     capabilities = capabilities,
     settings = {
       texlab = {
@@ -29,9 +29,7 @@ function M.setup(capabilities)
         },
       },
     },
-    on_attach = function(client, bufnr)
-      client.server_capabilities.documentFormattingProvider = false
-    end,
+    on_attach = function(client, bufnr) client.server_capabilities.documentFormattingProvider = false end,
   })
 end
 

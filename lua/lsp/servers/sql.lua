@@ -2,7 +2,7 @@ local M = {}
 
 function M.setup(capabilities)
   -- Postgres LSP
-  require('lspconfig').postgres_lsp.setup({
+  require("lspconfig").postgres_lsp.setup({
     capabilities = capabilities,
     filetypes = { "sql", "pgsql", "plpgsql" },
     settings = {
@@ -14,7 +14,7 @@ function M.setup(capabilities)
   })
 
   -- SQL Server (T-SQL)
-  require('lspconfig').sqlls.setup({
+  require("lspconfig").sqlls.setup({
     capabilities = capabilities,
     filetypes = { "sql", "tsql" },
     root_markers = { ".git" },
@@ -28,7 +28,7 @@ function M.setup(capabilities)
   })
 
   -- SQLs (generic, Oracle/MySQL/Postgres)
-  require('lspconfig').sqls.setup({
+  require("lspconfig").sqls.setup({
     capabilities = capabilities,
     filetypes = { "sql", "plsql", "oracle" },
     settings = {
@@ -58,15 +58,11 @@ end
 function M.format_sql()
   vim.lsp.buf.format({
     async = true,
-    filter = function(client)
-      return client.name == "sqlls" or client.name == "sqls" or client.name == "postgres_lsp"
-    end,
+    filter = function(client) return client.name == "sqlls" or client.name == "sqls" or client.name == "postgres_lsp" end,
   })
 end
 
-vim.api.nvim_create_user_command("SqlFormat", function()
-  M.format_sql()
-end, { desc = "Format SQL code" })
+vim.api.nvim_create_user_command("SqlFormat", function() M.format_sql() end, { desc = "Format SQL code" })
 
 vim.api.nvim_create_user_command("SqlConnect", function(opts)
   local args = vim.split(opts.args or "", "%s+")
