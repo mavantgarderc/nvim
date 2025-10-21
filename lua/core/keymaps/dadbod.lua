@@ -1,9 +1,3 @@
--- lua/core/keymaps/dadbod.lua
--- All dadbod-related keymaps extracted here.
--- Exports setup(map, with_db) where:
---  - map(mode, lhs, rhs, opts) is your mapping helper (noremap=true, silent=true)
---  - with_db(callback) is your async-safe DB selector
-
 local M = {}
 
 function M.setup(map, with_db)
@@ -12,9 +6,6 @@ function M.setup(map, with_db)
     return
   end
 
-  -------------------------------------------------------------------------
-  -- DBUI Window keymaps (global)
-  -------------------------------------------------------------------------
   map("n", "<leader>dt", ":DBUIToggle<CR>", { desc = "Toggle Database UI" })
   map("n", "<leader>da", ":DBUIAddConnection<CR>", { desc = "Add DB Connection" })
   map("n", "<leader>df", ":DBUIFindBuffer<CR>", { desc = "Find DB Buffer" })
@@ -35,9 +26,6 @@ function M.setup(map, with_db)
     end)
   end, { desc = "Quick Connect to DB" })
 
-  -------------------------------------------------------------------------
-  -- Top-level SQL Execution keymaps (global)
-  -------------------------------------------------------------------------
   map("n", "<leader>ss", function()
     local line = vim.api.nvim_get_current_line()
     if line == "" then
@@ -88,9 +76,6 @@ function M.setup(map, with_db)
     end)
   end, { desc = "Save and execute SQL file" })
 
-  -------------------------------------------------------------------------
-  -- DBUI buffer keymaps (filetype=dbui) - use plugin <Plug> mappings (noremap=false)
-  -------------------------------------------------------------------------
   local dbui = {
     ["<CR>"] = "<Plug>(DBUI_SelectLine)",
     ["o"] = "<Plug>(DBUI_SelectLine)",
@@ -114,16 +99,12 @@ function M.setup(map, with_db)
     end,
   })
 
-  -------------------------------------------------------------------------
-  -- SQL buffer-local mappings (localleader), and other buffer-specific helpers
-  -------------------------------------------------------------------------
   vim.api.nvim_create_autocmd("FileType", {
     pattern = { "sql", "mysql", "plsql", "sqlite", "postgresql", "psql" },
     callback = function(event)
       local buf = event.buf
       local opts = { buffer = buf, noremap = true, silent = true }
 
-      -- <localleader>r (normal): Execute current line
       vim.keymap.set("n", "<localleader>r", function()
         local line = vim.api.nvim_get_current_line()
         if line == "" then
@@ -135,7 +116,6 @@ function M.setup(map, with_db)
         end)
       end, vim.tbl_extend("force", opts, { desc = "Execute current line" }))
 
-      -- <localleader>r (visual): Execute selection
       vim.keymap.set("v", "<localleader>r", function()
         local start = vim.fn.getpos("'<")[2]
         local finish = vim.fn.getpos("'>")[2]
@@ -150,7 +130,6 @@ function M.setup(map, with_db)
         end)
       end, vim.tbl_extend("force", opts, { desc = "Execute selection" }))
 
-      -- <localleader>R: Execute entire buffer
       vim.keymap.set("n", "<localleader>R", function()
         local lines = vim.api.nvim_buf_get_lines(0, 0, -1, false)
         local query = table.concat(lines, "\n")
@@ -163,7 +142,6 @@ function M.setup(map, with_db)
         end)
       end, vim.tbl_extend("force", opts, { desc = "Execute entire buffer" }))
 
-      -- <localleader>h: Help for word under cursor
       vim.keymap.set("n", "<localleader>h", function()
         local w = vim.fn.expand("<cword>")
         if w == "" then
@@ -173,13 +151,10 @@ function M.setup(map, with_db)
         vim.cmd("help " .. w)
       end, vim.tbl_extend("force", opts, { desc = "Help for word under cursor" }))
 
-      -- <localleader>f: Format SQL (prefer sqlfluff, fallback to sqlformat)
       vim.keymap.set("n", "<localleader>f", function()
         if vim.fn.executable("sqlfluff") == 1 then
-          -- Prefer sqlfluff (user has it via pipx)
           local ok, _ = pcall(vim.cmd, "%!sqlfluff fix --stdin")
           if not ok then
-            -- fallback to sqlformat if sqlfluff invocation fails
             if vim.fn.executable("sqlformat") == 1 then
               vim.cmd("%!sqlformat --reindent --keywords upper --identifiers lower -")
             else
@@ -194,27 +169,21 @@ function M.setup(map, with_db)
         end
       end, vim.tbl_extend("force", opts, { desc = "Format SQL" }))
 
-      -- <localleader>e: Explain current query (SQLite-specific)
       vim.keymap.set("n", "<localleader>e", function()
         local line = vim.api.nvim_get_current_line()
         if line == "" then
           vim.notify("Empty line - nothing to explain", vim.log.levels.WARN)
           return
         end
-        -- Insert EXPLAIN QUERY PLAN <line> at the current line and execute it
         local cur = vim.fn.line(".")
         vim.api.nvim_buf_set_lines(buf, cur - 1, cur, false, { "EXPLAIN QUERY PLAN " .. line })
         with_db(function(db)
           vim.cmd("." .. "DB " .. vim.fn.fnameescape(db))
         end)
-        -- Note: this replaces the current line with the EXPLAIN. Restore logic can be added if desired.
       end, vim.tbl_extend("force", opts, { desc = "Explain current query (SQLite-specific)" }))
     end,
   })
 
-  -------------------------------------------------------------------------
-  -- Utility / Test keymaps (global)
-  -------------------------------------------------------------------------
   map("n", "<leader>dT", function()
     with_db(function(db)
       vim.notify("Testing DB connection...", vim.log.levels.INFO)

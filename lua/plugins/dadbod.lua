@@ -1,7 +1,3 @@
--- lua/plugins/dadbod.lua
--- Unified configuration for vim-dadbod, vim-dadbod-ui, vim-dadbod-completion, and vim-dotenv
--- Dependency-free, .env autoload now works properly
-
 return {
   {
     "tpope/vim-dadbod",
@@ -22,9 +18,6 @@ return {
     },
 
     init = function()
-      -------------------------------------------------------------------------
-      -- Keymap helper and async-safe DB selector (kept here and reused by keymaps module)
-      -------------------------------------------------------------------------
       local function map(mode, lhs, rhs, opts)
         local options = { noremap = true, silent = true }
         if opts then options = vim.tbl_extend("force", options, opts) end
@@ -51,7 +44,6 @@ return {
         end)
       end
 
-      -- Load external keymaps module (moved all keymaps there).
       local ok, keymaps = pcall(require, "core.keymaps.dadbod")
       if ok and type(keymaps.setup) == "function" then
         pcall(keymaps.setup, map, with_db)
@@ -71,14 +63,10 @@ return {
     end,
 
     config = function()
-      -------------------------------------------------------------------------
-      -- Ensure .env loads AFTER vim-dotenv is ready
-      -------------------------------------------------------------------------
       local dotenv_path = vim.fn.getcwd() .. "/.env"
       local config_env = vim.fn.stdpath("config") .. "/.env"
       if vim.fn.filereadable(dotenv_path) == 1 then
         vim.cmd("silent! Dotenv " .. dotenv_path)
-        vim.notify("Loaded .env from " .. dotenv_path, vim.log.levels.INFO)
       elseif vim.fn.filereadable(config_env) == 1 then
         vim.cmd("silent! Dotenv " .. config_env)
         vim.notify("Loaded .env from " .. config_env, vim.log.levels.INFO)
@@ -86,9 +74,6 @@ return {
         vim.notify("No .env file found in cwd or config dir", vim.log.levels.WARN)
       end
 
-      -------------------------------------------------------------------------
-      -- Global DadbodExecute helper
-      -------------------------------------------------------------------------
       _G.DadbodExecute = function(query, db_key)
         if not vim.g.dbs or not vim.g.dbs[db_key] or vim.g.dbs[db_key] == "" then
           local available = vim.g.dbs and table.concat(vim.tbl_keys(vim.g.dbs), ", ") or "none"
