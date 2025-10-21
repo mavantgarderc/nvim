@@ -23,29 +23,32 @@ function M.setup_ui_keymaps()
       if choice then vim.cmd("DB " .. choice) end
     end)
   end, { desc = "Quick Connect to DB" })
-
-  map("n", "<leader>dm", function()
-    vim.cmd("DB DB_DEV_MYSQL") -- replace with your default DB key from .env
-    vim.notify("Connected to DB_DEV_MYSQL", vim.log.levels.INFO)
-  end, { desc = "Connect to default MySQL DB" })
 end
 
 function M.setup_sql_keymaps()
-  map("n", "<leader>ss", ":DB<CR>", { desc = "Execute SQL line" })
-  map("v", "<leader>ss", ":DB<CR>", { desc = "Execute SQL selection" })
-  map("n", "<leader>sf", ":%DB<CR>", { desc = "Execute entire SQL file" })
-
-  map("n", "<leader>se", function()
+  -- top-level quick execution commands, consistent across DBs
+  map("n", "<leader>ss", function()
     local line = vim.api.nvim_get_current_line()
-    vim.cmd("DB " .. line)
-  end, { desc = "Execute current line with DB" })
+    _G.DadbodExecute(line, "DB_DEV_POSTGRES")
+  end, { desc = "Execute SQL line (Postgres default)" })
+
+  map("v", "<leader>ss", function()
+    local start = vim.fn.getpos("'<")[2]
+    local finish = vim.fn.getpos("'>")[2]
+    local lines = vim.api.nvim_buf_get_lines(0, start - 1, finish, false)
+    _G.DadbodExecute(table.concat(lines, "\n"), "DB_DEV_POSTGRES")
+  end, { desc = "Execute SQL selection (Postgres default)" })
+
+  map("n", "<leader>sf", function()
+    local lines = vim.api.nvim_buf_get_lines(0, 0, -1, false)
+    _G.DadbodExecute(table.concat(lines, "\n"), "DB_DEV_POSTGRES")
+  end, { desc = "Execute entire SQL file (Postgres default)" })
 
   map("n", "<leader>sx", function()
     vim.cmd("w")
-    vim.cmd("%DB")
-  end, { desc = "Save and execute SQL file" })
-
-  map("v", "<leader>se", function() vim.cmd("'<,'>DB") end, { desc = "Execute visual selection" })
+    local lines = vim.api.nvim_buf_get_lines(0, 0, -1, false)
+    _G.DadbodExecute(table.concat(lines, "\n"), "DB_DEV_POSTGRES")
+  end, { desc = "Save and execute SQL file (Postgres default)" })
 end
 
 function M.setup_dbui_buffer_keymaps()
@@ -80,15 +83,30 @@ function M.setup_sql_buffer_keymaps()
       local buf = event.buf
       local opts = { buffer = buf, noremap = true, silent = true }
 
-      map("n", "<localleader>r", ":DB<CR>", vim.tbl_extend("force", opts, { desc = "Execute current line" }))
-      map("v", "<localleader>r", ":DB<CR>", vim.tbl_extend("force", opts, { desc = "Execute selection" }))
-      map("n", "<localleader>R", ":%DB<CR>", vim.tbl_extend("force", opts, { desc = "Execute entire buffer" }))
-      map("n", "<localleader>h", function()
+      -- buffer-local leader mappings
+      vim.keymap.set("n", "<localleader>r", function()
+        local line = vim.api.nvim_get_current_line()
+        _G.DadbodExecute(line, "DB_DEV_POSTGRES")
+      end, vim.tbl_extend("force", opts, { desc = "Execute current line (Postgres)" }))
+
+      vim.keymap.set("v", "<localleader>r", function()
+        local start = vim.fn.getpos("'<")[2]
+        local finish = vim.fn.getpos("'>")[2]
+        local lines = vim.api.nvim_buf_get_lines(0, start - 1, finish, false)
+        _G.DadbodExecute(table.concat(lines, "\n"), "DB_DEV_POSTGRES")
+      end, vim.tbl_extend("force", opts, { desc = "Execute selection (Postgres)" }))
+
+      vim.keymap.set("n", "<localleader>R", function()
+        local lines = vim.api.nvim_buf_get_lines(0, 0, -1, false)
+        _G.DadbodExecute(table.concat(lines, "\n"), "DB_DEV_POSTGRES")
+      end, vim.tbl_extend("force", opts, { desc = "Execute entire buffer (Postgres)" }))
+
+      vim.keymap.set("n", "<localleader>h", function()
         local w = vim.fn.expand("<cword>")
         vim.cmd("help " .. w)
       end, vim.tbl_extend("force", opts, { desc = "Help for word under cursor" }))
 
-      map("n", "<localleader>f", function()
+      vim.keymap.set("n", "<localleader>f", function()
         if vim.fn.executable("sqlformat") == 1 then
           vim.cmd("%!sqlformat --reindent --keywords upper --identifiers lower -")
         else
@@ -96,15 +114,15 @@ function M.setup_sql_buffer_keymaps()
         end
       end, vim.tbl_extend("force", opts, { desc = "Format SQL" }))
 
-      map("n", "<localleader>e", function()
+      vim.keymap.set("n", "<localleader>e", function()
         local line = vim.api.nvim_get_current_line()
-        vim.cmd("DB EXPLAIN " .. line)
-      end, vim.tbl_extend("force", opts, { desc = "Explain current query" }))
+        _G.DadbodExecute("EXPLAIN " .. line, "DB_DEV_POSTGRES")
+      end, vim.tbl_extend("force", opts, { desc = "Explain current query (Postgres)" }))
 
-      map("n", "<localleader>d", function()
+      vim.keymap.set("n", "<localleader>d", function()
         local tbl = vim.fn.expand("<cword>")
-        vim.cmd("DB DESCRIBE " .. tbl)
-      end, vim.tbl_extend("force", opts, { desc = "Describe table under cursor" }))
+        _G.DadbodExecute("SELECT column_name, data_type FROM information_schema.columns WHERE table_name = '"..tbl.."';", "DB_DEV_POSTGRES")
+      end, vim.tbl_extend("force", opts, { desc = "Describe table under cursor (Postgres)" }))
     end,
   })
 end
@@ -115,12 +133,12 @@ function M.setup_lsp_integration()
     callback = function(event)
       local bufnr = event.buf
       local o = { buffer = bufnr, noremap = true, silent = true }
-      map("n", "gd", vim.lsp.buf.definition, vim.tbl_extend("force", o, { desc = "Go to definition" }))
-      map("n", "gr", vim.lsp.buf.references, vim.tbl_extend("force", o, { desc = "Show references" }))
-      map("n", "K", vim.lsp.buf.hover, vim.tbl_extend("force", o, { desc = "Show hover info" }))
-      map("n", "<leader>rn", vim.lsp.buf.rename, vim.tbl_extend("force", o, { desc = "Rename symbol" }))
-      map("n", "<leader>ca", vim.lsp.buf.code_action, vim.tbl_extend("force", o, { desc = "Code actions" }))
-      map("n", "<C-k>", vim.lsp.buf.signature_help, vim.tbl_extend("force", o, { desc = "Signature help" }))
+      vim.keymap.set("n", "gd", vim.lsp.buf.definition, vim.tbl_extend("force", o, { desc = "Go to definition" }))
+      vim.keymap.set("n", "gr", vim.lsp.buf.references, vim.tbl_extend("force", o, { desc = "Show references" }))
+      vim.keymap.set("n", "K", vim.lsp.buf.hover, vim.tbl_extend("force", o, { desc = "Show hover info" }))
+      vim.keymap.set("n", "<leader>rn", vim.lsp.buf.rename, vim.tbl_extend("force", o, { desc = "Rename symbol" }))
+      vim.keymap.set("n", "<leader>ca", vim.lsp.buf.code_action, vim.tbl_extend("force", o, { desc = "Code actions" }))
+      vim.keymap.set("n", "<C-k>", vim.lsp.buf.signature_help, vim.tbl_extend("force", o, { desc = "Signature help" }))
     end,
   })
 end
