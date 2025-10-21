@@ -1,3 +1,4 @@
+-- lua/plugins/lsp.lua
 return {
   {
     "VonHeikemen/lsp-zero.nvim",
@@ -15,17 +16,20 @@ return {
     config = function()
       local orig_notify = vim.notify
       vim.notify = function(msg, level, opts)
-        if msg:match("The `require%('lspconfig'%)` \"framework\" is deprecated") then return end
+        if msg:match("The `require%('lspconfig'%)` \"framework\" is deprecated") then
+          return
+        end
         orig_notify(msg, level, opts)
       end
 
+      -- ensure base module loads
       require("lspconfig")
 
       local lsp = require("lsp-zero").preset({})
       local map = vim.keymap.set
-
       vim.opt.signcolumn = "yes"
 
+      -- Mason setup
       require("mason").setup()
       require("mason-lspconfig").setup({
         ensure_installed = {
@@ -38,6 +42,11 @@ return {
           "texlab",
           "sqls",
           "solidity_ls",
+          "dockerls",
+          "jsonls",
+          "gopls",
+          "rust_analyzer",
+          "zls",
           "dockerls",
           "jsonls",
         },
@@ -58,13 +67,16 @@ return {
       })
 
       local shared_config = require("lsp.shared")
-
-      lsp.on_attach(function(_, bufnr) lsp.default_keymaps({ buffer = bufnr }) end)
+      lsp.on_attach(function(_, bufnr)
+        lsp.default_keymaps({ buffer = bufnr })
+      end)
 
       shared_config.setup_keymaps()
       shared_config.setup_diagnostics()
       shared_config.setup_null_ls()
       shared_config.setup_format_keymap()
+
+      lsp.setup()
 
       local capabilities = shared_config.get_capabilities()
       require("lsp.servers.lua_ls").setup(capabilities)
@@ -76,8 +88,6 @@ return {
       require("lsp.servers.latex").setup(capabilities)
       require("lsp.servers.sql").setup(capabilities)
       require("lsp.servers.solidity").setup(capabilities)
-
-      lsp.setup()
     end,
   },
 }
