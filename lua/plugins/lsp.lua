@@ -1,3 +1,4 @@
+-- lua/plugins/lsp.lua
 return {
   {
     "VonHeikemen/lsp-zero.nvim",
@@ -12,9 +13,6 @@ return {
       "L3MON4D3/LuaSnip",
       "nvimtools/none-ls.nvim",
     },
-
-    event = { "BufReadPre", "BufNewFile" },
-
     config = function()
       local orig_notify = vim.notify
       vim.notify = function(msg, level, opts)
@@ -24,15 +22,14 @@ return {
         orig_notify(msg, level, opts)
       end
 
-      local ok, _ = pcall(require, "lspconfig")
-      if not ok then
-        vim.notify("[plugins.lsp] nvim-lspconfig failed to load", vim.log.levels.ERROR)
-        return
-      end
+      -- ensure base module loads
+      require("lspconfig")
 
       local lsp = require("lsp-zero").preset({})
+      local map = vim.keymap.set
       vim.opt.signcolumn = "yes"
 
+      -- Mason setup
       require("mason").setup()
       require("mason-lspconfig").setup({
         ensure_installed = {
@@ -47,8 +44,14 @@ return {
           "solidity_ls",
           "dockerls",
           "jsonls",
+          "gopls",
+          "rust_analyzer",
+          "zls",
+          "dockerls",
+          "jsonls",
         },
         automatic_installation = true,
+        handlers = {},
       })
 
       local mason_tool_installer = require("mason-tool-installer")
@@ -76,33 +79,15 @@ return {
       lsp.setup()
 
       local capabilities = shared_config.get_capabilities()
-
-      local ok_lua, lua_ls = pcall(require, "lsp.servers.lua_ls")
-      if ok_lua and type(lua_ls.setup) == "function" then
-        lua_ls.setup(capabilities)
-      else
-        vim.notify("[LSP] lua_ls setup skipped (not found)", vim.log.levels.WARN)
-      end
-
-      local servers = {
-        "typescript",
-        "python",
-        "omnisharp",
-        "html",
-        "css",
-        "latex",
-        "sql",
-        "solidity",
-      }
-
-      for _, name in ipairs(servers) do
-        local ok, mod = pcall(require, "lsp.servers." .. name)
-        if ok and type(mod.setup) == "function" then
-          mod.setup(capabilities)
-        else
-          vim.notify(string.format("[LSP] %s setup skipped (not found)", name), vim.log.levels.WARN)
-        end
-      end
+      require("lsp.servers.lua_ls").setup(capabilities)
+      require("lsp.servers.typescript").setup(capabilities)
+      require("lsp.servers.python").setup(capabilities)
+      require("lsp.servers.omnisharp").setup(capabilities)
+      require("lsp.servers.html").setup(capabilities)
+      require("lsp.servers.css").setup(capabilities)
+      require("lsp.servers.latex").setup(capabilities)
+      require("lsp.servers.sql").setup(capabilities)
+      require("lsp.servers.solidity").setup(capabilities)
     end,
   },
 }
