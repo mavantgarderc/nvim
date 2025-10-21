@@ -9,7 +9,4 @@ M.key_fileaction = require("core.keymaps.fileactions")
 M.key_navigation = require("core.keymaps.navigation")
 M.key_visual = require("core.keymaps.visualkeys")
 
-require("core.sql_env").setup()
-require("core.sql_output").setup()
-
 return M

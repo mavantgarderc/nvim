@@ -1,4 +1,16 @@
 return {
+
+  {
+    dir = "~/projects/0-shelfs/CodeStorage/pantheon.nvim",
+    name = "pantheon.nvim",
+    priority = 1000,
+    -- config = function()
+    --   require('pantheon').setup({
+    --     theme = 'lantern-corps/green',
+    --   })
+    -- end,
+  },
+
   -- ==================================================
   -- Oil file explorer
   "stevearc/oil.nvim",
@@ -63,6 +75,8 @@ return {
       "tpope/vim-dadbod",
       "kristijanhusak/vim-dadbod-completion",
       "kristijanhusak/vim-dadbod-ui",
+      'tpope/vim-dotenv',
+      "nanotee/sqls.nvim",
       -- Utilities
       -- indent automation; no config needed
       "NMAC427/guess-indent.nvim",
@@ -113,7 +127,7 @@ return {
       { "nvim-telescope/telescope-ui-select.nvim" },
 
       -- Useful for getting pretty icons, but requires a Nerd Font.
-      { "nvim-tree/nvim-web-devicons", enabled = vim.g.have_nerd_font },
+      { "nvim-tree/nvim-web-devicons",            enabled = vim.g.have_nerd_font },
     },
   },
   -- undotree
