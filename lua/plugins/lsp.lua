@@ -1,4 +1,3 @@
--- lua/plugins/lsp.lua
 return {
   {
     "VonHeikemen/lsp-zero.nvim",
@@ -22,14 +21,12 @@ return {
         orig_notify(msg, level, opts)
       end
 
-      -- ensure base module loads
       require("lspconfig")
 
       local lsp = require("lsp-zero").preset({})
       local map = vim.keymap.set
       vim.opt.signcolumn = "yes"
 
-      -- Mason setup
       require("mason").setup()
       require("mason-lspconfig").setup({
         ensure_installed = {
@@ -79,15 +76,17 @@ return {
       lsp.setup()
 
       local capabilities = shared_config.get_capabilities()
-      require("lsp.servers.lua_ls").setup(capabilities)
-      require("lsp.servers.typescript").setup(capabilities)
-      require("lsp.servers.python").setup(capabilities)
-      require("lsp.servers.omnisharp").setup(capabilities)
-      require("lsp.servers.html").setup(capabilities)
-      require("lsp.servers.css").setup(capabilities)
-      require("lsp.servers.latex").setup(capabilities)
-      require("lsp.servers.sql").setup(capabilities)
-      require("lsp.servers.solidity").setup(capabilities)
+      if #vim.api.nvim_list_uis() > 0 then
+        require("lsp.servers.lua_ls").setup(capabilities)
+        require("lsp.servers.typescript").setup(capabilities)
+        require("lsp.servers.python").setup(capabilities)
+        require("lsp.servers.omnisharp").setup(capabilities)
+        require("lsp.servers.html").setup(capabilities)
+        require("lsp.servers.css").setup(capabilities)
+        require("lsp.servers.latex").setup(capabilities)
+        require("lsp.servers.sql").setup(capabilities)
+        require("lsp.servers.solidity").setup(capabilities)
+      end
     end,
   },
 }

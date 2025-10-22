@@ -1,51 +1,53 @@
 local M = {}
 
 function M.setup(capabilities)
-  local ok, lspconfig = pcall(require, "lspconfig")
-  if not ok or not lspconfig then
-    vim.notify("[lsp.servers.lua_ls] lspconfig not found", vim.log.levels.WARN)
-    return
-  end
+  vim.schedule(function()
+    local ok, lspconfig = pcall(require, "lspconfig")
+    if not ok then
+      vim.notify("[lsp.servers.lua_ls] nvim-lspconfig not found", vim.log.levels.WARN)
+      return
+    end
 
-  local server = lspconfig.lua_ls or lspconfig.sumneko_lua
-  if not server then
-    vim.notify(
-      "[lsp.servers.lua_ls] neither 'lua_ls' nor 'sumneko_lua' is available in lspconfig. Ensure nvim-lspconfig is installed and the server is registered (mason / manual).",
-      vim.log.levels.WARN
-    )
-    return
-  end
+    local configs_ok, configs = pcall(require, "lspconfig.configs")
+    if not configs_ok then
+      vim.notify("[lsp.servers.lua_ls] lspconfig.configs missing", vim.log.levels.WARN)
+      return
+    end
 
-  server.setup({
-    capabilities = capabilities,
-    on_attach = function(client, bufnr)
-      client.server_capabilities.documentFormattingProvider = false
-      client.server_capabilities.documentRangeFormattingProvider = false
-    end,
-    settings = {
-      Lua = {
-        diagnostics = {
-          globals = { "vim" },
+    if not configs.lua_ls then
+      configs.lua_ls = {
+        default_config = {
+          cmd = { "lua-language-server" },
+          filetypes = { "lua" },
+          root_dir = lspconfig.util.root_pattern(".git", ".luarc.json", ".luarc.jsonc", ".luacheckrc", ".stylua.toml", "selene.toml"),
+          settings = {},
         },
-        workspace = {
-          library = {
-            [vim.fn.expand("$VIMRUNTIME/lua")] = true,
-            [vim.fn.stdpath("config") .. "/lua"] = true,
+      }
+    end
+
+    lspconfig.lua_ls.setup({
+      capabilities = capabilities,
+      on_attach = function(client)
+        client.server_capabilities.documentFormattingProvider = false
+        client.server_capabilities.documentRangeFormattingProvider = false
+      end,
+      settings = {
+        Lua = {
+          diagnostics = { globals = { "vim" } },
+          workspace = {
+            library = {
+              [vim.fn.expand("$VIMRUNTIME/lua")] = true,
+              [vim.fn.stdpath("config") .. "/lua"] = true,
+            },
+            checkThirdParty = false,
           },
-          checkThirdParty = false,
-        },
-        telemetry = {
-          enable = false,
-        },
-        completion = {
-          callSnippet = "Replace",
-        },
-        format = {
-          enable = false,
+          telemetry = { enable = false },
+          completion = { callSnippet = "Replace" },
+          format = { enable = false },
         },
       },
-    },
-  })
+    })
+  end)
 end
 
 return M
