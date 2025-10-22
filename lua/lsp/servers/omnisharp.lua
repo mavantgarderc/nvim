@@ -1,3 +1,7 @@
+if #vim.api.nvim_list_uis() == 0 then
+  return { setup = function() end }
+end
+
 local M = {}
 
 local function find_project_root(arg)
@@ -41,66 +45,83 @@ local function get_omnisharp_cmd()
 end
 
 function M.setup(capabilities)
-  local extended = require("omnisharp_extended")
-  local cmd = get_omnisharp_cmd()
-  if not cmd then return { success = false, error = "OmniSharp not found" } end
+  -- Add a longer delay for omnisharp
+  vim.defer_fn(function()
+    local ok_lsp, lspconfig = pcall(require, "lspconfig")
+    if not ok_lsp then
+      vim.notify("[lsp.servers.omnisharp] nvim-lspconfig not found", vim.log.levels.WARN)
+      return
+    end
 
-  require("lspconfig").omnisharp.setup({
-    cmd = cmd,
-    capabilities = vim.tbl_deep_extend("force", capabilities or {}, extended.capabilities or {}),
+    local config_ok = pcall(require, "lspconfig.server_configurations.omnisharp")
+    if not config_ok then
+      vim.notify("[lsp.servers.omnisharp] omnisharp configuration not available", vim.log.levels.WARN)
+      return
+    end
 
-    root_dir = find_project_root,
-    filetypes = { "cs", "vb", "razor", "cshtml" },
+    local ok_ext, extended = pcall(require, "omnisharp_extended")
+    if not ok_ext then
+      extended = {}
+    end
 
-    init_options = {
-      AutomaticWorkspaceInit = true,
-      StartupTimeout = 30000,
-    },
+    local cmd = get_omnisharp_cmd()
+    if not cmd then return end
 
-    settings = {
-      FormattingOptions = {
-        EnableEditorConfigSupport = true,
-        OrganizeImports = true,
-        NewLine = "\n",
-        UseTabs = false,
-        TabSize = 4,
-        IndentationSize = 4,
-        SpacingAroundBinaryOperator = "single",
-        WrappingPreserveSingleLine = true,
-        WrappingKeepStatementsOnSingleLine = true,
-      },
-      MsBuild = { LoadProjectsOnDemand = false },
-      RoslynExtensionsOptions = {
-        EnableAnalyzersSupport = true,
-        EnableImportCompletion = true,
-        EnableDecompilationSupport = true,
-        DocumentAnalysisTimeoutMs = 30000,
-        LocationTimeout = 10000,
-      },
-      Sdk = { IncludePrereleases = true },
-      enableRoslynAnalyzers = true,
-      enableEditorConfigSupport = true,
-      enableMsBuildLoadProjectsOnDemand = false,
-      waitForDebugger = false,
-      loggingLevel = "information",
-    },
+    local setup_ok, err = pcall(function()
+      lspconfig.omnisharp.setup({
+        cmd = cmd,
+        capabilities = vim.tbl_deep_extend("force", capabilities or {}, extended.capabilities or {}),
+        root_dir = find_project_root,
+        filetypes = { "cs", "vb", "razor", "cshtml" },
+        init_options = {
+          AutomaticWorkspaceInit = true,
+          StartupTimeout = 30000,
+        },
+        settings = {
+          FormattingOptions = {
+            EnableEditorConfigSupport = true,
+            OrganizeImports = true,
+            NewLine = "\n",
+            UseTabs = false,
+            TabSize = 4,
+            IndentationSize = 4,
+            SpacingAroundBinaryOperator = "single",
+            WrappingPreserveSingleLine = true,
+            WrappingKeepStatementsOnSingleLine = true,
+          },
+          MsBuild = { LoadProjectsOnDemand = false },
+          RoslynExtensionsOptions = {
+            EnableAnalyzersSupport = true,
+            EnableImportCompletion = true,
+            EnableDecompilationSupport = true,
+            DocumentAnalysisTimeoutMs = 30000,
+            LocationTimeout = 10000,
+          },
+          Sdk = { IncludePrereleases = true },
+          enableRoslynAnalyzers = true,
+          enableEditorConfigSupport = true,
+          enableMsBuildLoadProjectsOnDemand = false,
+          waitForDebugger = false,
+          loggingLevel = "information",
+        },
+        on_init = function(client)
+          vim.defer_fn(function() client.initialized = true end, 1000)
+        end,
+        on_attach = function(client, bufnr)
+          if client.server_capabilities.semanticTokensProvider then vim.lsp.semantic_tokens.start(bufnr, client.id) end
+          vim.defer_fn(function()
+            client.initialized = true
+            print("OmniSharp ready for buffer " .. bufnr)
+          end, 2000)
+        end,
+        handlers = extended.handlers or {},
+      })
+    end)
 
-    on_init = function(client)
-      vim.defer_fn(function() client.initialized = true end, 1000)
-    end,
-
-    on_attach = function(client, bufnr)
-      if client.server_capabilities.semanticTokensProvider then vim.lsp.semantic_tokens.start(bufnr, client.id) end
-      vim.defer_fn(function()
-        client.initialized = true
-        print("OmniSharp ready for buffer " .. bufnr)
-      end, 2000)
-    end,
-
-    handlers = extended.handlers,
-  })
-
-  return { success = true, message = "OmniSharp LSP configured successfully" }
+    if not setup_ok then
+      vim.notify("[lsp.servers.omnisharp] Setup failed: " .. tostring(err), vim.log.levels.WARN)
+    end
+  end, 100)
 end
 
 return M
