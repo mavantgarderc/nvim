@@ -21,8 +21,6 @@ return {
         orig_notify(msg, level, opts)
       end
 
-      require("lspconfig")
-
       local lsp = require("lsp-zero").preset({})
       local map = vim.keymap.set
       vim.opt.signcolumn = "yes"
@@ -44,15 +42,11 @@ return {
           "gopls",
           "rust_analyzer",
           "zls",
-          "dockerls",
-          "jsonls",
         },
         automatic_installation = true,
-        handlers = {},
       })
 
-      local mason_tool_installer = require("mason-tool-installer")
-      mason_tool_installer.setup({
+      require("mason-tool-installer").setup({
         ensure_installed = {
           "stylua",
           "csharpier",
@@ -64,6 +58,7 @@ return {
       })
 
       local shared_config = require("lsp.shared")
+
       lsp.on_attach(function(_, bufnr)
         lsp.default_keymaps({ buffer = bufnr })
       end)
@@ -76,17 +71,21 @@ return {
       lsp.setup()
 
       local capabilities = shared_config.get_capabilities()
-      if #vim.api.nvim_list_uis() > 0 then
-        require("lsp.servers.lua_ls").setup(capabilities)
-        require("lsp.servers.typescript").setup(capabilities)
-        require("lsp.servers.python").setup(capabilities)
-        require("lsp.servers.omnisharp").setup(capabilities)
-        require("lsp.servers.html").setup(capabilities)
-        require("lsp.servers.css").setup(capabilities)
-        require("lsp.servers.latex").setup(capabilities)
-        require("lsp.servers.sql").setup(capabilities)
-        require("lsp.servers.solidity").setup(capabilities)
-      end
+      require("mason-lspconfig").setup_handlers({
+        function(server_name)
+          local ok, custom = pcall(require, "lsp.servers." .. server_name)
+          if ok and type(custom.setup) == "function" then
+            custom.setup(capabilities)
+          else
+            local ok_lsp, lspconfig = pcall(require, "lspconfig")
+            if ok_lsp and lspconfig[server_name] then
+              lspconfig[server_name].setup({ capabilities = capabilities })
+            else
+              vim.notify("[lsp] could not configure " .. server_name, vim.log.levels.WARN)
+            end
+          end
+        end,
+      })
     end,
   },
 }
