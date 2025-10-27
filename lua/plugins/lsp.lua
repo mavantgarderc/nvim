@@ -11,6 +11,11 @@ return {
       "hrsh7th/cmp-nvim-lsp",
       "L3MON4D3/LuaSnip",
       "nvimtools/none-ls.nvim",
+      "j-hui/fidget.nvim",
+      "stevearc/conform.nvim",
+      "stevearc/aerial.nvim",
+      "aznhe21/actions-preview.nvim",
+      "andythigpen/nvim-coverage",
     },
     config = function()
       local orig_notify = vim.notify
@@ -18,12 +23,25 @@ return {
         if msg:match("The `require%('lspconfig'%)` \"framework\" is deprecated") then return end
         orig_notify(msg, level, opts)
       end
+
       require("lspconfig")
       local lsp = require("lsp-zero").preset({})
+      vim.opt.signcolumn = "yes"
+
       require("mason").setup()
 
       local shared_config = require("lsp.shared")
-      lsp.on_attach(function(_, bufnr) lsp.default_keymaps({ buffer = bufnr }) end)
+
+      vim.api.nvim_create_autocmd("LspAttach", {
+        group = vim.api.nvim_create_augroup("UserLspConfig", {}),
+        callback = function(ev)
+          local client = vim.lsp.get_client_by_id(ev.data.client_id)
+          if client and client.server_capabilities.inlayHintProvider then vim.lsp.inlay_hint.enable(true, { bufnr = ev.buf }) end
+
+          lsp.default_keymaps({ buffer = ev.buf })
+        end,
+      })
+
       shared_config.setup_keymaps()
       shared_config.setup_diagnostics()
       shared_config.setup_null_ls()
@@ -50,6 +68,7 @@ return {
           "graphql",
           "yamlls",
           "marksman",
+          "bashls",
           "vimls",
         },
         automatic_installation = true,
@@ -77,12 +96,80 @@ return {
           "csharpier",
           "sql-formatter",
           "sqlfluff",
+          "prettier",
+          "black",
+          "isort",
+          "goimports",
+          "gofumpt",
+          "shfmt",
+          "autopep8",
+          "eslint_d",
+          "terraform-ls",
+          "tflint",
+          "clang-format",
         },
         auto_update = false,
         run_on_start = true,
       })
 
       lsp.setup()
+
+      local ok, auto_install = pcall(require, "lsp.auto-install")
+      if ok and type(auto_install.check_and_prompt) == "function" then auto_install.check_and_prompt() end
+
+      local border = "rounded"
+      vim.lsp.handlers["textDocument/hover"] = vim.lsp.with(vim.lsp.handlers.hover, { border = border })
+      vim.lsp.handlers["textDocument/signatureHelp"] = vim.lsp.with(vim.lsp.handlers.signature_help, { border = border })
+      vim.diagnostic.config({
+        float = { border = border },
+      })
+
+      local ok, keymaps = pcall(require, "core.keymaps.lsp")
+      if ok and type(keymaps.setup) == "function" then keymaps.setup() end
+
+      vim.api.nvim_create_autocmd("BufWritePost", {
+        pattern = { "*/lsp/*.lua", "*/plugins/lsp.lua" },
+        callback = function() vim.notify("LSP config changed, restart with :LspRestart", vim.log.levels.INFO) end,
+      })
+
+      -- UNCOMMENT ME WHEN YOU NEED TO HEALTCHCHECK THE LSP CLIENTS/SERVERS
+      -- vim.api.nvim_create_autocmd("VimEnter", {
+      --   once = true,
+      --   callback = function()
+      --     vim.defer_fn(function()
+      --       local health_ok = pcall(vim.cmd, "silent checkhealth lsp")
+      --       if not health_ok then vim.notify("LSP health check failed", vim.log.levels.WARN) end
+      --     end, 2000)
+      --   end,
+      -- })
+      vim.api.nvim_create_autocmd("VimEnter", {
+        once = true,
+        callback = function() vim.notify("LSP configured successfully.", vim.log.levels.INFO) end,
+      })
+
+      local monorepo = require("lsp.monorepo")
+      monorepo.setup_lsp_with_monorepo()
+
+      local function load_project_config()
+        local config_files = { ".nvim.lua", ".nvimrc.lua", ".nvim/init.lua" }
+        for _, config_file in ipairs(config_files) do
+          local path = vim.fn.getcwd() .. "/" .. config_file
+          if vim.fn.filereadable(path) == 1 then
+            local ok, err = pcall(dofile, path)
+            if ok then
+              vim.notify("Loaded project config: " .. config_file, vim.log.levels.INFO)
+            else
+              vim.notify("Error loading " .. config_file .. ": " .. err, vim.log.levels.ERROR)
+            end
+            break
+          end
+        end
+      end
+
+      vim.api.nvim_create_autocmd("DirChanged", {
+        callback = load_project_config,
+      })
+      load_project_config()
     end,
   },
 }
