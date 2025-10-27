@@ -4,4 +4,4 @@ require("core")
 
 require("lazy").setup("plugins")
 
-require("Raphael")
+vim.cmd.colorscheme("kanagawa-paper-ink")

@@ -1,15 +1,4 @@
 return {
-  {
-    dir = "~/projects/0-shelfs/CodeStorage/pantheon.nvim",
-    name = "pantheon.nvim",
-    priority = 1000,
-    -- config = function()
-    --   require('pantheon').setup({
-    --     theme = 'lantern-corps/green',
-    --   })
-    -- end,
-  },
-
   -- ==================================================
   -- Oil file explorer
   "stevearc/oil.nvim",

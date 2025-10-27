@@ -2,17 +2,17 @@ local M = {}
 
 local function get_lualine_theme()
   local colorscheme = vim.g.colors_name or "default"
-  local theme_map = { require("Raphael.colors") }
-  local mapped_theme = theme_map[colorscheme:lower()]
-
-  if mapped_theme then
-    local success = pcall(function()
-      require("lualine.themes." .. mapped_theme)
-    end)
-    if success then
-      return mapped_theme
-    end
-  end
+  -- local theme_map = { require("Raphael.colors") }
+  -- local mapped_theme = theme_map[colorscheme:lower()]
+  --
+  -- if mapped_theme then
+  --   local success = pcall(function()
+  --     require("lualine.themes." .. mapped_theme)
+  --   end)
+  --   if success then
+  --     return mapped_theme
+  --   end
+  -- end
 
   local success = pcall(function()
     require("lualine.themes." .. colorscheme)
