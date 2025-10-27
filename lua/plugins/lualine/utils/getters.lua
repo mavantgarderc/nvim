@@ -129,12 +129,7 @@ M.get_current_symbol = function()
     local function_node = current_node
     while function_node do
       local node_type = function_node:type()
-      if
-        node_type == "function_definition"
-        or node_type == "method_definition"
-        or node_type == "function_declaration"
-        or node_type == "method_declaration"
-      then
+      if node_type == "function_definition" or node_type == "method_definition" or node_type == "function_declaration" or node_type == "method_declaration" then
         local name_node = function_node:field("name")[1]
         if name_node then
           local name = vim.treesitter.get_node_text(name_node, 0)

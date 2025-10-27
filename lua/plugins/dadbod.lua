@@ -79,14 +79,7 @@ return {
       _G.DadbodExecute = function(query, db_key)
         if not vim.g.dbs or not vim.g.dbs[db_key] or vim.g.dbs[db_key] == "" then
           local available = vim.g.dbs and table.concat(vim.tbl_keys(vim.g.dbs), ", ") or "none"
-          vim.notify(
-            string.format(
-              "Database '%s' not found or empty URL.\nAvailable: %s\nCheck .env and reload with :Dotenv",
-              db_key,
-              available
-            ),
-            vim.log.levels.ERROR
-          )
+          vim.notify(string.format("Database '%s' not found or empty URL.\nAvailable: %s\nCheck .env and reload with :Dotenv", db_key, available), vim.log.levels.ERROR)
           return
         end
 

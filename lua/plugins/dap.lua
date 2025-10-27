@@ -36,12 +36,7 @@ return {
       if fn.executable(debugpy_path) == 1 then
         require("dap-python").setup(debugpy_path)
       else
-        notify(
-          "debugpy not installed. Create with:\n"
-            .. "python3 -m venv ~/.virtualenvs/debugpy\n"
-            .. "~/.virtualenvs/debugpy/bin/python -m pip install debugpy",
-          log.levels.WARN
-        )
+        notify("debugpy not installed. Create with:\n" .. "python3 -m venv ~/.virtualenvs/debugpy\n" .. "~/.virtualenvs/debugpy/bin/python -m pip install debugpy", log.levels.WARN)
       end
 
       -- ShiSherp 🇮🇳

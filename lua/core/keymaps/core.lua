@@ -17,11 +17,7 @@ map("n", "<leader>x", function()
     print("No word under cursor")
     return
   end
-  vim.api.nvim_feedkeys(
-    ":%s/" .. vim.fn.escape(word, "/\\") .. "//gc" .. string.rep(vim.api.nvim_replace_termcodes("<Left>", true, false, true), 3),
-    "n",
-    false
-  )
+  vim.api.nvim_feedkeys(":%s/" .. vim.fn.escape(word, "/\\") .. "//gc" .. string.rep(vim.api.nvim_replace_termcodes("<Left>", true, false, true), 3), "n", false)
 end, "Replace word under cursor interactively")
 
 map({ "n", "v", "i" }, "<Find>", "0")

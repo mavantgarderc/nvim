@@ -19,14 +19,7 @@ function M.setup(capabilities)
         default_config = {
           cmd = { "lua-language-server" },
           filetypes = { "lua" },
-          root_dir = lspconfig.util.root_pattern(
-            ".git",
-            ".luarc.json",
-            ".luarc.jsonc",
-            ".luacheckrc",
-            ".stylua.toml",
-            "selene.toml"
-          ),
+          root_dir = lspconfig.util.root_pattern(".git", ".luarc.json", ".luarc.jsonc", ".luacheckrc", ".stylua.toml", "selene.toml"),
           settings = {},
         },
       }

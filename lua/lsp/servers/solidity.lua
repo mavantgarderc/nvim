@@ -69,15 +69,7 @@ function M.setup()
           },
         },
         filetypes = { "solidity" },
-        root_dir = lspconfig.util.root_pattern(
-          "hardhat.config.js",
-          "hardhat.config.ts",
-          "foundry.toml",
-          "truffle-config.js",
-          "truffle.js",
-          "remappings.txt",
-          ".git"
-        ),
+        root_dir = lspconfig.util.root_pattern("hardhat.config.js", "hardhat.config.ts", "foundry.toml", "truffle-config.js", "truffle.js", "remappings.txt", ".git"),
         single_file_support = true,
         init_options = { enableTelemetry = false },
       })
