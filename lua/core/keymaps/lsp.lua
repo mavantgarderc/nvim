@@ -45,6 +45,95 @@ function M.setup_lsp_keymaps()
         map("n", "<leader>lw", telescope.lsp_workspace_symbols, { desc = "Workspace symbols" })
       end
 
+      map(
+        "n",
+        "<leader>fs",
+        function()
+          require("telescope.builtin").lsp_workspace_symbols({
+            query = vim.fn.input("Workspace Symbol: "),
+          })
+        end,
+        { desc = "Semantic Search (Workspace Symbols)" }
+      )
+
+      map(
+        "n",
+        "<leader>fS",
+        function() require("telescope.builtin").lsp_dynamic_workspace_symbols() end,
+        { desc = "Dynamic Workspace Symbols" }
+      )
+
+      map(
+        "n",
+        "<leader>lh",
+        function() vim.lsp.inlay_hint.enable(not vim.lsp.inlay_hint.is_enabled()) end,
+        { desc = "Toggle Inlay Hints" }
+      )
+
+      -- view LSP Logs
+      map(
+        "n",
+        "<leader>lL",
+        function()
+          require("telescope.builtin").find_files({
+            cwd = vim.fn.stdpath("cache"),
+            prompt_title = "LSP Logs",
+            find_command = { "rg", "--files", "--glob", "lsp.log" },
+          })
+        end,
+        { desc = "Open LSP Log" }
+      )
+
+      map("n", "<leader>lI", function() require("lsp.info").show_server_info() end, { desc = "LSP Server Info" })
+
+      map("n", "<leader>la", function() require("lsp.analytics").show_report() end, { desc = "LSP Analytics" })
+
+      map("n", "<leader>lth", vim.lsp.buf.typehierarchy, { desc = "Type Hierarchy" })
+
+      map("n", "<leader>lo", "<cmd>AerialToggle!<cr>", { desc = "Toggle Outline" })
+
+      map("n", "<leader>tc", "<cmd>Coverage<cr>", { desc = "Toggle Coverage" })
+
+      -- SQL Dialect Keymaps
+      map("n", "<leader>sd", function()
+        local dialects = {
+          "postgres",
+          "mysql",
+          "sqlite",
+          "tsql",
+          "bigquery",
+          "snowflake",
+          "oracle",
+          "clickhouse",
+          "athena",
+          "databricks",
+          "duckdb",
+          "mariadb",
+          "redshift",
+          "sparksql",
+          "teradata",
+          "trino",
+          "vertica",
+        }
+
+        vim.ui.select(dialects, {
+          prompt = "Select SQL Dialect:",
+        }, function(choice)
+          if choice then
+            vim.b.sql_dialect = choice
+            vim.notify("SQL dialect set to: " .. choice, vim.log.levels.INFO)
+            -- Trigger diagnostics refresh
+            vim.diagnostic.reset(nil, 0)
+          end
+        end)
+      end, { desc = "Set SQL Dialect" })
+
+      -- Show current SQL dialect
+      map("n", "<leader>sD", function()
+        local dialect = vim.b.sql_dialect or "auto-detect (default: postgres)"
+        vim.notify("Current SQL dialect: " .. dialect, vim.log.levels.INFO)
+      end, { desc = "Show SQL Dialect" })
+
       -- toggle auto-lint
       vim.b.lsp_format_on_save = false
       map("n", "<leader>tf", function()
@@ -201,6 +290,19 @@ function M.setup_lsp_keymaps()
             end, vim.tbl_extend("force", opts, { desc = "Debug test" }))
           end
         end
+      end
+    end,
+  })
+
+  -- Auto-notify about SQL dialect on SQL files
+  vim.api.nvim_create_autocmd("FileType", {
+    pattern = "sql",
+    callback = function(args)
+      if not vim.b[args.buf].sql_dialect then
+        vim.defer_fn(
+          function() vim.notify("SQL dialect: auto-detect (Press <leader>sd to change)", vim.log.levels.INFO) end,
+          1000
+        )
       end
     end,
   })
