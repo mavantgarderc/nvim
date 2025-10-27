@@ -20,7 +20,9 @@ return {
     })
 
     autopairs.add_rules({
-      Rule("'", "'", { "-python", "-lua" }):with_pair(cond.not_after_regex("%w")):with_pair(cond.not_before_regex("%w")),
+      Rule("'", "'", { "-python", "-lua" })
+        :with_pair(cond.not_after_regex("%w"))
+        :with_pair(cond.not_before_regex("%w")),
 
       Rule(" ", " "):with_pair(function(opts)
         return tbl_contains({ "(", "[", "{", "<" }, opts.prev_char:sub(-1, -1))

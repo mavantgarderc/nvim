@@ -1,3 +1,4 @@
 {
-  "diagnostics.globals": ["vim", "settings"]
+  "diagnostics.globals": ["vim", "settings",
+        "ts_ls_settings"]
 }

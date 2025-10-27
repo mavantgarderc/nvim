@@ -1,8 +1,8 @@
 local M = {}
 
 function M.setup(capabilities)
-  local ok, lspconfig = pcall(require, "lspconfig")
-  if not ok or not lspconfig then
+  local rust_ok, lspconfig = pcall(require, "lspconfig")
+  if not rust_ok or not lspconfig then
     vim.notify("[lsp.servers.rust] lspconfig not found", vim.log.levels.WARN)
     return
   end

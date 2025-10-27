@@ -91,7 +91,9 @@ function M.setup()
     vim.ui.input({ prompt = "Diff with branch: " }, function(input)
       if input and input ~= "" then
         local filepath = vim.fn.expand("%")
-        local diff_cmd = filepath ~= "" and ("git diff " .. vim.fn.shellescape(input) .. " -- " .. vim.fn.shellescape(filepath)) or ("git diff " .. vim.fn.shellescape(input))
+        local diff_cmd = filepath ~= ""
+            and ("git diff " .. vim.fn.shellescape(input) .. " -- " .. vim.fn.shellescape(filepath))
+          or ("git diff " .. vim.fn.shellescape(input))
         vim.cmd("tabnew | term " .. diff_cmd)
       end
     end)

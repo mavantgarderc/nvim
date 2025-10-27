@@ -54,20 +54,20 @@ end
 
 function M.setup(capabilities)
   vim.defer_fn(function()
-    local ok_lsp, lspconfig = pcall(require, "lspconfig")
-    if not ok_lsp then
+    local omnisharp_ok_lsp, lspconfig = pcall(require, "lspconfig")
+    if not omnisharp_ok_lsp then
       vim.notify("[lsp.servers.omnisharp] nvim-lspconfig not found", vim.log.levels.WARN)
       return
     end
 
-    local config_ok = pcall(require, "lspconfig.server_configurations.omnisharp")
-    if not config_ok then
+    local omnisharp_config_ok = pcall(require, "lspconfig.server_configurations.omnisharp")
+    if not omnisharp_config_ok then
       vim.notify("[lsp.servers.omnisharp] omnisharp configuration not available", vim.log.levels.WARN)
       return
     end
 
-    local ok_ext, extended = pcall(require, "omnisharp_extended")
-    if not ok_ext then
+    local omnisharp_ok_ext, extended = pcall(require, "omnisharp_extended")
+    if not omnisharp_ok_ext then
       extended = {}
     end
 
@@ -76,7 +76,7 @@ function M.setup(capabilities)
       return
     end
 
-    local setup_ok, err = pcall(function()
+    local omnisharrp_setup_ok, err = pcall(function()
       lspconfig.omnisharp.setup({
         cmd = cmd,
         capabilities = vim.tbl_deep_extend("force", capabilities or {}, extended.capabilities or {}),
@@ -135,7 +135,7 @@ function M.setup(capabilities)
       })
     end)
 
-    if not setup_ok then
+    if not omnisharrp_setup_ok then
       vim.notify("[lsp.servers.omnisharp] Setup failed: " .. tostring(err), vim.log.levels.WARN)
     end
   end, 100)

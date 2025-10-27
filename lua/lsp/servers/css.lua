@@ -6,19 +6,19 @@ local M = {}
 
 function M.setup(capabilities)
   vim.defer_fn(function()
-    local ok, lspconfig = pcall(require, "lspconfig")
-    if not ok then
+    local css_ok, lspconfig = pcall(require, "lspconfig")
+    if not css_ok then
       vim.notify("[lsp.servers.css] nvim-lspconfig not found", vim.log.levels.WARN)
       return
     end
 
-    local config_ok = pcall(require, "lspconfig.server_configurations.cssls")
-    if not config_ok then
+    local css_config_ok = pcall(require, "lspconfig.server_configurations.cssls")
+    if not css_config_ok then
       vim.notify("[lsp.servers.css] cssls configuration not available", vim.log.levels.WARN)
       return
     end
 
-    local setup_ok, err = pcall(function()
+    local css_setup_ok, err = pcall(function()
       lspconfig.cssls.setup({
         capabilities = capabilities,
         settings = {
@@ -42,7 +42,7 @@ function M.setup(capabilities)
       })
     end)
 
-    if not setup_ok then
+    if not css_setup_ok then
       vim.notify("[lsp.servers.css] Setup failed: " .. tostring(err), vim.log.levels.WARN)
     end
   end, 100)

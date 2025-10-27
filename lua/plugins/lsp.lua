@@ -125,14 +125,14 @@ return {
 
       local border = "rounded"
       vim.lsp.handlers["textDocument/hover"] = vim.lsp.with(vim.lsp.handlers.hover, { border = border })
-      vim.lsp.handlers["textDocument/signatureHelp"] = vim.lsp.with(vim.lsp.handlers.signature_help, { border = border })
+      vim.lsp.handlers["textDocument/signatureHelp"] =
+        vim.lsp.with(vim.lsp.handlers.signature_help, { border = border })
       vim.diagnostic.config({
         float = { border = border },
       })
 
-      ---@diagnostic disable-next-line: redefined-local
-      local ok, keymaps = pcall(require, "core.keymaps.lsp")
-      if ok and type(keymaps.setup) == "function" then
+      local lsp_keymap_ok, keymaps = pcall(require, "core.keymaps.lsp")
+      if lsp_keymap_ok and type(keymaps.setup) == "function" then
         keymaps.setup()
       end
 
@@ -168,9 +168,8 @@ return {
         for _, config_file in ipairs(config_files) do
           local path = vim.fn.getcwd() .. "/" .. config_file
           if vim.fn.filereadable(path) == 1 then
-            ---@diagnostic disable-next-line: redefined-local
-            local ok, err = pcall(dofile, path)
-            if ok then
+            local lsp_load_project_config_ok, err = pcall(dofile, path)
+            if lsp_load_project_config_ok then
               vim.notify("Loaded project config: " .. config_file, vim.log.levels.INFO)
             else
               vim.notify("Error loading " .. config_file .. ": " .. err, vim.log.levels.ERROR)

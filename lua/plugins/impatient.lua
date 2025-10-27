@@ -30,7 +30,12 @@ return {
         return
       end
 
-      local msg = string.format("Startup time: %.3fms (%.1fx faster)\nCached modules: %d", stats.startup_time * 1000, stats.speed_ratio, stats.cached_modules)
+      local msg = string.format(
+        "Startup time: %.3fms (%.1fx faster)\nCached modules: %d",
+        stats.startup_time * 1000,
+        stats.speed_ratio,
+        stats.cached_modules
+      )
 
       notify(msg, log.levels.INFO, {
         title = "impatient.nvim",

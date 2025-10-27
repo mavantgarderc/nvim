@@ -257,10 +257,7 @@ vim.api.nvim_create_autocmd("LspAttach", {
 })
 
 function M.setup_lsp_ui()
-  ---@diagnostic disable-next-line: unused-local
-  vim.lsp.handlers["textDocument/hover"] = function(_, result, ctx, config)
-    config = config or {}
-    config.border = config.border or "rounded"
+  vim.lsp.handlers["textDocument/hover"] = function(_, result)
     if not result or not result.contents then
       return
     end
@@ -270,13 +267,10 @@ function M.setup_lsp_ui()
     if vim.tbl_isempty(markdown_lines) then
       return
     end
-    return vim.lsp.util.open_floating_preview(markdown_lines, "markdown", config)
+    return vim.lsp.util.open_floating_preview(markdown_lines, "markdown")
   end
 
-  ---@diagnostic disable-next-line: unused-local
-  vim.lsp.handlers["textDocument/signatureHelp"] = function(_, result, ctx, config)
-    config = config or {}
-    config.border = config.border or "rounded"
+  vim.lsp.handlers["textDocument/signatureHelp"] = function(_, result)
     if not result or not result.signatures or vim.tbl_isempty(result.signatures) then
       return
     end
@@ -295,7 +289,7 @@ function M.setup_lsp_ui()
         table.insert(lines, "")
       end
     end
-    return vim.lsp.util.open_floating_preview(lines, "markdown", config)
+    return vim.lsp.util.open_floating_preview(lines, "markdown")
   end
 
   vim.lsp.handlers["$/progress"] = function(_, result, ctx)

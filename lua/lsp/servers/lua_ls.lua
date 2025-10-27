@@ -2,14 +2,14 @@ local M = {}
 
 function M.setup(capabilities)
   vim.schedule(function()
-    local ok, lspconfig = pcall(require, "lspconfig")
-    if not ok then
+    local lua_ls_ok, lspconfig = pcall(require, "lspconfig")
+    if not lua_ls_ok then
       vim.notify("[lsp.servers.lua_ls] nvim-lspconfig not found", vim.log.levels.WARN)
       return
     end
 
-    local configs_ok, configs = pcall(require, "lspconfig.configs")
-    if not configs_ok then
+    local lua_ls_configs_ok, configs = pcall(require, "lspconfig.configs")
+    if not lua_ls_configs_ok then
       vim.notify("[lsp.servers.lua_ls] lspconfig.configs missing", vim.log.levels.WARN)
       return
     end
@@ -19,7 +19,14 @@ function M.setup(capabilities)
         default_config = {
           cmd = { "lua-language-server" },
           filetypes = { "lua" },
-          root_dir = lspconfig.util.root_pattern(".git", ".luarc.json", ".luarc.jsonc", ".luacheckrc", ".stylua.toml", "selene.toml"),
+          root_dir = lspconfig.util.root_pattern(
+            ".git",
+            ".luarc.json",
+            ".luarc.jsonc",
+            ".luacheckrc",
+            ".stylua.toml",
+            "selene.toml"
+          ),
           settings = {},
         },
       }

@@ -22,7 +22,8 @@ function M.prompt_install_server(server_name)
   -- Convert LSP name to Mason package name
   local mason_package = lsp_to_mason[server_name] or server_name
 
-  local choice = vim.fn.confirm(string.format("LSP server '%s' is not installed. Install it?", server_name), "&Yes\n&No", 1)
+  local choice =
+    vim.fn.confirm(string.format("LSP server '%s' is not installed. Install it?", server_name), "&Yes\n&No", 1)
 
   if choice == 1 then
     vim.cmd("MasonInstall " .. mason_package)

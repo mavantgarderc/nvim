@@ -20,7 +20,9 @@ vim.api.nvim_create_autocmd("User", {
       -- Search
       map("n", "<leader>fw", builtin.grep_string, { desc = "Find word under cursor" })
       map("n", "<leader>/", function()
-        builtin.current_buffer_fuzzy_find(require("telescope.themes").get_dropdown({ winblend = 10, previewer = false }))
+        builtin.current_buffer_fuzzy_find(
+          require("telescope.themes").get_dropdown({ winblend = 10, previewer = false })
+        )
       end, { desc = "[/] Search in buffer" })
       map("n", "<leader>f/", builtin.search_history, { desc = "Search history" })
       map("n", "<leader>f:", builtin.command_history, { desc = "Command history" })

@@ -30,19 +30,6 @@ function M.show_server_info()
   vim.api.nvim_buf_set_lines(buf, 0, -1, false, lines)
   vim.api.nvim_buf_set_option(buf, "filetype", "markdown")
 
-  local width = 80
-  local height = 30
-  ---@diagnostic disable-next-line: unused-local
-  local _win = vim.api.nvim_open_win(buf, true, {
-    relative = "editor",
-    width = width,
-    height = height,
-    col = (vim.o.columns - width) / 2,
-    row = (vim.o.lines - height) / 2,
-    style = "minimal",
-    border = "rounded",
-  })
-
   vim.keymap.set("n", "q", ":close<CR>", { buffer = buf, silent = true })
 end
 

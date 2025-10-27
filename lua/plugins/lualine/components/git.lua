@@ -14,7 +14,8 @@ M.branch = {
   --icon = glyphs.git.branch_alt,
   icon = glyphs.git.branch,
   cond = function()
-    return vim.fn.executable("git") == 1 and (vim.fn.isdirectory(".git") == 1 or vim.fn.system("git rev-parse --git-dir 2>/dev/null"):match("%.git"))
+    return vim.fn.executable("git") == 1
+      and (vim.fn.isdirectory(".git") == 1 or vim.fn.system("git rev-parse --git-dir 2>/dev/null"):match("%.git"))
   end,
   fmt = function(str)
     if str == "" or str == nil then

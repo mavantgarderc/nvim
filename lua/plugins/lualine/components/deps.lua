@@ -2,13 +2,6 @@ local cache = require("plugins.lualine.utils.cache")
 
 local M = {}
 
-local lockfiles = {
-  package_json = "package.json",
-  requirements = "requirements.txt",
-  poetry = "poetry.lock",
-  cargo = "Cargo.lock",
-}
-
 local function check_updates()
   if vim.fn.filereadable("package.json") == 1 then
     local out = vim.fn.system("npm outdated --json 2>/dev/null")

@@ -6,19 +6,19 @@ local M = {}
 
 function M.setup(capabilities)
   vim.defer_fn(function()
-    local ok, lspconfig = pcall(require, "lspconfig")
-    if not ok then
+    local html_ok, lspconfig = pcall(require, "lspconfig")
+    if not html_ok then
       vim.notify("[lsp.servers.html] nvim-lspconfig not found", vim.log.levels.WARN)
       return
     end
 
-    local config_ok = pcall(require, "lspconfig.server_configurations.html")
-    if not config_ok then
+    local html_config_ok = pcall(require, "lspconfig.server_configurations.html")
+    if not html_config_ok then
       vim.notify("[lsp.servers.html] html configuration not available", vim.log.levels.WARN)
       return
     end
 
-    local setup_ok, err = pcall(function()
+    local html_setup_ok, err = pcall(function()
       lspconfig.html.setup({
         capabilities = capabilities,
         filetypes = { "html", "templ" },
@@ -42,7 +42,7 @@ function M.setup(capabilities)
       })
     end)
 
-    if not setup_ok then
+    if not html_setup_ok then
       vim.notify("[lsp.servers.html] Setup failed: " .. tostring(err), vim.log.levels.WARN)
     end
   end, 100)

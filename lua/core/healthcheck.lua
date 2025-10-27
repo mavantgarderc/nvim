@@ -89,7 +89,13 @@ local function check_version()
     patch = config.min_version[3],
   })
 
-  return is_compatible, string.format("Neovim %s (minimum: %s) - %s", current_version, min_version, is_compatible and "Compatible" or "Outdated")
+  return is_compatible,
+    string.format(
+      "Neovim %s (minimum: %s) - %s",
+      current_version,
+      min_version,
+      is_compatible and "Compatible" or "Outdated"
+    )
 end
 
 local function check_external_deps()
@@ -160,7 +166,12 @@ local function check_plugins()
   else
     table.insert(results, {
       ok = false,
-      message = string.format("Missing %d/%d plugins: %s", #missing_plugins, #config.critical_plugins, table.concat(missing_plugins, ", ")),
+      message = string.format(
+        "Missing %d/%d plugins: %s",
+        #missing_plugins,
+        #config.critical_plugins,
+        table.concat(missing_plugins, ", ")
+      ),
     })
   end
 

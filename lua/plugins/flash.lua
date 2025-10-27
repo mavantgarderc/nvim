@@ -76,7 +76,7 @@ return {
       char = {
         enabled = true,
         config = function(mode_opts)
-          local mode_ok, mode_result = pcall(fn.mode, true)
+          local mode_ok, mode_result = pcall(vim.fn.mode, true)
           local operator_ok, operator_result = pcall(function()
             return vim.v.operator
           end)
@@ -218,7 +218,10 @@ return {
       for _, category in ipairs(categories) do
         local link_ok, err = pcall(vim.api.nvim_set_hl, 0, category[1], { link = category[2] })
         if not link_ok then
-          vim.notify("Failed to link " .. category[1] .. " to " .. category[2] .. ": " .. tostring(err), vim.log.levels.WARN)
+          vim.notify(
+            "Failed to link " .. category[1] .. " to " .. category[2] .. ": " .. tostring(err),
+            vim.log.levels.WARN
+          )
         end
       end
     end

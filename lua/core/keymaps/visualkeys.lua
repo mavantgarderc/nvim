@@ -94,7 +94,12 @@ map("i", "<F22>", function()
   vim.wo.relativenumber = not vim.wo.relativenumber
 end, { desc = "Toggle Relative Line Numbers", noremap = true, silent = true })
 
-map("n", "<F23>", ":TSHighlightCapturesUnderCursor<CR>", { desc = "Highlight under cursor", noremap = true, silent = true })
+map(
+  "n",
+  "<F23>",
+  ":TSHighlightCapturesUnderCursor<CR>",
+  { desc = "Highlight under cursor", noremap = true, silent = true }
+)
 
 map("n", "<F24>", function()
   if vim.lsp and vim.lsp.buf and vim.lsp.buf.definition then

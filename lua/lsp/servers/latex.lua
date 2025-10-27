@@ -6,19 +6,19 @@ local M = {}
 
 function M.setup(capabilities)
   vim.defer_fn(function()
-    local ok, lspconfig = pcall(require, "lspconfig")
-    if not ok then
+    local vimtex_ok, lspconfig = pcall(require, "lspconfig")
+    if not vimtex_ok then
       vim.notify("[lsp.servers.texlab] nvim-lspconfig not found", vim.log.levels.WARN)
       return
     end
 
-    local config_ok = pcall(require, "lspconfig.server_configurations.texlab")
-    if not config_ok then
+    local vimtext_config_ok = pcall(require, "lspconfig.server_configurations.texlab")
+    if not vimtext_config_ok then
       vim.notify("[lsp.servers.texlab] texlab configuration not available", vim.log.levels.WARN)
       return
     end
 
-    local setup_ok, err = pcall(function()
+    local vimtex_setup_ok, err = pcall(function()
       lspconfig.texlab.setup({
         capabilities = capabilities,
         settings = {
@@ -47,13 +47,13 @@ function M.setup(capabilities)
             },
           },
         },
-        on_attach = function(client, bufnr)
+        on_attach = function(client)
           client.server_capabilities.documentFormattingProvider = false
         end,
       })
     end)
 
-    if not setup_ok then
+    if not vimtex_setup_ok then
       vim.notify("[lsp.servers.texlab] Setup failed: " .. tostring(err), vim.log.levels.WARN)
     end
   end, 100)

@@ -24,7 +24,7 @@ map({ "n", "x", "o" }, ";;", function()
   require("flash").jump({ continue = true })
 end, { desc = "Continue flash" })
 
--- === === === === === === === === === === === === === === === === === === === === === === === === === === === === === ===
+-- === === === === === === === === === === ===
 
 local categories = {
   -- <leader>fcv
@@ -247,7 +247,7 @@ local categories = {
   },
 }
 
--- === === === === === === === === === === === === === === === === === === === === === === === === === === === === === ===
+-- === === === === === === === === === === ===
 
 local function create_pattern(keywords)
   return "\\<\\(" .. table.concat(keywords, "\\|") .. "\\)\\>"

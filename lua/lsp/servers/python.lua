@@ -6,19 +6,19 @@ local M = {}
 
 function M.setup(capabilities)
   vim.defer_fn(function()
-    local ok, lspconfig = pcall(require, "lspconfig")
-    if not ok then
+    local python_ok, lspconfig = pcall(require, "lspconfig")
+    if not python_ok then
       vim.notify("[lsp.servers.python] nvim-lspconfig not found", vim.log.levels.WARN)
       return
     end
 
-    local config_ok = pcall(require, "lspconfig.server_configurations.pyright")
-    if not config_ok then
+    local python_config_ok = pcall(require, "lspconfig.server_configurations.pyright")
+    if not python_config_ok then
       vim.notify("[lsp.servers.python] pyright configuration not available", vim.log.levels.WARN)
       return
     end
 
-    local setup_ok, err = pcall(function()
+    local python_setup_ok, err = pcall(function()
       lspconfig.pyright.setup({
         capabilities = capabilities,
         settings = {
@@ -34,14 +34,13 @@ function M.setup(capabilities)
             },
           },
         },
-        ---@diagnostic disable-next-line: unused-local
-        on_attach = function(client, bufnr)
+        on_attach = function(client)
           client.server_capabilities.documentFormattingProvider = false
         end,
       })
     end)
 
-    if not setup_ok then
+    if not python_setup_ok then
       vim.notify("[lsp.servers.python] Setup failed: " .. tostring(err), vim.log.levels.WARN)
     end
   end, 100)

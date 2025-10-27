@@ -1,9 +1,10 @@
 local M = {}
 
 function M.prompt_install_server(server_name)
-  local choice = vim.fn.confirm(string.format("LSP server '%s' is not installed. Install it?", server_name), "&Yes\n&No", 1)
+  local mason_analytics_choice =
+    vim.fn.confirm(string.format("LSP server '%s' is not installed. Install it?", server_name), "&Yes\n&No", 1)
 
-  if choice == 1 then
+  if mason_analytics_choice == 1 then
     vim.cmd("MasonInstall " .. server_name)
     vim.notify("Installing " .. server_name, vim.log.levels.INFO)
   end
@@ -36,8 +37,8 @@ function M.check_and_prompt()
       local server = server_map[ft]
       if server then
         -- Safely check if mason-registry is available
-        local ok, mason_registry = pcall(require, "mason-registry")
-        if ok then
+        local mason_analytics_ok, mason_registry = pcall(require, "mason-registry")
+        if mason_analytics_ok then
           -- Check if the package exists in registry first
           if mason_registry.has_package(server) then
             if not mason_registry.is_installed(server) then

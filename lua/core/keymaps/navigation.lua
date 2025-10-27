@@ -268,7 +268,13 @@ map("n", "<leader>zi", function()
   ---@diagnostic disable-next-line: undefined-field
   local foldenable = vim.opt.foldenable:get()
 
-  local info = string.format("Fold Info:\n• Method: %s\n• Level: %d\n• Column: %s\n• Enabled: %s", foldmethod, foldlevel, foldcolumn, foldenable and "Yes" or "No")
+  local info = string.format(
+    "Fold Info:\n• Method: %s\n• Level: %d\n• Column: %s\n• Enabled: %s",
+    foldmethod,
+    foldlevel,
+    foldcolumn,
+    foldenable and "Yes" or "No"
+  )
   vim.notify(info)
 end, { desc = "Show fold info" })
 

@@ -10,8 +10,8 @@ local M = {}
 
 function M.setup(capabilities)
   vim.defer_fn(function()
-    local ok, lspconfig = pcall(require, "lspconfig")
-    if not ok then
+    local sql_ok, lspconfig = pcall(require, "lspconfig")
+    if not sql_ok then
       vim.notify("[lsp.servers.sql] nvim-lspconfig not found", vim.log.levels.WARN)
       return
     end
