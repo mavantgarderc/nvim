@@ -23,6 +23,10 @@ function M.setup(capabilities)
       json = {
         schemas = require("schemastore").json.schemas(),
         validate = { enable = true },
+        inlayHints = {
+          chainingHints = true,
+          parameterHints = true,
+        },
       },
     },
   })

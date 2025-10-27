@@ -1,6 +1,4 @@
-if #vim.api.nvim_list_uis() == 0 then
-  return { setup = function() end }
-end
+if #vim.api.nvim_list_uis() == 0 then return { setup = function() end } end
 
 local M = {}
 
@@ -60,9 +58,7 @@ function M.setup(capabilities)
     end
 
     local ok_ext, extended = pcall(require, "omnisharp_extended")
-    if not ok_ext then
-      extended = {}
-    end
+    if not ok_ext then extended = {} end
 
     local cmd = get_omnisharp_cmd()
     if not cmd then return end
@@ -97,6 +93,10 @@ function M.setup(capabilities)
             DocumentAnalysisTimeoutMs = 30000,
             LocationTimeout = 10000,
           },
+          inlayHints = {
+            chainingHints = true,
+            parameterHints = true,
+          },
           Sdk = { IncludePrereleases = true },
           enableRoslynAnalyzers = true,
           enableEditorConfigSupport = true,
@@ -118,9 +118,7 @@ function M.setup(capabilities)
       })
     end)
 
-    if not setup_ok then
-      vim.notify("[lsp.servers.omnisharp] Setup failed: " .. tostring(err), vim.log.levels.WARN)
-    end
+    if not setup_ok then vim.notify("[lsp.servers.omnisharp] Setup failed: " .. tostring(err), vim.log.levels.WARN) end
   end, 100)
 end
 

@@ -24,6 +24,10 @@ function M.setup(capabilities)
         languageserver = {
           diagnostics = { enable = true },
         },
+        inlayHints = {
+          chainingHints = true,
+          parameterHints = true,
+        },
       },
     },
   })
