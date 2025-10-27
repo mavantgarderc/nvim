@@ -15,6 +15,14 @@ function M.setup(core)
       end
     end,
   })
+
+  vim.api.nvim_create_autocmd("LspAttach", {
+    callback = function()
+      vim.api.nvim_set_hl(0, "LspReferenceText", { link = "CursorLine" })
+      vim.api.nvim_set_hl(0, "LspReferenceRead", { link = "CursorLine" })
+      vim.api.nvim_set_hl(0, "LspReferenceWrite", { link = "Visual" })
+    end,
+  })
 end
 
 return M
