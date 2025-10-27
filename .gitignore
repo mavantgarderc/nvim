@@ -1,4 +1,4 @@
 .env
 raphael_state.lua
-.luarc.json
 connections.json
+lua/Raphael/testfiles/*
