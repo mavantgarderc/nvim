@@ -6,18 +6,26 @@ local function get_lualine_theme()
   local mapped_theme = theme_map[colorscheme:lower()]
 
   if mapped_theme then
-    local success = pcall(function() require("lualine.themes." .. mapped_theme) end)
-    if success then return mapped_theme end
+    local success = pcall(function()
+      require("lualine.themes." .. mapped_theme)
+    end)
+    if success then
+      return mapped_theme
+    end
   end
 
-  local success = pcall(function() require("lualine.themes." .. colorscheme) end)
+  local success = pcall(function()
+    require("lualine.themes." .. colorscheme)
+  end)
 
-  if success then return colorscheme end
+  if success then
+    return colorscheme
+  end
 
   return "auto"
 end
 
-function M.get_options()
+M.get_options = function()
   return {
     icons_enabled = true,
     theme = get_lualine_theme(),

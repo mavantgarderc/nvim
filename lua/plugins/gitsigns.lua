@@ -4,6 +4,7 @@ return {
   config = function()
     local gitsigns = require("gitsigns")
 
+    ---@diagnostic disable-next-line: redundant-parameter
     gitsigns.setup({
       signcolumn = true,
       numhl = true,
@@ -23,6 +24,7 @@ return {
       },
     })
 
+    ---@diagnostic disable-next-line: different-requires
     require("core.keymaps.gitsigns").setup()
   end,
 }

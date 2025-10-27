@@ -67,7 +67,9 @@ return {
         table.insert(sorted_modules, { name = name, time = time })
       end
 
-      table.sort(sorted_modules, function(a, b) return a.time > b.time end)
+      table.sort(sorted_modules, function(a, b)
+        return a.time > b.time
+      end)
 
       for _, mod in ipairs(sorted_modules) do
         local formatted_time = string.format("%.3f", mod.time * 1000)

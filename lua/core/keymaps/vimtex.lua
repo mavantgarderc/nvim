@@ -1,5 +1,3 @@
-local opts = { noremap = true, silent = true, buffer = true }
-
 local group = vim.api.nvim_create_augroup("vimtex_keymaps", { clear = true })
 
 vim.api.nvim_create_autocmd("FileType", {
@@ -7,7 +5,9 @@ vim.api.nvim_create_autocmd("FileType", {
   pattern = "tex",
   callback = function(ev)
     local buf = ev.buf
-    local map = function(mode, lhs, rhs) vim.keymap.set(mode, lhs, rhs, { noremap = true, silent = true, buffer = buf }) end
+    local map = function(mode, lhs, rhs)
+      vim.keymap.set(mode, lhs, rhs, { noremap = true, silent = true, buffer = buf })
+    end
 
     -- Compile commands
     map("n", "<leader>lc", ":VimtexCompile<CR>") -- Full compile

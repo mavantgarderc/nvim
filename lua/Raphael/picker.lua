@@ -31,19 +31,29 @@ local PALETTE_HL = { "Normal", "Comment", "String", "Identifier", "Function", "T
 local palette_hl_cache = {}
 
 -- helpers
-local function trim(s) return (s or ""):gsub("^%s+", ""):gsub("%s+$", "") end
+local function trim(s)
+  return (s or ""):gsub("^%s+", ""):gsub("%s+$", "")
+end
 local function parse_line_theme(line)
-  if not line or line == "" then return nil end
-  if line:match("%(%d+%)%s*$") then return nil end
+  if not line or line == "" then
+    return nil
+  end
+  if line:match("%(%d+%)%s*$") then
+    return nil
+  end
   local theme = line:match("([%w_%-]+)%s*$")
-  if theme and theme ~= "" then return theme end
+  if theme and theme ~= "" then
+    return theme
+  end
   local last
   for token in line:gmatch("%S+") do
     last = token
   end
   if last then
     last = last:gsub("^[^%w_%-]+", ""):gsub("[^%w_%-]+$", "")
-    if last ~= "" then return last end
+    if last ~= "" then
+      return last
+    end
   end
   return nil
 end
@@ -58,6 +68,7 @@ local function debounce(ms, fn)
       timer = nil
     end
     timer = vim.defer_fn(function()
+      ---@diagnostic disable-next-line: deprecated
       pcall(fn, unpack(args))
       timer = nil
     end, ms)
@@ -66,16 +77,24 @@ end
 
 local function get_hl_rgb(name)
   local ok, hl = pcall(vim.api.nvim_get_hl_by_name, name, true)
-  if ok and hl then return hl end
+  if ok and hl then
+    return hl
+  end
   ok, hl = pcall(vim.api.nvim_get_hl, 0, { name = name })
-  if ok and hl then return hl end
+  if ok and hl then
+    return hl
+  end
   return nil
 end
 
 local function ensure_palette_hl(idx, color_int)
-  if not color_int then return nil end
+  if not color_int then
+    return nil
+  end
   local key = ("RaphaelPalette_%d_%x"):format(idx, color_int)
-  if palette_hl_cache[key] then return key end
+  if palette_hl_cache[key] then
+    return key
+  end
   pcall(vim.api.nvim_set_hl, 0, key, { bg = color_int })
   palette_hl_cache[key] = true
   return key
@@ -84,12 +103,16 @@ end
 -- palette window
 function M.update_palette(theme)
   if not theme or not themes.is_available(theme) then
-    if palette_win and vim.api.nvim_win_is_valid(palette_win) then pcall(vim.api.nvim_win_close, palette_win, true) end
+    if palette_win and vim.api.nvim_win_is_valid(palette_win) then
+      pcall(vim.api.nvim_win_close, palette_win, true)
+    end
     palette_win, palette_buf = nil, nil
     return
   end
 
-  if not picker_win or not vim.api.nvim_win_is_valid(picker_win) or not picker_w then return end
+  if not picker_win or not vim.api.nvim_win_is_valid(picker_win) or not picker_w then
+    return
+  end
 
   if not palette_buf or not vim.api.nvim_buf_is_valid(palette_buf) then
     palette_buf = vim.api.nvim_create_buf(false, true)
@@ -124,7 +147,9 @@ function M.update_palette(theme)
         local start_pos, count = 1, 0
         while true do
           local s, e = string.find(bufline, BLOCK_CHAR, start_pos, true)
-          if not s then break end
+          if not s then
+            break
+          end
           count = count + 1
           if count == i then
             start_pos = s
@@ -132,7 +157,9 @@ function M.update_palette(theme)
           end
           start_pos = e + 1
         end
-        if start_pos then pcall(vim.api.nvim_buf_add_highlight, palette_buf, 0, gname, 0, start_pos - 1, start_pos) end
+        if start_pos then
+          pcall(vim.api.nvim_buf_add_highlight, palette_buf, 0, gname, 0, start_pos - 1, start_pos)
+        end
       end
     end
   end
@@ -166,12 +193,16 @@ end
 
 -- render picker
 local function render()
-  if not picker_buf or not vim.api.nvim_buf_is_valid(picker_buf) then return end
+  if not picker_buf or not vim.api.nvim_buf_is_valid(picker_buf) then
+    return
+  end
   local lines = {}
   for group, items in pairs(themes.theme_map) do
     local visible_count = 0
     for _, t in ipairs(items) do
-      if search_query == "" or (t:lower():find(search_query:lower(), 1, true)) then visible_count = visible_count + 1 end
+      if search_query == "" or (t:lower():find(search_query:lower(), 1, true)) then
+        visible_count = visible_count + 1
+      end
     end
     local header_icon = collapsed[group] and ICON_GROUP_COL or ICON_GROUP_EXP
     local summary = collapsed[group] and string.format("(%d themes hidden)", #items) or string.format("(%d)", #items)
@@ -196,9 +227,15 @@ local function close_picker(revert)
   if revert and state_ref and state_ref.previous and themes.is_available(state_ref.previous) then
     pcall(vim.cmd.colorscheme, state_ref.previous)
   end
-  if picker_win and vim.api.nvim_win_is_valid(picker_win) then pcall(vim.api.nvim_win_close, picker_win, true) end
-  if palette_win and vim.api.nvim_win_is_valid(palette_win) then pcall(vim.api.nvim_win_close, palette_win, true) end
-  if search_win and vim.api.nvim_win_is_valid(search_win) then pcall(vim.api.nvim_win_close, search_win, true) end
+  if picker_win and vim.api.nvim_win_is_valid(picker_win) then
+    pcall(vim.api.nvim_win_close, picker_win, true)
+  end
+  if palette_win and vim.api.nvim_win_is_valid(palette_win) then
+    pcall(vim.api.nvim_win_close, palette_win, true)
+  end
+  if search_win and vim.api.nvim_win_is_valid(search_win) then
+    pcall(vim.api.nvim_win_close, search_win, true)
+  end
   picker_buf, picker_win, palette_buf, palette_win, search_buf, search_win = nil, nil, nil, nil, nil, nil
   search_query = ""
   previewed = nil
@@ -206,8 +243,12 @@ end
 
 -- preview
 local function do_preview(theme)
-  if not theme or not themes.is_available(theme) then return end
-  if previewed == theme then return end
+  if not theme or not themes.is_available(theme) then
+    return
+  end
+  if previewed == theme then
+    return
+  end
   previewed = theme
   pcall(vim.cmd.colorscheme, theme)
   pcall(M.update_palette, theme)
@@ -216,7 +257,9 @@ local preview = debounce(100, do_preview)
 
 -- open search
 local function open_search()
-  if not picker_win or not vim.api.nvim_win_is_valid(picker_win) then return end
+  if not picker_win or not vim.api.nvim_win_is_valid(picker_win) then
+    return
+  end
   if search_win and vim.api.nvim_win_is_valid(search_win) then
     pcall(vim.api.nvim_set_current_win, search_win)
     return
@@ -248,17 +291,25 @@ local function open_search()
   })
 
   vim.keymap.set("i", "<Esc>", function()
-    if search_win and vim.api.nvim_win_is_valid(search_win) then pcall(vim.api.nvim_win_close, search_win, true) end
+    if search_win and vim.api.nvim_win_is_valid(search_win) then
+      pcall(vim.api.nvim_win_close, search_win, true)
+    end
     search_buf, search_win = nil, nil
     vim.cmd("stopinsert")
-    if picker_win and vim.api.nvim_win_is_valid(picker_win) then pcall(vim.api.nvim_set_current_win, picker_win) end
+    if picker_win and vim.api.nvim_win_is_valid(picker_win) then
+      pcall(vim.api.nvim_set_current_win, picker_win)
+    end
   end, { buffer = search_buf })
 
   vim.keymap.set("i", "<CR>", function()
-    if search_win and vim.api.nvim_win_is_valid(search_win) then pcall(vim.api.nvim_win_close, search_win, true) end
+    if search_win and vim.api.nvim_win_is_valid(search_win) then
+      pcall(vim.api.nvim_win_close, search_win, true)
+    end
     search_buf, search_win = nil, nil
     vim.cmd("stopinsert")
-    if picker_win and vim.api.nvim_win_is_valid(picker_win) then pcall(vim.api.nvim_set_current_win, picker_win) end
+    if picker_win and vim.api.nvim_win_is_valid(picker_win) then
+      pcall(vim.api.nvim_set_current_win, picker_win)
+    end
   end, { buffer = search_buf })
 end
 
@@ -298,8 +349,12 @@ function M.open(core)
 
   state_ref.previous = vim.g.colors_name
 
-  vim.keymap.set("n", "q", function() close_picker(true) end, { buffer = picker_buf })
-  vim.keymap.set("n", "<Esc>", function() close_picker(true) end, { buffer = picker_buf })
+  vim.keymap.set("n", "q", function()
+    close_picker(true)
+  end, { buffer = picker_buf })
+  vim.keymap.set("n", "<Esc>", function()
+    close_picker(true)
+  end, { buffer = picker_buf })
 
   vim.keymap.set("n", "<CR>", function()
     local line = vim.api.nvim_get_current_line()
@@ -307,15 +362,21 @@ function M.open(core)
     if hdr then
       collapsed[hdr] = not collapsed[hdr]
       state_ref.collapsed = vim.deepcopy(collapsed)
-      if core_ref and core_ref.save_state then pcall(core_ref.save_state) end
+      if core_ref and core_ref.save_state then
+        pcall(core_ref.save_state)
+      end
       render()
       return
     end
     local theme = parse_line_theme(line)
     if theme and themes.is_available(theme) then
-      if core_ref and core_ref.apply then pcall(core_ref.apply, theme) end
+      if core_ref and core_ref.apply then
+        pcall(core_ref.apply, theme)
+      end
       state_ref.current = theme
-      if core_ref and core_ref.save_state then pcall(core_ref.save_state) end
+      if core_ref and core_ref.save_state then
+        pcall(core_ref.save_state)
+      end
       close_picker(false)
     else
       vim.notify("No theme on this line", vim.log.levels.WARN)

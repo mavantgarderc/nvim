@@ -120,7 +120,9 @@ vim.api.nvim_create_user_command("SqlConnect", function(opts)
 end, {
   nargs = "+",
   desc = "Add a database connection to sqls or sqlls (usage: :SqlConnect sqls '{...}')",
-  complete = function() return { "sqls", "sqlls" } end,
+  complete = function()
+    return { "sqls", "sqlls" }
+  end,
 })
 
 return M

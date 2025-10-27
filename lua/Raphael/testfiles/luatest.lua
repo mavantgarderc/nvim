@@ -4,7 +4,9 @@ local a, b = 0, 1
 io.write("fib: ")
 for i = 1, n do
   io.write(a)
-  if i < n then io.write(", ") end
+  if i < n then
+    io.write(", ")
+  end
   a, b = b, a + b
 end
 io.write("\n")

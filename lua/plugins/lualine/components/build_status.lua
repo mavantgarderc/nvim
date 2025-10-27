@@ -12,11 +12,13 @@ local patterns = {
   "yarn build",
 }
 
-function M.build_status()
+M.build_status = function()
   return cache.get("build_status", function()
     for _, p in ipairs(patterns) do
       local out = vim.fn.system("pgrep -f '" .. p .. "' 2>/dev/null")
-      if out ~= "" and vim.v.shell_error == 0 then return "󰣖 BUILD" end
+      if out ~= "" and vim.v.shell_error == 0 then
+        return "󰣖 BUILD"
+      end
     end
     return ""
   end, 3000)

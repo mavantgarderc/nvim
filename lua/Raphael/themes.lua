@@ -27,6 +27,8 @@ function M.refresh()
   end
 end
 
-function M.is_available(theme) return M.installed[theme] == true end
+function M.is_available(theme)
+  return M.installed[theme] == true
+end
 
 return M

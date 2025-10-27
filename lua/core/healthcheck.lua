@@ -50,13 +50,20 @@ local config = {
   },
 }
 
-local function format_version(v) return string.format("%d.%d.%d", v.major or 0, v.minor or 0, v.patch or 0) end
+local function format_version(v)
+  return string.format("%d.%d.%d", v.major or 0, v.minor or 0, v.patch or 0)
+end
 
 local function get_plugin_manager()
   local managers = {
     { name = "lazy.nvim", path = vim.fn.stdpath("data") .. "/lazy" },
     { name = "packer.nvim", path = vim.fn.stdpath("data") .. "/site/pack/packer" },
-    { name = "vim-plug", check = function() return vim.g.loaded_plug ~= nil end },
+    {
+      name = "vim-plug",
+      check = function()
+        return vim.g.loaded_plug ~= nil
+      end,
+    },
   }
 
   for _, manager in ipairs(managers) do
@@ -70,7 +77,9 @@ local function get_plugin_manager()
 end
 
 local function check_version()
-  if not ver.ge then return false, "Neovim version API unavailable (very old version)" end
+  if not ver.ge then
+    return false, "Neovim version API unavailable (very old version)"
+  end
 
   local is_compatible = ver.ge(ver, config.min_version)
   local current_version = format_version(ver)
@@ -122,9 +131,11 @@ local function check_plugins()
   local manager = get_plugin_manager()
   local results = {}
 
-  if not manager then return {
-    { ok = false, message = "No plugin manager detected" },
-  } end
+  if not manager then
+    return {
+      { ok = false, message = "No plugin manager detected" },
+    }
+  end
 
   table.insert(results, {
     ok = true,
@@ -168,9 +179,11 @@ local function check_lsp_servers()
   local missing_servers = {}
 
   local lspconfig_ok, lspconfig = pcall(require, "lspconfig")
-  if not lspconfig_ok then return {
-    { ok = false, message = "nvim-lspconfig not available" },
-  } end
+  if not lspconfig_ok then
+    return {
+      { ok = false, message = "nvim-lspconfig not available" },
+    }
+  end
 
   for _, server in ipairs(config.language_servers) do
     local server_available = false
@@ -182,7 +195,9 @@ local function check_lsp_servers()
       end
     end
 
-    if not server_available then table.insert(missing_servers, server) end
+    if not server_available then
+      table.insert(missing_servers, server)
+    end
   end
 
   table.insert(results, {
@@ -347,13 +362,19 @@ function M.summary()
 
   print(string.format("Health Status: %s", health_status))
   print(string.format("Checks: %d/%d passed", passed_checks, total_checks))
-  if critical_failed > 0 then print(string.format("Critical failures: %d", critical_failed)) end
+  if critical_failed > 0 then
+    print(string.format("Critical failures: %d", critical_failed))
+  end
 end
 
-function M.get_results() return M.check() end
+function M.get_results()
+  return M.check()
+end
 
 local function setup_commands()
-  if vim.g.loaded_nvim_healthcheck then return end
+  if vim.g.loaded_nvim_healthcheck then
+    return
+  end
 
   vim.api.nvim_create_user_command("HealthCheck", M.run, {
     desc = "Run comprehensive Neovim configuration health check",
@@ -405,29 +426,6 @@ local function setup_commands()
   end, { desc = "Run automatic health check on startup" })
 
   vim.g.loaded_nvim_healthcheck = true
-end
-
-local function check_custom_config()
-  local results = {}
-
-  local colorscheme_ok = pcall(vim.cmd, "colorscheme catppuccin")
-  table.insert(results, {
-    ok = colorscheme_ok,
-    message = colorscheme_ok and "Colorscheme available" or "Default colorscheme missing",
-  })
-
-  local leader = vim.g.mapleader or "\\"
-  table.insert(results, {
-    ok = leader ~= "\\",
-    message = string.format("Leader key: '%s' %s", leader, leader ~= "\\" and "OK" or "(default)"),
-  })
-
-  return results
-end
-
-function M.setup(user_config)
-  if user_config then config = vim.tbl_deep_extend("force", config, user_config) end
-  setup_commands()
 end
 
 setup_commands()

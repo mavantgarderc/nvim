@@ -1,64 +1,89 @@
-name: CI
+name: Simple Neovim CI
 
 on:
-  push:
-    branches: [ main, master ]
-  pull_request:
-    branches: [ main, master ]
+    push:
+        branches: [main, dev]
+    pull_request:
+        branches: [main, dev]
+    workflow_dispatch:
 
 jobs:
-  lint-and-test:
-    runs-on: ubuntu-latest
-    strategy:
-      matrix:
-        neovim: [stable, nightly]
+    check:
+        name: Lint, Format & Validate
+        runs-on: ubuntu-latest
+        steps:
+            - name: Checkout Code
+              uses: actions/checkout@v4
 
-    steps:
-      - name: Checkout repo
-        uses: actions/checkout@v4
+            - name: Setup Lua
+              uses: leafo/gh-actions-lua@v10
+              with:
+                  luaVersion: "5.1"
 
-      - name: Install Lua + luarocks
-        run: |
-          sudo apt-get update
-          sudo apt-get install -y lua5.1 luarocks
+            - name: Install LuaRocks
+              uses: leafo/gh-actions-luarocks@v4
 
-      - name: Install luacheck
-        run: sudo luarocks install luacheck
+            - name: Install StyLua
+              run: |
+                  cargo install stylua
+                  stylua --version
 
-      - name: Run luacheck (robust)
-        run: |
-          if [ -d "lua" ]; then
-            luacheck lua
-          else
-            echo "No lua/ directory found, skipping lint."
-          fi
+            - name: Check Lua Formatting
+              run: |
+                  if ! stylua --check lua/ init.lua; then
+                    echo "::error::StyLua found formatting issues. Run 'stylua lua/ init.lua' locally to fix."
+                    exit 1
+                  else
+                    echo "StyLua: OK"
+                  fi
 
-      - name: Install Neovim (${{ matrix.neovim }})
-        run: |
-          if [ "${{ matrix.neovim }}" = "stable" ]; then
-            url="https://github.com/neovim/neovim/releases/latest/download/nvim-linux64.tar.gz"
-          else
-            url="https://github.com/neovim/neovim/releases/download/nightly/nvim-linux64.tar.gz"
-          fi
-          wget "$url"
-          tar xzvf nvim-linux64.tar.gz
-          echo "$PWD/nvim-linux64/bin" >> $GITHUB_PATH
-          export PATH="$PWD/nvim-linux64/bin:$PATH"
+            - name: Install Luacheck
+              run: luarocks install luacheck
 
-      - name: Cache lazy.nvim plugins
-        uses: actions/cache@v4
-        with:
-          path: ~/.local/share/nvim/lazy
-          key: ${{ runner.os }}-${{ matrix.neovim }}-lazy-${{ hashFiles('**/lua/**/*.lua') }}
-          restore-keys: |
-            ${{ runner.os }}-${{ matrix.neovim }}-lazy-
+            - name: Run Luacheck
+              run: |
+                  if ! luacheck lua/ init.lua --globals vim --no-color --formatter plain; then
+                    echo "::error::Luacheck found lint warnings/errors. Inspect the output above."
+                    exit 1
+                  else
+                    echo "Luacheck: OK"
+                  fi
 
-      - name: Install plugins (Lazy)
-        run: nvim --headless "+Lazy! sync" +qa
+            - name: Install Neovim (Stable)
+              uses: rhysd/action-setup-vim@v1
+              with:
+                  neovim: true
+                  version: stable
 
-      - name: Verify Neovim startup
-        run: nvim --headless -c 'quitall'
+            - name: Validate init.lua Syntax
+              env:
+                  LUA_PATH: ./lua/?.lua;./lua/?/init.lua;;
+                  LUA_CPATH: ./lua/?.so;;
+              run: |
+                  nvim --headless -u init.lua -c "lua vim.print('init.lua loaded successfully')" -c "quit" 2>&1 | tee init_output.log
+                  if grep -q "Error" init_output.log; then
+                    echo "Errors found in init.lua"
+                    cat init_output.log
+                    exit 1
+                  fi
 
-      - name: Run healthcheck
-        run: |
-          nvim --headless -c 'checkhealth' -c 'quitall'
+            - name: Install Plugins (Headless)
+              env:
+                  LUA_PATH: ./lua/?.lua;./lua/?/init.lua;;
+                  LUA_CPATH: ./lua/?.so;;
+              run: |
+                  nvim --headless "+Lazy! sync" +qa
+              timeout-minutes: 5
+
+            - name: Run Health Check
+              env:
+                  LUA_PATH: ./lua/?.lua;./lua/?/init.lua;;
+                  LUA_CPATH: ./lua/?.so;;
+              run: |
+                  nvim --headless -c 'redir! > healthcheck.log | silent checkhealth | redir END | qa'
+                  if [ -f healthcheck.log ]; then
+                    cat healthcheck.log
+                  else
+                    echo "::error::healthcheck.log not found"
+                    exit 1
+                  fi

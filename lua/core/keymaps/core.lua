@@ -1,7 +1,8 @@
-local function map(mode, lhs, rhs, desc) vim.keymap.set(mode, lhs, rhs, { noremap = true, silent = true, desc = desc }) end
+local function map(mode, lhs, rhs, desc)
+  vim.keymap.set(mode, lhs, rhs, { noremap = true, silent = true, desc = desc })
+end
 
 local set = vim.keymap.set
-local opts = { noremap = true, silent = true }
 
 -- Paste from OS-Integrated Clipboard
 -- map("n", "<leader>p", "\"_dp", opts)

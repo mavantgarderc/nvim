@@ -2,7 +2,7 @@ local map = vim.keymap.set
 
 local M = {}
 
-function M.setup(lualine_opts)
+M.setup = function(lualine_opts)
   local components = require("plugins.lualine.components.init")
   local options = require("plugins.lualine.core.options")
 
@@ -20,12 +20,9 @@ function M.setup(lualine_opts)
     require("lualine").refresh()
   end, { silent = true })
 
-  map(
-    "n",
-    "<leader>tg",
-    function() require("plugins.lualine.components.git").toggle_last_commit() end,
-    { desc = "Toggle last commit in lualine" }
-  )
+  map("n", "<leader>tg", function()
+    require("plugins.lualine.components.git").toggle_last_commit()
+  end, { desc = "Toggle last commit in lualine" })
 end
 
 return M

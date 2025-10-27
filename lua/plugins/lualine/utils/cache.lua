@@ -9,7 +9,7 @@ M.cache = {
   current_symbol = { value = "", last_update = 0 },
 }
 
-function M.get_cached_value(key, update_fn, ttl)
+M.get_cached_value = function(key, update_fn, ttl)
   ttl = ttl or 500
   local now = vim.loop.hrtime() / 1000000
   local cached = M.cache[key]
@@ -22,6 +22,8 @@ function M.get_cached_value(key, update_fn, ttl)
   return cached.value
 end
 
-M.clear_cached_value = function(key) M.cache[key] = { value = "", last_update = 0 } end
+M.clear_cached_value = function(key)
+  M.cache[key] = { value = "", last_update = 0 }
+end
 
 return M

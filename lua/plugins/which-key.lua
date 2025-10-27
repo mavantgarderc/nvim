@@ -3,7 +3,9 @@ return {
   event = "VimEnter",
   config = function()
     local status_ok, which_key = pcall(require, "which-key")
-    if not status_ok then return end
+    if not status_ok then
+      return
+    end
 
     local g = vim.g
     local setup = {
@@ -54,7 +56,9 @@ return {
         align = "left",
       },
       ignore_missing = false,
-      filter = function() return true end,
+      filter = function()
+        return true
+      end,
       triggers = { "<leader>" },
       triggers_blacklist = {
         i = { "j", "k" },
@@ -70,5 +74,8 @@ return {
       ["<leader>t"] = { name = "[T]oggle", mode = "n" },
       ["<leader>h"] = { name = "Git [H]unk", mode = { "n", "v" } },
     }
+
+    which_key.setup(setup)
+    which_key.add(group_specs)
   end,
 }

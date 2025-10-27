@@ -1,16 +1,7 @@
--- Debug version of Flash.nvim configuration
--- This version includes error handling and diagnostic information
-
-local fn = vim.fn
-local v = vim.v
-local api = vim.api
-local opt = vim.opt
-
 return {
   "folke/flash.nvim",
   event = "VeryLazy",
   opts = {
-    -- Basic configuration with error handling
     labels = "abcdefghijklmnopqrstuvwxyz",
 
     search = {
@@ -84,15 +75,16 @@ return {
 
       char = {
         enabled = true,
-        config = function(opts)
-          -- Safe mode detection with error handling
+        config = function(mode_opts)
           local mode_ok, mode_result = pcall(fn.mode, true)
-          local operator_ok, operator_result = pcall(function() return v.operator end)
+          local operator_ok, operator_result = pcall(function()
+            return vim.v.operator
+          end)
 
           if mode_ok and operator_ok then
-            opts.autohide = opts.autohide == nil and (mode_result:find("no") and operator_result == "y")
+            mode_opts.autohide = mode_opts.autohide == nil and (mode_result:find("no") and operator_result == "y")
           end
-          opts.jump_labels = opts.jump_labels == nil and false
+          mode_opts.jump_labels = mode_opts.jump_labels == nil and false
         end,
         autohide = false,
         jump_labels = false,
@@ -154,35 +146,35 @@ return {
     },
   },
 
-  config = function(_, opts)
-    -- Setup Flash with error handling
+  config = function(_, plugin_opts)
     local flash_ok, flash = pcall(require, "flash")
     if not flash_ok then
       vim.notify("Flash.nvim failed to load: " .. tostring(flash), vim.log.levels.ERROR)
       return
     end
 
-    local setup_ok, setup_err = pcall(flash.setup, opts)
+    local setup_ok, setup_err = pcall(flash.setup, plugin_opts)
     if not setup_ok then
       vim.notify("Flash.nvim setup failed: " .. tostring(setup_err), vim.log.levels.ERROR)
       return
     end
 
-    -- Safe highlight setup function
     local function setup_flash_highlights()
       local function get_hl_color(group, attr)
-        local ok, hl = pcall(api.nvim_get_hl, 0, { name = group })
-        if not ok or not hl then return nil end
+        local hl_ok, hl = pcall(vim.api.nvim_get_hl, 0, { name = group })
+        if not hl_ok or not hl then
+          return nil
+        end
         return hl[attr] and string.format("#%06x", hl[attr]) or nil
       end
 
-      -- Safe highlight setting with fallbacks
-      local function safe_set_hl(name, opts)
-        local ok, err = pcall(api.nvim_set_hl, 0, name, opts)
-        if not ok then vim.notify("Failed to set highlight " .. name .. ": " .. tostring(err), vim.log.levels.WARN) end
+      local function safe_set_hl(name, hl_opts)
+        local hl_set_ok, err = pcall(vim.api.nvim_set_hl, 0, name, hl_opts)
+        if not hl_set_ok then
+          vim.notify("Failed to set highlight " .. name .. ": " .. tostring(err), vim.log.levels.WARN)
+        end
       end
 
-      -- Extract colors with fallbacks
       local search_bg = get_hl_color("Search", "bg") or get_hl_color("IncSearch", "bg") or "#ff9900"
       local search_fg = get_hl_color("Search", "fg") or get_hl_color("IncSearch", "fg") or "#000000"
       local error_bg = get_hl_color("ErrorMsg", "bg") or get_hl_color("DiagnosticError", "fg") or "#ff0000"
@@ -192,7 +184,6 @@ return {
       local visual_fg = get_hl_color("Visual", "fg") or "#ffffff"
       local keyword_fg = get_hl_color("Keyword", "fg") or get_hl_color("Function", "fg") or "#ff9900"
 
-      -- Set up Flash-specific highlight groups
       safe_set_hl("FlashMatch", { bg = search_bg, fg = search_fg, bold = true })
       safe_set_hl("FlashCurrent", { bg = error_bg, fg = error_fg, bold = true })
       safe_set_hl("FlashBackdrop", { fg = comment_fg })
@@ -200,18 +191,15 @@ return {
       safe_set_hl("FlashPromptIcon", { fg = keyword_fg })
     end
 
-    -- Initialize highlight groups
     setup_flash_highlights()
 
-    -- Auto-update highlight groups when colorscheme changes
-    local highlight_group = api.nvim_create_augroup("FlashHighlights", { clear = true })
-    api.nvim_create_autocmd("ColorScheme", {
+    local highlight_group = vim.api.nvim_create_augroup("FlashHighlights", { clear = true })
+    vim.api.nvim_create_autocmd("ColorScheme", {
       group = highlight_group,
       pattern = "*",
       callback = setup_flash_highlights,
     })
 
-    -- Set up category-specific highlight groups
     local function setup_category_highlights()
       local categories = {
         { "FlashClass", "Type" },
@@ -228,55 +216,61 @@ return {
       }
 
       for _, category in ipairs(categories) do
-        local ok, err = pcall(api.nvim_set_hl, 0, category[1], { link = category[2] })
-        if not ok then
+        local link_ok, err = pcall(vim.api.nvim_set_hl, 0, category[1], { link = category[2] })
+        if not link_ok then
           vim.notify("Failed to link " .. category[1] .. " to " .. category[2] .. ": " .. tostring(err), vim.log.levels.WARN)
         end
       end
     end
 
-    api.nvim_create_autocmd("ColorScheme", {
+    vim.api.nvim_create_autocmd("ColorScheme", {
       group = highlight_group,
       pattern = "*",
       callback = setup_category_highlights,
     })
 
-    -- Trigger highlight setup for current colorscheme
     setup_category_highlights()
 
-    -- Cursor configuration with error handling
-    local cursor_group = api.nvim_create_augroup("FlashCursor", { clear = true })
+    local cursor_group = vim.api.nvim_create_augroup("FlashCursor", { clear = true })
 
-    api.nvim_create_autocmd("User", {
+    vim.api.nvim_create_autocmd("User", {
       group = cursor_group,
       pattern = "FlashPromptPre",
       callback = function()
-        local ok, err = pcall(function() opt.guicursor = "n:block-FlashCursor" end)
-        if not ok then vim.notify("Flash cursor setup failed: " .. tostring(err), vim.log.levels.WARN) end
+        local cursor_ok, err = pcall(function()
+          vim.opt.guicursor = "n:block-FlashCursor"
+        end)
+        if not cursor_ok then
+          vim.notify("Flash cursor setup failed: " .. tostring(err), vim.log.levels.WARN)
+        end
       end,
     })
 
-    api.nvim_create_autocmd("User", {
+    vim.api.nvim_create_autocmd("User", {
       group = cursor_group,
       pattern = "FlashPromptPost",
       callback = function()
-        local ok, err = pcall(function() opt.guicursor = "n:block" end)
-        if not ok then vim.notify("Flash cursor restore failed: " .. tostring(err), vim.log.levels.WARN) end
+        local cursor_ok, err = pcall(function()
+          vim.opt.guicursor = "n:block"
+        end)
+        if not cursor_ok then
+          vim.notify("Flash cursor restore failed: " .. tostring(err), vim.log.levels.WARN)
+        end
       end,
     })
 
-    -- Load custom keymaps with error handling
     local keymaps_ok, keymaps_err = pcall(require, "core.keymaps.flash")
     if not keymaps_ok then
       vim.notify("Flash keymaps failed to load: " .. tostring(keymaps_err), vim.log.levels.WARN)
-      -- Define basic keymaps as fallback
       local map = vim.keymap.set
       map({ "n", "x", "o" }, "ff", function()
-        local ok, err = pcall(function() require("flash").jump() end)
-        if not ok then vim.notify("Flash jump failed: " .. tostring(err), vim.log.levels.ERROR) end
+        local jump_ok, err = pcall(function()
+          require("flash").jump()
+        end)
+        if not jump_ok then
+          vim.notify("Flash jump failed: " .. tostring(err), vim.log.levels.ERROR)
+        end
       end, { desc = "Flash jump" })
     end
-
-    -- vim.notify("Flash.nvim loaded successfully", vim.log.levels.INFO)
   end,
 }

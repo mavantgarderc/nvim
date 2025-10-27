@@ -15,11 +15,20 @@ return {
       local v = vim.v
 
       dapui.setup()
-      dap.listeners.before.attach.dapui_config = function() dapui.open() end
-      dap.listeners.before.launch.dapui_config = function() dapui.open() end
-      dap.listeners.before.event_terminated.dapui_config = function() dapui.close() end
-      dap.listeners.before.event_exited.dapui_config = function() dapui.close() end
+      dap.listeners.before.attach.dapui_config = function()
+        dapui.open()
+      end
+      dap.listeners.before.launch.dapui_config = function()
+        dapui.open()
+      end
+      dap.listeners.before.event_terminated.dapui_config = function()
+        dapui.close()
+      end
+      dap.listeners.before.event_exited.dapui_config = function()
+        dapui.close()
+      end
 
+      ---@diagnostic disable-next-line: different-requires
       require("core.keymaps.dap")
 
       -- Python
@@ -57,7 +66,9 @@ return {
             if #dll_files > 1 then
               local cwd_name = fn.fnamemodify(fn.getcwd(), ":t")
               for _, dll in ipairs(dll_files) do
-                if string.match(dll, cwd_name) then return dll end
+                if string.match(dll, cwd_name) then
+                  return dll
+                end
               end
             end
             return dll_files[1] -- return first match
@@ -92,14 +103,18 @@ return {
           program = function()
             if fn.confirm("Should I recompile first?", "&yes\n&no", 2) == 1 then
               if not build_dotnet_project() then
-                if fn.confirm("Build failed. Continue anyway?", "&yes\n&no", 2) ~= 1 then return nil end
+                if fn.confirm("Build failed. Continue anyway?", "&yes\n&no", 2) ~= 1 then
+                  return nil
+                end
               end
             end
             local dll_path = find_dll_path()
             if dll_path then
               print("Found DLL: " .. dll_path)
               local choice = fn.confirm("Use found DLL?\n" .. dll_path, "&yes\n&choose different", 1)
-              if choice == 1 then return dll_path end
+              if choice == 1 then
+                return dll_path
+              end
             end
             local manual_path = fn.input("Path to dll: ", fn.getcwd() .. "/bin/Debug/", "file")
             if manual_path == "" then
@@ -116,7 +131,9 @@ return {
           console = "integratedTerminal",
           program = function()
             local dll_path = find_dll_path()
-            if dll_path then return dll_path end
+            if dll_path then
+              return dll_path
+            end
             return fn.input("Path to dll: ", fn.getcwd() .. "/bin/Debug/", "file")
           end,
         },

@@ -51,6 +51,7 @@ return {
       cmd("normal! gg")
     end, { desc = "Open Oil Keymap Cheatsheet" })
 
+    ---@diagnostic disable-next-line: redundant-parameter
     oil.setup({
       default_file_explorer = true,
       show_hidden = true,
@@ -116,15 +117,21 @@ return {
         ["g\\"] = "actions.toggle_trash",
         ["gh"] = "actions.toggle_hidden",
         ["q"] = "actions.close",
-        ["gp"] = function() oil.open(fn.expand("%:p:h")) end,
+        ["gp"] = function()
+          oil.open(fn.expand("%:p:h"))
+        end,
       },
 
       use_default_keymaps = true,
 
       view_options = {
         show_hidden = true,
-        is_hidden_file = function(name, _) return name:sub(1, 1) == "." end,
-        is_always_hidden = function() return false end,
+        is_hidden_file = function(name, _)
+          return name:sub(1, 1) == "."
+        end,
+        is_always_hidden = function()
+          return false
+        end,
         natural_order = false,
         sort = {
           { "type", "asc" },
@@ -137,7 +144,9 @@ return {
         border = "rounded",
         preview_split = "auto",
         win_options = fn.has("nvim-0.10") == 1 and { winblend = 10 } or {},
-        override = function(conf) return conf end,
+        override = function(conf)
+          return conf
+        end,
       },
 
       preview = {
@@ -158,10 +167,13 @@ return {
     api.nvim_create_autocmd("VimEnter", {
       callback = function()
         local arg = fn.argv(0)
-        if arg ~= "" and fn.isdirectory(arg) == 1 then oil.open() end
+        if arg ~= "" and fn.isdirectory(arg) == 1 then
+          oil.open()
+        end
       end,
     })
 
+    ---@diagnostic disable-next-line: different-requires
     require("core.keymaps.oil").setup()
   end,
 }

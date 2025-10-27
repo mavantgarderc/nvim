@@ -8,10 +8,7 @@ return {
     },
     config = function()
       local telescope = require("telescope")
-      local builtin = require("telescope.builtin")
       local actions = require("telescope.actions")
-      local map = vim.keymap.set
-      local fn = vim.fn
 
       telescope.setup({
         defaults = {
@@ -82,6 +79,7 @@ return {
       })
 
       telescope.load_extension("ui-select")
+      ---@diagnostic disable-next-line: different-requires
       require("core.keymaps.telescope")
     end,
   },

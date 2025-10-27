@@ -18,6 +18,6 @@ M.ci = require("plugins.lualine.components.ci")
 M.coverage = require("plugins.lualine.components.coverage")
 M.container = require("plugins.lualine.components.container")
 M.project = require("plugins.lualine.components.project")
--- M.deps = require("lua.plugins.lualine.components.deps")
+M.deps = require("lua.plugins.lualine.components.deps")
 
 return M

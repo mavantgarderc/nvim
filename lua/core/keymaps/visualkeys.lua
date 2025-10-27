@@ -84,16 +84,15 @@ map("n", "<F7>", ":setlocal spell! spelllang=en_us<CR>", { desc = "Toggle Spellc
 
 map("n", "<F8>", ":Telescope live_grep<CR>", { desc = "Project Search (Telescope)", noremap = true, silent = true })
 
-map({ "n", "v", "i" }, "<F9>", function() vim.cmd(":LspRestart") end, { desc = "Restart LSP", noremap = true, silent = true })
+map({ "n", "v", "i" }, "<F9>", function()
+  vim.cmd(":LspRestart")
+end, { desc = "Restart LSP", noremap = true, silent = true })
 
 map("n", "<F17>", ":TSPlaygroundToggle<CR>", { desc = "Tree-sitter Playground", noremap = true, silent = true })
 
-map(
-  "i",
-  "<F22>",
-  function() vim.wo.relativenumber = not vim.wo.relativenumber end,
-  { desc = "Toggle Relative Line Numbers", noremap = true, silent = true }
-)
+map("i", "<F22>", function()
+  vim.wo.relativenumber = not vim.wo.relativenumber
+end, { desc = "Toggle Relative Line Numbers", noremap = true, silent = true })
 
 map("n", "<F23>", ":TSHighlightCapturesUnderCursor<CR>", { desc = "Highlight under cursor", noremap = true, silent = true })
 

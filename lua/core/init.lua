@@ -1,3 +1,7 @@
+vim.opt.runtimepath:append(vim.fn.stdpath("config"))
+vim.opt.runtimepath:append(vim.fn.stdpath("config") .. "/lua")
+package.path = package.path .. ";" .. vim.fn.stdpath("config") .. "/?.lua" .. ";" .. vim.fn.stdpath("config") .. "/?/init.lua"
+
 local M = {}
 
 M.healthcheck = require("core.healthcheck")

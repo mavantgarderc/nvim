@@ -9,7 +9,6 @@ return {
     g.vimtex_view_method = "zathura"
     g.vimtex_view_forward_search_on_start = 1
 
-    -- Compiler setup
     g.vimtex_compiler_method = "latexmk"
     g.vimtex_compiler_latexmk = {
       build_dir = "",
@@ -26,7 +25,6 @@ return {
       },
     }
 
-    -- Syntax and conceal (improves readability by hiding LaTeX markup)
     g.vimtex_syntax_enabled = 1
     g.vimtex_syntax_conceal = {
       accents = 1,
@@ -44,11 +42,9 @@ return {
       styles = 1,
     }
 
-    -- disable vimtex's built-in completion to avoid conflicts with LSP (texlab + cmp)
     g.vimtex_complete_enabled = 0
-    g.vimtex_complete_close_braces = 0 -- rely on LSP/cmp instead
+    g.vimtex_complete_close_braces = 0
 
-    -- Folding (enabled, but customize levels if needed)
     g.vimtex_fold_enabled = 1
     g.vimtex_fold_manual = 0
 
