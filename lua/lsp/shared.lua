@@ -257,6 +257,7 @@ vim.api.nvim_create_autocmd("LspAttach", {
 })
 
 function M.setup_lsp_ui()
+  ---@diagnostic disable-next-line: unused-local
   vim.lsp.handlers["textDocument/hover"] = function(_, result, ctx, config)
     config = config or {}
     config.border = config.border or "rounded"
@@ -272,6 +273,7 @@ function M.setup_lsp_ui()
     return vim.lsp.util.open_floating_preview(markdown_lines, "markdown", config)
   end
 
+  ---@diagnostic disable-next-line: unused-local
   vim.lsp.handlers["textDocument/signatureHelp"] = function(_, result, ctx, config)
     config = config or {}
     config.border = config.border or "rounded"

@@ -32,7 +32,8 @@ function M.show_server_info()
 
   local width = 80
   local height = 30
-  local win = vim.api.nvim_open_win(buf, true, {
+  ---@diagnostic disable-next-line: unused-local
+  local _win = vim.api.nvim_open_win(buf, true, {
     relative = "editor",
     width = width,
     height = height,
@@ -42,7 +43,7 @@ function M.show_server_info()
     border = "rounded",
   })
 
-  vim.keymap.set("n", "q", "<cmd>close<cr>", { buffer = buf, silent = true })
+  vim.keymap.set("n", "q", ":close<CR>", { buffer = buf, silent = true })
 end
 
 -- Add keymap

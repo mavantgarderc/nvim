@@ -1,5 +1,3 @@
-local opts = { noremap = true, silent = true, buffer = true }
-
 local group = vim.api.nvim_create_augroup("vimtex_keymaps", { clear = true })
 
 vim.api.nvim_create_autocmd("FileType", {

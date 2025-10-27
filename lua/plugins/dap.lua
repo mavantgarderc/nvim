@@ -28,6 +28,7 @@ return {
         dapui.close()
       end
 
+      ---@diagnostic disable-next-line: different-requires
       require("core.keymaps.dap")
 
       -- Python

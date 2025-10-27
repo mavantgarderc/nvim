@@ -53,7 +53,6 @@ local function get_omnisharp_cmd()
 end
 
 function M.setup(capabilities)
-  -- Add a longer delay for omnisharp
   vim.defer_fn(function()
     local ok_lsp, lspconfig = pcall(require, "lspconfig")
     if not ok_lsp then

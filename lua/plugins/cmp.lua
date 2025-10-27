@@ -31,6 +31,7 @@ return {
           completion = cmp.config.window.bordered(),
           documentation = cmp.config.window.bordered(),
         },
+        ---@diagnostic disable-next-line: different-requires
         mapping = require("core.keymaps.cmp").get_mappings(),
         sources = cmp.config.sources({
           { name = "nvim_lsp" },

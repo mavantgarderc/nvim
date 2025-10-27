@@ -428,31 +428,6 @@ local function setup_commands()
   vim.g.loaded_nvim_healthcheck = true
 end
 
-local function check_custom_config()
-  local results = {}
-
-  local colorscheme_ok = pcall(vim.cmd, "colorscheme catppuccin")
-  table.insert(results, {
-    ok = colorscheme_ok,
-    message = colorscheme_ok and "Colorscheme available" or "Default colorscheme missing",
-  })
-
-  local leader = vim.g.mapleader or "\\"
-  table.insert(results, {
-    ok = leader ~= "\\",
-    message = string.format("Leader key: '%s' %s", leader, leader ~= "\\" and "OK" or "(default)"),
-  })
-
-  return results
-end
-
-function M.setup(user_config)
-  if user_config then
-    config = vim.tbl_deep_extend("force", config, user_config)
-  end
-  setup_commands()
-end
-
 setup_commands()
 
 return M

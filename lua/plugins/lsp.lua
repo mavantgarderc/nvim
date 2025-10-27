@@ -130,6 +130,7 @@ return {
         float = { border = border },
       })
 
+      ---@diagnostic disable-next-line: redefined-local
       local ok, keymaps = pcall(require, "core.keymaps.lsp")
       if ok and type(keymaps.setup) == "function" then
         keymaps.setup()
@@ -167,6 +168,7 @@ return {
         for _, config_file in ipairs(config_files) do
           local path = vim.fn.getcwd() .. "/" .. config_file
           if vim.fn.filereadable(path) == 1 then
+            ---@diagnostic disable-next-line: redefined-local
             local ok, err = pcall(dofile, path)
             if ok then
               vim.notify("Loaded project config: " .. config_file, vim.log.levels.INFO)

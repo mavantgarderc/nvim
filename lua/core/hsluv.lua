@@ -192,6 +192,7 @@ hsluv.luv_to_lch = function(tuple)
   if C < 0.00000001 then
     H = 0
   else
+    ---@diagnostic disable-next-line: deprecated
     H = math.atan2(V, U) * 180.0 / 3.1415926535897932
     if H < 0 then
       H = 360 + H

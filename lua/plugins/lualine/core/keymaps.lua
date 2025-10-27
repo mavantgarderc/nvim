@@ -2,7 +2,7 @@ local map = vim.keymap.set
 
 local M = {}
 
-function M.setup(lualine_opts)
+M.setup = function(lualine_opts)
   local components = require("plugins.lualine.components.init")
   local options = require("plugins.lualine.core.options")
 

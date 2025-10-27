@@ -243,7 +243,7 @@ function M.setup_lsp_keymaps()
               diagnostics = vim.diagnostic.get(event.buf, { lnum = vim.fn.line(".") - 1 }),
             }
 
-            vim.lsp.buf_request(event.buf, "textDocument/codeAction", params, function(err, result, ctx, config)
+            vim.lsp.buf_request(event.buf, "textDocument/codeAction", params, function(err, result, _ctx, _config)
               if err then
                 vim.notify("Error getting code actions: " .. err.message, vim.log.levels.ERROR)
                 return

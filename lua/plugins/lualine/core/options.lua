@@ -25,7 +25,7 @@ local function get_lualine_theme()
   return "auto"
 end
 
-function M.get_options()
+M.get_options = function()
   return {
     icons_enabled = true,
     theme = get_lualine_theme(),

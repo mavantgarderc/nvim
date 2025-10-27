@@ -14,14 +14,6 @@ local function vm_clear_all()
   print("VM: All cursors cleared")
 end
 
-local function vm_toggle_case()
-  vim.cmd("VMCaseSetting")
-end
-
-local function vm_toggle_whole_word()
-  vim.cmd("VMWholeWord")
-end
-
 vim.api.nvim_create_augroup("VMKeymaps", { clear = true })
 
 vim.api.nvim_create_autocmd("User", {

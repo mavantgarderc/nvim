@@ -1,6 +1,6 @@
 local M = {}
 
-function M.setup(lualine_opts)
+M.setup = function(lualine_opts)
   local utils = require("plugins.lualine.utils.init")
   local options = require("plugins.lualine.core.options")
 

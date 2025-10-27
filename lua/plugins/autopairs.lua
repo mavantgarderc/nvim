@@ -39,7 +39,6 @@ return {
         :set_end_pair_length(0),
     })
 
-    -- ===== CMP Integration =====
     local cmp_ok, cmp = pcall(require, "cmp")
     if cmp_ok then
       cmp.event:on("confirm_done", require("nvim-autopairs.completion.cmp").on_confirm_done())

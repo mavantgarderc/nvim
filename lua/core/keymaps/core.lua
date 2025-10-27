@@ -3,7 +3,6 @@ local function map(mode, lhs, rhs, desc)
 end
 
 local set = vim.keymap.set
-local opts = { noremap = true, silent = true }
 
 -- Paste from OS-Integrated Clipboard
 -- map("n", "<leader>p", "\"_dp", opts)

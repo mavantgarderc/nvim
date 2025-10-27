@@ -34,6 +34,7 @@ return {
     local api = vim.api
     obsidian.setup(opts)
 
+    ---@diagnostic disable-next-line: different-requires
     local keymaps = require("core.keymaps.obsidian")
 
     api.nvim_create_autocmd("FileType", {

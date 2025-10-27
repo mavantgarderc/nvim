@@ -68,6 +68,7 @@ local function debounce(ms, fn)
       timer = nil
     end
     timer = vim.defer_fn(function()
+      ---@diagnostic disable-next-line: deprecated
       pcall(fn, unpack(args))
       timer = nil
     end, ms)

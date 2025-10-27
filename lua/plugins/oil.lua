@@ -51,6 +51,7 @@ return {
       cmd("normal! gg")
     end, { desc = "Open Oil Keymap Cheatsheet" })
 
+    ---@diagnostic disable-next-line: redundant-parameter
     oil.setup({
       default_file_explorer = true,
       show_hidden = true,
@@ -172,6 +173,7 @@ return {
       end,
     })
 
+    ---@diagnostic disable-next-line: different-requires
     require("core.keymaps.oil").setup()
   end,
 }

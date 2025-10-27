@@ -13,8 +13,8 @@ function M.setup()
   local capabilities = shared.get_capabilities()
 
   vim.defer_fn(function()
-    local ok, lspconfig = pcall(require, "lspconfig")
-    if not ok then
+    local lsp_ok, lspconfig = pcall(require, "lspconfig")
+    if not lsp_ok then
       vim.notify("[solidity.lua] nvim-lspconfig not found", vim.log.levels.WARN)
       return
     end
@@ -26,7 +26,7 @@ function M.setup()
     end
 
     local setup_ok, err = pcall(function()
-      lspconfig.solidity_ls.setup({
+      lspconfig.solidity.setup({
         capabilities = capabilities,
         on_attach = function(client, bufnr)
           if shared.setup_keymaps then
@@ -37,14 +37,14 @@ function M.setup()
             vim.api.nvim_create_autocmd("BufWritePre", {
               buffer = bufnr,
               callback = function()
-                local ok, val = pcall(vim.api.nvim_buf_get_var, bufnr, "lsp_format_on_save")
-                if ok and val == false then
+                local format_ok, val = pcall(vim.api.nvim_buf_get_var, bufnr, "lsp_format_on_save")
+                if format_ok and val == false then
                   return
                 end
                 vim.lsp.buf.format({
                   bufnr = bufnr,
                   filter = function(c)
-                    return c.name == "solidity_ls"
+                    return c.name == "solidity"
                   end,
                 })
               end,
@@ -117,14 +117,14 @@ function M.setup_solidity_autocmds()
 end
 
 function M.mason_setup()
-  local ok, mason_lspconfig = pcall(require, "mason-lspconfig")
-  if not ok then
+  local mason_ok, mason_lspconfig = pcall(require, "mason-lspconfig")
+  if not mason_ok then
     vim.notify("[solidity.lua] mason-lspconfig not found", vim.log.levels.WARN)
     return
   end
 
   mason_lspconfig.setup({
-    ensure_installed = { "solidity_ls" },
+    ensure_installed = { "solidity" },
     automatic_installation = true,
   })
 end

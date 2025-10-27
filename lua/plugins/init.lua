@@ -1,5 +1,4 @@
 return {
-
   {
     dir = "~/projects/0-shelfs/CodeStorage/pantheon.nvim",
     name = "pantheon.nvim",

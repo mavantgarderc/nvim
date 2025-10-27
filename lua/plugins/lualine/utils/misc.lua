@@ -1,23 +1,23 @@
 local M = {}
 
-function M.hide_in_width()
+M.hide_in_width = function()
   return vim.fn.winwidth(0) > 80
 end
 
-function M.has_lsp()
+M.has_lsp = function()
   return #vim.lsp.get_clients({ bufnr = 0 }) > 0
 end
 
-function M.has_value(getter)
+M.has_value = function(getter)
   return (type(getter) == "function" and (getter() or "")) ~= ""
 end
 
-function M.is_sql_file()
+M.is_sql_file = function()
   local ft = vim.bo.filetype
   return ft == "sql" or ft == "mysql" or ft == "postgresql"
 end
 
-function M.get_cwd()
+M.get_cwd = function()
   local cwd = vim.fn.getcwd()
   local home = os.getenv("HOME")
   if home and cwd:sub(1, #home) == home then
@@ -26,16 +26,16 @@ function M.get_cwd()
   return " " .. vim.fn.pathshorten(cwd)
 end
 
-function Mgit_in_repo()
+M.git_in_repo = function()
   return vim.fn.system("git rev-parse --is-inside-work-tree 2>/dev/null"):match("true") ~= nil
 end
 
-function M.git_branch()
+M.git_branch = function()
   local b = vim.fn.system("git rev-parse --abbrev-ref HEAD 2>/dev/null"):gsub("%s+$", "")
   return b ~= "" and b or nil
 end
 
-function M.branch_truncate(name, maxlen)
+M.branch_truncate = function(name, maxlen)
   if not name or name == "" then
     return ""
   end
@@ -48,7 +48,7 @@ function M.branch_truncate(name, maxlen)
   return name:sub(1, keep) .. "…" .. name:sub(#name - keep + 1)
 end
 
-function M.read_file_safe(path, limit_bytes)
+M.read_file_safe = function(path, limit_bytes)
   local fd = vim.loop.fs_open(path, "r", 438)
   if not fd then
     return nil
@@ -63,7 +63,7 @@ function M.read_file_safe(path, limit_bytes)
   return data
 end
 
-function M.runtime_warnings()
+M.runtime_warnings = function()
   local res = vim.api.nvim_exec2("messages", { output = true })
   if not res or not res.output then
     return ""

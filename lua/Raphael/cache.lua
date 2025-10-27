@@ -1,5 +1,3 @@
-local util = require("Raphael.util")
-
 local M = {}
 
 local state_file = vim.fn.stdpath("data") .. "/raphael/state.json"

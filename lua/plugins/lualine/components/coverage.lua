@@ -35,7 +35,7 @@ local function parse_xml(s)
   return nil
 end
 
-function M.coverage()
+M.coverage = function()
   return cache.get("coverage", function()
     local paths = {
       "coverage/lcov.info",

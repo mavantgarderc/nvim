@@ -34,6 +34,7 @@ function M.setup(capabilities)
             },
           },
         },
+        ---@diagnostic disable-next-line: unused-local
         on_attach = function(client, bufnr)
           client.server_capabilities.documentFormattingProvider = false
         end,

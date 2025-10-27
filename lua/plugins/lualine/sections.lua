@@ -4,7 +4,7 @@ local utils = require("plugins.lualine.utils.init")
 local M = {}
 
 M.sections = {
-  lualine_a = { components.branch },
+  lualine_a = { components.branch, components.ci },
   lualine_b = { components.diagnostics },
   lualine_c = {
     { utils.get_navic_breadcrumbs, cond = utils.has_navic },

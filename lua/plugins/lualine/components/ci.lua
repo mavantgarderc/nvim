@@ -1,9 +1,8 @@
 local M = {}
 
 local cache = require("plugins.lualine.utils.cache")
-local glyphs = require("plugins.lualine.utils.glyphs")
 
-local ci = function()
+M.ci = function()
   return cache.get("ci_status", function()
     local out = vim.fn.system("gh run list --limit 1 --json status,conclusion 2>/dev/null")
     if vim.v.shell_error ~= 0 or out == "" then

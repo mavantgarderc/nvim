@@ -30,7 +30,7 @@ local function check_updates()
   return ""
 end
 
-function M.deps()
+M.deps = function()
   return cache.get("deps", check_updates, 60000) -- 1 min TTL
 end
 

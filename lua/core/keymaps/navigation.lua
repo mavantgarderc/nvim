@@ -121,10 +121,6 @@ map("n", "<leader>tf", ":tabfind ", { noremap = true }) -- Find and open file in
 
 map("n", "<leader>tT", ":tabnew | terminal<CR>", opts) -- Open terminal in new tab
 
-local function create_tab_with_file(filename)
-  cmd("tabnew " .. filename)
-end
-
 local function close_other_tabs()
   cmd("tabonly")
 end
@@ -139,7 +135,7 @@ end
 
 local function close_tabs_left()
   local current_tab = vim.fn.tabpagenr()
-  for i = current_tab - 1, 1, -1 do
+  for _ = current_tab - 1, 1, -1 do
     cmd("1tabclose")
   end
 end
@@ -252,6 +248,7 @@ end, { desc = "Set fold method to diff" })
 
 -- Toggle fold column
 map("n", "<leader>zfc", function()
+  ---@diagnostic disable-next-line: undefined-field
   local current = vim.opt.foldcolumn:get()
   if current == "0" then
     vim.opt.foldcolumn = "4"
@@ -266,7 +263,9 @@ end, { desc = "Toggle fold column" })
 map("n", "<leader>zi", function()
   local foldlevel = vim.opt.foldlevel:get()
   local foldmethod = vim.opt.foldmethod:get()
+  ---@diagnostic disable-next-line: undefined-field
   local foldcolumn = vim.opt.foldcolumn:get()
+  ---@diagnostic disable-next-line: undefined-field
   local foldenable = vim.opt.foldenable:get()
 
   local info = string.format(
@@ -282,6 +281,7 @@ end, { desc = "Show fold info" })
 -- Toggle folding on/off
 map("n", "<leader>zt", function()
   vim.opt.foldenable = not vim.opt.foldenable:get()
+  ---@diagnostic disable-next-line: undefined-field
   local status = vim.opt.foldenable:get() and "enabled" or "disabled"
   vim.notify("Folding " .. status)
 end, { desc = "Toggle folding" })

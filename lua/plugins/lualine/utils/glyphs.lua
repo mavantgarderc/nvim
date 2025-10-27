@@ -2,7 +2,6 @@ local M = {}
 
 M.git = {
   branch = "󰝨",
-  -- branch_alt = "",
   added = " ",
   modified = " ",
   removed = " ",
