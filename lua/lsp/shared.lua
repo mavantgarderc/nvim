@@ -5,7 +5,9 @@ local diagnostic = vim.diagnostic
 
 function M.setup_keymaps()
   local ok, keymaps = pcall(require, "core.keymaps.lsp")
-  if ok and keymaps.setup_lsp_keymaps then keymaps.setup_lsp_keymaps() end
+  if ok and keymaps.setup_lsp_keymaps then
+    keymaps.setup_lsp_keymaps()
+  end
 end
 
 function M.setup_diagnostics()
@@ -40,7 +42,9 @@ function M.setup_diagnostics()
       severity = { min = diagnostic.severity.WARN },
       format = function(d)
         local msg = d.message
-        if #msg > 80 then msg = msg:sub(1, 77) .. "..." end
+        if #msg > 80 then
+          msg = msg:sub(1, 77) .. "..."
+        end
         return msg
       end,
     },
@@ -87,7 +91,9 @@ function M.setup_null_ls()
     local bufnr = params.bufnr
 
     -- Check if dialect is already set for this buffer
-    if vim.b[bufnr].sql_dialect then return vim.b[bufnr].sql_dialect end
+    if vim.b[bufnr].sql_dialect then
+      return vim.b[bufnr].sql_dialect
+    end
 
     -- Try to detect from filename patterns
     local filename = vim.api.nvim_buf_get_name(bufnr):lower()
@@ -116,7 +122,9 @@ function M.setup_null_ls()
       local config_content = vim.fn.readfile(config_file)
       for _, line in ipairs(config_content) do
         local dialect = line:match("dialect%s*=%s*(%w+)")
-        if dialect then return dialect end
+        if dialect then
+          return dialect
+        end
       end
     end
 
@@ -135,9 +143,13 @@ function M.setup_null_ls()
     )
   end
 
-  if vim.fn.executable("csharpier") == 1 then table.insert(sources, null_ls.builtins.formatting.csharpier) end
+  if vim.fn.executable("csharpier") == 1 then
+    table.insert(sources, null_ls.builtins.formatting.csharpier)
+  end
 
-  if vim.fn.executable("sql-formatter") == 1 then table.insert(sources, null_ls.builtins.formatting.sql_formatter) end
+  if vim.fn.executable("sql-formatter") == 1 then
+    table.insert(sources, null_ls.builtins.formatting.sql_formatter)
+  end
 
   if vim.fn.executable("sqlfluff") == 1 then
     table.insert(
@@ -161,11 +173,17 @@ function M.setup_null_ls()
     )
   end
 
-  if vim.fn.executable("prettier") == 1 then table.insert(sources, null_ls.builtins.formatting.prettier) end
+  if vim.fn.executable("prettier") == 1 then
+    table.insert(sources, null_ls.builtins.formatting.prettier)
+  end
 
-  if vim.fn.executable("black") == 1 then table.insert(sources, null_ls.builtins.formatting.black) end
+  if vim.fn.executable("black") == 1 then
+    table.insert(sources, null_ls.builtins.formatting.black)
+  end
 
-  if vim.fn.executable("isort") == 1 then table.insert(sources, null_ls.builtins.formatting.isort) end
+  if vim.fn.executable("isort") == 1 then
+    table.insert(sources, null_ls.builtins.formatting.isort)
+  end
 
   null_ls.setup({
     sources = sources,
@@ -179,7 +197,9 @@ function M.setup_null_ls()
             if vim.b.lsp_format_on_save ~= false then
               vim.lsp.buf.format({
                 bufnr = bufnr,
-                filter = function(c) return c.name == "null-ls" end,
+                filter = function(c)
+                  return c.name == "null-ls"
+                end,
               })
             end
           end,
@@ -193,7 +213,9 @@ function M.setup_format_keymap()
   map("n", "<leader>gf", function()
     vim.lsp.buf.format({
       async = true,
-      filter = function(client) return client.name ~= "omnisharp" end,
+      filter = function(client)
+        return client.name ~= "omnisharp"
+      end,
     })
   end, { desc = "Format with LSP/null-ls" })
 
@@ -201,7 +223,9 @@ function M.setup_format_keymap()
     vim.lsp.buf.format({
       async = true,
       range = { start = vim.fn.getpos("'<"), ["end"] = vim.fn.getpos("'>") },
-      filter = function(client) return client.name ~= "omnisharp" end,
+      filter = function(client)
+        return client.name ~= "omnisharp"
+      end,
     })
   end, { desc = "Format selection" })
 end
@@ -213,7 +237,9 @@ function M.setup_autoformat()
       if vim.b.lsp_format_on_save ~= false then
         vim.lsp.buf.format({
           async = false,
-          filter = function(client) return client.name ~= "omnisharp" end,
+          filter = function(client)
+            return client.name ~= "omnisharp"
+          end,
         })
       end
     end,
@@ -224,7 +250,9 @@ vim.api.nvim_create_autocmd("LspAttach", {
   group = vim.api.nvim_create_augroup("UserLspConfig", {}),
   callback = function(ev)
     local client = vim.lsp.get_client_by_id(ev.data.client_id)
-    if client and client.server_capabilities.inlayHintProvider then vim.lsp.inlay_hint.enable(true, { bufnr = ev.buf }) end
+    if client and client.server_capabilities.inlayHintProvider then
+      vim.lsp.inlay_hint.enable(true, { bufnr = ev.buf })
+    end
   end,
 })
 
@@ -232,18 +260,24 @@ function M.setup_lsp_ui()
   vim.lsp.handlers["textDocument/hover"] = function(_, result, ctx, config)
     config = config or {}
     config.border = config.border or "rounded"
-    if not result or not result.contents then return end
+    if not result or not result.contents then
+      return
+    end
     local markdown_lines = vim.lsp.util.convert_input_to_markdown_lines(result.contents)
     local content = table.concat(markdown_lines, "\n")
     markdown_lines = vim.split(content, "\n", { trimempty = true })
-    if vim.tbl_isempty(markdown_lines) then return end
+    if vim.tbl_isempty(markdown_lines) then
+      return
+    end
     return vim.lsp.util.open_floating_preview(markdown_lines, "markdown", config)
   end
 
   vim.lsp.handlers["textDocument/signatureHelp"] = function(_, result, ctx, config)
     config = config or {}
     config.border = config.border or "rounded"
-    if not result or not result.signatures or vim.tbl_isempty(result.signatures) then return end
+    if not result or not result.signatures or vim.tbl_isempty(result.signatures) then
+      return
+    end
     local lines = {}
     for i, sig in ipairs(result.signatures) do
       table.insert(lines, sig.label)
@@ -255,14 +289,18 @@ function M.setup_lsp_ui()
           table.insert(lines, sig.documentation.value)
         end
       end
-      if i < #result.signatures then table.insert(lines, "") end
+      if i < #result.signatures then
+        table.insert(lines, "")
+      end
     end
     return vim.lsp.util.open_floating_preview(lines, "markdown", config)
   end
 
   vim.lsp.handlers["$/progress"] = function(_, result, ctx)
     local client = vim.lsp.get_client_by_id(ctx.client_id)
-    if not client then return end
+    if not client then
+      return
+    end
     local value = result.value
     if value.kind == "end" then
       vim.notify(string.format("%s: %s", client.name, value.message or "Complete"), vim.log.levels.INFO)

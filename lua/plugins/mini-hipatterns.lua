@@ -51,11 +51,21 @@ return {
               end
 
               local function hue_to_rgb(p, q, t)
-                if t < 0 then t = t + 1 end
-                if t > 1 then t = t - 1 end
-                if t < 1 / 6 then return p + (q - p) * 6 * t end
-                if t < 1 / 2 then return q end
-                if t < 2 / 3 then return p + (q - p) * (2 / 3 - t) * 6 end
+                if t < 0 then
+                  t = t + 1
+                end
+                if t > 1 then
+                  t = t - 1
+                end
+                if t < 1 / 6 then
+                  return p + (q - p) * 6 * t
+                end
+                if t < 1 / 2 then
+                  return q
+                end
+                if t < 2 / 3 then
+                  return p + (q - p) * (2 / 3 - t) * 6
+                end
                 return p
               end
 

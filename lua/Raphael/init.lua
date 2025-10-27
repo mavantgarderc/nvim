@@ -25,14 +25,16 @@ local state_file = vim.fn.stdpath("data") .. "/raphael/state.json"
 local function async_write(path, contents)
   vim.loop.fs_open(path, "w", 438, function(err, fd)
     if err then
-      vim.schedule(function() vim.notify("Raphael: failed to write state: " .. tostring(err), vim.log.levels.WARN) end)
+      vim.schedule(function()
+        vim.notify("Raphael: failed to write state: " .. tostring(err), vim.log.levels.WARN)
+      end)
       return
     end
     vim.loop.fs_write(fd, contents, -1, function(write_err)
       if write_err and write_err ~= 0 then
-        vim.schedule(
-          function() vim.notify("Raphael: failed to write state (write): " .. tostring(write_err), vim.log.levels.WARN) end
-        )
+        vim.schedule(function()
+          vim.notify("Raphael: failed to write state (write): " .. tostring(write_err), vim.log.levels.WARN)
+        end)
       end
       vim.loop.fs_close(fd)
     end)
@@ -43,7 +45,9 @@ end
 function Raphael.load_state()
   -- ensure directory exists
   local d = vim.fn.fnamemodify(state_file, ":h")
-  if vim.fn.isdirectory(d) == 0 then vim.fn.mkdir(d, "p") end
+  if vim.fn.isdirectory(d) == 0 then
+    vim.fn.mkdir(d, "p")
+  end
 
   local f = io.open(state_file, "r")
   if not f then
@@ -123,7 +127,9 @@ end
 
 -- bookmark toggle (persisted)
 function Raphael.toggle_bookmark(theme)
-  if not theme or theme == "" then return end
+  if not theme or theme == "" then
+    return
+  end
   local idx = vim.fn.index(Raphael.state.bookmarks or {}, theme)
   if idx >= 0 then
     table.remove(Raphael.state.bookmarks, idx + 1)
@@ -136,26 +142,31 @@ function Raphael.toggle_bookmark(theme)
 end
 
 -- open picker
-function Raphael.open_picker() Raphael.picker.open(Raphael) end
+function Raphael.open_picker()
+  Raphael.picker.open(Raphael)
+end
 
 -- FileType autocmd: dynamic switching when auto_apply is on
 vim.api.nvim_create_autocmd("FileType", {
   callback = function(args)
-    if not Raphael.state.auto_apply then return end
+    if not Raphael.state.auto_apply then
+      return
+    end
     local ft = args.match
     local theme = Raphael.themes.filetype_themes[ft]
-    if theme and Raphael.themes.is_available(theme) then Raphael.apply(theme) end
+    if theme and Raphael.themes.is_available(theme) then
+      Raphael.apply(theme)
+    end
   end,
 })
 
 -- keymaps (picker + toggle)
-vim.keymap.set(
-  "n",
-  Raphael.config.leader .. Raphael.config.mappings.picker,
-  function() Raphael.open_picker() end,
-  { desc = "Raphael: theme picker" }
-)
-vim.keymap.set("n", Raphael.config.leader .. "ta", function() Raphael.toggle_auto() end, { desc = "Raphael: toggle auto-theme" })
+vim.keymap.set("n", Raphael.config.leader .. Raphael.config.mappings.picker, function()
+  Raphael.open_picker()
+end, { desc = "Raphael: theme picker" })
+vim.keymap.set("n", Raphael.config.leader .. "ta", function()
+  Raphael.toggle_auto()
+end, { desc = "Raphael: toggle auto-theme" })
 
 -- apply the saved current theme on startup (scheduled)
 vim.schedule(function()

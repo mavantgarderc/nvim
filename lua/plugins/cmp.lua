@@ -17,11 +17,15 @@ return {
       luasnip.filetype_extend("javascript", { "javascriptreact" })
       luasnip.filetype_extend("typescript", { "typescriptreact" })
 
-      if g.have_nerd_font == nil then g.have_nerd_font = fn.has("nvim-0.7") == 1 end
+      if g.have_nerd_font == nil then
+        g.have_nerd_font = fn.has("nvim-0.7") == 1
+      end
 
       cmp.setup({
         snippet = {
-          expand = function(args) luasnip.lsp_expand(args.body) end,
+          expand = function(args)
+            luasnip.lsp_expand(args.body)
+          end,
         },
         window = {
           completion = cmp.config.window.bordered(),
@@ -84,7 +88,9 @@ return {
 
             local label = vim_item.abbr
             local truncated_label = fn.strcharpart(label, 0, 40)
-            if truncated_label ~= label then vim_item.abbr = truncated_label .. "..." end
+            if truncated_label ~= label then
+              vim_item.abbr = truncated_label .. "..."
+            end
 
             return vim_item
           end,

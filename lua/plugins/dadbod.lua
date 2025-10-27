@@ -20,7 +20,9 @@ return {
     init = function()
       local function map(mode, lhs, rhs, opts)
         local options = { noremap = true, silent = true }
-        if opts then options = vim.tbl_extend("force", options, opts) end
+        if opts then
+          options = vim.tbl_extend("force", options, opts)
+        end
         vim.keymap.set(mode, lhs, rhs, options)
       end
 
@@ -78,8 +80,11 @@ return {
         if not vim.g.dbs or not vim.g.dbs[db_key] or vim.g.dbs[db_key] == "" then
           local available = vim.g.dbs and table.concat(vim.tbl_keys(vim.g.dbs), ", ") or "none"
           vim.notify(
-            string.format("Database '%s' not found or empty URL.\nAvailable: %s\nCheck .env and reload with :Dotenv",
-              db_key, available),
+            string.format(
+              "Database '%s' not found or empty URL.\nAvailable: %s\nCheck .env and reload with :Dotenv",
+              db_key,
+              available
+            ),
             vim.log.levels.ERROR
           )
           return

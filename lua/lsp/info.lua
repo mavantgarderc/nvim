@@ -18,7 +18,9 @@ function M.show_server_info()
     table.insert(lines, "### Capabilities:")
     local caps = client.server_capabilities
     for key, value in pairs(caps) do
-      if type(value) == "boolean" and value then table.insert(lines, string.format("- %s", key)) end
+      if type(value) == "boolean" and value then
+        table.insert(lines, string.format("- %s", key))
+      end
     end
     table.insert(lines, "")
   end
@@ -44,6 +46,8 @@ function M.show_server_info()
 end
 
 -- Add keymap
-vim.keymap.set("n", "<leader>lI", function() require("lsp.info").show_server_info() end, { desc = "LSP Server Info" })
+vim.keymap.set("n", "<leader>lI", function()
+  require("lsp.info").show_server_info()
+end, { desc = "LSP Server Info" })
 
 return M

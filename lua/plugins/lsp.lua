@@ -20,7 +20,9 @@ return {
     config = function()
       local orig_notify = vim.notify
       vim.notify = function(msg, level, opts)
-        if msg:match("The `require%('lspconfig'%)` \"framework\" is deprecated") then return end
+        if msg:match("The `require%('lspconfig'%)` \"framework\" is deprecated") then
+          return
+        end
         orig_notify(msg, level, opts)
       end
 
@@ -36,7 +38,9 @@ return {
         group = vim.api.nvim_create_augroup("UserLspConfig", {}),
         callback = function(ev)
           local client = vim.lsp.get_client_by_id(ev.data.client_id)
-          if client and client.server_capabilities.inlayHintProvider then vim.lsp.inlay_hint.enable(true, { bufnr = ev.buf }) end
+          if client and client.server_capabilities.inlayHintProvider then
+            vim.lsp.inlay_hint.enable(true, { bufnr = ev.buf })
+          end
 
           lsp.default_keymaps({ buffer = ev.buf })
         end,
@@ -115,7 +119,9 @@ return {
       lsp.setup()
 
       local ok, auto_install = pcall(require, "lsp.auto-install")
-      if ok and type(auto_install.check_and_prompt) == "function" then auto_install.check_and_prompt() end
+      if ok and type(auto_install.check_and_prompt) == "function" then
+        auto_install.check_and_prompt()
+      end
 
       local border = "rounded"
       vim.lsp.handlers["textDocument/hover"] = vim.lsp.with(vim.lsp.handlers.hover, { border = border })
@@ -125,11 +131,15 @@ return {
       })
 
       local ok, keymaps = pcall(require, "core.keymaps.lsp")
-      if ok and type(keymaps.setup) == "function" then keymaps.setup() end
+      if ok and type(keymaps.setup) == "function" then
+        keymaps.setup()
+      end
 
       vim.api.nvim_create_autocmd("BufWritePost", {
         pattern = { "*/lsp/*.lua", "*/plugins/lsp.lua" },
-        callback = function() vim.notify("LSP config changed, restart with :LspRestart", vim.log.levels.INFO) end,
+        callback = function()
+          vim.notify("LSP config changed, restart with :LspRestart", vim.log.levels.INFO)
+        end,
       })
 
       -- UNCOMMENT ME WHEN YOU NEED TO HEALTCHCHECK THE LSP CLIENTS/SERVERS
@@ -144,7 +154,9 @@ return {
       -- })
       vim.api.nvim_create_autocmd("VimEnter", {
         once = true,
-        callback = function() vim.notify("LSP configured successfully.", vim.log.levels.INFO) end,
+        callback = function()
+          vim.notify("LSP configured successfully.", vim.log.levels.INFO)
+        end,
       })
 
       local monorepo = require("lsp.monorepo")

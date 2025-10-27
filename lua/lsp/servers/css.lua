@@ -1,4 +1,6 @@
-if #vim.api.nvim_list_uis() == 0 then return { setup = function() end } end
+if #vim.api.nvim_list_uis() == 0 then
+  return { setup = function() end }
+end
 
 local M = {}
 
@@ -16,33 +18,33 @@ function M.setup(capabilities)
       return
     end
 
-    local setup_ok, err = pcall(
-      function()
-        lspconfig.cssls.setup({
-          capabilities = capabilities,
-          settings = {
-            css = {
-              validate = true,
-              lint = { unknownAtRules = "ignore" },
-              inlayHints = {
-                chainingHints = true,
-                parameterHints = true,
-              },
-            },
-            scss = {
-              validate = true,
-              lint = { unknownAtRules = "ignore" },
-            },
-            less = {
-              validate = true,
-              lint = { unknownAtRules = "ignore" },
+    local setup_ok, err = pcall(function()
+      lspconfig.cssls.setup({
+        capabilities = capabilities,
+        settings = {
+          css = {
+            validate = true,
+            lint = { unknownAtRules = "ignore" },
+            inlayHints = {
+              chainingHints = true,
+              parameterHints = true,
             },
           },
-        })
-      end
-    )
+          scss = {
+            validate = true,
+            lint = { unknownAtRules = "ignore" },
+          },
+          less = {
+            validate = true,
+            lint = { unknownAtRules = "ignore" },
+          },
+        },
+      })
+    end)
 
-    if not setup_ok then vim.notify("[lsp.servers.css] Setup failed: " .. tostring(err), vim.log.levels.WARN) end
+    if not setup_ok then
+      vim.notify("[lsp.servers.css] Setup failed: " .. tostring(err), vim.log.levels.WARN)
+    end
   end, 100)
 end
 

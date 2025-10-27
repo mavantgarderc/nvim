@@ -1,4 +1,6 @@
-if #vim.api.nvim_list_uis() == 0 then return { setup = function() end } end
+if #vim.api.nvim_list_uis() == 0 then
+  return { setup = function() end }
+end
 
 local M = {}
 
@@ -32,11 +34,15 @@ function M.setup(capabilities)
             },
           },
         },
-        on_attach = function(client, bufnr) client.server_capabilities.documentFormattingProvider = false end,
+        on_attach = function(client, bufnr)
+          client.server_capabilities.documentFormattingProvider = false
+        end,
       })
     end)
 
-    if not setup_ok then vim.notify("[lsp.servers.python] Setup failed: " .. tostring(err), vim.log.levels.WARN) end
+    if not setup_ok then
+      vim.notify("[lsp.servers.python] Setup failed: " .. tostring(err), vim.log.levels.WARN)
+    end
   end, 100)
 end
 

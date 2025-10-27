@@ -24,15 +24,25 @@ function M.setup_lsp_keymaps()
 
       map("n", "<leader>e", vim.diagnostic.open_float, opts)
       map("n", "<leader>q", vim.diagnostic.setloclist, opts)
-      map("n", "<leader>[d", function() vim.diagnostic.jump({ count = -1 }) end, opts)
-      map("n", "<leader>]d", function() vim.diagnostic.jump({ count = 1 }) end, opts)
+      map("n", "<leader>[d", function()
+        vim.diagnostic.jump({ count = -1 })
+      end, opts)
+      map("n", "<leader>]d", function()
+        vim.diagnostic.jump({ count = 1 })
+      end, opts)
 
-      map("n", "<leader>[e", function() vim.diagnostic.jump({ count = -1, severity = vim.diagnostic.severity.ERROR }) end, opts)
-      map("n", "<leader>]e", function() vim.diagnostic.jump({ count = 1, severity = vim.diagnostic.severity.ERROR }) end, opts)
+      map("n", "<leader>[e", function()
+        vim.diagnostic.jump({ count = -1, severity = vim.diagnostic.severity.ERROR })
+      end, opts)
+      map("n", "<leader>]e", function()
+        vim.diagnostic.jump({ count = 1, severity = vim.diagnostic.severity.ERROR })
+      end, opts)
 
       map("n", "<leader>wa", buff.add_workspace_folder, opts)
       map("n", "<leader>wr", buff.remove_workspace_folder, opts)
-      map("n", "<leader>wl", function() print(vim.inspect(vim.ls.buf.list_workspace_folders())) end, opts)
+      map("n", "<leader>wl", function()
+        print(vim.inspect(vim.ls.buf.list_workspace_folders()))
+      end, opts)
 
       local has_telescope, telescope = pcall(require, "telescope.builtin")
       if has_telescope then
@@ -45,48 +55,36 @@ function M.setup_lsp_keymaps()
         map("n", "<leader>lw", telescope.lsp_workspace_symbols, { desc = "Workspace symbols" })
       end
 
-      map(
-        "n",
-        "<leader>fs",
-        function()
-          require("telescope.builtin").lsp_workspace_symbols({
-            query = vim.fn.input("Workspace Symbol: "),
-          })
-        end,
-        { desc = "Semantic Search (Workspace Symbols)" }
-      )
+      map("n", "<leader>fs", function()
+        require("telescope.builtin").lsp_workspace_symbols({
+          query = vim.fn.input("Workspace Symbol: "),
+        })
+      end, { desc = "Semantic Search (Workspace Symbols)" })
 
-      map(
-        "n",
-        "<leader>fS",
-        function() require("telescope.builtin").lsp_dynamic_workspace_symbols() end,
-        { desc = "Dynamic Workspace Symbols" }
-      )
+      map("n", "<leader>fS", function()
+        require("telescope.builtin").lsp_dynamic_workspace_symbols()
+      end, { desc = "Dynamic Workspace Symbols" })
 
-      map(
-        "n",
-        "<leader>lh",
-        function() vim.lsp.inlay_hint.enable(not vim.lsp.inlay_hint.is_enabled()) end,
-        { desc = "Toggle Inlay Hints" }
-      )
+      map("n", "<leader>lh", function()
+        vim.lsp.inlay_hint.enable(not vim.lsp.inlay_hint.is_enabled())
+      end, { desc = "Toggle Inlay Hints" })
 
       -- view LSP Logs
-      map(
-        "n",
-        "<leader>lL",
-        function()
-          require("telescope.builtin").find_files({
-            cwd = vim.fn.stdpath("cache"),
-            prompt_title = "LSP Logs",
-            find_command = { "rg", "--files", "--glob", "lsp.log" },
-          })
-        end,
-        { desc = "Open LSP Log" }
-      )
+      map("n", "<leader>lL", function()
+        require("telescope.builtin").find_files({
+          cwd = vim.fn.stdpath("cache"),
+          prompt_title = "LSP Logs",
+          find_command = { "rg", "--files", "--glob", "lsp.log" },
+        })
+      end, { desc = "Open LSP Log" })
 
-      map("n", "<leader>lI", function() require("lsp.info").show_server_info() end, { desc = "LSP Server Info" })
+      map("n", "<leader>lI", function()
+        require("lsp.info").show_server_info()
+      end, { desc = "LSP Server Info" })
 
-      map("n", "<leader>la", function() require("lsp.analytics").show_report() end, { desc = "LSP Analytics" })
+      map("n", "<leader>la", function()
+        require("lsp.analytics").show_report()
+      end, { desc = "LSP Analytics" })
 
       map("n", "<leader>lth", vim.lsp.buf.typehierarchy, { desc = "Type Hierarchy" })
 
@@ -150,7 +148,9 @@ function M.setup_lsp_keymaps()
       map("n", "<leader>glb", function()
         vim.lsp.buf.format({
           async = false,
-          filter = function(client) return client.name == "null-ls" end,
+          filter = function(client)
+            return client.name == "null-ls"
+          end,
         })
         vim.lsp.buf.code_action({
           context = {
@@ -182,7 +182,9 @@ function M.setup_lsp_keymaps()
 
         if omnisharp_client then
           -- Helper function to check if OmniSharp is ready
-          local function is_omnisharp_ready() return omnisharp_client.initialized or false end
+          local function is_omnisharp_ready()
+            return omnisharp_client.initialized or false
+          end
 
           -- Add missing usings
           map("n", "<leader>cu", function()
@@ -299,10 +301,9 @@ function M.setup_lsp_keymaps()
     pattern = "sql",
     callback = function(args)
       if not vim.b[args.buf].sql_dialect then
-        vim.defer_fn(
-          function() vim.notify("SQL dialect: auto-detect (Press <leader>sd to change)", vim.log.levels.INFO) end,
-          1000
-        )
+        vim.defer_fn(function()
+          vim.notify("SQL dialect: auto-detect (Press <leader>sd to change)", vim.log.levels.INFO)
+        end, 1000)
       end
     end,
   })

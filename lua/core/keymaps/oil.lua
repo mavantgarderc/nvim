@@ -7,9 +7,13 @@ local M = {}
 M.setup = function()
   map("n", "<leader>fo", ":Oil<CR>", { desc = "Open parent directory in Oil" })
 
-  map("n", "<leader>fO", function() oil.open_float() end, { desc = "Open Oil in floating window" })
+  map("n", "<leader>fO", function()
+    oil.open_float()
+  end, { desc = "Open Oil in floating window" })
 
-  map("n", "<leader>foo", function() oil.open(vim.fn.getcwd()) end, { desc = "Open Oil in cwd" })
+  map("n", "<leader>foo", function()
+    oil.open(vim.fn.getcwd())
+  end, { desc = "Open Oil in cwd" })
 
   local oil_sidebar_win = nil
   map("n", "<leader>e", function()
@@ -24,7 +28,9 @@ M.setup = function()
   end, { desc = "Toggle Oil sidebar" })
 
   map("n", "<leader>nf", function()
-    if vim.bo.filetype ~= "oil" then return vim.notify("Not in oil buffer", vim.log.levels.WARN) end
+    if vim.bo.filetype ~= "oil" then
+      return vim.notify("Not in oil buffer", vim.log.levels.WARN)
+    end
     vim.ui.input({ prompt = "New file name: " }, function(input)
       if input then
         local dir = oil.get_current_dir()
@@ -35,7 +41,9 @@ M.setup = function()
   end, { desc = "Create new file in Oil" })
 
   map("n", "<leader>nd", function()
-    if vim.bo.filetype ~= "oil" then return vim.notify("Not in oil buffer", vim.log.levels.WARN) end
+    if vim.bo.filetype ~= "oil" then
+      return vim.notify("Not in oil buffer", vim.log.levels.WARN)
+    end
     vim.ui.input({ prompt = "New directory name: " }, function(input)
       if input then
         local dir = oil.get_current_dir()

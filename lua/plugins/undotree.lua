@@ -29,7 +29,9 @@ return {
 
     if fn.has("persistent_undo") == 1 then
       local undodir = fn.expand("~/undodir")
-      if fn.isdirectory(undodir) == 0 then fn.mkdir(undodir, "p") end
+      if fn.isdirectory(undodir) == 0 then
+        fn.mkdir(undodir, "p")
+      end
       opt.undodir = undodir
       opt.undofile = true
     end

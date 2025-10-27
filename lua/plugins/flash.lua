@@ -87,7 +87,9 @@ return {
         config = function(opts)
           -- Safe mode detection with error handling
           local mode_ok, mode_result = pcall(fn.mode, true)
-          local operator_ok, operator_result = pcall(function() return v.operator end)
+          local operator_ok, operator_result = pcall(function()
+            return v.operator
+          end)
 
           if mode_ok and operator_ok then
             opts.autohide = opts.autohide == nil and (mode_result:find("no") and operator_result == "y")
@@ -172,14 +174,18 @@ return {
     local function setup_flash_highlights()
       local function get_hl_color(group, attr)
         local ok, hl = pcall(api.nvim_get_hl, 0, { name = group })
-        if not ok or not hl then return nil end
+        if not ok or not hl then
+          return nil
+        end
         return hl[attr] and string.format("#%06x", hl[attr]) or nil
       end
 
       -- Safe highlight setting with fallbacks
       local function safe_set_hl(name, opts)
         local ok, err = pcall(api.nvim_set_hl, 0, name, opts)
-        if not ok then vim.notify("Failed to set highlight " .. name .. ": " .. tostring(err), vim.log.levels.WARN) end
+        if not ok then
+          vim.notify("Failed to set highlight " .. name .. ": " .. tostring(err), vim.log.levels.WARN)
+        end
       end
 
       -- Extract colors with fallbacks
@@ -251,8 +257,12 @@ return {
       group = cursor_group,
       pattern = "FlashPromptPre",
       callback = function()
-        local ok, err = pcall(function() opt.guicursor = "n:block-FlashCursor" end)
-        if not ok then vim.notify("Flash cursor setup failed: " .. tostring(err), vim.log.levels.WARN) end
+        local ok, err = pcall(function()
+          opt.guicursor = "n:block-FlashCursor"
+        end)
+        if not ok then
+          vim.notify("Flash cursor setup failed: " .. tostring(err), vim.log.levels.WARN)
+        end
       end,
     })
 
@@ -260,8 +270,12 @@ return {
       group = cursor_group,
       pattern = "FlashPromptPost",
       callback = function()
-        local ok, err = pcall(function() opt.guicursor = "n:block" end)
-        if not ok then vim.notify("Flash cursor restore failed: " .. tostring(err), vim.log.levels.WARN) end
+        local ok, err = pcall(function()
+          opt.guicursor = "n:block"
+        end)
+        if not ok then
+          vim.notify("Flash cursor restore failed: " .. tostring(err), vim.log.levels.WARN)
+        end
       end,
     })
 
@@ -272,8 +286,12 @@ return {
       -- Define basic keymaps as fallback
       local map = vim.keymap.set
       map({ "n", "x", "o" }, "ff", function()
-        local ok, err = pcall(function() require("flash").jump() end)
-        if not ok then vim.notify("Flash jump failed: " .. tostring(err), vim.log.levels.ERROR) end
+        local ok, err = pcall(function()
+          require("flash").jump()
+        end)
+        if not ok then
+          vim.notify("Flash jump failed: " .. tostring(err), vim.log.levels.ERROR)
+        end
       end, { desc = "Flash jump" })
     end
 

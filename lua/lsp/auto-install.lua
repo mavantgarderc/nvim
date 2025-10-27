@@ -65,7 +65,9 @@ function M.check_and_prompt()
           -- Check if the package exists in registry first
           if mason_registry.has_package(mason_package) then
             if not mason_registry.is_installed(mason_package) then
-              vim.defer_fn(function() M.prompt_install_server(server) end, 500)
+              vim.defer_fn(function()
+                M.prompt_install_server(server)
+              end, 500)
             end
           end
         end

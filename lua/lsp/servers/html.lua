@@ -1,4 +1,6 @@
-if #vim.api.nvim_list_uis() == 0 then return { setup = function() end } end
+if #vim.api.nvim_list_uis() == 0 then
+  return { setup = function() end }
+end
 
 local M = {}
 
@@ -16,33 +18,33 @@ function M.setup(capabilities)
       return
     end
 
-    local setup_ok, err = pcall(
-      function()
-        lspconfig.html.setup({
-          capabilities = capabilities,
-          filetypes = { "html", "templ" },
-          settings = {
-            html = {
-              format = {
-                templating = true,
-                wrapLineLength = 120,
-                wrapAttributes = "auto",
-              },
-              hover = {
-                documentation = true,
-                references = true,
-              },
-              inlayHints = {
-                chainingHints = true,
-                parameterHints = true,
-              },
+    local setup_ok, err = pcall(function()
+      lspconfig.html.setup({
+        capabilities = capabilities,
+        filetypes = { "html", "templ" },
+        settings = {
+          html = {
+            format = {
+              templating = true,
+              wrapLineLength = 120,
+              wrapAttributes = "auto",
+            },
+            hover = {
+              documentation = true,
+              references = true,
+            },
+            inlayHints = {
+              chainingHints = true,
+              parameterHints = true,
             },
           },
-        })
-      end
-    )
+        },
+      })
+    end)
 
-    if not setup_ok then vim.notify("[lsp.servers.html] Setup failed: " .. tostring(err), vim.log.levels.WARN) end
+    if not setup_ok then
+      vim.notify("[lsp.servers.html] Setup failed: " .. tostring(err), vim.log.levels.WARN)
+    end
   end, 100)
 end
 

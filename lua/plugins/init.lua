@@ -25,7 +25,9 @@ return {
   {
     "echasnovski/mini.hipatterns",
     version = "*",
-    config = function() require("core.mini-hipatterns") end,
+    config = function()
+      require("core.mini-hipatterns")
+    end,
   },
   -- themes
   {
@@ -75,7 +77,7 @@ return {
       "tpope/vim-dadbod",
       "kristijanhusak/vim-dadbod-completion",
       "kristijanhusak/vim-dadbod-ui",
-      'tpope/vim-dotenv',
+      "tpope/vim-dotenv",
       "nanotee/sqls.nvim",
       -- Utilities
       -- indent automation; no config needed
@@ -126,12 +128,14 @@ return {
       {
         "nvim-telescope/telescope-fzf-native.nvim",
         build = "make",
-        cond = function() return vim.fn.executable("make") == 1 end,
+        cond = function()
+          return vim.fn.executable("make") == 1
+        end,
       },
       { "nvim-telescope/telescope-ui-select.nvim" },
 
       -- Useful for getting pretty icons, but requires a Nerd Font.
-      { "nvim-tree/nvim-web-devicons",            enabled = vim.g.have_nerd_font },
+      { "nvim-tree/nvim-web-devicons", enabled = vim.g.have_nerd_font },
     },
   },
   -- undotree

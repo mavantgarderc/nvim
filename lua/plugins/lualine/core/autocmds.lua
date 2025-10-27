@@ -10,7 +10,9 @@ function M.setup(lualine_opts)
     group = group,
     callback = function()
       utils.cache.lsp_clients = { value = "", last_update = 0 }
-      vim.defer_fn(function() require("lualine").refresh() end, 500)
+      vim.defer_fn(function()
+        require("lualine").refresh()
+      end, 500)
     end,
   })
 
@@ -34,7 +36,9 @@ function M.setup(lualine_opts)
         utils.cache.test_status = { value = "", last_update = 0 }
         utils.cache.debug_status = { value = "", last_update = 0 }
 
-        if utils.has_test_running() or utils.has_debug_session() then require("lualine").refresh() end
+        if utils.has_test_running() or utils.has_debug_session() then
+          require("lualine").refresh()
+        end
       end)
     )
   end
