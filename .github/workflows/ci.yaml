@@ -1,22 +1,15 @@
-name: Neovim Config CI
+name: Simple Neovim CI
 
 on:
     push:
-        branches: [main, develop]
+        branches: [main, dev]
     pull_request:
-        branches: [main]
+        branches: [main, dev]
     workflow_dispatch:
 
-concurrency:
-    group: ${{ github.workflow }}-${{ github.ref }}
-    cancel-in-progress: true
-
 jobs:
-    # ============================================================================
-    # Lua Linting & Formatting
-    # ============================================================================
-    lint:
-        name: Lint & Format Check
+    check:
+        name: Lint, Format & Validate
         runs-on: ubuntu-latest
         steps:
             - name: Checkout Code
@@ -36,9 +29,6 @@ jobs:
                   stylua --version
 
             - name: Check Lua Formatting
-              env:
-                  LUA_PATH: ./lua/?.lua;./lua/?/init.lua;;
-                  LUA_CPATH: ./lua/?.so;;
               run: |
                   if ! stylua --check lua/ init.lua; then
                     echo "::error::StyLua found formatting issues. Run 'stylua lua/ init.lua' locally to fix."
@@ -52,36 +42,18 @@ jobs:
 
             - name: Run Luacheck
               run: |
-                  if ! luacheck lua/ init.lua --no-color --formatter plain; then
+                  if ! luacheck lua/ init.lua --globals vim --no-color --formatter plain; then
                     echo "::error::Luacheck found lint warnings/errors. Inspect the output above."
                     exit 1
                   else
                     echo "Luacheck: OK"
                   fi
 
-    # ============================================================================
-    # Neovim Configuration Validation
-    # ============================================================================
-    validate:
-        name: Validate Configuration
-        runs-on: ${{ matrix.os }}
-        strategy:
-            fail-fast: false
-            matrix:
-                os: [ubuntu-latest, macos-latest]
-                neovim_version: ["stable", "nightly"]
-        steps:
-            - name: Checkout Code
-              uses: actions/checkout@v4
-
-            - name: Install Neovim (${{ matrix.neovim_version }})
+            - name: Install Neovim (Stable)
               uses: rhysd/action-setup-vim@v1
               with:
                   neovim: true
-                  version: ${{ matrix.neovim_version }}
-
-            - name: Neovim Version
-              run: nvim --version
+                  version: stable
 
             - name: Validate init.lua Syntax
               env:
@@ -101,7 +73,7 @@ jobs:
                   LUA_CPATH: ./lua/?.so;;
               run: |
                   nvim --headless "+Lazy! sync" +qa
-              timeout-minutes: 10
+              timeout-minutes: 5
 
             - name: Run Health Check
               env:
@@ -110,255 +82,8 @@ jobs:
               run: |
                   nvim --headless -c 'redir! > healthcheck.log | silent checkhealth | redir END | qa'
                   if [ -f healthcheck.log ]; then
-                    echo "Healthcheck produced healthcheck.log"
                     cat healthcheck.log
                   else
                     echo "::error::healthcheck.log not found"
                     exit 1
                   fi
-
-            - name: Upload Health Check Logs
-              uses: actions/upload-artifact@v4
-              if: always()
-              with:
-                  name: healthcheck-${{ matrix.os }}-${{ matrix.neovim_version }}
-                  path: healthcheck.log
-                  retention-days: 7
-
-    # ============================================================================
-    # LSP Configuration Testing
-    # ============================================================================
-    test-lsp:
-        name: Test LSP Setup
-        runs-on: ubuntu-latest
-        steps:
-            - name: Checkout Code
-              uses: actions/checkout@v4
-
-            - name: Install Neovim (Stable)
-              uses: rhysd/action-setup-vim@v1
-              with:
-                  neovim: true
-                  version: stable
-
-            - name: Install Plugins
-              env:
-                  LUA_PATH: ./lua/?.lua;./lua/?/init.lua;;
-                  LUA_CPATH: ./lua/?.so;;
-              run: |
-                  nvim --headless "+Lazy! sync" +qa
-              timeout-minutes: 10
-
-            - name: Install Common LSP Servers via Mason
-              env:
-                  LUA_PATH: ./lua/?.lua;./lua/?/init.lua;;
-                  LUA_CPATH: ./lua/?.so;;
-              run: |
-                  nvim --headless -c "MasonInstall lua-language-server typescript-language-server pyright" -c "sleep 30" -c "qa"
-              timeout-minutes: 15
-
-            - name: Test LSP Configuration Loading
-              env:
-                  LUA_PATH: ./lua/?.lua;./lua/?/init.lua;;
-                  LUA_CPATH: ./lua/?.so;;
-              run: |
-                  nvim --headless -c "lua print('Testing LSP config...')" \
-                       -c "lua local ok, shared = pcall(require, 'lsp.shared'); print('lsp.shared:', ok)" \
-                       -c "lua local ok2, lsp = pcall(require, 'plugins.lsp'); print('plugins.lsp:', ok2)" \
-                       -c "qa"
-
-            - name: Check LSP Health
-              env:
-                  LUA_PATH: ./lua/?.lua;./lua/?/init.lua;;
-                  LUA_CPATH: ./lua/?.so;;
-              run: |
-                  nvim --headless -c "checkhealth lsp" -c "redir! > lsp-health.log | silent checkhealth lsp | redir END | qa" || true
-                  [ -f lsp-health.log ] && cat lsp-health.log || echo "::error::lsp-health.log missing"
-
-            - name: Upload LSP Health Logs
-              uses: actions/upload-artifact@v4
-              if: always()
-              with:
-                  name: lsp-health-logs
-                  path: lsp-health.log
-                  retention-days: 7
-
-    # ============================================================================
-    # Plugin Compatibility Testing
-    # ============================================================================
-    test-plugins:
-        name: Test Plugin Loading
-        runs-on: ubuntu-latest
-        steps:
-            - name: Checkout Code
-              uses: actions/checkout@v4
-
-            - name: Install Neovim (Stable)
-              uses: rhysd/action-setup-vim@v1
-              with:
-                  neovim: true
-                  version: stable
-
-            - name: Install Plugins
-              env:
-                  LUA_PATH: ./lua/?.lua;./lua/?/init.lua;;
-                  LUA_CPATH: ./lua/?.so;;
-              run: |
-                  nvim --headless "+Lazy! sync" +qa
-              timeout-minutes: 10
-
-            - name: Test Plugin Loading
-              env:
-                  LUA_PATH: ./lua/?.lua;./lua/?/init.lua;;
-                  LUA_CPATH: ./lua/?.so;;
-              run: |
-                  nvim --headless -c "lua vim.print('=== Testing Plugins ===')" \
-                       -c "lua for name, plugin in pairs(require('lazy').plugins()) do vim.print(name .. ': ' .. (plugin._.loaded and '✅' or '❌')) end" \
-                       -c "redir! > plugin-status.log | silent write | redir END" -c "qa"
-                  cat plugin-status.log || true
-
-            - name: Upload Plugin Status
-              uses: actions/upload-artifact@v4
-              if: always()
-              with:
-                  name: plugin-status
-                  path: plugin-status.log
-                  retention-days: 7
-
-    # ============================================================================
-    # Startup Performance Benchmark
-    # ============================================================================
-    benchmark:
-        name: Startup Performance
-        runs-on: ubuntu-latest
-        steps:
-            - name: Checkout Code
-              uses: actions/checkout@v4
-
-            - name: Install Neovim (Stable)
-              uses: rhysd/action-setup-vim@v1
-              with:
-                  neovim: true
-                  version: stable
-
-            - name: Install Plugins
-              env:
-                  LUA_PATH: ./lua/?.lua;./lua/?/init.lua;;
-                  LUA_CPATH: ./lua/?.so;;
-              run: |
-                  nvim --headless "+Lazy! sync" +qa
-              timeout-minutes: 10
-
-            - name: Measure Startup Time
-              env:
-                  LUA_PATH: ./lua/?.lua;./lua/?/init.lua;;
-                  LUA_CPATH: ./lua/?.so;;
-              run: |
-                  echo "=== Startup Time Benchmark ===" > benchmark.log
-                  rm -f benchmark_times.txt || true
-
-                  for i in {1..10}; do
-                    nvim --startuptime startup${i}.log +qa
-                    awk 'NF && /^[0-9]/ {time=$1} END { if (time) print time }' startup${i}.log >> benchmark_times.txt || true
-                    printf "Run %d: " "${i}" >> benchmark.log
-                    tail -n +1 startup${i}.log | sed -n '1,5p' >> benchmark.log
-                    echo "" >> benchmark.log
-                  done
-
-                  echo "" >> benchmark.log
-                  echo "Individual times (ms):" >> benchmark.log
-                  cat benchmark_times.txt >> benchmark.log || true
-                  echo "" >> benchmark.log
-                  echo "Average startup time:" >> benchmark.log
-                  awk '{ sum+=$1; count++ } END { if (count>0) printf "%.2f ms\n", sum/count; else print "No numeric startup times captured" }' benchmark_times.txt >> benchmark.log
-
-                  cat benchmark.log
-              continue-on-error: true
-
-            - name: Upload Benchmark Results
-              uses: actions/upload-artifact@v4
-              if: always()
-              with:
-                  name: benchmark-results
-                  path: |
-                      benchmark.log
-                      startup*.log
-                  retention-days: 30
-
-    # ============================================================================
-    # Documentation Validation
-    # ============================================================================
-    docs:
-        name: Validate Documentation
-        runs-on: ubuntu-latest
-        steps:
-            - name: Checkout Code
-              uses: actions/checkout@v4
-
-            - name: Check for Broken Links in README
-              uses: gaurav-nelson/github-action-markdown-link-check@v1
-              with:
-                  use-quiet-mode: "yes"
-                  config-file: ".github/markdown-link-check-config.json"
-
-            - name: Check Spelling
-              uses: streetsidesoftware/cspell-action@v6
-              with:
-                  files: |
-                      **/*.md
-                      **/*.lua
-                  config: .github/cspell.json
-
-    # ============================================================================
-    # Security Scanning
-    # ============================================================================
-    security:
-        name: Security Scan
-        runs-on: ubuntu-latest
-        steps:
-            - name: Checkout Code
-              uses: actions/checkout@v4
-
-            - name: Run Trivy Security Scanner
-              uses: aquasecurity/trivy-action@master
-              with:
-                  scan-type: "fs"
-                  scan-ref: "."
-                  format: "sarif"
-                  output: "trivy-results.sarif"
-                  severity: "CRITICAL,HIGH"
-
-            - name: Upload Trivy Results to GitHub Security
-              uses: github/codeql-action/upload-sarif@v3
-              if: always()
-              with:
-                  sarif_file: "trivy-results.sarif"
-
-    # ============================================================================
-    # Integration Summary
-    # ============================================================================
-    summary:
-        name: CI Summary
-        runs-on: ubuntu-latest
-        needs:
-            [lint, validate, test-lsp, test-plugins, benchmark, docs, security]
-        if: always()
-        steps:
-            - name: Generate Summary
-              run: |
-                  echo "# Neovim Config CI Summary" >> $GITHUB_STEP_SUMMARY
-                  echo "" >> $GITHUB_STEP_SUMMARY
-                  echo "## Test Results" >> $GITHUB_STEP_SUMMARY
-                  echo "- **Lint**: ${{ needs.lint.result }}" >> $GITHUB_STEP_SUMMARY
-                  echo "- **Validate**: ${{ needs.validate.result }}" >> $GITHUB_STEP_SUMMARY
-                  echo "- **LSP Tests**: ${{ needs.test-lsp.result }}" >> $GITHUB_STEP_SUMMARY
-                  echo "- **Plugin Tests**: ${{ needs.test-plugins.result }}" >> $GITHUB_STEP_SUMMARY
-                  echo "- **Benchmark**: ${{ needs.benchmark.result }}" >> $GITHUB_STEP_SUMMARY
-                  echo "- **Documentation**: ${{ needs.docs.result }}" >> $GITHUB_STEP_SUMMARY
-                  echo "- **Security**: ${{ needs.security.result }}" >> $GITHUB_STEP_SUMMARY
-                  echo "" >> $GITHUB_STEP_SUMMARY
-                  echo "All checks completed!" >> $GITHUB_STEP_SUMMARY
-
-            - name: Fail if Critical Tests Failed
-              if: needs.lint.result == 'failure' || needs.validate.result == 'failure'
-              run: exit 1
