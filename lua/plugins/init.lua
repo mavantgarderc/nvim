@@ -13,9 +13,6 @@ return {
   {
     "echasnovski/mini.hipatterns",
     version = "*",
-    config = function()
-      require("core.mini-hipatterns")
-    end,
   },
   -- themes
   {
