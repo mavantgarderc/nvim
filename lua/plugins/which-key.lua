@@ -74,8 +74,5 @@ return {
       ["<leader>t"] = { name = "[T]oggle", mode = "n" },
       ["<leader>h"] = { name = "Git [H]unk", mode = { "n", "v" } },
     }
-
-    which_key.setup(setup)
-    which_key.add(group_specs)
   end,
 }
