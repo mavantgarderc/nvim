@@ -26,6 +26,10 @@ function M.setup(capabilities)
           nilness = true,
           shadow = true,
         },
+        inlayHints = {
+          chainingHints = true,
+          parameterHints = true,
+        },
         staticcheck = true,
         gofumpt = false,
       },

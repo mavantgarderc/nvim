@@ -83,6 +83,10 @@ return {
       -- Snippets
       "L3MON4D3/LuaSnip",
       "rafamadriz/friendly-snippets",
+      --
+      "j-hui/fidget.nvim",
+      --
+      "stevearc/conform.nvim",
     },
   },
   -- Pair Character Completion

@@ -56,6 +56,10 @@ function M.setup()
             defaultCompiler = "remote",
             analysisLevel = "full",
             enableIncrementalCompilation = true,
+            inlayHints = {
+              chainingHints = true,
+              parameterHints = true,
+            },
           },
         },
         filetypes = { "solidity" },

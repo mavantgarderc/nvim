@@ -82,6 +82,48 @@ function M.setup_null_ls()
     return
   end
 
+  -- Function to detect SQL dialect from file or prompt user
+  local function get_sql_dialect(params)
+    local bufnr = params.bufnr
+
+    -- Check if dialect is already set for this buffer
+    if vim.b[bufnr].sql_dialect then return vim.b[bufnr].sql_dialect end
+
+    -- Try to detect from filename patterns
+    local filename = vim.api.nvim_buf_get_name(bufnr):lower()
+    if filename:match("postgres") or filename:match("pg_") then
+      return "postgres"
+    elseif filename:match("mysql") or filename:match("mariadb") then
+      return "mysql"
+    elseif filename:match("sqlite") then
+      return "sqlite"
+    elseif filename:match("tsql") or filename:match("sqlserver") then
+      return "tsql"
+    elseif filename:match("bigquery") or filename:match("bq_") then
+      return "bigquery"
+    elseif filename:match("snowflake") then
+      return "snowflake"
+    elseif filename:match("oracle") then
+      return "oracle"
+    elseif filename:match("clickhouse") then
+      return "clickhouse"
+    end
+
+    -- Check for .sqlfluff config in project root
+    local root_dir = vim.fn.getcwd()
+    local config_file = root_dir .. "/.sqlfluff"
+    if vim.fn.filereadable(config_file) == 1 then
+      local config_content = vim.fn.readfile(config_file)
+      for _, line in ipairs(config_content) do
+        local dialect = line:match("dialect%s*=%s*(%w+)")
+        if dialect then return dialect end
+      end
+    end
+
+    -- Default to postgres if nothing detected
+    return "postgres"
+  end
+
   local sources = {}
 
   if vim.fn.executable("stylua") == 1 then
@@ -96,18 +138,33 @@ function M.setup_null_ls()
   if vim.fn.executable("csharpier") == 1 then table.insert(sources, null_ls.builtins.formatting.csharpier) end
 
   if vim.fn.executable("sql-formatter") == 1 then table.insert(sources, null_ls.builtins.formatting.sql_formatter) end
+
   if vim.fn.executable("sqlfluff") == 1 then
-    table.insert(sources, null_ls.builtins.formatting.sqlfluff)
+    table.insert(
+      sources,
+      null_ls.builtins.formatting.sqlfluff.with({
+        extra_args = function(params)
+          local dialect = get_sql_dialect(params)
+          return { "--dialect", dialect }
+        end,
+      })
+    )
     table.insert(
       sources,
       null_ls.builtins.diagnostics.sqlfluff.with({
         method = null_ls.methods.DIAGNOSTICS_ON_SAVE,
+        extra_args = function(params)
+          local dialect = get_sql_dialect(params)
+          return { "--dialect", dialect }
+        end,
       })
     )
   end
 
   if vim.fn.executable("prettier") == 1 then table.insert(sources, null_ls.builtins.formatting.prettier) end
+
   if vim.fn.executable("black") == 1 then table.insert(sources, null_ls.builtins.formatting.black) end
+
   if vim.fn.executable("isort") == 1 then table.insert(sources, null_ls.builtins.formatting.isort) end
 
   null_ls.setup({
@@ -163,6 +220,14 @@ function M.setup_autoformat()
   })
 end
 
+vim.api.nvim_create_autocmd("LspAttach", {
+  group = vim.api.nvim_create_augroup("UserLspConfig", {}),
+  callback = function(ev)
+    local client = vim.lsp.get_client_by_id(ev.data.client_id)
+    if client and client.server_capabilities.inlayHintProvider then vim.lsp.inlay_hint.enable(true, { bufnr = ev.buf }) end
+  end,
+})
+
 function M.setup_lsp_ui()
   vim.lsp.handlers["textDocument/hover"] = function(_, result, ctx, config)
     config = config or {}
@@ -206,6 +271,21 @@ function M.setup_lsp_ui()
       vim.notify(string.format("%s: %s%s", client.name, value.message, pct), vim.log.levels.INFO)
     end
   end
+end
+
+function M.setup_workspace_caching()
+  local cache_dir = vim.fn.stdpath("cache") .. "/lsp-workspace"
+  vim.fn.mkdir(cache_dir, "p")
+
+  vim.api.nvim_create_autocmd("LspAttach", {
+    callback = function(args)
+      local client = vim.lsp.get_client_by_id(args.data.client_id)
+      if client and client.config.root_dir then
+        local workspace_cache = cache_dir .. "/" .. vim.fn.fnamemodify(client.config.root_dir, ":t")
+        client.config.workspace_cache = workspace_cache
+      end
+    end,
+  })
 end
 
 return M

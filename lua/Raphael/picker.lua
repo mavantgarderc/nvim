@@ -1,7 +1,3 @@
--- lua/Raphael/picker.lua
--- Raphael picker: palette floating window, inline fuzzy search, collapsible categories, bookmarks, preview (debounced)
--- Compatible with Neovim 0.11.x
-
 local themes = require("Raphael.themes")
 local M = {}
 

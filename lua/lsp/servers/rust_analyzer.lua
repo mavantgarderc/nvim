@@ -25,6 +25,10 @@ function M.setup(capabilities)
         checkOnSave = { command = "clippy" },
         diagnostics = { disabled = { "unresolved-proc-macro" } },
         completion = { autoimport = { enable = true } },
+        inlayHints = {
+          chainingHints = true,
+          parameterHints = true,
+        },
       },
     },
   })

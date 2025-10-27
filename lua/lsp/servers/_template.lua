@@ -1,6 +1,4 @@
-if #vim.api.nvim_list_uis() == 0 then
-  return { setup = function() end }
-end
+if #vim.api.nvim_list_uis() == 0 then return { setup = function() end } end
 
 local M = {}
 
@@ -19,7 +17,7 @@ function M.setup(capabilities)
         -- your settings here
       })
     end)
-  end, 150)  -- Increased delay to ensure lspconfig is ready
+  end, 150) -- Increased delay to ensure lspconfig is ready
 end
 
 return M

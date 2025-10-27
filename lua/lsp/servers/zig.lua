@@ -24,6 +24,10 @@ function M.setup(capabilities)
         enable_snippets = true,
         enable_autofix = true,
         warn_style = true,
+        inlayHints = {
+          chainingHints = true,
+          parameterHints = true,
+        },
       },
     },
   })
