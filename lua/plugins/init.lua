@@ -1,35 +1,25 @@
 return {
   -- ==================================================
+  -- === ui ===
   -- Oil file explorer
   "stevearc/oil.nvim",
-  -- === Optimizer
-  "lewis6991/impatient.nvim",
-  -- === ui ===
   -- status line & tabbar
   "nvim-lualine/lualine.nvim",
   -- startup dashboard
   "goolord/alpha-nvim",
   -- text coloring
-  {
-    "echasnovski/mini.hipatterns",
-    version = "*",
-    config = function()
-      require("core.mini-hipatterns")
-    end,
-  },
+  "echasnovski/mini.hipatterns",
   -- themes
-  {
-    "RRethy/base16-nvim",
-    "catppuccin/nvim",
-    "folke/tokyonight.nvim",
-    "ellisonleao/gruvbox.nvim",
-    "EdenEast/nightfox.nvim",
-    "rebelot/kanagawa.nvim",
-    "thesimonho/kanagawa-paper.nvim",
-    "nyoom-engineering/oxocarbon.nvim",
-    "whatyouhide/vim-gotham",
-    "everviolet/nvim",
-  },
+  "RRethy/base16-nvim",
+  "catppuccin/nvim",
+  "folke/tokyonight.nvim",
+  "ellisonleao/gruvbox.nvim",
+  "EdenEast/nightfox.nvim",
+  "rebelot/kanagawa.nvim",
+  "thesimonho/kanagawa-paper.nvim",
+  "nyoom-engineering/oxocarbon.nvim",
+  "whatyouhide/vim-gotham",
+  "everviolet/nvim",
   -- ==================================================
   -- === LSP ===
   {
@@ -43,7 +33,6 @@ return {
       -- Autocompletion Core
       "hrsh7th/nvim-cmp",
       "hrsh7th/cmp-buffer",
-      "hrsh7th/cmp_luasnip",
       "hrsh7th/cmp-nvim-lsp",
       "hrsh7th/cmp-nvim-lua",
       "saadparwaiz1/cmp_luasnip",
@@ -55,7 +44,7 @@ return {
       {
         "folke/lazydev.nvim",
         ft = "lua",
-        opt = {
+        opts = {
           library = {
             { path = "${3rd}/luv/library", words = { "vim%.uv" } },
           },
@@ -94,13 +83,7 @@ return {
   },
   -- ==================================================
   -- === LaTeX Integration ===
-  {
-    "lervag/vimtex",
-    init = function()
-      vim.g.vimtex_view_method = "zathura" -- the PDF live viewer
-      vim.g.vimtex_compiler_method = "latexmk"
-    end,
-  },
+  "lervag/vimtex",
   -- ==================================================
   -- === nvim plugins ===
   -- filetree
@@ -135,8 +118,6 @@ return {
   -- Git Integration
   "lewis6991/gitsigns.nvim",
   -- ==================================================
-  -- which-key; to show pending keybinds
-  "folke/which-key.nvim",
   -- keymaps of vscode
   "mg979/vim-visual-multi",
   -- Flash

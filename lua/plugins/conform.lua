@@ -31,7 +31,6 @@ return {
       c = { "clang_format" },
       cpp = { "clang_format" },
       sh = { "shfmt" },
-      terraform = { "terraform_fmt" },
     },
     format_on_save = {
       timeout_ms = 500,

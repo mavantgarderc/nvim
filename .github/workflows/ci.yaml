@@ -11,6 +11,7 @@ jobs:
     check:
         name: Lint, Format & Validate
         runs-on: ubuntu-latest
+
         steps:
             - name: Checkout Code
               uses: actions/checkout@v4
@@ -60,11 +61,14 @@ jobs:
                   LUA_PATH: ./lua/?.lua;./lua/?/init.lua;;
                   LUA_CPATH: ./lua/?.so;;
               run: |
+                  cd $GITHUB_WORKSPACE
                   nvim --headless -u init.lua -c "lua vim.print('init.lua loaded successfully')" -c "quit" 2>&1 | tee init_output.log
                   if grep -q "Error" init_output.log; then
-                    echo "Errors found in init.lua"
+                    echo "::error::Errors found in init.lua"
                     cat init_output.log
                     exit 1
+                  else
+                    echo "init.lua: OK"
                   fi
 
             - name: Install Plugins (Headless)
@@ -72,6 +76,7 @@ jobs:
                   LUA_PATH: ./lua/?.lua;./lua/?/init.lua;;
                   LUA_CPATH: ./lua/?.so;;
               run: |
+                  cd $GITHUB_WORKSPACE
                   nvim --headless "+Lazy! sync" +qa
               timeout-minutes: 5
 
@@ -80,6 +85,7 @@ jobs:
                   LUA_PATH: ./lua/?.lua;./lua/?/init.lua;;
                   LUA_CPATH: ./lua/?.so;;
               run: |
+                  cd $GITHUB_WORKSPACE
                   nvim --headless -c 'redir! > healthcheck.log | silent checkhealth | redir END | qa'
                   if [ -f healthcheck.log ]; then
                     cat healthcheck.log
@@ -87,3 +93,14 @@ jobs:
                     echo "::error::healthcheck.log not found"
                     exit 1
                   fi
+
+            - name: Run cspell
+              uses: streetsidesoftware/cspell-action@v6
+              with:
+                  config: ./cspell.json
+                  incremental_files_only: false
+                  check_dot_files: true
+                  files: |
+                      **/*.lua
+                      **/*.md
+                      **/*.json

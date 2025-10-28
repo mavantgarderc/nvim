@@ -1,0 +1,41 @@
+{
+  "version": "0.2",
+  "language": "en",
+  "ignorePaths": ["node_modules", "dist", ".git", "lazy-lock.json"],
+  "ignoreRegExpList": [
+    "/\\b[a-zA-Z0-9_]*_setup\\b/",
+    "/\\b[a-zA-Z0-9_]*_config\\b/"
+  ],
+  "dictionaries": ["softwareTerms", "en_US", "lua"],
+  "dictionaryDefinitions": [
+    {
+      "name": "lua",
+      "path": "./.github/dicts/lua.txt",
+      "addWords": true
+    }
+  ],
+  "words": [
+    "neovim",
+    "nvim",
+    "vimrc",
+    "stylua",
+    "luacheck",
+    "lspconfig",
+    "mason",
+    "conform",
+    "lazyvim",
+    "cmp",
+    "treesitter",
+    "null",
+    "none",
+    "keymap",
+    "diagnostics",
+    "autocmd",
+    "aerial",
+    "fidget",
+    "omnisharp",
+    "rustfmt",
+    "luarocks"
+  ],
+  "flagWords": []
+}

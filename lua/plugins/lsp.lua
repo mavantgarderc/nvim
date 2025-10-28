@@ -13,7 +13,6 @@ return {
       "nvimtools/none-ls.nvim",
       "j-hui/fidget.nvim",
       "stevearc/conform.nvim",
-      "stevearc/aerial.nvim",
       "aznhe21/actions-preview.nvim",
       "andythigpen/nvim-coverage",
     },
@@ -48,7 +47,7 @@ return {
 
       shared_config.setup_keymaps()
       shared_config.setup_diagnostics()
-      shared_config.setup_null_ls()
+      shared_config.setup_conform()
       shared_config.setup_format_keymap()
 
       local capabilities = shared_config.get_capabilities()
@@ -153,12 +152,6 @@ return {
       --     end, 2000)
       --   end,
       -- })
-      vim.api.nvim_create_autocmd("VimEnter", {
-        once = true,
-        callback = function()
-          vim.notify("LSP configured successfully.", vim.log.levels.INFO)
-        end,
-      })
 
       local monorepo = require("lsp.monorepo")
       monorepo.setup_lsp_with_monorepo()
@@ -170,7 +163,7 @@ return {
           if vim.fn.filereadable(path) == 1 then
             local lsp_load_project_config_ok, err = pcall(dofile, path)
             if lsp_load_project_config_ok then
-              vim.notify("Loaded project config: " .. config_file, vim.log.levels.INFO)
+              return
             else
               vim.notify("Error loading " .. config_file .. ": " .. err, vim.log.levels.ERROR)
             end
