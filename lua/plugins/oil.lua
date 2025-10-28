@@ -167,6 +167,7 @@ return {
     api.nvim_create_autocmd("VimEnter", {
       callback = function()
         local arg = fn.argv(0)
+        ---@diagnostic disable-next-line: param-type-mismatch
         if arg ~= "" and fn.isdirectory(arg) == 1 then
           oil.open()
         end
