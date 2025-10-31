@@ -27,15 +27,6 @@ This structure allows the user to explore mappings as standalone modules and ref
 ### Kendos Sword Schools - Techniques & Forms
 *Kendo* means *The Way of The Sword*.
 
-Among La Italia's finest painters, Raphael stood out for his harmony in color — just like your interface should.
-
-#### `Raphael/`
-Theme management with auto & user commands (astigmatist heaven)
-- FileType theme appliance; toggle to turn off.
-- Live theme-selector.
-- TODO: Integrations with Ghostty & Starship.
-- TODO: TOML & Hex Code support, powered by [Base16](https://github.com/RRethy/base16-nvim); TOML parser, etc. needed.
-
 #### `lsp/`
 Modular Per-language LSP Configuration; extensible & usage specific
   - Add your language server's config to `lua/lsp/servers/`, then inject to `lua/lsp/shared.lua`.
@@ -54,7 +45,8 @@ Inspired by out-of-the-box Lua-based distros:
 Plugins are lazy-loaded, organized under `lua/plugins/`, and grouped by function.
 
 `plugins/`: configured like a blade — swift, silent, and aligned in purpose
-  - [`colorizer.nvim`](https://github.com/norcalli/nvim-colorizer.lua): Inline hex/rgb coloring
+  - [`raphael.nvim`](https://github.com/mavantgarderc/raphael.nvim): Theme management plugin with file-type specific theme appliance
+  - [`pantheon.nvim`](https://github.com/mavantgarderc/pantheon.nvim): Theme plugin based on fictional characters
   - [`dadbod.nvim`](https://github.com/tpope/vim-dadbod): UI + cmp: SQL interaction with RDBMS systems (Postgres, Oracle, SSMS, etc.)
   - [`flash.nvim`](https://github.com/folke/flash.nvim): Navigate precisely - no more `H/J/K/L` spam
   - [`gitsigns.nvim`](https://github.com/lewis6991/gitsigns.nvim): Stage hunks, view diffs, navigate history — buffer-local
