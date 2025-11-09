@@ -1,5 +1,7 @@
 return {
-  "mavantgarderc/prismpunk.nvim",
+  dir = "~/projects/0-shelfs/CodeStorage/nvim-plugins/prismpunk.nvim",
+  name = "prismpunk.nvim",
+  -- "mavantgarderc/prismpunk.nvim",
   lazy = false,
   priority = 1000,
 
@@ -28,7 +30,7 @@ return {
 
       terminal = {
         enabled = true,
-        emulator = { "ghostty", "alacritty" },
+        emulator = { "ghostty" },
 
         ghostty = {
           enabled = true,

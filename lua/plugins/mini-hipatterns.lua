@@ -6,6 +6,8 @@ return {
 
     local color_vars = {}
 
+    local palette_identifier = "󱗾 █ "
+
     local function scan_for_colors(bufnr)
       color_vars = {}
       for _, line in ipairs(vim.api.nvim_buf_get_lines(bufnr, 0, -1, false)) do
@@ -52,7 +54,32 @@ return {
             end
             local group = hipatterns.compute_hex_color_group(hex, "fg")
             return {
-              virt_text = { { "󱗾 █ ", group } },
+              virt_text = { { palette_identifier, group } },
+              virt_text_pos = "inline",
+              priority = 2000,
+            }
+          end,
+        },
+
+        pal_var = {
+          pattern = "pal%.[%w_]+",
+          group = function(_, match)
+            local name = match:match("pal%.([%w_]+)")
+            local hex = color_vars[name]
+            if hex then
+              return hipatterns.compute_hex_color_group(hex, "fg")
+            end
+            return nil
+          end,
+          extmark_opts = function(_, match)
+            local name = match:match("pal%.([%w_]+)")
+            local hex = color_vars[name]
+            if not hex then
+              return nil
+            end
+            local group = hipatterns.compute_hex_color_group(hex, "fg")
+            return {
+              virt_text = { { palette_identifier, group } },
               virt_text_pos = "inline",
               priority = 2000,
             }
