@@ -95,6 +95,7 @@ opt.hlsearch = true
 opt.incsearch = true
 
 opt.termguicolors = true
+vim.o.termguicolors = true
 
 opt.scrolloff = 3
 opt.signcolumn = "yes"

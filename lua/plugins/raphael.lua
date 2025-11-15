@@ -1,3 +1,5 @@
+local raphael = require("raphael")
+
 return {
   dir = "~/projects/0-shelfs/CodeStorage/nvim-plugins/raphael.nvim",
   name = "raphael.nvim",
@@ -6,53 +8,28 @@ return {
   priority = 1000,
 
   keys = {
-    {
-      "<leader>tp",
-      function()
-        require("raphael").open_picker({ only_configured = true })
-      end,
-      desc = "Raphael: Configured themes",
-    },
-    {
-      "<leader>t/",
-      function()
-        require("raphael").open_picker({ exclude_configured = true })
-      end,
-      desc = "Raphael: All other themes",
-    },
-    {
-      "<leader>ta",
-      function()
-        require("raphael").toggle_auto()
-      end,
-      desc = "Raphael: Toggle auto-apply",
-    },
-    {
-      "<leader>tR",
-      function()
-        require("raphael").refresh_and_reload()
-      end,
-      desc = "Raphael: Refresh themes",
-    },
-    {
-      "<leader>ts",
-      function()
-        require("raphael").show_status()
-      end,
-      desc = "Raphael: Show status",
-    },
+    { "<leader>tp", raphael.open_picker, desc = "Raphael: Configured themes" },
+    { "<leader>t/", raphael.open_picker, desc = "Raphael: All other themes" },
+    { "<leader>ta", raphael.toggle_auto, desc = "Raphael: Toggle auto-apply" },
+    { "<leader>tR", raphael.refresh_and_reload, desc = "Raphael: Refresh themes" },
+    { "<leader>ts", raphael.show_status, desc = "Raphael: Show status" },
   },
 
   opts = {
-    default_theme = "kanagawa-paper-edo",
-    animate = { enabled = false, duration = 200, steps = 10 },
+    default_theme = "kanagawa-paper-sunset",
 
     leader = "<leader>t",
     mappings = {
       next = ">",
       previous = "<",
       random = "t",
+      auto = "a",
     },
+
+    bookmark_group = false,
+    recent_group = false,
+
+    save_on_exit = false,
 
     sample_preview = {
       enabled = true,
@@ -65,10 +42,11 @@ return {
     },
 
     theme_map = {
+
       prismpunk_kanagawa = {
         "kanagawa-paper-nightfall",
         "kanagawa-paper-sunset",
-        "kanagawa-paper-dawn",
+        -- "kanagawa-paper-dawn",
         "kanagawa-paper-edo",
         "kanagawa-paper-eclipse",
         "kanagawa-paper-storm",
@@ -77,12 +55,30 @@ return {
         "kanagawa-paper-inko",
       },
 
-      kanagawa = {
-        -- "kanagawa-paper-ink", -- nvim section
-        "base16-kanagawa",
-        "base16-kanagawa-dragon", -- sql
-        "kanagawa-wave",
-        "kanagawa-dragon",
+      -- kanagawa = {
+      --   "kanagawa-paper-ink",
+      --   "base16-kanagawa",
+      --   "base16-kanagawa-dragon",
+      --   "kanagawa-wave",
+      --   "kanagawa-dragon",
+      -- },
+
+      prismpunk_lantern_corps = {
+        -- "lantern-corps-black",
+        -- "lantern-corps-blue",
+        -- "lantern-corps-gold",
+        -- "lantern-corps-green",
+        -- "lantern-corps-indigo",
+        -- "lantern-corps-orange",
+        "lantern-corps-phantom-balanced",
+        "lantern-corps-phantom-choas",
+        "lantern-corps-phantom-corrupted",
+        -- "lantern-corps-red",
+        "lantern-corps-ultraviolet-spectral",
+        "lantern-corps-ultraviolet-veiled",
+        -- "lantern-corps-violet",
+        -- "lantern-corps-white",
+        -- "lantern-corps-yellow",
       },
 
       -- prismpunk_bat_family = {
@@ -106,7 +102,6 @@ return {
       -- prismpunk_justice_league = {
       --   "justice-league-aquaman",
       --   "justice-league-batman",
-      --   "justice-league-black-canary",
       --   "justice-league-blue-beetle",
       --   "justice-league-booster-gold",
       --   "justice-league-captain-atom",
@@ -121,34 +116,18 @@ return {
       --   "justice-league-superman",
       --   "justice-league-wonder-woman",
       -- },
-      -- prismpunk_lantern_corps = {
-      --   "lantern-corps-black",
-      --   "lantern-corps-blue",
-      --   "lantern-corps-gold",
-      --   "lantern-corps-green",
-      --   "lantern-corps-indigo",
-      --   "lantern-corps-orange",
-      --   "lantern-corps-phantom-balanced",
-      --   "lantern-corps-phantom-choas",
-      --   "lantern-corps-phantom-corrupted",
-      --   "lantern-corps-red",
-      --   "lantern-corps-ultraviolet-spectral",
-      --   "lantern-corps-ultraviolet-veiled",
-      --   "lantern-corps-violet",
-      --   "lantern-corps-white",
-      --   "lantern-corps-yellow",
-      -- },
+
       -- prismpunk_societyofshadows = {
       --   "society-of-shadows-athanasia-al-ghul",
       --   "society-of-shadows-bane",
       --   "society-of-shadows-ras-al-ghul",
       --   "society-of-shadows-talia-al-ghul",
       -- },
-      --
+
       -- everviolet = {
       --   "evergarden-fall",
       -- },
-      --
+
       -- black_metal = {
       --   "base16-black-metal-bathory",
       --   "base16-black-metal-dark-funeral",
@@ -163,7 +142,7 @@ return {
       --   "base16-vesper",
       --   "base16-vulcan",
       -- },
-      --
+
       -- jukebox = {
       --   "base16-atelier-dune",
       --   "base16-atelier-forest",
@@ -234,34 +213,34 @@ return {
       kdl = "kanagawa-paper-ink",
       toml = "kanagawa-paper-ink",
       conf = "kanagawa-paper-ink",
-      --
-      -- sh = "kanagawa-paper-ink",
-      -- zsh = "kanagawa-paper-ink",
-      -- hyprlang = "kanagawa-paper-ink",
-      -- csv = "kanagawa-paper-ink",
-      --
-      -- md = "base16-catppuccin-frappe",
-      -- tex = "base16-catppuccin-mocha",
-      --
-      -- cs = "gruvbox",
-      -- csx = "base16-gruvbox-dark-hard",
-      -- csproj = "base16-gruvbox-dark-pale",
-      -- xml = "base16-gruvbox-dark-pale",
-      -- solution = "base16-gruvbox-material-dark-hard",
-      --
-      -- python = "kanagawa-wave",
-      --
-      -- solidity = "base16-darkmoss",
-      --
-      -- sql = "kanagawa-dragon",
-      -- sqls = "kanagawa-dragon",
-      --
-      -- html = "tokyonight",
-      -- css = "tokyonight",
-      -- javascript = "nordfox",
-      -- typescript = "duskfox",
-      -- json = "base16-rose-pine",
-      -- jsonc = "base16-rose-pine",
+
+      sh = "kanagawa-paper-ink",
+      zsh = "kanagawa-paper-ink",
+      hyprlang = "kanagawa-paper-ink",
+      csv = "kanagawa-paper-ink",
+
+      md = "base16-catppuccin-frappe",
+      tex = "base16-catppuccin-mocha",
+
+      cs = "gruvbox",
+      csx = "base16-gruvbox-dark-hard",
+      csproj = "base16-gruvbox-dark-pale",
+      xml = "base16-gruvbox-dark-pale",
+      solution = "base16-gruvbox-material-dark-hard",
+
+      python = "kanagawa-wave",
+
+      solidity = "base16-darkmoss",
+
+      sql = "kanagawa-dragon",
+      sqls = "kanagawa-dragon",
+
+      html = "tokyonight",
+      css = "tokyonight",
+      javascript = "nordfox",
+      typescript = "duskfox",
+      json = "base16-rose-pine",
+      jsonc = "base16-rose-pine",
     },
   },
 }

@@ -3,7 +3,7 @@ return {
   name = "prismpunk.nvim",
   -- "mavantgarderc/prismpunk.nvim",
   lazy = false,
-  priority = 1000,
+  priority = 900,
 
   config = function()
     require("prismpunk").setup({
@@ -39,8 +39,8 @@ return {
         },
 
         alacritty = {
-          enabled = true,
-          auto_reload = true,
+          enabled = false,
+          auto_reload = false,
           config_path = vim.fn.expand("~/.config/alacritty/prismpunk.toml"),
         },
       },
