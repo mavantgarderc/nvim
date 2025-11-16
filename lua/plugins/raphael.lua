@@ -1,9 +1,7 @@
 local raphael = require("raphael")
 
 return {
-  dir = "~/projects/0-shelfs/CodeStorage/nvim-plugins/raphael.nvim",
-  name = "raphael.nvim",
-  -- "mavantgarderc/raphael.nvim",
+  "mavantgarderc/raphael.nvim",
   lazy = true,
   priority = 1000,
 
