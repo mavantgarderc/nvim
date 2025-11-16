@@ -1,7 +1,7 @@
 return {
   "echasnovski/mini.nvim",
   version = false,
-  lazy = true,
+  lazy = false,
   keys = {
     { "-", "<cmd>lua require('mini.files').open(vim.fn.getcwd(), true)<CR>", desc = "Open mini.files (Directory)" },
   },
@@ -14,11 +14,10 @@ return {
       local files = {}
       local dotfiles = {}
 
-      -- Categorize entries
       for _, entry in ipairs(entries) do
         local name = entry.name
         local is_dir = entry.fs_type == "directory"
-        local is_dot = name:sub(1, 1) == "." and name ~= ".."  -- Exclude parent '..'
+        local is_dot = name:sub(1, 1) == "." and name ~= ".."
 
         if is_dir and is_dot then
           table.insert(dotdirs, entry)
@@ -31,18 +30,15 @@ return {
         end
       end
 
-      -- Alphabetical sort helper (case-insensitive)
       local function alpha_sort(a, b)
         return string.lower(a.name) < string.lower(b.name)
       end
 
-      -- Sort each category
       table.sort(dotdirs, alpha_sort)
       table.sort(dirs, alpha_sort)
       table.sort(files, alpha_sort)
       table.sort(dotfiles, alpha_sort)
 
-      -- Concatenate in desired order
       local sorted = {}
       vim.list_extend(sorted, dotdirs)
       vim.list_extend(sorted, dirs)
@@ -59,20 +55,20 @@ return {
       },
 
       mappings = {
-        close       = "q",
-        go_in       = "l",
-        go_in_plus  = "L",
-        go_out      = "h",
+        close = "q",
+        go_in = "l",
+        go_in_plus = "L",
+        go_out = "h",
         go_out_plus = "H",
-        reset       = "<BS>",
-        reveal_cwd  = "@",
-        show_help   = "?",
+        reset = "<BS>",
+        reveal_cwd = "@",
+        show_help = "?",
         synchronize = "<leader>oo",
-        trim_left   = "<<",
-        trim_right  = ">>",
-        delete      = "dd",
-        new_file    = "ff",
-        new_dir     = "FF",
+        trim_left = "<<",
+        trim_right = ">>",
+        delete = "dd",
+        new_file = "ff",
+        new_dir = "FF",
       },
 
       options = {
@@ -89,6 +85,17 @@ return {
       },
     })
 
+    vim.api.nvim_create_autocmd("VimEnter", {
+      callback = function()
+        local arg = vim.fn.argv(0)
+        if arg ~= "" and vim.fn.isdirectory(arg) == 1 then
+          vim.schedule(function()
+            minifiles.open(arg, false)
+          end)
+        end
+      end,
+    })
+
     vim.keymap.set("n", "-", function()
       minifiles.open(vim.uv.cwd())
     end, { desc = "Open mini.files" })
@@ -97,5 +104,13 @@ return {
       minifiles.open(vim.uv.cwd())
     end, { desc = "Open mini.files" })
 
+    vim.keymap.set("n", "<leader>nf", function()
+      require("mini.files").create_new("file")
+    end, { buffer = true, desc = "New file" })
+
+    vim.keymap.set("n", "<leader>nd", function()
+      require("mini.files").create_new("directory")
+    end, { buffer = true, desc = "New directory" })
   end,
+
 }
