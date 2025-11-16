@@ -1,6 +1,7 @@
 return {
   "echasnovski/mini.hipatterns",
   version = "*",
+  lazy = true,
   config = function()
     local hipatterns = require("mini.hipatterns")
 

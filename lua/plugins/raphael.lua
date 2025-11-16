@@ -4,7 +4,7 @@ return {
   dir = "~/projects/0-shelfs/CodeStorage/nvim-plugins/raphael.nvim",
   name = "raphael.nvim",
   -- "mavantgarderc/raphael.nvim",
-  lazy = false,
+  lazy = true,
   priority = 1000,
 
   keys = {

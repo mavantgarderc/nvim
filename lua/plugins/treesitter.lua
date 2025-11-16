@@ -2,6 +2,7 @@ return {
   {
     "nvim-treesitter/nvim-treesitter",
     build = ":TSUpdate",
+    lazy = true,
     config = function()
       vim.g.skip_ts_context_commentstring_module = true
 

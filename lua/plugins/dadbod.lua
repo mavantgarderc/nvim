@@ -71,7 +71,7 @@ return {
         vim.cmd("silent! Dotenv " .. dotenv_path)
       elseif vim.fn.filereadable(config_env) == 1 then
         vim.cmd("silent! Dotenv " .. config_env)
-        vim.notify("Loaded .env from " .. config_env, vim.log.levels.INFO)
+        -- vim.notify("Loaded .env from " .. config_env, vim.log.levels.INFO)
       else
         vim.notify("No .env file found in cwd or config dir", vim.log.levels.WARN)
       end

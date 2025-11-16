@@ -6,7 +6,6 @@ return {
     config = function()
       local alpha = require("alpha")
       local dashboard = require("alpha.themes.dashboard")
-      local cmd = vim.cmd
       alpha.setup(require("alpha.themes.startify").config)
       dashboard.section.header.val = {
         -- "                                                   ",
@@ -79,7 +78,7 @@ return {
       }
 
       alpha.setup(dashboard.opts)
-      cmd([[
+      vim.cmd([[
              autocmd FileType alpha setlocal nofoldenable
              ]])
     end,

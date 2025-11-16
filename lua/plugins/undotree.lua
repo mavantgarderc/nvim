@@ -1,5 +1,6 @@
 return {
   "mbbill/undotree",
+  lazy = true,
   config = function()
     local g = vim.g
     local fn = vim.fn

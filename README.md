@@ -52,7 +52,6 @@ Plugins are lazy-loaded, organized under `lua/plugins/`, and grouped by function
   - [`gitsigns.nvim`](https://github.com/lewis6991/gitsigns.nvim): Stage hunks, view diffs, navigate history — buffer-local
   - [`lualine.nvim`](https://github.com/nvim-lualine/lualine.nvim): Custom tabline/statusline with style
   - [`undotree.nvim`](https://github.com/mbbill/undotree): Visual undo/redo timeline
-  - [`impatient.nvim`](https://github.com/lewis6991/impatient.nvim): Speeds up startup by caching Lua modules rather than search through the entire `runtimepath`
 
 And of course: Telescope, cmp, luasnip, DAP — the usual suspects.
 

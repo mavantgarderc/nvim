@@ -7,12 +7,8 @@ return {
 
   config = function()
     local oil = require("oil")
-    local fn = vim.fn
-    local api = vim.api
-    local cmd = vim.cmd
-    local bo = vim.bo
 
-    api.nvim_create_user_command("OilCheatsheet", function()
+    vim.api.nvim_create_user_command("OilCheatsheet", function()
       local lines = {
         "##### Oil.nvim Keymap Cheatsheet #####",
         "--------------------------------------",
@@ -41,14 +37,14 @@ return {
         " <leader>pv    → Open Oil file explorer",
       }
 
-      cmd("new")
-      api.nvim_buf_set_lines(0, 0, -1, false, lines)
-      bo.buftype = "nofile"
-      bo.bufhidden = "wipe"
-      bo.swapfile = false
-      bo.readonly = true
-      bo.filetype = "oilcheatsheet"
-      cmd("normal! gg")
+      vim.cmd("new")
+      vim.api.nvim_buf_set_lines(0, 0, -1, false, lines)
+      vim.bo.buftype = "nofile"
+      vim.bo.bufhidden = "wipe"
+      vim.bo.swapfile = false
+      vim.bo.readonly = true
+      vim.bo.filetype = "oilcheatsheet"
+      vim.cmd("normal! gg")
     end, { desc = "Open Oil Keymap Cheatsheet" })
 
     ---@diagnostic disable-next-line: redundant-parameter
@@ -82,7 +78,7 @@ return {
         list = false,
         conceallevel = 0,
         concealcursor = "",
-        winblend = fn.has("nvim-0.10") == 1 and 10 or nil,
+        winblend = vim.fn.has("nvim-0.10") == 1 and 10 or nil,
       },
 
       delete_to_trash = true,
@@ -96,7 +92,7 @@ return {
       },
 
       constrain_cursor = "editable",
-      watch_for_changes = fn.has("nvim-0.10") == 1,
+      watch_for_changes = vim.fn.has("nvim-0.10") == 1,
 
       keymaps = {
         ["g?"] = "actions.show_help",
@@ -118,7 +114,7 @@ return {
         ["gh"] = "actions.toggle_hidden",
         ["q"] = "actions.close",
         ["gp"] = function()
-          oil.open(fn.expand("%:p:h"))
+          oil.open(vim.fn.expand("%:p:h"))
         end,
       },
 
@@ -143,7 +139,7 @@ return {
         padding = 2,
         border = "rounded",
         preview_split = "auto",
-        win_options = fn.has("nvim-0.10") == 1 and { winblend = 10 } or {},
+        win_options = vim.fn.has("nvim-0.10") == 1 and { winblend = 10 } or {},
         override = function(conf)
           return conf
         end,
@@ -151,12 +147,12 @@ return {
 
       preview = {
         border = "rounded",
-        win_options = fn.has("nvim-0.10") == 1 and { winblend = 10 } or {},
+        win_options = vim.fn.has("nvim-0.10") == 1 and { winblend = 10 } or {},
       },
 
       progress = {
         border = "rounded",
-        win_options = fn.has("nvim-0.10") == 1 and { winblend = 10 } or {},
+        win_options = vim.fn.has("nvim-0.10") == 1 and { winblend = 10 } or {},
       },
 
       ssh = {
@@ -164,11 +160,11 @@ return {
       },
     })
 
-    api.nvim_create_autocmd("VimEnter", {
+    vim.api.nvim_create_autocmd("VimEnter", {
       callback = function()
-        local arg = fn.argv(0)
+        local arg = vim.fn.argv(0)
         ---@diagnostic disable-next-line: param-type-mismatch
-        if arg ~= "" and fn.isdirectory(arg) == 1 then
+        if arg ~= "" and vim.fn.isdirectory(arg) == 1 then
           oil.open()
         end
       end,

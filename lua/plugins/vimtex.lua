@@ -2,7 +2,7 @@ local g = vim.g
 
 return {
   "lervag/vimtex",
-  lazy = false,
+  lazy = true,
   init = function()
     g.tex_flavor = "latex"
 

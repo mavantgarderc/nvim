@@ -6,6 +6,7 @@ return {
       "rcarriga/nvim-dap-ui",
       "nvim-neotest/nvim-nio",
     },
+    lazy = true,
     config = function()
       local dap = require("dap")
       local dapui = require("dapui")
@@ -125,6 +126,7 @@ return {
     "mfussenegger/nvim-dap-python",
     dependencies = { "mfussenegger/nvim-dap" },
     ft = "python",
+    lazy = true,
     enabled = not vim.env.CI, -- disables in CI builds
     config = function()
       local fn = vim.fn
