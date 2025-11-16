@@ -4,6 +4,7 @@ return {
     "nvim-tree/nvim-web-devicons",
     "lewis6991/gitsigns.nvim",
   },
+  lazy = true,
   event = "VeryLazy",
   config = function()
     local core = require("plugins.lualine.core")

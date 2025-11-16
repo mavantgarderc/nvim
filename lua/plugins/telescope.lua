@@ -7,7 +7,8 @@ return {
       "nvim-telescope/telescope-ui-select.nvim",
     },
     lazy = true,
-    cmd = { "Telescope" },
+    cmd = "Telescope",
+    keys = { "<leader>f" },
     config = function()
       local telescope = require("telescope")
       local actions = require("telescope.actions")

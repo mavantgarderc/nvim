@@ -1,6 +1,8 @@
 return {
   "mbbill/undotree",
   lazy = true,
+  cmd = "UndoTreeToggle",
+  keys = { "<leader>ut" },
   config = function()
     local g = vim.g
     local fn = vim.fn

@@ -1,8 +1,11 @@
 return {
   "epwalsh/obsidian.nvim",
   version = "*",
-  ft = "markdown",
   lazy = true,
+  ft = "markdown",
+  cond = function()
+    return vim.fn.getcwd():match("obsdn")
+  end,
   dependencies = {
     "nvim-lua/plenary.nvim",
   },

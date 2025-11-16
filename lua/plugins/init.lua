@@ -1,10 +1,30 @@
 return {
-  "mavantgarderc/prismpunk.nvim",
-  "mavantgarderc/raphael.nvim",
+
+  {
+    dir = "~/projects/0-shelfs/CodeStorage/nvim-plugins/raphael.nvim",
+    name = "raphael.nvim",
+    priority = 1000,
+    lazy = true,
+  },
+
+  {
+    dir = "~/projects/0-shelfs/CodeStorage/nvim-plugins/prismpunk.nvim",
+    name = "prismpunk.nvim",
+    lazy = false,
+    priority = 900,
+    config = function()
+      require("prismpunk").setup()
+
+      vim.schedule(function()
+        vim.cmd("colorscheme kanagawa-paper-edo")
+      end)
+    end,
+  },
+
   -- ==================================================
   -- === ui ===
   -- Oil file explorer
-  "stevearc/oil.nvim",
+  "echasnovski/mini.nvim",
   -- status line & tabbar
   "nvim-lualine/lualine.nvim",
   -- startup dashboard
@@ -74,15 +94,7 @@ return {
   "windwp/nvim-autopairs",
   -- ==================================================
   -- === Obsidian Integration ===
-  {
-    "epwalsh/obsidian.nvim",
-    version = "*",
-    lazy = true,
-    ft = "markdown",
-    dependencies = {
-      "nvim-lua/plenary.nvim",
-    },
-  },
+  "epwalsh/obsidian.nvim",
   -- ==================================================
   -- === LaTeX Integration ===
   "lervag/vimtex",
@@ -120,8 +132,6 @@ return {
   -- Git Integration
   "lewis6991/gitsigns.nvim",
   -- ==================================================
-  -- keymaps of vscode
-  "mg979/vim-visual-multi",
   -- Flash
   "folke/flash.nvim",
 }

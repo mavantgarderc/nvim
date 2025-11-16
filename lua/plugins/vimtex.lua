@@ -3,6 +3,7 @@ local g = vim.g
 return {
   "lervag/vimtex",
   lazy = true,
+  ft = { "text", "bib" },
   init = function()
     g.tex_flavor = "latex"
 

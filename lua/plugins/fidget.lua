@@ -1,7 +1,8 @@
 return {
   "j-hui/fidget.nvim",
-  event = "LspAttach",
   lazy = true,
+  event = "LspAttach",
+  keys = { "s", "S" },
   opts = {
     progress = {
       display = {

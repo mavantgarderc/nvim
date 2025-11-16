@@ -8,6 +8,7 @@ return {
       "rafamadriz/friendly-snippets",
     },
     lazy = true,
+    event = "BufWritePre",
     config = function()
       local cmp = require("cmp")
       local luasnip = require("luasnip")

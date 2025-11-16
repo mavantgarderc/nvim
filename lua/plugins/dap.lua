@@ -7,7 +7,9 @@ return {
       "nvim-neotest/nvim-nio",
     },
     lazy = true,
-    config = function()
+    cmd = { "DapContinue", "DapToggleBreakpoint" },
+    keys = { "<leader>d" },
+    nfig = function()
       local dap = require("dap")
       local dapui = require("dapui")
 

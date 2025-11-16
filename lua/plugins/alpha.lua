@@ -2,7 +2,8 @@ return {
   {
     "goolord/alpha-nvim",
     dependencies = { "echasnovski/mini.icons" },
-    lazy = false,
+    lazy = true,
+    event = "VimEnter",
     config = function()
       local alpha = require("alpha")
       local dashboard = require("alpha.themes.dashboard")

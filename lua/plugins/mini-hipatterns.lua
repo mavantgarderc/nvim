@@ -2,6 +2,7 @@ return {
   "echasnovski/mini.hipatterns",
   version = "*",
   lazy = true,
+  event = "BufReadPost",
   config = function()
     local hipatterns = require("mini.hipatterns")
 
