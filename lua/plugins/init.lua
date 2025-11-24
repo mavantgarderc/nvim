@@ -1,30 +1,10 @@
 return {
-
-  {
-    dir = "~/projects/0-shelfs/CodeStorage/nvim-plugins/raphael.nvim",
-    name = "raphael.nvim",
-    priority = 1000,
-    lazy = true,
-  },
-
-  {
-    dir = "~/projects/0-shelfs/CodeStorage/nvim-plugins/prismpunk.nvim",
-    name = "prismpunk.nvim",
-    lazy = false,
-    priority = 900,
-    config = function()
-      require("prismpunk").setup()
-
-      vim.schedule(function()
-        vim.cmd("colorscheme kanagawa-paper-edo")
-      end)
-    end,
-  },
-
+  "mavantgarderc/raphael.nvim",
+  "mavantgarderc/prismpunk.nvim",
   -- ==================================================
   -- === ui ===
   -- Oil file explorer
-  "echasnovski/mini.nvim",
+  "stevearc/oil.nvim",
   -- status line & tabbar
   "nvim-lualine/lualine.nvim",
   -- startup dashboard
@@ -37,8 +17,8 @@ return {
   "folke/tokyonight.nvim",
   "ellisonleao/gruvbox.nvim",
   "EdenEast/nightfox.nvim",
-  "rebelot/kanagawa.nvim",
-  "thesimonho/kanagawa-paper.nvim",
+  -- "rebelot/kanagawa.nvim",
+  -- "thesimonho/kanagawa-paper.nvim",
   "nyoom-engineering/oxocarbon.nvim",
   "whatyouhide/vim-gotham",
   "everviolet/nvim",
