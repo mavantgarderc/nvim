@@ -26,7 +26,7 @@ return {
         lualine = true,
       },
 
-      terminal = {
+      terminals = {
         enabled = true,
         emulator = { "ghostty" },
 
@@ -34,12 +34,6 @@ return {
           enabled = true,
           auto_reload = true,
           config_path = vim.fn.expand("~/.config/ghostty/themes/prismpunk.toml"),
-        },
-
-        alacritty = {
-          enabled = false,
-          auto_reload = false,
-          config_path = vim.fn.expand("~/.config/alacritty/prismpunk.toml"),
         },
       },
     })

@@ -64,7 +64,7 @@ end
 map.set("n", "<leader>ww", toggle_wrap, { desc = "Toggle line wrap, linebreak, and colorcolumn" })
 
 opt.number = true
---opt.relativenumber = true
+opt.relativenumber = true
 opt.numberwidth = 2
 
 opt.expandtab = true -- Convert tabs to spaces
@@ -78,7 +78,7 @@ end)
 
 o.showmode = false -- don not show the mode (shown in commandline)
 
-o.cursorline = false -- show which line cursor is on
+o.cursorline = true -- show which line cursor is on
 -- opt.guicursor = ""
 opt.guicursor = "n-v-c:block-Cursor/lCursor,i-ci-ve:ver25-Cursor/lCursor,r-cr:hor20-Cursor/lCursor"
 

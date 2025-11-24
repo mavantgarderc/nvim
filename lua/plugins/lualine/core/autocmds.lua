@@ -21,8 +21,18 @@ M.setup = function(lualine_opts)
     callback = function()
       vim.defer_fn(function()
         lualine_opts.options.theme = options.get_lualine_theme()
-        require("lualine").setup(lualine_opts)
-        require("lualine").refresh()
+        local ok, err = pcall(function()
+          require("lualine").setup(lualine_opts)
+          require("lualine").refresh()
+        end)
+
+        if not ok then
+          lualine_opts.options.theme = "auto"
+          pcall(function()
+            require("lualine").setup(lualine_opts)
+            require("lualine").refresh()
+          end)
+        end
       end, 100)
     end,
   })

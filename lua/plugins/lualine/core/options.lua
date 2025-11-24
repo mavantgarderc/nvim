@@ -11,7 +11,7 @@ local function get_lualine_theme()
     return colorscheme
   end
 
-  return
+  return "auto"
 end
 
 M.get_options = function()
