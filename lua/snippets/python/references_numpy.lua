@@ -1,0 +1,16 @@
+local ls = require("luasnip")
+local s = ls.snippet
+local t = ls.text_node
+local i = ls.insert_node
+
+return {
+  s({
+    trig = "npref",
+    name = "NumPy References Section",
+    desc = "Inserts a References section in NumPy style.",
+  }, {
+    t({ "", "References", "----------" }),
+    t({ "", "" }),
+    i(1, "Citation or link..."),
+  }),
+}
