@@ -1,6 +1,6 @@
 return {
   "lewis6991/gitsigns.nvim",
-  lazy = true,
+  lazy = lazy,
   event = { "BufReadPre", "BufNewFile" },
   config = function()
     local gitsigns = require("gitsigns")

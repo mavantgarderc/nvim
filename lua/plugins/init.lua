@@ -15,12 +15,11 @@ return {
   "RRethy/base16-nvim",
   "catppuccin/nvim",
   "folke/tokyonight.nvim",
-  "ellisonleao/gruvbox.nvim",
+  -- "ellisonleao/gruvbox.nvim",
   "EdenEast/nightfox.nvim",
   -- "rebelot/kanagawa.nvim",
   -- "thesimonho/kanagawa-paper.nvim",
   "nyoom-engineering/oxocarbon.nvim",
-  "whatyouhide/vim-gotham",
   "everviolet/nvim",
   -- ==================================================
   -- === LSP ===

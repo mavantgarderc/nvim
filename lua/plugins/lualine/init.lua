@@ -5,7 +5,7 @@ return {
     "lewis6991/gitsigns.nvim",
   },
   lazy = true,
-  event = "VeryLazy",
+  event = "ColorScheme",
   config = function()
     local core = require("plugins.lualine.core")
     local sections = require("plugins.lualine.sections")
