@@ -1,4 +1,4 @@
 return {
-  "location",
-  padding = -1,
+	"location",
+	padding = -1,
 }

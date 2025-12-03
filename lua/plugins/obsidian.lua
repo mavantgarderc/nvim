@@ -1,51 +1,51 @@
 return {
-  "epwalsh/obsidian.nvim",
-  version = "*",
-  lazy = true,
-  ft = "markdown",
-  cond = function()
-    return vim.fn.getcwd():match("obsdn")
-  end,
-  dependencies = {
-    "nvim-lua/plenary.nvim",
-  },
+	"epwalsh/obsidian.nvim",
+	version = "*",
+	lazy = true,
+	ft = "markdown",
+	cond = function()
+		return vim.fn.getcwd():match("obsdn")
+	end,
+	dependencies = {
+		"nvim-lua/plenary.nvim",
+	},
 
-  opts = {
-    workspaces = {
-      {
-        name = "vanaheim",
-        path = vim.fn.expand("~/projects/0-shelfs/obsdn/Vanaheim"),
-      },
-    },
-    notes_subdir = "z-Inbox",
-    new_notes_location = "z-Inbox",
-    ui = {
-      enable = false,
-    },
+	opts = {
+		workspaces = {
+			{
+				name = "vanaheim",
+				path = vim.fn.expand("~/projects/0-shelfs/obsdn/Vanaheim"),
+			},
+		},
+		notes_subdir = "z-Inbox",
+		new_notes_location = "z-Inbox",
+		ui = {
+			enable = false,
+		},
 
-    mappings = {
-      ["<leader>go"] = {
-        action = function()
-          return require("obsidian").util.gf_passthrough()
-        end,
-        opts = { noremap = false, expr = true, buffer = true },
-      },
-    },
-  },
+		mappings = {
+			["<leader>go"] = {
+				action = function()
+					return require("obsidian").util.gf_passthrough()
+				end,
+				opts = { noremap = false, expr = true, buffer = true },
+			},
+		},
+	},
 
-  config = function(_, opts)
-    local obsidian = require("obsidian")
-    local api = vim.api
-    obsidian.setup(opts)
+	config = function(_, opts)
+		local obsidian = require("obsidian")
+		local api = vim.api
+		obsidian.setup(opts)
 
-    ---@diagnostic disable-next-line: different-requires
-    local keymaps = require("core.keymaps.obsidian")
+		---@diagnostic disable-next-line: different-requires
+		local keymaps = require("core.keymaps.obsidian")
 
-    api.nvim_create_autocmd("FileType", {
-      pattern = "markdown",
-      callback = function(args)
-        keymaps.set_keymaps(args.buf)
-      end,
-    })
-  end,
+		api.nvim_create_autocmd("FileType", {
+			pattern = "markdown",
+			callback = function(args)
+				keymaps.set_keymaps(args.buf)
+			end,
+		})
+	end,
 }

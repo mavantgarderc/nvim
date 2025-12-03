@@ -8,33 +8,33 @@ local opts = { noremap = true, silent = true }
 -- === Terminal Multiplexer  ===
 -- === === ===  ===  === === ===
 local function detect_multiplexer()
-  if vim.env.TMUX then
-    return "tmux"
-  end
-  if vim.env.ZELLIJ then
-    return "zellij"
-  end
-  local term = vim.env.TERM or ""
-  if term:match("screen") then
-    return "screen"
-  elseif term:match("tmux") then
-    return "tmux"
-  end
-  return nil
+	if vim.env.TMUX then
+		return "tmux"
+	end
+	if vim.env.ZELLIJ then
+		return "zellij"
+	end
+	local term = vim.env.TERM or ""
+	if term:match("screen") then
+		return "screen"
+	elseif term:match("tmux") then
+		return "tmux"
+	end
+	return nil
 end
 local function setup_multiplexer_keymaps()
-  local multiplexer = detect_multiplexer()
-  if multiplexer then
-    map("n", "<A-h>", ":NavigateLeft<CR>", opts)
-    map("n", "<A-j>", ":NavigateDown<CR>", opts)
-    map("n", "<A-k>", ":NavigateUp<CR>", opts)
-    map("n", "<A-l>", ":NavigateRight<CR>", opts)
-  else
-    map("n", "<A-h>", "<C-w>h", opts)
-    map("n", "<A-j>", "<C-w>j", opts)
-    map("n", "<A-k>", "<C-w>k", opts)
-    map("n", "<A-l>", "<C-w>l", opts)
-  end
+	local multiplexer = detect_multiplexer()
+	if multiplexer then
+		map("n", "<A-h>", ":NavigateLeft<CR>", opts)
+		map("n", "<A-j>", ":NavigateDown<CR>", opts)
+		map("n", "<A-k>", ":NavigateUp<CR>", opts)
+		map("n", "<A-l>", ":NavigateRight<CR>", opts)
+	else
+		map("n", "<A-h>", "<C-w>h", opts)
+		map("n", "<A-j>", "<C-w>j", opts)
+		map("n", "<A-k>", "<C-w>k", opts)
+		map("n", "<A-l>", "<C-w>l", opts)
+	end
 end
 setup_multiplexer_keymaps()
 
@@ -46,7 +46,7 @@ setup_multiplexer_keymaps()
 -- === === === Buffers === ===
 -- === === === === === === ===
 map("n", "<leader>bb", function()
-  print(vim.api.nvim_buf_get_name(vim.api.nvim_get_current_buf()))
+	print(vim.api.nvim_buf_get_name(vim.api.nvim_get_current_buf()))
 end, opts)
 map("n", "<leader>bl", cmd.ls, opts)
 map("n", "<leader>bn", cmd.bnext, opts)
@@ -107,10 +107,10 @@ map("n", "<leader>g0", cmd.tablast, opts) -- Go to last tab
 
 map("n", "<leader>tm", cmd.tabmove, opts) -- Move tab (will prompt for position)
 map("n", "<leader>t<", function()
-  cmd.tabmove("-1")
+	cmd.tabmove("-1")
 end, opts) -- Move tab left
 map("n", "<leader>t>", function()
-  cmd.tabmove("+1")
+	cmd.tabmove("+1")
 end, opts) -- Move tab right
 
 map("n", "<C-t>", cmd.tabnew, opts) -- Quick new tab
@@ -122,22 +122,22 @@ map("n", "<leader>tf", ":tabfind ", { noremap = true }) -- Find and open file in
 map("n", "<leader>tT", ":tabnew | terminal<CR>", opts) -- Open terminal in new tab
 
 local function close_other_tabs()
-  cmd("tabonly")
+	cmd("tabonly")
 end
 
 local function close_tabs_right()
-  local current_tab = vim.fn.tabpagenr()
-  local last_tab = vim.fn.tabpagenr("$")
-  for i = last_tab, current_tab + 1, -1 do
-    cmd(i .. "tabclose")
-  end
+	local current_tab = vim.fn.tabpagenr()
+	local last_tab = vim.fn.tabpagenr("$")
+	for i = last_tab, current_tab + 1, -1 do
+		cmd(i .. "tabclose")
+	end
 end
 
 local function close_tabs_left()
-  local current_tab = vim.fn.tabpagenr()
-  for _ = current_tab - 1, 1, -1 do
-    cmd("1tabclose")
-  end
+	local current_tab = vim.fn.tabpagenr()
+	for _ = current_tab - 1, 1, -1 do
+		cmd("1tabclose")
+	end
 end
 
 map("n", "<leader>tO", close_other_tabs, opts) -- Close all other tabs (function)
@@ -146,7 +146,7 @@ map("n", "<leader>tL", close_tabs_left, opts) -- Close tabs to the left
 
 map("n", "<leader>ti", cmd.tabs, opts) -- List all tabs
 map("n", "<leader>tb", function()
-  cmd("tab split")
+	cmd("tab split")
 end, opts) -- Open current buffer in new tab
 map("n", "<leader>td", ":tab drop ", { noremap = true }) -- Drop file in tab (no silent to see command)
 
@@ -190,34 +190,34 @@ map("n", "zX", "zX", { desc = "Undo manually opened/closed folds" })
 
 -- Fold level operations
 map("n", "z1", function()
-  opt.foldlevel = 1
+	opt.foldlevel = 1
 end, { desc = "Set fold level to 1" })
 map("n", "z2", function()
-  opt.foldlevel = 2
+	opt.foldlevel = 2
 end, { desc = "Set fold level to 2" })
 map("n", "z3", function()
-  opt.foldlevel = 3
+	opt.foldlevel = 3
 end, { desc = "Set fold level to 3" })
 map("n", "z4", function()
-  opt.foldlevel = 4
+	opt.foldlevel = 4
 end, { desc = "Set fold level to 4" })
 map("n", "z5", function()
-  opt.foldlevel = 5
+	opt.foldlevel = 5
 end, { desc = "Set fold level to 5" })
 map("n", "z6", function()
-  opt.foldlevel = 6
+	opt.foldlevel = 6
 end, { desc = "Set fold level to 6" })
 map("n", "z7", function()
-  opt.foldlevel = 7
+	opt.foldlevel = 7
 end, { desc = "Set fold level to 7" })
 map("n", "z8", function()
-  opt.foldlevel = 8
+	opt.foldlevel = 8
 end, { desc = "Set fold level to 8" })
 map("n", "z9", function()
-  opt.foldlevel = 9
+	opt.foldlevel = 9
 end, { desc = "Set fold level to 9" })
 map("n", "z0", function()
-  opt.foldlevel = 0
+	opt.foldlevel = 0
 end, { desc = "Set fold level to 0" })
 
 -- Quick fold level adjustments
@@ -228,62 +228,62 @@ map("n", "<leader>zM", "zM", { desc = "Close all folds" })
 
 -- Fold method switching
 map("n", "<leader>zmi", function()
-  opt.foldmethod = "indent"
+	opt.foldmethod = "indent"
 end, { desc = "Set fold method to indent" })
 map("n", "<leader>zms", function()
-  opt.foldmethod = "syntax"
+	opt.foldmethod = "syntax"
 end, { desc = "Set fold method to syntax" })
 map("n", "<leader>zmm", function()
-  opt.foldmethod = "manual"
+	opt.foldmethod = "manual"
 end, { desc = "Set fold method to manual" })
 map("n", "<leader>zme", function()
-  opt.foldmethod = "expr"
+	opt.foldmethod = "expr"
 end, { desc = "Set fold method to expr" })
 map("n", "<leader>zmk", function()
-  opt.foldmethod = "marker"
+	opt.foldmethod = "marker"
 end, { desc = "Set fold method to marker" })
 map("n", "<leader>zmd", function()
-  opt.foldmethod = "diff"
+	opt.foldmethod = "diff"
 end, { desc = "Set fold method to diff" })
 
 -- Toggle fold column
 map("n", "<leader>zfc", function()
-  ---@diagnostic disable-next-line: undefined-field
-  local current = vim.opt.foldcolumn:get()
-  if current == "0" then
-    vim.opt.foldcolumn = "4"
-    vim.notify("Fold column enabled")
-  else
-    vim.opt.foldcolumn = "0"
-    vim.notify("Fold column disabled")
-  end
+	---@diagnostic disable-next-line: undefined-field
+	local current = vim.opt.foldcolumn:get()
+	if current == "0" then
+		vim.opt.foldcolumn = "4"
+		vim.notify("Fold column enabled")
+	else
+		vim.opt.foldcolumn = "0"
+		vim.notify("Fold column disabled")
+	end
 end, { desc = "Toggle fold column" })
 
 -- Show fold info
 map("n", "<leader>zi", function()
-  local foldlevel = vim.opt.foldlevel:get()
-  local foldmethod = vim.opt.foldmethod:get()
-  ---@diagnostic disable-next-line: undefined-field
-  local foldcolumn = vim.opt.foldcolumn:get()
-  ---@diagnostic disable-next-line: undefined-field
-  local foldenable = vim.opt.foldenable:get()
+	local foldlevel = vim.opt.foldlevel:get()
+	local foldmethod = vim.opt.foldmethod:get()
+	---@diagnostic disable-next-line: undefined-field
+	local foldcolumn = vim.opt.foldcolumn:get()
+	---@diagnostic disable-next-line: undefined-field
+	local foldenable = vim.opt.foldenable:get()
 
-  local info = string.format(
-    "Fold Info:\n• Method: %s\n• Level: %d\n• Column: %s\n• Enabled: %s",
-    foldmethod,
-    foldlevel,
-    foldcolumn,
-    foldenable and "Yes" or "No"
-  )
-  vim.notify(info)
+	local info = string.format(
+		"Fold Info:\n• Method: %s\n• Level: %d\n• Column: %s\n• Enabled: %s",
+		foldmethod,
+		foldlevel,
+		foldcolumn,
+		foldenable and "Yes" or "No"
+	)
+	vim.notify(info)
 end, { desc = "Show fold info" })
 
 -- Toggle folding on/off
 map("n", "<leader>zt", function()
-  vim.opt.foldenable = not vim.opt.foldenable:get()
-  ---@diagnostic disable-next-line: undefined-field
-  local status = vim.opt.foldenable:get() and "enabled" or "disabled"
-  vim.notify("Folding " .. status)
+	vim.opt.foldenable = not vim.opt.foldenable:get()
+	---@diagnostic disable-next-line: undefined-field
+	local status = vim.opt.foldenable:get() and "enabled" or "disabled"
+	vim.notify("Folding " .. status)
 end, { desc = "Toggle folding" })
 
 -- Fold all functions (for programming languages)
@@ -294,19 +294,19 @@ end, { desc = "Toggle folding" })
 
 -- Fold all comments
 map("n", "<leader>zcc", function()
-  cmd("normal! zE") -- Clear existing folds
-  cmd('g/^\\s*\\/\\*\\|^\\s*\\/\\/\\|^\\s*#\\|^\\s*"/,/\\*\\/\\|$/fold')
+	cmd("normal! zE") -- Clear existing folds
+	cmd('g/^\\s*\\/\\*\\|^\\s*\\/\\/\\|^\\s*#\\|^\\s*"/,/\\*\\/\\|$/fold')
 end, { desc = "Fold all comments" })
 
 -- Save and restore fold state
 map("n", "<leader>zs", function()
-  cmd("mkview")
-  vim.notify("Fold state saved")
+	cmd("mkview")
+	vim.notify("Fold state saved")
 end, { desc = "Save fold state" })
 
 map("n", "<leader>zl", function()
-  cmd("loadview")
-  vim.notify("Fold state loaded")
+	cmd("loadview")
+	vim.notify("Fold state loaded")
 end, { desc = "Load fold state" })
 
 -- === === ===  === === ===
@@ -354,18 +354,18 @@ map("n", "<leader>ml", cmd.marks, tbl_extend("force", opts, { desc = "List all m
 -- Delete marks
 map("n", "<leader>md", cmd.delmarks, { desc = "Delete marks (specify which)" })
 map("n", "<leader>mD", function()
-  cmd("delmarks!")
+	cmd("delmarks!")
 end, opts, { desc = "Delete all lowercase marks" })
 
 -- Clear specific mark ranges
 map("n", "<leader>mCa", function()
-  cmd("delmarks a-z")
+	cmd("delmarks a-z")
 end, opts, { desc = "Clear all local marks" })
 map("n", "<leader>mCA", function()
-  cmd("delmarks A-Z")
+	cmd("delmarks A-Z")
 end, opts, { desc = "Clear all global marks" })
 map("n", "<leader>mC0", function()
-  cmd("delmarks 0-9")
+	cmd("delmarks 0-9")
 end, opts, { desc = "Clear all numbered marks" })
 
 -- automatics; don't need maps; documented for reference:
@@ -402,41 +402,41 @@ map("n", "<leader>jc", cmd.changes, tbl_extend("force", opts, { desc = "Show cha
 
 -- Function to set a mark and provide feedback
 local function set_mark_with_feedback(mark)
-  cmd("mark " .. mark)
-  vim.notify("Mark " .. mark .. " set at line " .. vim.fn.line("."), vim.log.levels.INFO)
+	cmd("mark " .. mark)
+	vim.notify("Mark " .. mark .. " set at line " .. vim.fn.line("."), vim.log.levels.INFO)
 end
 
 -- Function to jump to mark with feedback
 local function jump_to_mark_with_feedback(mark)
-  local pos = vim.fn.getpos("'" .. mark)
-  if pos[2] == 0 then
-    vim.notify("Mark " .. mark .. " not set", vim.log.levels.WARN)
-  else
-    cmd("normal! '" .. mark)
-    vim.notify("Jumped to mark " .. mark .. " at line " .. pos[2], vim.log.levels.INFO)
-  end
+	local pos = vim.fn.getpos("'" .. mark)
+	if pos[2] == 0 then
+		vim.notify("Mark " .. mark .. " not set", vim.log.levels.WARN)
+	else
+		cmd("normal! '" .. mark)
+		vim.notify("Jumped to mark " .. mark .. " at line " .. pos[2], vim.log.levels.INFO)
+	end
 end
 
 -- Enhanced mark setting with feedback
 map("n", "<leader>mM", function()
-  set_mark_with_feedback("M")
+	set_mark_with_feedback("M")
 end, { desc = "Set mark M with feedback" })
 map("n", "<leader>mT", function()
-  set_mark_with_feedback("T")
+	set_mark_with_feedback("T")
 end, { desc = "Set mark T with feedback" })
 map("n", "<leader>mB", function()
-  set_mark_with_feedback("B")
+	set_mark_with_feedback("B")
 end, { desc = "Set mark B with feedback" })
 
 -- Enhanced mark jumping with feedback
 map("n", "<leader>JM", function()
-  jump_to_mark_with_feedback("M")
+	jump_to_mark_with_feedback("M")
 end, { desc = "Jump to mark M with feedback" })
 map("n", "<leader>JT", function()
-  jump_to_mark_with_feedback("T")
+	jump_to_mark_with_feedback("T")
 end, { desc = "Jump to mark T with feedback" })
 map("n", "<leader>JB", function()
-  jump_to_mark_with_feedback("B")
+	jump_to_mark_with_feedback("B")
 end, { desc = "Jump to mark B with feedback" })
 
 -- Set marks in visual mode
@@ -483,7 +483,7 @@ map("n", "?", "m'?", tbl_extend("force", opts, { desc = "Search backwards (mark 
 
 -- If using telescope.nvim, you might want these
 map("n", "<leader>fm", function()
-  cmd("Telescope marks")
+	cmd("Telescope marks")
 end, { desc = "Find marks with Telescope" })
 
 -- useful commands
@@ -493,9 +493,9 @@ vim.api.nvim_create_user_command("ClearAllMarks", "delmarks!", { desc = "Clear a
 
 -- Command to show mark info
 vim.api.nvim_create_user_command("MarkInfo", function()
-  local marks = vim.fn.getmarklist()
-  local buf_marks = vim.fn.getmarklist(vim.fn.bufnr())
-  print("Global marks: " .. #marks)
-  print("Buffer marks: " .. #buf_marks)
-  cmd("marks")
+	local marks = vim.fn.getmarklist()
+	local buf_marks = vim.fn.getmarklist(vim.fn.bufnr())
+	print("Global marks: " .. #marks)
+	print("Buffer marks: " .. #buf_marks)
+	cmd("marks")
 end, { desc = "Show mark information" })

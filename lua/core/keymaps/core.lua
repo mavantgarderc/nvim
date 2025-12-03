@@ -1,5 +1,5 @@
 local function map(mode, lhs, rhs, desc)
-  vim.keymap.set(mode, lhs, rhs, { noremap = true, silent = true, desc = desc })
+	vim.keymap.set(mode, lhs, rhs, { noremap = true, silent = true, desc = desc })
 end
 
 local set = vim.keymap.set
@@ -12,19 +12,19 @@ set("n", "<leader>pv", ":Oil<CR>", { noremap = true, silent = true, desc = "Open
 
 -- interactive replace word under the cursor
 map("n", "<leader>x", function()
-  local word = vim.fn.expand("<cword>")
-  if word == "" then
-    print("No word under cursor")
-    return
-  end
-  vim.api.nvim_feedkeys(
-    ":%s/"
-      .. vim.fn.escape(word, "/\\")
-      .. "//gc"
-      .. string.rep(vim.api.nvim_replace_termcodes("<Left>", true, false, true), 3),
-    "n",
-    false
-  )
+	local word = vim.fn.expand("<cword>")
+	if word == "" then
+		print("No word under cursor")
+		return
+	end
+	vim.api.nvim_feedkeys(
+		":%s/"
+			.. vim.fn.escape(word, "/\\")
+			.. "//gc"
+			.. string.rep(vim.api.nvim_replace_termcodes("<Left>", true, false, true), 3),
+		"n",
+		false
+	)
 end, "Replace word under cursor interactively")
 
 map({ "n", "v", "i" }, "<Find>", "0")

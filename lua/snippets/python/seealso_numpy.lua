@@ -4,14 +4,14 @@ local t = ls.text_node
 local i = ls.insert_node
 
 return {
-  s({
-    trig = "npsee",
-    name = "NumPy See Also Section",
-    desc = "Inserts a See Also section in NumPy style.",
-  }, {
-    t({ "", "See Also", "--------" }),
-    t({ "", "" }),
-    i(1, "related_function"),
-    t({ "", "    : Description." }),
-  }),
+	s({
+		trig = "npsee",
+		name = "NumPy See Also Section",
+		desc = "Inserts a See Also section in NumPy style.",
+	}, {
+		t({ "", "See Also", "--------" }),
+		t({ "", "" }),
+		i(1, "related_function"),
+		t({ "", "    : Description." }),
+	}),
 }

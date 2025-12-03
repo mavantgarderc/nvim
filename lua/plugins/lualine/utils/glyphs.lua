@@ -1,56 +1,56 @@
 local M = {}
 
 M.git = {
-  branch = "󰝨",
-  added = " ",
-  modified = " ",
-  removed = " ",
-  ahead = "↑",
-  behind = "↓",
+	branch = "󰝨",
+	added = " ",
+	modified = " ",
+	removed = " ",
+	ahead = "↑",
+	behind = "↓",
 }
 
 M.diagnostics = {
-  error = "󰯈 ",
-  warn = " ",
+	error = "󰯈 ",
+	warn = " ",
 }
 
 M.language = {
-  python = " ",
-  dotnet = " ",
-  database = " ",
+	python = " ",
+	dotnet = " ",
+	database = " ",
 }
 
 M.status = {
-  test = "󰙨 ",
-  debug = " ",
-  func = "⚡",
+	test = "󰙨 ",
+	debug = " ",
+	func = "⚡",
 }
 
 M.progress = {
-  "",
-  "",
-  "",
-  "",
-  "",
-  "",
-  "",
-  "",
-  "",
-  "",
-  "",
-  "",
-  "",
-  "",
-  "",
-  "",
-  "",
-  "",
-  "",
-  "",
+	"",
+	"",
+	"",
+	"",
+	"",
+	"",
+	"",
+	"",
+	"",
+	"",
+	"",
+	"",
+	"",
+	"",
+	"",
+	"",
+	"",
+	"",
+	"",
+	"",
 }
 
 M.file = {
-  folder = " ",
+	folder = " ",
 }
 
 return M
