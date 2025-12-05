@@ -41,7 +41,7 @@ function M.setup_lsp_keymaps()
 			map("n", "<leader>wa", buff.add_workspace_folder, opts)
 			map("n", "<leader>wr", buff.remove_workspace_folder, opts)
 			map("n", "<leader>wl", function()
-				print(vim.inspect(vim.ls.buf.list_workspace_folders()))
+				print(vim.inspect(vim.lsp.buf.list_workspace_folders()))
 			end, opts)
 
 			local has_telescope, telescope = pcall(require, "telescope.builtin")

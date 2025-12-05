@@ -2,7 +2,7 @@ return {
 	{
 		"VonHeikemen/lsp-zero.nvim",
 		branch = "v3.x",
-		lazy = true,
+		lazy = false,
 		dependencies = {
 			"neovim/nvim-lspconfig",
 			"williamboman/mason.nvim",
@@ -143,7 +143,7 @@ return {
 				end,
 			})
 
-			-- UNCOMMENT ME WHEN YOU NEED TO HEALTCHCHECK THE LSP CLIENTS/SERVERS
+			-- -- UNCOMMENT ME WHEN YOU NEED TO HEALTCHCHECK THE LSP CLIENTS/SERVERS
 			-- vim.api.nvim_create_autocmd("VimEnter", {
 			--   once = true,
 			--   callback = function()

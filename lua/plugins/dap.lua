@@ -85,7 +85,7 @@ return {
 					program = function()
 						if vim.fn.confirm("Should I recompile first?", "&yes\n&no", 2) == 1 then
 							if not build_dotnet_project() then
-								if vim.mfn.confirm("Build failed. Continue anyway?", "&yes\n&no", 2) ~= 1 then
+								if vim.fn.confirm("Build failed. Continue anyway?", "&yes\n&no", 2) ~= 1 then
 									return nil
 								end
 							end
