@@ -83,7 +83,8 @@ return {
 					end)
 
 					if mode_ok and operator_ok then
-						mode_opts.autohide = mode_opts.autohide == nil and (mode_result:find("no") and operator_result == "y")
+						mode_opts.autohide = mode_opts.autohide == nil
+							and (mode_result:find("no") and operator_result == "y")
 					end
 					mode_opts.jump_labels = mode_opts.jump_labels == nil and false
 				end,

@@ -243,22 +243,34 @@ function M.setup_lsp_keymaps()
 							diagnostics = vim.diagnostic.get(event.buf, { lnum = vim.fn.line(".") - 1 }),
 						}
 
-						vim.lsp.buf_request(event.buf, "textDocument/codeAction", params, function(err, result, _ctx, _config)
-							if err then
-								vim.notify("Error getting code actions: " .. err.message, vim.log.levels.ERROR)
-								return
-							end
+						vim.lsp.buf_request(
+							event.buf,
+							"textDocument/codeAction",
+							params,
+							function(err, result, _ctx, _config)
+								if err then
+									vim.notify("Error getting code actions: " .. err.message, vim.log.levels.ERROR)
+									return
+								end
 
-							if not result or #result == 0 then
-								vim.notify("No code actions available", vim.log.levels.INFO)
-								return
-							end
+								if not result or #result == 0 then
+									vim.notify("No code actions available", vim.log.levels.INFO)
+									return
+								end
 
-							print("Available code actions:")
-							for i, action in ipairs(result) do
-								print(string.format("%d: %s (kind: %s)", i, action.title or "No title", action.kind or "No kind"))
+								print("Available code actions:")
+								for i, action in ipairs(result) do
+									print(
+										string.format(
+											"%d: %s (kind: %s)",
+											i,
+											action.title or "No title",
+											action.kind or "No kind"
+										)
+									)
+								end
 							end
-						end)
+						)
 					end, vim.tbl_extend("force", opts, { desc = "Debug code actions" }))
 
 					-- Test running keymaps (if netcoredbg is available)
