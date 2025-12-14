@@ -233,7 +233,8 @@ local function check_config()
 	local config_ok, config_err = pcall(vim.cmd, "source $MYVIMRC")
 	table.insert(results, {
 		ok = config_ok,
-		message = config_ok and "Configuration loads successfully OK" or ("Configuration error: " .. tostring(config_err)),
+		message = config_ok and "Configuration loads successfully OK"
+			or ("Configuration error: " .. tostring(config_err)),
 	})
 
 	local config_files = {
@@ -425,7 +426,10 @@ local function setup_commands()
 			end
 
 			if has_critical_issues then
-				vim.notify("WARNING: Critical configuration issues detected! Run :HealthCheck for details", vim.log.levels.WARN)
+				vim.notify(
+					"WARNING: Critical configuration issues detected! Run :HealthCheck for details",
+					vim.log.levels.WARN
+				)
 			end
 		end, 1000)
 	end, { desc = "Run automatic health check on startup" })

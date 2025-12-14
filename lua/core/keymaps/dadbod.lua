@@ -158,7 +158,10 @@ function M.setup(map, with_db)
 						if vim.fn.executable("sqlformat") == 1 then
 							vim.cmd("%!sqlformat --reindent --keywords upper --identifiers lower -")
 						else
-							vim.notify("sqlfluff failed and sqlformat not found. Install sqlfluff/sqlformat.", vim.log.levels.WARN)
+							vim.notify(
+								"sqlfluff failed and sqlformat not found. Install sqlfluff/sqlformat.",
+								vim.log.levels.WARN
+							)
 						end
 					end
 				elseif vim.fn.executable("sqlformat") == 1 then

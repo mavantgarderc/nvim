@@ -5,7 +5,7 @@ return {
 
 	config = function()
 		require("prismpunk").setup({
-			theme = "kanagawa/paper-edo",
+			-- theme = "kanagawa/paper-edo",
 
 			styles = {
 				comments = { italic = true },
