@@ -69,34 +69,17 @@ return {
 			"stevearc/conform.nvim",
 		},
 	},
-	-- Pair Character Completion
+	-- === other plugins ===
 	"windwp/nvim-autopairs",
-	-- ==================================================
-	-- === Obsidian Integration ===
 	"epwalsh/obsidian.nvim",
-	-- ==================================================
-	-- === LaTeX Integration ===
 	"lervag/vimtex",
-	-- ==================================================
-	-- === nvim plugins ===
-	-- filetree
 	"MunifTanjim/nui.nvim",
 	"nvim-treesitter/nvim-treesitter",
-	"nvim-treesitter/playground",
-  -- Telescope
-  "nvim-telescope/telescope.nvim",
-	-- undotree
+	"nvim-telescope/telescope.nvim",
 	"mbbill/undotree",
-	-- terminal multiplexer navigations
-	"christoomey/vim-tmux-navigator",
-	"swaits/zellij-nav.nvim",
-	-- ==================================================
-	-- Git Integration
 	"lewis6991/gitsigns.nvim",
-	-- ==================================================
-	-- Flash
 	"folke/flash.nvim",
-  -- ==================================================
-  -- Screenshot
-  "mistweaverco/snap.nvim",
+	"mistweaverco/snap.nvim",
+  "christoomey/vim-tmux-navigator",
+  -- "swaits/zellij-nav.nvim",
 }

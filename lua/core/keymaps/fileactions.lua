@@ -13,4 +13,4 @@ map("n", "<leader>oo", function()
 	end
 end, { desc = "Save all; source if Lua" })
 
-map("n", "<leader>o<leader>o", ":wa<CR>:qa", { desc = "Save all, then quit; confirmation needed" })
+-- map("n", "<leader>o<leader>o", ":wa<CR>:qa", { desc = "Save all, then quit; confirmation needed" })
