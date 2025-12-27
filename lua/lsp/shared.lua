@@ -82,31 +82,6 @@ end
 function M.setup_conform()
 	local conform = require("conform")
 
-	conform.setup({
-		formatters_by_ft = {
-			lua = { "stylua" },
-			cs = { "csharpier" },
-			sql = { "sqlfluff", "sql-formatter" },
-			javascript = { "prettier" },
-			typescript = { "prettier" },
-			json = { "prettier" },
-			html = { "prettier" },
-			css = { "prettier" },
-			python = { "isort", "black" },
-			go = { "goimports", "gofumpt" },
-			sh = { "shfmt" },
-			yaml = { "prettier" },
-			markdown = { "prettier" },
-		},
-		-- run all available formatters sequentially
-		format_on_save = function(bufnr)
-			if vim.b[bufnr].lsp_format_on_save == false then
-				return
-			end
-			return { timeout_ms = 3000, lsp_fallback = true }
-		end,
-	})
-
 	vim.api.nvim_create_user_command("Format", function()
 		conform.format({ async = true, lsp_fallback = true })
 	end, { desc = "Format current buffer with Conform" })
@@ -133,21 +108,7 @@ function M.setup_format_keymap()
 	end, { desc = "Format selection" })
 end
 
-function M.setup_autoformat()
-	vim.api.nvim_create_autocmd("BufWritePre", {
-		pattern = "*",
-		callback = function()
-			if vim.b.lsp_format_on_save ~= false then
-				vim.lsp.buf.format({
-					async = false,
-					filter = function(client)
-						return client.name ~= "omnisharp"
-					end,
-				})
-			end
-		end,
-	})
-end
+function M.setup_autoformat() end
 
 vim.api.nvim_create_autocmd("LspAttach", {
 	group = vim.api.nvim_create_augroup("UserLspConfig", {}),
