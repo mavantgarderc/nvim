@@ -1,7 +1,6 @@
 return {
 	{
 		"nvim-telescope/telescope.nvim",
-		tag = "0.1.5",
 		dependencies = {
 			"nvim-lua/plenary.nvim",
 			{
@@ -13,7 +12,7 @@ return {
 			},
 			{ "nvim-telescope/telescope-ui-select.nvim" },
 			{ "nvim-tree/nvim-web-devicons", enabled = vim.g.have_nerd_font },
-    },
+		},
 		lazy = true,
 		cmd = "Telescope",
 		keys = { "<leader>f" },

@@ -119,7 +119,7 @@ opt.incsearch = true -- show incremental search results as you type
 opt.termguicolors = true -- enable 24-bit RGB colors
 vim.o.termguicolors = true -- (duplicate, but harmless; ensures it's on)
 
-opt.scrolloff = 9 -- keep at least 1 line above/below cursor when scrolling
+opt.scrolloff = 3 -- keep at least 1 line above/below cursor when scrolling
 opt.signcolumn = "yes" -- always show sign column (avoids text shifting)
 opt.isfname:append("@-@") -- treat @-@ as part of file names
 
