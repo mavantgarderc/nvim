@@ -1,6 +1,7 @@
 return {
 	"mavantgarderc/raphael.nvim",
 	"mavantgarderc/prismpunk.nvim",
+	"mavantgarderc/conscious.nvim",
 	-- ==================================================
 	-- === ui ===
 	-- Oil file explorer

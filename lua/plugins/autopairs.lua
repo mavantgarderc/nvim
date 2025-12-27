@@ -2,7 +2,6 @@ return {
 	"windwp/nvim-autopairs",
 	lazy = true,
 	event = "InsertEnter",
-	dependencies = { "hrsh7th/nvim-cmp" },
 	config = function()
 		local autopairs = require("nvim-autopairs")
 		local Rule = require("nvim-autopairs.rule")

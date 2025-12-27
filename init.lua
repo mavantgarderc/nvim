@@ -58,6 +58,8 @@ require("core")
 require("lazy").setup({
 	spec = {
 		{ import = "plugins" },
+		{ import = "plugins.lspconfig" },
+		{ import = "plugins.cmpconfig" },
 	},
 	dev = lazy_dev,
 })
