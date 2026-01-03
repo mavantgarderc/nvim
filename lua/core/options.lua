@@ -4,6 +4,10 @@ local o = vim.o
 local schedule = vim.schedule
 local map = vim.keymap
 local opt_local = vim.opt_local
+local env = vim.env
+local wo = vim.wo
+local w = vim.w
+local fn = vim.fn
 
 map.set("n", "<leader>J", "<Nop>")
 map.set("n", "gc", "<Nop>")
@@ -28,13 +32,22 @@ g.loaded_ruby_provider = 0
 -- Don't force markdown recommended defaults (let your config decide)
 g.markdown_recommended_style = 0
 
+-- Enable spellchecking in markdown buffers
+vim.api.nvim_create_autocmd("FileType", {
+	pattern = "markdown",
+	callback = function()
+		vim.opt_local.spell = true
+		vim.opt_local.spelllang = { "en_us" }
+	end,
+})
+
 -- mason.nvim $PATH setup
-local mason_bin = vim.fn.stdpath("data") .. "/mason/bin"
-if vim.fn.has("win32") == 1 then
+local mason_bin = fn.stdpath("data") .. "/mason/bin"
+if fn.has("win32") == 1 then
 	mason_bin = mason_bin:gsub("/", "\\")
-	vim.env.PATH = mason_bin .. ";" .. vim.env.PATH
+	env.PATH = mason_bin .. ";" .. env.PATH
 else
-	vim.env.PATH = mason_bin .. ":" .. vim.env.PATH
+	env.PATH = mason_bin .. ":" .. env.PATH
 end
 
 -- Global wrapping defaults + per-window toggle
@@ -48,31 +61,31 @@ local grp = vim.api.nvim_create_augroup("GlobalWrap", { clear = true })
 vim.api.nvim_create_autocmd({ "BufWinEnter", "WinNew" }, {
 	group = grp,
 	callback = function()
-		if vim.w.__wrap_user_enabled then
-			vim.wo.wrap = true
-			vim.wo.linebreak = true
-			vim.wo.colorcolumn = "120"
+		if w.__wrap_user_enabled then
+			wo.wrap = true
+			wo.linebreak = true
+			wo.colorcolumn = "120"
 		else
-			vim.wo.wrap = false
-			vim.wo.linebreak = false
-			vim.wo.colorcolumn = ""
+			wo.wrap = false
+			wo.linebreak = false
+			wo.colorcolumn = ""
 		end
 	end,
 })
 
 -- Toggle wrapping for the current window (sticky per-window toggle)
 local function toggle_wrap()
-	if vim.w.__wrap_user_enabled then
-		vim.w.__wrap_user_enabled = nil
-		vim.wo.wrap = false
-		vim.wo.linebreak = false
-		vim.wo.colorcolumn = ""
+	if w.__wrap_user_enabled then
+		w.__wrap_user_enabled = nil
+		wo.wrap = false
+		wo.linebreak = false
+		wo.colorcolumn = ""
 		print("Wrap OFF")
 	else
-		vim.w.__wrap_user_enabled = true
-		vim.wo.wrap = true
-		vim.wo.linebreak = true
-		vim.wo.colorcolumn = "135"
+		w.__wrap_user_enabled = true
+		wo.wrap = true
+		wo.linebreak = true
+		wo.colorcolumn = "135"
 		print("Wrap ON (sticky for this window)")
 	end
 end
@@ -100,6 +113,7 @@ o.cursorline = true -- highlight the line with the cursor
 o.guicursor = "n-v-c:block-Cursor/lCursor,i-ci-ve:ver25-Cursor/lCursor,r-cr:hor20-Cursor/lCursor" -- fine-grained cursor shapes
 
 o.list = true -- show whitespace characters according to 'listchars'
+opt.autoread = true -- auto read file if changed outside vim
 
 -- Symbols used to represent whitespace when 'list' is on
 opt.listchars = {
@@ -128,11 +142,14 @@ opt.updatetime = 20 -- faster CursorHold & swap writes (default is 4000ms)
 opt.splitright = true -- vertical splits open to the right
 opt.splitbelow = true -- horizontal splits open below
 
--- Enable spellchecking in markdown buffers
-vim.api.nvim_create_autocmd("FileType", {
-	pattern = "markdown",
-	callback = function()
-		vim.opt_local.spell = true
-		vim.opt_local.spelllang = { "en_us" }
-	end,
-})
+opt.cmdheight = 1 -- command line height
+opt.showcmd = true -- show command in status line
+
+opt.smoothscroll = true -- smooth scrolling (if available)
+opt.undolevels = 1000 -- number of changes to undo
+opt.mouse = "a" -- enable mouse in all modes
+opt.mousefocus = true -- focus window when mouse is moved over it
+opt.mousehide = true -- hide mouse pointer when typing
+opt.selectmode = "mouse,key" -- selection mode
+opt.modeline = true -- enable modeline
+opt.modelines = 5 -- number of lines to check for modeline
