@@ -74,18 +74,18 @@ return {
 			random = "r",
 		},
 
-		profiles = {
-			work = {
-				default_theme = "kanagawa-paper-edo",
-			},
-			night = {
-				default_theme = "detox-ink",
-			},
-			presentation = {
-				default_theme = "kanagawa-paper-obsidian",
-			},
-		},
-		current_profile = "work",
+		-- profiles = {
+		-- 	work = {
+		-- 		default_theme = "kanagawa-paper-edo",
+		-- 	},
+		-- 	night = {
+		-- 		default_theme = "detox-ink",
+		-- 	},
+		-- 	presentation = {
+		-- 		default_theme = "kanagawa-paper-obsidian",
+		-- 	},
+		-- },
+		-- current_profile = "work",
 
 		sample_preview = {
 			enabled = true,

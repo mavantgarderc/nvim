@@ -1,7 +1,7 @@
 return {
 	"mavantgarderc/raphael.nvim",
 	"mavantgarderc/prismpunk.nvim",
-	"mavantgarderc/conscious.nvim",
+	-- "mavantgarderc/conscious.nvim",
 	-- ==================================================
 	-- === ui ===
 	-- status line & tabbar
@@ -27,4 +27,5 @@ return {
 	"mistweaverco/snap.nvim",
 	"christoomey/vim-tmux-navigator",
 	-- "swaits/zellij-nav.nvim",
+	"nvim-lua/plenary.nvim",
 }
