@@ -91,6 +91,10 @@ local function toggle_wrap()
 end
 map.set("n", "<leader>ww", toggle_wrap, { desc = "Toggle line wrap, linebreak, and colorcolumn" })
 
+opt.foldmethod = "expr"
+opt.foldexpr = "v:lua.vim.treesitter.foldexpr()"
+opt.foldlevel = 99
+
 opt.number = true -- show absolute line number on the current line
 opt.relativenumber = true -- show relative line numbers on others
 opt.numberwidth = 2 -- minimum width of line number column
