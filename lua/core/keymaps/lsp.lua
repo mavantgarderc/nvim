@@ -305,6 +305,11 @@ function M.setup_lsp_keymaps()
 					end
 				end
 			end
+
+			-- LSP toggle keymap
+			map("n", "<leader>lt", function()
+				require("lsp.toggle").toggle_lsp()
+			end, vim.tbl_extend("force", opts, { desc = "Toggle LSP" }))
 		end,
 	})
 
@@ -320,5 +325,10 @@ function M.setup_lsp_keymaps()
 		end,
 	})
 end
+
+-- Add global LSP toggle keymap
+vim.keymap.set("n", "<leader>lT", function()
+	require("lsp.toggle").toggle_lsp_globally()
+end, { desc = "Toggle LSP globally" })
 
 return M

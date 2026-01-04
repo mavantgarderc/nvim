@@ -186,4 +186,13 @@ function M.setup_workspace_caching()
 	})
 end
 
+-- LSP toggle command
+vim.api.nvim_create_user_command("LspToggle", function()
+	require("lsp.toggle").toggle_lsp()
+end, { desc = "Toggle LSP for current buffer" })
+
+vim.api.nvim_create_user_command("LspToggleGlobal", function()
+	require("lsp.toggle").toggle_lsp_globally()
+end, { desc = "Toggle LSP globally" })
+
 return M
