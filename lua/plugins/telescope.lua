@@ -13,9 +13,9 @@ return {
 			{ "nvim-telescope/telescope-ui-select.nvim" },
 			{ "nvim-tree/nvim-web-devicons", enabled = vim.g.have_nerd_font },
 		},
-		lazy = true,
-		cmd = "Telescope",
-		keys = { "<leader>f" },
+		lazy = false,
+		-- cmd = "Telescope",
+		-- keys = { "<leader>f" },
 		config = function()
 			local telescope = require("telescope")
 			local actions = require("telescope.actions")
