@@ -30,6 +30,18 @@ function M.setup(capabilities)
 					includeInlayFunctionLikeReturnTypeHints = true,
 					includeInlayEnumMemberValueHints = true,
 				},
+				preferences = {
+					includeCompletionsForModuleExports = true,
+					includeCompletionsWithInsertText = true,
+					quoteStyle = "single",
+					importModuleSpecifier = "relative",
+				},
+				suggest = {
+					autoImports = true,
+					completeFunctionCalls = true,
+					completeJSDocs = true,
+				},
+				updateImportsOnFileMove = "always",
 			},
 			javascript = {
 				inlayHints = {
@@ -42,6 +54,18 @@ function M.setup(capabilities)
 					includeInlayFunctionLikeReturnTypeHints = true,
 					includeInlayEnumMemberValueHints = true,
 				},
+				preferences = {
+					includeCompletionsForModuleExports = true,
+					includeCompletionsWithInsertText = true,
+					quoteStyle = "single",
+					importModuleSpecifier = "relative",
+				},
+				suggest = {
+					autoImports = true,
+					completeFunctionCalls = true,
+					completeJSDocs = true,
+				},
+				updateImportsOnFileMove = "always",
 			},
 		}
 

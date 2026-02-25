@@ -141,7 +141,7 @@ opt.scrolloff = 3 -- keep at least 1 line above/below cursor when scrolling
 opt.signcolumn = "yes" -- always show sign column (avoids text shifting)
 opt.isfname:append("@-@") -- treat @-@ as part of file names
 
-opt.updatetime = 20 -- faster CursorHold & swap writes (default is 4000ms)
+opt.updatetime = 50 -- faster CursorHold & swap writes (default is 4000ms)
 
 opt.splitright = true -- vertical splits open to the right
 opt.splitbelow = true -- horizontal splits open below
