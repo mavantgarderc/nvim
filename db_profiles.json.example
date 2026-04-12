@@ -1,0 +1,62 @@
+{
+  "local_postgres": {
+    "url": "postgresql://mava:password@localhost:5432/ml",
+    "driver": "postgres",
+    "description": "Local PostgreSQL for ML metadata + experiments",
+    "project": "core",
+    "readonly": false,
+    "default_schema": "public"
+  },
+
+  "analytics_clickhouse": {
+    "url": "clickhouse://localhost:9000",
+    "driver": "clickhouse",
+    "description": "High‑performance analytics warehouse",
+    "project": "analytics",
+    "readonly": true
+  },
+
+  "feature_store_duckdb": {
+    "url": "duckdb:///home/mava/data/feature_store.duckdb",
+    "driver": "duckdb",
+    "description": "Local DuckDB file for offline feature engineering",
+    "project": "offline-ml",
+    "readonly": false
+  },
+
+  "iot_influx": {
+    "url": "http://localhost:8086",
+    "driver": "influx",
+    "token_var": "INFLUXDB_TOKEN",
+    "org": "mava-labs",
+    "bucket": "sensors",
+    "description": "InfluxDB bucket for IoT telemetry measurements",
+    "readonly": false
+  },
+
+  "vector_db_qdrant": {
+    "url": "http://localhost:6333",
+    "driver": "qdrant",
+    "description": "Local Qdrant vector DB for embeddings / ANN search",
+    "project": "vector-search",
+    "readonly": false
+  },
+
+  "prod_postgres": {
+    "url": "postgresql://analytics:***REDACTED***/prod",
+    "driver": "postgres",
+    "description": "Production PostgreSQL instance",
+    "project": "core",
+    "readonly": true,
+    "default_schema": "analytics"
+  },
+
+  "warehouse_bigquery": {
+    "url": "bigquery://mava-prod",
+    "driver": "bigquery",
+    "description": "BigQuery warehouse for large‑scale analytics",
+    "project": "analytics",
+    "credentials_file": "/home/mava/.config/gcloud/credentials.json",
+    "readonly": true
+  }
+}
