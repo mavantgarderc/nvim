@@ -76,6 +76,7 @@ return {
 				end
 			end
 
+			-- .NET
 			dap.configurations.cs = {
 				{
 					type = "coreclr",
