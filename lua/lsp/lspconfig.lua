@@ -92,5 +92,5 @@ vim.api.nvim_create_autocmd("LspAttach", {
 	end,
 })
 
--- ── Load optional modules ─────────────────────────────────────────
-require("lsp.health")
+require("health")
+require("symbol_index").setup()

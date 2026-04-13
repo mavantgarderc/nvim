@@ -42,29 +42,31 @@ function M.extend(client, bufnr)
 	local opts = { buffer = bufnr, silent = true }
 
 	vim.keymap.set("n", "<leader>re", function()
-		client:request("rust-analyzer/expandMacro", vim.lsp.util.make_position_params(), function(err, result)
-			if err then
-				vim.notify("expandMacro failed: " .. tostring(err.message), vim.log.levels.ERROR)
-				return
-			end
-			if result and result.expansion then
-				vim.lsp.util.open_floating_preview(
-					vim.split(result.expansion, "\n"),
-					"rust",
-					{ border = "rounded", title = "Macro Expansion" }
-				)
-			end
-		end)
-	end, vim.tbl_extend("force", opts, { desc = "Expand macro (rust)" }))
+		vim.lsp.buf.code_action({
+			apply = true,
+			context = { only = { "rust-analyzer.expandMacro" }, diagnostics = {} },
+		})
+	end, vim.tbl_extend("force", opts, { desc = "Expand macro (Rust)" }))
 
 	vim.keymap.set("n", "<leader>rc", function()
-		client:request("rust-analyzer/openCargoToml", vim.lsp.util.make_position_params(), function(err, result)
-			if err or not result then
-				return
-			end
-			vim.cmd("edit " .. vim.uri_to_fname(result.uri))
-		end)
+		local root = client.config.root_dir or vim.fn.getcwd()
+		local cargo = root .. "/Cargo.toml"
+		if vim.fn.filereadable(cargo) == 1 then
+			vim.cmd.edit(cargo)
+		else
+			vim.notify("Cargo.toml not found", vim.log.levels.WARN)
+		end
 	end, vim.tbl_extend("force", opts, { desc = "Open Cargo.toml" }))
+
+	vim.keymap.set("n", "<leader>rr", function()
+		client:request("rust-analyzer/reloadWorkspace", nil, function(err)
+			if err then
+				vim.notify("reload failed: " .. tostring(err), vim.log.levels.ERROR)
+			else
+				vim.notify("rust-analyzer: workspace reloaded", vim.log.levels.INFO)
+			end
+		end, bufnr)
+	end, vim.tbl_extend("force", opts, { desc = "Reload workspace (Rust)" }))
 end
 
 return M

@@ -126,4 +126,47 @@ function M.setup(capabilities)
 	vim.lsp.enable("omnisharp")
 end
 
+function M.extend(client, bufnr)
+	local opts = { buffer = bufnr, silent = true }
+
+	vim.keymap.set("n", "<leader>cd", function()
+		local ok, ext = pcall(require, "omnisharp_extended")
+		if ok and ext.lsp_definition then
+			ext.lsp_definition()
+		else
+			vim.lsp.buf.definition()
+		end
+	end, vim.tbl_extend("force", opts, { desc = "Go to definition (OmniSharp)" }))
+
+	vim.keymap.set("n", "<leader>cr", function()
+		local ok, ext = pcall(require, "omnisharp_extended")
+		if ok and ext.lsp_references then
+			ext.lsp_references()
+		else
+			vim.lsp.buf.references()
+		end
+	end, vim.tbl_extend("force", opts, { desc = "Find references (OmniSharp)" }))
+
+	vim.keymap.set("n", "<leader>ci", function()
+		local ok, ext = pcall(require, "omnisharp_extended")
+		if ok and ext.lsp_implementation then
+			ext.lsp_implementation()
+		else
+			vim.lsp.buf.implementation()
+		end
+	end, vim.tbl_extend("force", opts, { desc = "Go to implementation (OmniSharp)" }))
+
+	vim.keymap.set("n", "<leader>cs", function()
+		client:request("o#/v2/codestructure", {
+			FileName = vim.api.nvim_buf_get_name(bufnr),
+		}, function(err, result)
+			if err then
+				vim.notify("code structure failed: " .. tostring(err), vim.log.levels.WARN)
+				return
+			end
+			vim.print(result)
+		end, bufnr)
+	end, vim.tbl_extend("force", opts, { desc = "Code structure (OmniSharp)" }))
+end
+
 return M

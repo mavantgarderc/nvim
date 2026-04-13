@@ -72,29 +72,33 @@ end
 function M.extend(client, bufnr)
 	local opts = { buffer = bufnr, silent = true }
 
-	-- Organize imports
-	vim.keymap.set("n", "<leader>to", function()
-		vim.lsp.buf.code_action({
-			context = { only = { "source.organizeImports.ts" }, diagnostics = {} },
-			apply = true,
-		})
-	end, vim.tbl_extend("force", opts, { desc = "Organize imports (TS)" }))
+	local function code_action(kind, desc)
+		return function()
+			vim.lsp.buf.code_action({
+				apply = true,
+				context = { only = { kind }, diagnostics = {} },
+			})
+		end,
+			desc
+	end
 
-	-- Add missing imports
-	vim.keymap.set("n", "<leader>ta", function()
-		vim.lsp.buf.code_action({
-			context = { only = { "source.addMissingImports.ts" }, diagnostics = {} },
-			apply = true,
-		})
-	end, vim.tbl_extend("force", opts, { desc = "Add missing imports (TS)" }))
+	vim.keymap.set("n", "<leader>to", code_action("source.organizeImports.ts", "Organize imports (TS)"))
+	vim.keymap.set("n", "<leader>ta", code_action("source.addMissingImports.ts", "Add missing imports (TS)"))
+	vim.keymap.set("n", "<leader>tu", code_action("source.removeUnused.ts", "Remove unused (TS)"))
 
-	-- Remove unused imports
-	vim.keymap.set("n", "<leader>tu", function()
-		vim.lsp.buf.code_action({
-			context = { only = { "source.removeUnused.ts" }, diagnostics = {} },
-			apply = true,
-		})
-	end, vim.tbl_extend("force", opts, { desc = "Remove unused (TS)" }))
+	-- remap all three with buffer scope
+	for _, map in ipairs({
+		{ "<leader>to", "source.organizeImports.ts", "Organize imports (TS)" },
+		{ "<leader>ta", "source.addMissingImports.ts", "Add missing imports (TS)" },
+		{ "<leader>tu", "source.removeUnused.ts", "Remove unused (TS)" },
+	}) do
+		vim.keymap.set("n", map[1], function()
+			vim.lsp.buf.code_action({
+				apply = true,
+				context = { only = { map[2] }, diagnostics = {} },
+			})
+		end, vim.tbl_extend("force", opts, { desc = map[3] }))
+	end
 end
 
 return M

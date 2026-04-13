@@ -32,29 +32,32 @@ end
 function M.extend(client, bufnr)
 	local opts = { buffer = bufnr, silent = true }
 
-	-- Organize imports on save
 	vim.api.nvim_create_autocmd("BufWritePre", {
-		group = vim.api.nvim_create_augroup("GoImports_" .. bufnr, { clear = true }),
 		buffer = bufnr,
 		callback = function()
-			local params = vim.lsp.util.make_range_params()
+			local params = vim.lsp.util.make_range_params(0, client.offset_encoding)
 			params.context = { only = { "source.organizeImports" } }
 			local result = client:request_sync("textDocument/codeAction", params, 1000, bufnr)
-			if result and result.result then
-				for _, action in ipairs(result.result) do
-					if action.edit then
-						vim.lsp.util.apply_workspace_edit(action.edit, client.offset_encoding)
-					end
+			for _, action in pairs(result and result.result or {}) do
+				if action.edit then
+					vim.lsp.util.apply_workspace_edit(action.edit, client.offset_encoding)
 				end
 			end
 		end,
+		desc = "gopls: organize imports on save",
 	})
 
-	-- Run go test for current file
 	vim.keymap.set("n", "<leader>gt", function()
-		local file = vim.fn.expand("%:p:h")
-		vim.cmd("split | terminal go test -v " .. file)
-	end, vim.tbl_extend("force", opts, { desc = "Go test (current pkg)" }))
+		local name = vim.fn.expand("%:p")
+		vim.cmd("split | terminal go test -v -run . " .. vim.fn.shellescape(vim.fn.fnamemodify(name, ":h")))
+	end, vim.tbl_extend("force", opts, { desc = "Run go test (package)" }))
+
+	vim.keymap.set("n", "<leader>gi", function()
+		vim.lsp.buf.code_action({
+			apply = true,
+			context = { only = { "source.organizeImports" }, diagnostics = {} },
+		})
+	end, vim.tbl_extend("force", opts, { desc = "Organize imports (Go)" }))
 end
 
 return M
