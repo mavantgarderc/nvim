@@ -38,4 +38,33 @@ function M.setup(capabilities)
 	vim.lsp.enable("rust_analyzer")
 end
 
+function M.extend(client, bufnr)
+	local opts = { buffer = bufnr, silent = true }
+
+	vim.keymap.set("n", "<leader>re", function()
+		client:request("rust-analyzer/expandMacro", vim.lsp.util.make_position_params(), function(err, result)
+			if err then
+				vim.notify("expandMacro failed: " .. tostring(err.message), vim.log.levels.ERROR)
+				return
+			end
+			if result and result.expansion then
+				vim.lsp.util.open_floating_preview(
+					vim.split(result.expansion, "\n"),
+					"rust",
+					{ border = "rounded", title = "Macro Expansion" }
+				)
+			end
+		end)
+	end, vim.tbl_extend("force", opts, { desc = "Expand macro (rust)" }))
+
+	vim.keymap.set("n", "<leader>rc", function()
+		client:request("rust-analyzer/openCargoToml", vim.lsp.util.make_position_params(), function(err, result)
+			if err or not result then
+				return
+			end
+			vim.cmd("edit " .. vim.uri_to_fname(result.uri))
+		end)
+	end, vim.tbl_extend("force", opts, { desc = "Open Cargo.toml" }))
+end
+
 return M

@@ -69,4 +69,32 @@ function M.setup(capabilities)
 	vim.lsp.enable("ts_ls")
 end
 
+function M.extend(client, bufnr)
+	local opts = { buffer = bufnr, silent = true }
+
+	-- Organize imports
+	vim.keymap.set("n", "<leader>to", function()
+		vim.lsp.buf.code_action({
+			context = { only = { "source.organizeImports.ts" }, diagnostics = {} },
+			apply = true,
+		})
+	end, vim.tbl_extend("force", opts, { desc = "Organize imports (TS)" }))
+
+	-- Add missing imports
+	vim.keymap.set("n", "<leader>ta", function()
+		vim.lsp.buf.code_action({
+			context = { only = { "source.addMissingImports.ts" }, diagnostics = {} },
+			apply = true,
+		})
+	end, vim.tbl_extend("force", opts, { desc = "Add missing imports (TS)" }))
+
+	-- Remove unused imports
+	vim.keymap.set("n", "<leader>tu", function()
+		vim.lsp.buf.code_action({
+			context = { only = { "source.removeUnused.ts" }, diagnostics = {} },
+			apply = true,
+		})
+	end, vim.tbl_extend("force", opts, { desc = "Remove unused (TS)" }))
+end
+
 return M
