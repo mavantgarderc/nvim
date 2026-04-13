@@ -1,18 +1,15 @@
 local mason = require("mason")
 local mason_lspconfig = require("mason-lspconfig")
-local lspconfig = require("lspconfig")
-
-local capabilities = require("lsp.shared").capabilities
 
 mason.setup()
 
-local servers = {
+local ensure_installed = {
 	"lua_ls",
 	"pyright",
 	"tailwindcss",
 	"eslint",
 	"ts_ls",
-	"vimls",
+	"vim-language-server",
 	"html",
 	"cssls",
 	"jsonls",
@@ -23,20 +20,7 @@ local servers = {
 }
 
 mason_lspconfig.setup({
-	ensure_installed = servers,
+	ensure_installed = ensure_installed,
 })
 
-for _, server in ipairs(servers) do
-	local opts = {}
-
-	local ok, custom = pcall(require, "lsp.servers." .. server)
-	if ok and type(custom) == "table" then
-		opts = custom
-	end
-
-	opts.capabilities = capabilities
-
-	-- STABLE, SUPPORTED, COMPATIBLE WITH YOUR OFFLINE ECOSYSTEM
-	vim.lsp.config(server, opts)
-	vim.lsp.enable(server)
-end
+require("lsp.dynamic")

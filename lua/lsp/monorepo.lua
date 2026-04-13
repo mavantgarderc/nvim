@@ -45,9 +45,31 @@ M.monorepo_markers = {
 	"helmfile.yaml",
 	"Chart.yaml",
 	"docker-compose.yaml",
-
 	".git",
 }
+
+M.workspace_types = {
+	node = { "package.json", "pnpm-workspace.yaml", "yarn.lock", "pnpm-lock.yaml" },
+	python = { "pyproject.toml", "setup.py", "setup.cfg", "requirements.txt", "Pipfile" },
+	rust = { "Cargo.toml", "Cargo.lock" },
+	go = { "go.mod", "go.work" },
+	latex = { ".latexmkrc", "latexmkrc", ".texlabroot", "Tectonic.toml" },
+	docker = { "Dockerfile", "docker-compose.yaml", "docker-compose.yml" },
+}
+
+function M.detect_workspace_type(root)
+	root = root or vim.fn.getcwd()
+	local detected = {}
+	for wtype, markers in pairs(M.workspace_types) do
+		for _, marker in ipairs(markers) do
+			if vim.fn.filereadable(root .. "/" .. marker) == 1 then
+				detected[wtype] = true
+				break
+			end
+		end
+	end
+	return detected
+end
 
 local function upward_search(startpath, markers)
 	local dir = vim.fs.dirname(startpath)
@@ -60,7 +82,6 @@ local function upward_search(startpath, markers)
 		end
 		dir = vim.fs.dirname(dir)
 	end
-
 	return nil
 end
 
