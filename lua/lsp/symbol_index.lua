@@ -1,6 +1,6 @@
 local M = {}
 
-local monorepo = require("monorepo")
+local monorepo = require("lsp.monorepo")
 
 -- Symbol Cache
 -- { [filepath] = { mtime = number, symbols = { {name, kind, lnum, col, end_lnum, end_col, file} } } }
