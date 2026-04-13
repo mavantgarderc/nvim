@@ -95,3 +95,4 @@ vim.api.nvim_create_autocmd("LspAttach", {
 require("lsp.health")
 require("lsp.symbol_index").setup()
 require("lsp.diagnostics").setup()
+require("lsp.progress").setup()

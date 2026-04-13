@@ -38,7 +38,16 @@ M.tabline = {
 		components.project,
 	},
 	lualine_c = { "filename" },
-	lualine_x = {},
+	lualine_x = {
+		{
+			function()
+				return require("lsp.progress").status()
+			end,
+			cond = function()
+				return require("lsp.progress").is_busy()
+			end,
+		},
+	},
 	lualine_y = {
 		{ utils.get_lsp_clients, cond = utils.has_lsp },
 		{ utils.get_python_env, cond = utils.has_python_env },
