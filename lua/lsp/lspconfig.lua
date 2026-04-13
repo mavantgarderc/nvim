@@ -25,11 +25,11 @@ mason_lspconfig.setup({
 	ensure_installed = servers,
 })
 
--- ── Registry of loaded extenders ──────────────────────────────────
+-- Registry of loaded extenders
 -- { server_name = extend_fn | nil }
 local extenders = {}
 
--- ── Unified loader ────────────────────────────────────────────────
+-- Unified loader
 for _, server in ipairs(servers) do
 	local ok, mod = pcall(require, "lsp.servers." .. server)
 
@@ -76,7 +76,7 @@ for _, server in ipairs(servers) do
 	end
 end
 
--- ── Global LspAttach hook for Pattern-A extenders ─────────────────
+-- Global LspAttach hook for Pattern-A extenders
 vim.api.nvim_create_autocmd("LspAttach", {
 	group = vim.api.nvim_create_augroup("LspExtenders", { clear = true }),
 	desc = "Fire per-language extend() hooks",
@@ -92,5 +92,6 @@ vim.api.nvim_create_autocmd("LspAttach", {
 	end,
 })
 
-require("health")
-require("symbol_index").setup()
+require("lsp.health")
+require("lsp.symbol_index").setup()
+require("lsp.diagnostics").setup()

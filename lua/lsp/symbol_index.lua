@@ -2,7 +2,7 @@ local M = {}
 
 local monorepo = require("monorepo")
 
--- ── Symbol Cache ─────────────────────────────────────────────────
+-- Symbol Cache
 -- { [filepath] = { mtime = number, symbols = { {name, kind, lnum, col, end_lnum, end_col, file} } } }
 local cache = {}
 local ns = vim.api.nvim_create_namespace("symbol_index")
@@ -24,7 +24,7 @@ local kind_map = {
 	["namespace"] = "Namespace",
 }
 
--- ── Treesitter symbol extraction ─────────────────────────────────
+-- Treesitter symbol extraction
 -- Queries for definition nodes per language
 local ts_queries = {
 	lua = [[
@@ -138,7 +138,7 @@ local function extract_ts_symbols(filepath, lang)
 	return symbols
 end
 
--- ── File scanning ────────────────────────────────────────────────
+-- File scanning
 local ext_to_lang = {
 	lua = "lua",
 	py = "python",
@@ -177,7 +177,7 @@ local function scan_file(filepath)
 	return symbols
 end
 
--- ── Workspace file discovery ─────────────────────────────────────
+-- Workspace file discovery
 local function find_workspace_root()
 	local fname = vim.api.nvim_buf_get_name(0)
 	if fname == "" then
@@ -251,7 +251,7 @@ local function collect_files(root, max_files)
 	return files
 end
 
--- ── LSP symbol merge ─────────────────────────────────────────────
+-- LSP symbol merge
 local function fetch_lsp_symbols(query, callback)
 	local clients = vim.lsp.get_clients({ bufnr = 0 })
 	local results = {}
@@ -314,7 +314,7 @@ local function merge_symbols(ts_symbols, lsp_symbols)
 	return merged
 end
 
--- ── Monorepo package resolution ──────────────────────────────────
+-- Monorepo package resolution
 local function resolve_package(filepath, root)
 	-- find which package/project a file belongs to
 	local rel = filepath:sub(#root + 2) -- strip root + separator
@@ -329,7 +329,7 @@ local function resolve_package(filepath, root)
 	return nil
 end
 
--- ── Telescope picker ─────────────────────────────────────────────
+-- Telescope picker
 local function open_picker(symbols, root)
 	local has_telescope, pickers = pcall(require, "telescope.pickers")
 	if not has_telescope then
@@ -416,7 +416,7 @@ local function open_picker(symbols, root)
 		:find()
 end
 
--- ── Public API ───────────────────────────────────────────────────
+-- Public API
 
 --- Full index: scan workspace with treesitter, merge LSP, open picker
 function M.search(query)
@@ -484,7 +484,7 @@ function M.stats()
 	return { files = file_count, symbols = sym_count }
 end
 
--- ── Commands & autocmds ──────────────────────────────────────────
+-- Commands & autocmds
 function M.setup()
 	vim.api.nvim_create_user_command("SymbolIndex", function(opts)
 		M.search(opts.args ~= "" and opts.args or nil)
