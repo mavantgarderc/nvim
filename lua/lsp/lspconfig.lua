@@ -24,3 +24,4 @@ mason_lspconfig.setup({
 })
 
 require("lsp.dynamic")
+require("lsp.health")
