@@ -5,6 +5,7 @@ local M = {}
 
 local _enabled = {} -- per-buffer toggle state: buf -> bool
 local _augroup = nil
+local setup_done = false
 
 -- ── Helpers ──────────────────────────────────────────────────────
 
@@ -207,6 +208,10 @@ end
 -- ── Setup ────────────────────────────────────────────────────────
 
 function M.setup()
+	if setup_done then
+		return
+	end
+
 	setup_autocmds()
 
 	vim.api.nvim_create_user_command("LensToggle", function()
@@ -225,9 +230,7 @@ function M.setup()
 		M.status()
 	end, { desc = "Show codelens status for all buffers" })
 
-	-- keymaps
-	vim.keymap.set("n", "<leader>cl", M.run, { desc = "Run codelens at cursor" })
-	vim.keymap.set("n", "<leader>cL", M.toggle, { desc = "Toggle codelens" })
+	setup_done = true
 end
 
 return M

@@ -1,9 +1,6 @@
-local mason = require("mason")
 local mason_lspconfig = require("mason-lspconfig")
 
 local capabilities = require("lsp.shared").capabilities
-
-mason.setup()
 
 local servers = {
 	"lua_ls",
@@ -28,6 +25,22 @@ mason_lspconfig.setup({
 -- Registry of loaded extenders
 -- { server_name = extend_fn | nil }
 local extenders = {}
+
+local function safe_setup(module_name, opts)
+	local ok, mod = pcall(require, module_name)
+	if not ok or type(mod) ~= "table" or type(mod.setup) ~= "function" then
+		return
+	end
+
+	local setup_ok, err = pcall(mod.setup, opts)
+	if setup_ok then
+		return
+	end
+
+	vim.schedule(function()
+		vim.notify(string.format("Failed to setup %s: %s", module_name, err), vim.log.levels.ERROR)
+	end)
+end
 
 -- Unified loader
 for _, server in ipairs(servers) do
@@ -93,9 +106,25 @@ vim.api.nvim_create_autocmd("LspAttach", {
 })
 
 require("lsp.health")
-require("lsp.symbol_index").setup()
-require("lsp.diagnostics").setup()
-require("lsp.progress").setup()
-require("lsp.references").setup()
-require("lsp.codelens").setup()
-require("lsp.rename").setup()
+safe_setup("lsp.symbol_index")
+safe_setup("lsp.diagnostics")
+safe_setup("lsp.progress")
+safe_setup("lsp.references")
+safe_setup("lsp.codelens")
+safe_setup("lsp.rename")
+safe_setup("lsp.code_actions")
+safe_setup("lsp.hover")
+safe_setup("lsp.inlay_hint")
+safe_setup("lsp.lightbulb", { debounce = 150 })
+safe_setup("lsp.semantic_tokens")
+safe_setup("lsp.virtual_text")
+safe_setup("lsp.workspace_symbol")
+safe_setup("lsp.implementation")
+safe_setup("lsp.type_definition")
+safe_setup("lsp.definition_peek")
+safe_setup("lsp.call_hierarchy")
+safe_setup("lsp.capability_inspector")
+safe_setup("lsp.toggle")
+safe_setup("lsp.info")
+safe_setup("lsp.analytics")
+safe_setup("lsp.keymaps")

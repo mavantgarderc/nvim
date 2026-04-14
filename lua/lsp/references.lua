@@ -4,6 +4,7 @@
 local M = {}
 
 local monorepo = require("lsp.monorepo")
+local commands_registered = false
 
 ---@class RefEntry
 ---@field filename string
@@ -29,18 +30,7 @@ local function is_cache_valid(key)
 end
 
 local function detect_package(filepath)
-	local root = monorepo.detect_root(filepath)
-	if not root then
-		return nil
-	end
-
-	local rel = filepath:sub(#root + 2)
-	local pkg = rel:match("^packages/([^/]+)/")
-		or rel:match("^apps/([^/]+)/")
-		or rel:match("^libs/([^/]+)/")
-		or rel:match("^modules/([^/]+)/")
-		or rel:match("^services/([^/]+)/")
-	return pkg
+	return monorepo.find_package_name(filepath)
 end
 
 local function group_by_package(refs)
@@ -240,6 +230,10 @@ function M.summary()
 end
 
 function M.setup()
+	if commands_registered then
+		return
+	end
+
 	vim.api.nvim_create_user_command("LspRefFind", function()
 		M.find_references()
 	end, { desc = "Find all references (cross-package)" })
@@ -248,13 +242,7 @@ function M.setup()
 		M.summary()
 	end, { desc = "Show reference summary by package" })
 
-	vim.keymap.set("n", "grr", function()
-		M.find_references()
-	end, { desc = "LSP: Find references (cross-package)" })
-
-	vim.keymap.set("n", "grs", function()
-		M.summary()
-	end, { desc = "LSP: Reference summary" })
+	commands_registered = true
 end
 
 return M

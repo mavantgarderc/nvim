@@ -90,6 +90,41 @@ function M.find_monorepo_root(startpath)
 	return upward_search(startpath, M.monorepo_markers)
 end
 
+local function package_from_root(root)
+	return root:match("/packages/([^/]+)$")
+		or root:match("/apps/([^/]+)$")
+		or root:match("/libs/([^/]+)$")
+		or root:match("/modules/([^/]+)$")
+		or root:match("/projects/([^/]+)$")
+		or root:match("/services/([^/]+)$")
+end
+
+function M.find_package_name(path, root)
+	path = path or vim.api.nvim_buf_get_name(0)
+	root = root or M.find_monorepo_root(path)
+	if not path or path == "" or not root then
+		return nil
+	end
+
+	local pkg = package_from_root(root)
+	if pkg then
+		return pkg
+	end
+
+	if path:find(root, 1, true) ~= 1 or #path <= #root then
+		return nil
+	end
+
+	local rel = path:sub(#root + 2)
+	return rel:match("^packages/([^/]+)/")
+		or rel:match("^apps/([^/]+)/")
+		or rel:match("^libs/([^/]+)/")
+		or rel:match("^modules/([^/]+)/")
+		or rel:match("^projects/([^/]+)/")
+		or rel:match("^services/([^/]+)/")
+		or rel:match("^([^/]+)/")
+end
+
 function M.attach_monorepo_root(config, fname)
 	local repo = M.find_monorepo_root(fname)
 	if repo then

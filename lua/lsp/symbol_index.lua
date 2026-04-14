@@ -6,6 +6,7 @@ local monorepo = require("lsp.monorepo")
 -- { [filepath] = { mtime = number, symbols = { {name, kind, lnum, col, end_lnum, end_col, file} } } }
 local cache = {}
 local ns = vim.api.nvim_create_namespace("symbol_index")
+local setup_done = false
 
 local kind_map = {
 	["function"] = "Function",
@@ -184,11 +185,10 @@ local function find_workspace_root()
 		return vim.fn.getcwd()
 	end
 
-	-- try monorepo roots first
-	local root = monorepo.get_ts_root(fname) or monorepo.get_python_root(fname) or monorepo.get_go_root(fname)
+	local root = monorepo.find_monorepo_root(fname)
 
 	if not root then
-		root = vim.fs.root(0, { ".git", "pyproject.toml", "Cargo.toml", "go.work", "package.json" })
+		root = vim.fs.root(fname, { ".git", "pyproject.toml", "Cargo.toml", "go.work", "package.json" })
 	end
 
 	return root or vim.fn.getcwd()
@@ -484,8 +484,14 @@ function M.stats()
 	return { files = file_count, symbols = sym_count }
 end
 
+M._find_workspace_root = find_workspace_root
+
 -- Commands & autocmds
 function M.setup()
+	if setup_done then
+		return
+	end
+
 	vim.api.nvim_create_user_command("SymbolIndex", function(opts)
 		M.search(opts.args ~= "" and opts.args or nil)
 	end, { nargs = "?", desc = "Global workspace symbol search (TS + LSP)" })
@@ -507,15 +513,7 @@ function M.setup()
 		desc = "symbol_index: invalidate cache on save",
 	})
 
-	-- keymap
-	vim.keymap.set("n", "<leader>sS", function()
-		M.search()
-	end, { desc = "Symbol Index: workspace search" })
-
-	vim.keymap.set("n", "<leader>ss", function()
-		local word = vim.fn.expand("<cword>")
-		M.search(word)
-	end, { desc = "Symbol Index: search word under cursor" })
+	setup_done = true
 end
 
 return M

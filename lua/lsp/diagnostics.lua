@@ -3,6 +3,7 @@ local M = {}
 local ns = vim.api.nvim_create_namespace("lsp_diagnostics_ex")
 local monorepo = require("lsp.monorepo")
 local dynamic = require("lsp.dynamic")
+local setup_done = false
 
 ---@class DiagEntry
 ---@field file string
@@ -31,10 +32,7 @@ local sev_hl = {
 ---@param root string
 ---@return string
 local function resolve_package(filepath, root)
-	local rel = filepath:sub(#root + 2)
-	-- first directory segment under root = package name
-	local pkg = rel:match("^([^/]+)/")
-	return pkg or "."
+	return monorepo.find_package_name(filepath, root) or "."
 end
 
 --- Collect all diagnostics from vim.diagnostic, grouped by workspace root
@@ -282,6 +280,10 @@ end
 
 --- Setup commands, keymaps, and autorefresh
 function M.setup()
+	if setup_done then
+		return
+	end
+
 	-- Commands
 	vim.api.nvim_create_user_command("DiagSummary", function()
 		M.summary()
@@ -315,17 +317,6 @@ function M.setup()
 		M.telescope_pick()
 	end, { desc = "Telescope picker for workspace diagnostics" })
 
-	-- Keymaps
-	vim.keymap.set("n", "<leader>dS", M.summary, { desc = "Diag: workspace summary" })
-	vim.keymap.set("n", "<leader>ds", function()
-		-- auto-detect current package
-		local fname = vim.api.nvim_buf_get_name(0)
-		local root = monorepo.find_monorepo_root(fname) or vim.fn.getcwd()
-		local pkg = resolve_package(fname, root)
-		M.focus(pkg)
-	end, { desc = "Diag: current package (quickfix)" })
-	vim.keymap.set("n", "<leader>dp", M.telescope_pick, { desc = "Diag: telescope picker" })
-
 	-- Auto-refresh cache on DiagnosticChanged
 	vim.api.nvim_create_autocmd("DiagnosticChanged", {
 		group = vim.api.nvim_create_augroup("lsp_diagnostics_ex", { clear = true }),
@@ -334,6 +325,8 @@ function M.setup()
 			diag_cache = {}
 		end,
 	})
+
+	setup_done = true
 end
 
 return M

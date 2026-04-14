@@ -4,6 +4,7 @@
 local M = {}
 
 local monorepo = require("lsp.monorepo")
+local commands_registered = false
 
 local _history = {} -- rename history stack for undo
 local _cache_roots = {} -- path -> { root, pkg, ts }
@@ -19,14 +20,11 @@ local function resolve_package(path)
 		return cached.root, cached.pkg
 	end
 
-	local roots = monorepo.roots and monorepo.roots() or {}
-	for _, r in ipairs(roots) do
-		if path:find(r, 1, true) == 1 then
-			local rel = path:sub(#r + 2)
-			local pkg = rel:match("^([^/]+)") or "(root)"
-			_cache_roots[path] = { root = r, pkg = pkg, ts = vim.uv.now() / 1000 }
-			return r, pkg
-		end
+	local root = monorepo.find_monorepo_root(path)
+	if root and path:find(root, 1, true) == 1 then
+		local pkg = monorepo.find_package_name(path, root) or "(root)"
+		_cache_roots[path] = { root = root, pkg = pkg, ts = vim.uv.now() / 1000 }
+		return root, pkg
 	end
 
 	_cache_roots[path] = { root = nil, pkg = nil, ts = vim.uv.now() / 1000 }
@@ -360,6 +358,10 @@ end
 -- ── Setup ────────────────────────────────────────────────────────
 
 function M.setup()
+	if commands_registered then
+		return
+	end
+
 	vim.api.nvim_create_user_command("Rename", function(cmd)
 		local arg = cmd.args ~= "" and cmd.args or nil
 		M.rename({ new_name = arg })
@@ -382,12 +384,7 @@ function M.setup()
 		M.summary()
 	end, { desc = "Show rename impact summary" })
 
-	-- keymaps
-	vim.keymap.set("n", "<leader>rn", M.rename, { desc = "Smart rename (preview)" })
-	vim.keymap.set("n", "<leader>rN", M.rename_quick, { desc = "Quick rename (no preview)" })
-	vim.keymap.set("n", "<leader>ru", M.undo, { desc = "Undo last rename" })
-	vim.keymap.set("n", "<leader>rh", M.history, { desc = "Rename history" })
-	vim.keymap.set("n", "<leader>ri", M.summary, { desc = "Rename impact summary" })
+	commands_registered = true
 end
 
 return M

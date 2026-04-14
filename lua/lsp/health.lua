@@ -725,8 +725,4 @@ vim.api.nvim_create_user_command("LspHealth", function()
 	M.open()
 end, { desc = "Toggle LSP Health Dashboard" })
 
-vim.keymap.set("n", "<leader>lh", function()
-	require("lsp.health").open()
-end, { desc = "LSP Health Dashboard" })
-
 return M

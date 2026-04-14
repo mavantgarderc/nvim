@@ -20,6 +20,7 @@ local active_tasks = {}
 local spinner = { "⠋", "⠙", "⠹", "⠸", "⠼", "⠴", "⠦", "⠧", "⠇", "⠏" }
 local spinner_idx = 0
 local timer = nil
+local setup_done = false
 
 --- Format a single progress entry into a display string
 ---@param entry ProgressEntry
@@ -294,6 +295,10 @@ end
 
 --- Setup handler, commands, and keymaps
 function M.setup()
+	if setup_done then
+		return
+	end
+
 	-- Register the $/progress handler
 	local orig_handler = vim.lsp.handlers["$/progress"]
 	vim.lsp.handlers["$/progress"] = function(err, result, ctx, config)
@@ -315,9 +320,6 @@ function M.setup()
 		vim.notify("LSP progress cleared", vim.log.levels.INFO)
 	end, { desc = "Clear all tracked LSP progress" })
 
-	-- Keymaps
-	vim.keymap.set("n", "<leader>lp", M.show, { desc = "LSP: progress overview" })
-
 	-- Cleanup on LspDetach
 	vim.api.nvim_create_autocmd("LspDetach", {
 		group = vim.api.nvim_create_augroup("lsp_progress_cleanup", { clear = true }),
@@ -336,6 +338,8 @@ function M.setup()
 			end
 		end,
 	})
+
+	setup_done = true
 end
 
 return M
