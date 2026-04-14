@@ -7,8 +7,11 @@ local monorepo = require("lsp.monorepo")
 
 ---@class CodeActionEntry
 ---@field action lsp.CodeAction
+---@field client_id integer
 ---@field client_name string
 ---@field package_name string|nil
+
+local commands_registered = false
 
 M._history = {}
 M._config = {
@@ -60,6 +63,7 @@ function M.gather(bufnr, callback)
         for _, action in ipairs(resp.result) do
           table.insert(entries, {
             action = action,
+            client_id = client_id,
             client_name = name,
             package_name = pkg,
           })
@@ -104,39 +108,55 @@ end
 function M.execute(entry, bufnr)
   bufnr = bufnr or vim.api.nvim_get_current_buf()
   local action = entry.action
+  local client = entry.client_id and vim.lsp.get_client_by_id(entry.client_id) or nil
 
   -- Resolve if needed
   if not action.edit and not action.command then
-    local clients = vim.lsp.get_clients({ name = entry.client_name })
-    if clients[1] then
-      clients[1].request("codeAction/resolve", action, function(err, resolved)
-        if err then
-          vim.notify("Code action resolve failed: " .. tostring(err.message), vim.log.levels.ERROR)
-          return
-        end
-        M._apply_action(resolved, bufnr)
-        M._record_history(entry)
-      end, bufnr)
+    if not client then
+      vim.notify("No client available to resolve code action", vim.log.levels.WARN)
       return
     end
+
+    if not client.supports_method("codeAction/resolve") then
+      vim.notify("Selected client does not support codeAction/resolve", vim.log.levels.WARN)
+      return
+    end
+
+    client.request("codeAction/resolve", action, function(err, resolved)
+      if err then
+        vim.notify("Code action resolve failed: " .. tostring(err.message), vim.log.levels.ERROR)
+        return
+      end
+      M._apply_action(resolved, bufnr, entry.client_id)
+      M._record_history(entry)
+    end, bufnr)
+    return
   end
 
-  M._apply_action(action, bufnr)
+  M._apply_action(action, bufnr, entry.client_id)
   M._record_history(entry)
 end
 
 --- Apply workspace edit and/or command
 ---@param action lsp.CodeAction
 ---@param bufnr number
-function M._apply_action(action, bufnr)
+---@param client_id integer|nil
+function M._apply_action(action, bufnr, client_id)
+  local client = client_id and vim.lsp.get_client_by_id(client_id) or nil
+
   if action.edit then
-    vim.lsp.util.apply_workspace_edit(action.edit, "utf-8")
+    vim.lsp.util.apply_workspace_edit(action.edit, client and client.offset_encoding or "utf-8")
   end
+
   if action.command then
     local cmd = type(action.command) == "table" and action.command or action
-    local clients = vim.lsp.get_clients({ bufnr = bufnr })
-    if clients[1] then
-      clients[1].request("workspace/executeCommand", cmd, nil, bufnr)
+    if not client then
+      local clients = vim.lsp.get_clients({ bufnr = bufnr, method = "workspace/executeCommand" })
+      client = clients[1]
+    end
+
+    if client then
+      client.request("workspace/executeCommand", cmd, nil, bufnr)
     end
   end
 end
@@ -270,6 +290,10 @@ end
 
 --- Setup keymaps and commands
 function M.setup()
+  if commands_registered then
+    return
+  end
+
   vim.api.nvim_create_user_command("CodeAction", function(cmd)
     local kind = cmd.args ~= "" and cmd.args or nil
     M.pick({ kind = kind })
@@ -283,6 +307,8 @@ function M.setup()
   vim.api.nvim_create_user_command("CodeActionHistory", function()
     M.history()
   end, { desc = "Show code action history" })
+
+  commands_registered = true
 end
 
 return M
