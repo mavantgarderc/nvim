@@ -4,6 +4,7 @@ local ns = vim.api.nvim_create_namespace("lsp_diagnostics_ex")
 local monorepo = require("lsp.monorepo")
 local dynamic = require("lsp.dynamic")
 local setup_done = false
+local underline_enabled = true
 
 ---@class DiagEntry
 ---@field file string
@@ -278,6 +279,31 @@ function M.telescope_pick(opts)
 		:find()
 end
 
+local function apply_underlines()
+	local function get_fg(name)
+		local hl = vim.api.nvim_get_hl(0, { name = name, link = false })
+		return hl.fg
+	end
+
+	if underline_enabled then
+		vim.api.nvim_set_hl(0, "DiagnosticUnderlineError", { underline = true, fg = get_fg("DiagnosticError") })
+		vim.api.nvim_set_hl(0, "DiagnosticUnderlineWarn", { underline = true, fg = get_fg("DiagnosticWarn") })
+		vim.api.nvim_set_hl(0, "DiagnosticUnderlineInfo", { underline = true, fg = get_fg("DiagnosticInfo") })
+		vim.api.nvim_set_hl(0, "DiagnosticUnderlineHint", { underline = true, fg = get_fg("DiagnosticHint") })
+	else
+		vim.api.nvim_set_hl(0, "DiagnosticUnderlineError", {})
+		vim.api.nvim_set_hl(0, "DiagnosticUnderlineWarn", {})
+		vim.api.nvim_set_hl(0, "DiagnosticUnderlineInfo", {})
+		vim.api.nvim_set_hl(0, "DiagnosticUnderlineHint", {})
+	end
+end
+
+function M.toggle_underlines()
+	underline_enabled = not underline_enabled
+	apply_underlines()
+	vim.notify("Diagnostic underlines: " .. (underline_enabled and "ON" or "OFF"))
+end
+
 --- Setup commands, keymaps, and autorefresh
 function M.setup()
 	if setup_done then
@@ -296,7 +322,6 @@ function M.setup()
 		nargs = "?",
 		desc = "Filter diagnostics to a package (quickfix)",
 		complete = function()
-			-- offer package names from current cache
 			local data = collect()
 			local pkgs = {}
 			local seen = {}
@@ -317,13 +342,23 @@ function M.setup()
 		M.telescope_pick()
 	end, { desc = "Telescope picker for workspace diagnostics" })
 
+	vim.api.nvim_create_user_command("DiagUnderlineToggle", function()
+		M.toggle_underlines()
+	end, { desc = "Toggle diagnostic underline highlights" })
+
 	-- Auto-refresh cache on DiagnosticChanged
 	vim.api.nvim_create_autocmd("DiagnosticChanged", {
 		group = vim.api.nvim_create_augroup("lsp_diagnostics_ex", { clear = true }),
 		callback = function()
-			-- lightweight: just invalidate cache so next query is fresh
 			diag_cache = {}
 		end,
+	})
+
+	apply_underlines()
+
+	vim.api.nvim_create_autocmd("ColorScheme", {
+		group = vim.api.nvim_create_augroup("lsp_diag_underline_sync", { clear = true }),
+		callback = apply_underlines,
 	})
 
 	setup_done = true
