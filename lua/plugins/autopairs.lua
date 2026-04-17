@@ -33,12 +33,7 @@ return {
 
 		autopairs.add_rules({
 			Rule("<!--", "-->", "html"):only_cr(),
-			Rule("<", ">", { "html", "typescriptreact", "javascriptreact" })
-				:replace_endpair(function(opts)
-					return string.format("</%s>", opts.ts_match or "")
-				end)
-				:use_regex(true)
-				:set_end_pair_length(0),
+			Rule("<", ">", { "-html" }),
 		})
 
 		local cmp_ok, cmp = pcall(require, "cmp")
