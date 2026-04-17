@@ -9,6 +9,7 @@ function M.setup(capabilities)
 		capabilities = capabilities,
 
 		filetypes = { "html", "templ" },
+		root_dir = vim.fs.root(0, { "package.json", ".git" }),
 
 		settings = {
 			html = {

@@ -149,6 +149,7 @@ local ext_to_lang = {
 	jsx = "javascriptreact",
 	go = "go",
 	rs = "rust",
+	cs = "csharp",
 }
 
 local function scan_file(filepath)

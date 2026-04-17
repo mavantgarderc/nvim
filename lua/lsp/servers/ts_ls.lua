@@ -60,6 +60,7 @@ function M.setup(capabilities)
 	vim.lsp.config("ts_ls", {
 		capabilities = capabilities,
 		settings = settings,
+		root_dir = vim.fs.root(0, { "package.json", "tsconfig.json", "jsconfig.json", ".git" }),
 
 		on_attach = function(client, _)
 			client.server_capabilities.documentFormattingProvider = false
@@ -72,21 +73,6 @@ end
 function M.extend(client, bufnr)
 	local opts = { buffer = bufnr, silent = true }
 
-	local function code_action(kind, desc)
-		return function()
-			vim.lsp.buf.code_action({
-				apply = true,
-				context = { only = { kind }, diagnostics = {} },
-			})
-		end,
-			desc
-	end
-
-	vim.keymap.set("n", "<leader>to", code_action("source.organizeImports.ts", "Organize imports (TS)"))
-	vim.keymap.set("n", "<leader>ta", code_action("source.addMissingImports.ts", "Add missing imports (TS)"))
-	vim.keymap.set("n", "<leader>tu", code_action("source.removeUnused.ts", "Remove unused (TS)"))
-
-	-- remap all three with buffer scope
 	for _, map in ipairs({
 		{ "<leader>to", "source.organizeImports.ts", "Organize imports (TS)" },
 		{ "<leader>ta", "source.addMissingImports.ts", "Add missing imports (TS)" },

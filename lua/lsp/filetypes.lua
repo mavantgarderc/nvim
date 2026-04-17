@@ -1,5 +1,18 @@
 vim.filetype.add({
 	extension = {
+		cs = "cs",
+		csx = "cs",
+		fs = "fsharp",
+		fsx = "fsharp",
+		vb = "vb",
+		sln = "sln",
+		csproj = "xml",
+		fsproj = "xml",
+		vbproj = "xml",
+		props = "xml",
+		targets = "xml",
+		razor = "razor",
+		cshtml = "razor",
 		ipynb = "ipynb",
 		pt = "pytorch",
 		pkl = "pickle",
@@ -48,6 +61,9 @@ vim.filetype.add({
 	},
 
 	filename = {
+		["omnisharp.json"] = "json",
+		["global.json"] = "json",
+		["nuget.config"] = "xml",
 		["Chart.yaml"] = "yaml.helm-values",
 		["values.yaml"] = "yaml.helm-values",
 		["model.yml"] = "yaml",

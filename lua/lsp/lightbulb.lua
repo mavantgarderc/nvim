@@ -10,7 +10,7 @@ vim.fn.sign_define(sign_name, { text = "💡", texthl = "DiagnosticSignWarn" })
 local function update_lightbulb(bufnr)
   vim.fn.sign_unplace("lsp_lightbulb", { buffer = bufnr })
 
-  local params = vim.lsp.util.make_range_params()
+  local params = vim.lsp.util.make_range_params(0, "utf-16")
   params.context = { diagnostics = vim.diagnostic.get(bufnr, { lnum = params.range.start.line }) }
 
   vim.lsp.buf_request(bufnr, "textDocument/codeAction", params, function(err, results, _)
