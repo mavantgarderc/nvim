@@ -1,31 +1,10 @@
+-- lsp/analytics.lua
+
 local M = {}
 
 local mason_registry_ok, mason_registry = pcall(require, "mason-registry")
 local dynamic = require("lsp.dynamic")
 local commands_registered = false
-
--- filetype -> server_name (vim.lsp.config name)
-local filetype_to_server_map = {
-	python = "pyright",
-	javascript = "ts_ls",
-	javascriptreact = "ts_ls",
-	typescript = "ts_ls",
-	typescriptreact = "ts_ls",
-	html = "html",
-	templ = "html",
-	css = "cssls",
-	scss = "cssls",
-	less = "cssls",
-	json = "jsonls",
-	yaml = "yamlls",
-	yml = "yamlls",
-	dockerfile = "dockerls",
-	sh = "bashls",
-	terraform = "terraformls",
-	lua = "lua_ls",
-	rust = "rust_analyzer",
-	go = "gopls",
-}
 
 -- server_name -> Mason package name
 local server_to_mason_map = {
@@ -41,150 +20,139 @@ local server_to_mason_map = {
 	lua_ls = "lua-language-server",
 	rust_analyzer = "rust-analyzer",
 	gopls = "gopls",
+	zls = "zls",
+	omnisharp = "omnisharp",
 }
 
+--- Ensure a server's Mason package is installed.
+--- @param server_name string
+--- @return boolean
 local function ensure_installed(server_name)
 	if not mason_registry_ok then
-		return
+		return false
 	end
 
 	local pkg_name = server_to_mason_map[server_name]
 	if not pkg_name then
-		vim.notify(
-			string.format("[LSP Dynamic] No Mason package mapping for server '%s'", server_name),
-			vim.log.levels.DEBUG
-		)
-		return
-	end
-
-	if mason_registry.is_installed(pkg_name) then
-		return
+		vim.notify(string.format("[LSP Analytics] No Mason mapping for '%s'", server_name), vim.log.levels.DEBUG)
+		return false
 	end
 
 	local ok, pkg = pcall(mason_registry.get_package, pkg_name)
 	if not ok or not pkg then
-		vim.notify(
-			string.format("[LSP Dynamic] Mason package '%s' not found for server '%s'", pkg_name, server_name),
-			vim.log.levels.WARN
-		)
-		return
+		vim.notify(string.format("[LSP Analytics] Mason package '%s' not found", pkg_name), vim.log.levels.WARN)
+		return false
 	end
 
-	vim.notify(string.format("[LSP Dynamic] Installing LSP %s (Mason: %s)", server_name, pkg_name), vim.log.levels.INFO)
+	if pkg:is_installed() then
+		return true
+	end
+
+	vim.notify(string.format("[LSP Analytics] Installing %s (mason: %s)", server_name, pkg_name), vim.log.levels.INFO)
 	pkg:install()
+	return true
 end
 
--- Register dynamic servers and (optionally) ensure they’re installed.
+--- Sync dynamic registry with Mason. Ensures all registered servers are installed.
+--- @param opts? { install?: boolean }
 function M.register_dynamic_servers(opts)
 	opts = opts or {}
 	local install = opts.install ~= false
 
-	-- Ensure all registry servers are considered for Mason.
-	for server_name, cfg in pairs(dynamic.registry) do
-		if install then
-			ensure_installed(server_name)
-		end
-		dynamic.registry[server_name] = cfg
-	end
-
-	-- Also ensure any filetype -> server mapping is consistent with registry.
-	for ft, server_name in pairs(filetype_to_server_map) do
-		local reg = dynamic.registry[server_name]
-		if not reg then
-			vim.notify(
-				string.format(
-					"[LSP Dynamic] Filetype '%s' maps to server '%s' which is not in dynamic.registry",
-					ft,
-					server_name
-				),
-				vim.log.levels.WARN
-			)
-		else
-			-- Guarantee that mapped ft is present in registry config
-			if not vim.tbl_contains(reg.filetypes or {}, ft) then
-				reg.filetypes = reg.filetypes or {}
-				table.insert(reg.filetypes, ft)
-			end
-			dynamic.registry[server_name] = reg
-			if install then
-				ensure_installed(server_name)
-			end
-		end
-	end
-end
-
--- Trigger dynamic start for the current buffer’s filetype.
-function M.trigger_for_current_buffer()
-	local bufnr = vim.api.nvim_get_current_buf()
-	local ft = vim.bo[bufnr].filetype
-	if not ft or ft == "" then
+	if not install then
 		return
 	end
 
-	for name, cfg in pairs(dynamic.registry) do
-		if vim.tbl_contains(cfg.filetypes or {}, ft) then
-			dynamic.try_spawn(name, bufnr)
+	local seen = {}
+	for server_name, _ in pairs(dynamic.list()) do
+		if not seen[server_name] then
+			seen[server_name] = true
+			ensure_installed(server_name)
 		end
 	end
 end
 
-function M.show_report()
-	local bufnr = vim.api.nvim_get_current_buf()
-	local ft = vim.bo[bufnr].filetype
-	local attached = vim.lsp.get_clients({ bufnr = bufnr })
-	local active = vim.tbl_keys(dynamic.active or {})
-	table.sort(active)
+--- Collect status for all registered servers.
+--- @return table<string, table>
+local function collect_server_status()
+	local status = {}
 
-	local registry = vim.tbl_keys(dynamic.registry or {})
-	table.sort(registry)
+	for server_name, cfg in pairs(dynamic.list()) do
+		local mason_pkg = server_to_mason_map[server_name]
+		local installed = false
 
-	local lines = {
-		"LSP Analytics",
-		"",
-		string.format("Current filetype: %s", ft ~= "" and ft or "none"),
-		string.format("Attached clients: %d", #attached),
-		string.format("Dynamic registry size: %d", #registry),
-		string.format("Dynamic active count: %d", #active),
-		"",
-	}
-
-	if #attached > 0 then
-		table.insert(lines, "Attached:")
-		for _, client in ipairs(attached) do
-			table.insert(lines, string.format("  • %s (%s)", client.name, client.config.root_dir or "no root"))
+		if mason_registry_ok and mason_pkg then
+			local ok, pkg = pcall(mason_registry.get_package, mason_pkg)
+			if ok and pkg then
+				installed = pkg:is_installed()
+			end
 		end
-		table.insert(lines, "")
+
+		local fts = cfg.filetypes or {}
+
+		status[server_name] = {
+			server = server_name,
+			filetypes = fts,
+			registered = true,
+			mason_package = mason_pkg or "N/A",
+			installed = installed,
+			active_clients = #vim.lsp.get_clients({ name = server_name }),
+		}
 	end
 
-	if #active > 0 then
-		table.insert(lines, "Active dynamic servers:")
-		for _, name in ipairs(active) do
-			local installed = "unknown"
-			local pkg_name = server_to_mason_map[name]
-			if mason_registry_ok and pkg_name then
-				installed = mason_registry.is_installed(pkg_name) and "installed" or "missing"
-			elseif pkg_name == nil then
-				installed = "unmapped"
-			end
-			table.insert(lines, string.format("  • %s [%s]", name, installed))
-		end
-	else
-		table.insert(lines, "Active dynamic servers: none")
+	return status
+end
+
+local function print_status()
+	local status = collect_server_status()
+	local lines = { "LSP Analytics — Server Status:", "" }
+
+	for name, s in pairs(status) do
+		table.insert(
+			lines,
+			string.format(
+				"  %s | ft: %s | mason: %s | installed: %s | clients: %d",
+				name,
+				table.concat(s.filetypes, ","),
+				s.mason_package,
+				s.installed and "yes" or "no",
+				s.active_clients
+			)
+		)
+	end
+
+	if #lines == 2 then
+		table.insert(lines, "  (no servers registered)")
 	end
 
 	vim.notify(table.concat(lines, "\n"), vim.log.levels.INFO)
 end
 
-function M.setup()
+local function setup_commands()
 	if commands_registered then
 		return
 	end
-
-	vim.api.nvim_create_user_command("LspAnalytics", function()
-		M.show_report()
-	end, { desc = "Show LSP analytics report" })
-
 	commands_registered = true
+
+	vim.api.nvim_create_user_command("LspDynamicStatus", function()
+		print_status()
+	end, { desc = "Show LSP dynamic/Mason status" })
+
+	vim.api.nvim_create_user_command("LspDynamicRegister", function(cmd_opts)
+		local install = cmd_opts.bang ~= true
+		M.register_dynamic_servers({ install = install })
+		vim.notify(
+			string.format("[LSP Analytics] Registry synced (install=%s)", tostring(install)),
+			vim.log.levels.INFO
+		)
+	end, {
+		desc = "Sync dynamic LSP registry with Mason",
+		bang = true,
+	})
+end
+
+function M.setup()
+	setup_commands()
 end
 
 return M
