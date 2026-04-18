@@ -15,17 +15,19 @@ function M.setup(capabilities)
 
 		settings = {
 			["rust-analyzer"] = {
-				cargo = {
-					allFeatures = true,
-				},
 				checkOnSave = {
 					command = "clippy",
 				},
-				diagnostics = {
-					disabled = { "unresolved-proc-macro" },
+				cargo = {
+					buildScripts = {
+						enable = true,
+					},
 				},
-				completion = {
-					autoimport = { enable = true },
+				imports = {
+					granularity = {
+						group = "module",
+					},
+					prefix = "self",
 				},
 				inlayHints = {
 					chainingHints = true,

@@ -5,66 +5,62 @@ function M.setup(capabilities)
 		return
 	end
 
-	local settings = {
-		typescript = {
-			inlayHints = {
-				includeInlayParameterNameHints = "all",
-				includeInlayParameterNameHintsWhenArgumentMatchesName = false,
-				includeInlayFunctionParameterTypeHints = true,
-				includeInlayVariableTypeHints = true,
-				includeInlayVariableTypeHintsWhenTypeMatchesName = false,
-				includeInlayPropertyDeclarationTypeHints = true,
-				includeInlayFunctionLikeReturnTypeHints = true,
-				includeInlayEnumMemberValueHints = true,
-			},
-			preferences = {
-				includeCompletionsForModuleExports = true,
-				includeCompletionsWithInsertText = true,
-				quoteStyle = "single",
-				importModuleSpecifier = "relative",
-			},
-			suggest = {
-				autoImports = true,
-				completeFunctionCalls = true,
-				completeJSDocs = true,
-			},
-			updateImportsOnFileMove = "always",
-		},
-
-		javascript = {
-			inlayHints = {
-				includeInlayParameterNameHints = "all",
-				includeInlayParameterNameHintsWhenArgumentMatchesName = false,
-				includeInlayFunctionParameterTypeHints = true,
-				includeInlayVariableTypeHints = true,
-				includeInlayVariableTypeHintsWhenTypeMatchesName = false,
-				includeInlayPropertyDeclarationTypeHints = true,
-				includeInlayFunctionLikeReturnTypeHints = true,
-				includeInlayEnumMemberValueHints = true,
-			},
-			preferences = {
-				includeCompletionsForModuleExports = true,
-				includeCompletionsWithInsertText = true,
-				quoteStyle = "single",
-				importModuleSpecifier = "relative",
-			},
-			suggest = {
-				autoImports = true,
-				completeFunctionCalls = true,
-				completeJSDocs = true,
-			},
-			updateImportsOnFileMove = "always",
-		},
-	}
-
 	vim.lsp.config("ts_ls", {
 		capabilities = capabilities,
-		settings = settings,
-		root_dir = vim.fs.root(0, { "package.json", "tsconfig.json", "jsconfig.json", ".git" }),
 
-		on_attach = function(client, _)
+		filetypes = {
+			"javascript",
+			"javascriptreact",
+			"typescript",
+			"typescriptreact",
+		},
+
+		on_attach = function(client)
 			client.server_capabilities.documentFormattingProvider = false
+			client.server_capabilities.documentRangeFormattingProvider = false
 		end,
+
+		settings = {
+			typescript = {
+				inlayHints = {
+					includeInlayParameterNameHints = "all",
+					includeInlayParameterNameHintsWhenArgumentMatchesName = false,
+					includeInlayFunctionParameterTypeHints = true,
+					includeInlayVariableTypeHints = true,
+					includeInlayVariableTypeHintsWhenTypeMatchesName = false,
+					includeInlayPropertyDeclarationTypeHints = true,
+					includeInlayFunctionLikeReturnTypeHints = true,
+					includeInlayEnumMemberValueHints = true,
+				},
+				preferences = {
+					importModuleSpecifierPreference = "non-relative",
+					quoteStyle = "double",
+				},
+			},
+			javascript = {
+				inlayHints = {
+					includeInlayParameterNameHints = "all",
+					includeInlayParameterNameHintsWhenArgumentMatchesName = false,
+					includeInlayFunctionParameterTypeHints = true,
+					includeInlayVariableTypeHints = true,
+					includeInlayVariableTypeHintsWhenTypeMatchesName = false,
+					includeInlayPropertyDeclarationTypeHints = true,
+					includeInlayFunctionLikeReturnTypeHints = true,
+					includeInlayEnumMemberValueHints = true,
+				},
+				preferences = {
+					importModuleSpecifierPreference = "non-relative",
+					quoteStyle = "double",
+				},
+			},
+		},
+
+		root_dir = vim.fs.root(0, {
+			"tsconfig.json",
+			"package.json",
+			"jsconfig.json",
+			".git",
+		}),
 	})
 
 	vim.lsp.enable("ts_ls")

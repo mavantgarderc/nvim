@@ -81,59 +81,6 @@ function M.setup(capabilities)
 		},
 	})
 
-	vim.api.nvim_create_user_command("MyPy", function()
-		local root = vim.fs.root(0, { "pyproject.toml", "setup.cfg", "mypy.ini", ".mypy.ini", ".git" })
-			or vim.fn.getcwd()
-
-		vim.notify("mypy: running on " .. root .. " …", vim.log.levels.INFO)
-
-		vim.fn.jobstart({ "mypy", "--show-error-codes", "--no-color-output", "." }, {
-			cwd = root,
-			stdout_buffered = true,
-			stderr_buffered = true,
-			on_stdout = function(_, data)
-				if not data or (#data == 1 and data[1] == "") then
-					return
-				end
-				local items = {}
-				for _, line in ipairs(data) do
-					local file, lnum, col, msg = line:match("^(.+):(%d+):(%d+): (.+)$")
-					if not file then
-						file, lnum, msg = line:match("^(.+):(%d+): (.+)$")
-						col = "1"
-					end
-					if file then
-						table.insert(items, {
-							filename = vim.fs.joinpath(root, file),
-							lnum = tonumber(lnum),
-							col = tonumber(col) or 1,
-							text = msg,
-							type = msg:match("^error") and "E" or "W",
-						})
-					end
-				end
-				if #items > 0 then
-					vim.schedule(function()
-						vim.fn.setqflist(items, "r")
-						vim.cmd("copen")
-						vim.notify("mypy: " .. #items .. " finding(s)", vim.log.levels.WARN)
-					end)
-				else
-					vim.schedule(function()
-						vim.notify("mypy: clean ✓", vim.log.levels.INFO)
-					end)
-				end
-			end,
-			on_stderr = function(_, data)
-				if data and #data > 1 then
-					vim.schedule(function()
-						vim.notify("mypy stderr: " .. table.concat(data, "\n"), vim.log.levels.ERROR)
-					end)
-				end
-			end,
-		})
-	end, { desc = "Run MyPy on project root → quickfix" })
-
 	vim.lsp.enable("pyright")
 	vim.lsp.enable("jedi_language_server")
 	vim.lsp.enable("ruff")

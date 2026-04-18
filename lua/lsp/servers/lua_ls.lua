@@ -7,26 +7,32 @@ function M.setup(capabilities)
 
 	vim.lsp.config("lua_ls", {
 		capabilities = capabilities,
+
 		on_attach = function(client)
 			client.server_capabilities.documentFormattingProvider = false
 			client.server_capabilities.documentRangeFormattingProvider = false
 		end,
+
 		settings = {
 			Lua = {
-				diagnostics = { globals = { "vim" } },
+				runtime = {
+					version = "LuaJIT",
+				},
+				diagnostics = {
+					globals = { "vim" },
+				},
 				workspace = {
-					library = {
-						[vim.fn.expand("$VIMRUNTIME/lua")] = true,
-						[vim.fn.stdpath("config") .. "/lua"] = true,
-					},
+					library = vim.api.nvim_get_runtime_file("", true),
 					checkThirdParty = false,
 				},
-				telemetry = { enable = false },
-				completion = { callSnippet = "Replace" },
-				format = { enable = false },
-				inlayHints = {
-					chainingHints = true,
-					parameterHints = true,
+				telemetry = {
+					enable = false,
+				},
+				hint = {
+					enable = true,
+					setType = true,
+					paramType = true,
+					paramName = "All",
 				},
 			},
 		},

@@ -30,4 +30,19 @@ function M.find_monorepo_root(fname)
 	)
 end
 
+-- UI guard: prevent LSP start in headless/non-interactive environments
+function M.should_start_server()
+	return #vim.api.nvim_list_uis() > 0
+end
+
+-- Shared on_attach: disable formatting by default
+function M.on_attach(client, bufnr)
+	if client.server_capabilities.documentFormattingProvider then
+		client.server_capabilities.documentFormattingProvider = false
+	end
+	if client.server_capabilities.documentRangeFormattingProvider then
+		client.server_capabilities.documentRangeFormattingProvider = false
+	end
+end
+
 return M

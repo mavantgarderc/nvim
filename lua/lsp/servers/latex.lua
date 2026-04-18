@@ -17,30 +17,27 @@ function M.setup(capabilities)
 			texlab = {
 				auxDirectory = ".",
 				bibtexFormatter = "texlab",
-
 				build = {
-					args = { "-pdf", "-interaction=nonstopmode", "-synctex=1", "%f" },
 					executable = "latexmk",
-					forwardSearchAfter = false,
-					onSave = false,
+					args = { "-pdf", "-interaction=nonstopmode", "-synctex=1", "%f" },
+					onSave = true,
 				},
-
-				chktex = {
-					onEdit = false,
-					onOpenAndSave = true,
-				},
-
-				diagnosticsDelay = 300,
-				formatterLineLength = 80,
-
 				forwardSearch = {
 					executable = "zathura",
-					args = { "--synctex-forward", "%l:1:%f", "%p" },
+					args = { "%p", "--synctex-forward", "%l:1:%f" },
 				},
-
+				chktex = {
+					onOpenAndSave = true,
+					onEdit = true,
+				},
+				diagnosticsDelay = 300,
 				latexFormatter = "latexindent",
 				latexindent = {
-					modifyLineBreaks = false,
+					modifyLineBreaks = true,
+				},
+				inlayHints = {
+					chainingHints = true,
+					parameterHints = true,
 				},
 			},
 		},

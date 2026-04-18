@@ -37,7 +37,7 @@ map("n", "<C-b>", "<C-b>zt", "Go one page up")
 map("n", "<C-u>", "<C-u>zz", "Go half page up")
 map("n", "<C-d>", "<C-d>zz", "Go half page down")
 map("n", "<C-f>", "<C-f>zb", "Go one page down")
-map("n", "G", "Gzb", "Go to bottom")
+map("n", "G", "GMztG", "Go to bottom")
 
 map("i", "<C-b>", "<ESC>^i", "Go bol; 'i' mode")
 map("i", "<C-h>", "<Left>", "Go left; 'i' mode")

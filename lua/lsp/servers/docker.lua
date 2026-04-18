@@ -12,11 +12,14 @@ function M.setup(capabilities)
 		settings = {
 			docker = {
 				languageserver = {
-					diagnostics = { enable = true },
-				},
-				inlayHints = {
-					chainingHints = true,
-					parameterHints = true,
+					diagnostics = {
+						deprecatedProperties = true,
+						uselessProperties = true,
+					},
+					inlayHints = {
+						chainingHints = true,
+						parameterHints = true,
+					},
 				},
 			},
 		},
