@@ -227,6 +227,9 @@ map("n", "<leader>zR", "zR", { desc = "Open all folds" })
 map("n", "<leader>zM", "zM", { desc = "Close all folds" })
 
 -- Fold method switching
+map("n", "<leader>zme", function()
+	opt.foldmethod = "expr"
+end, { desc = "Set fold method to expr" })
 map("n", "<leader>zmi", function()
 	opt.foldmethod = "indent"
 end, { desc = "Set fold method to indent" })
@@ -236,9 +239,6 @@ end, { desc = "Set fold method to syntax" })
 map("n", "<leader>zmm", function()
 	opt.foldmethod = "manual"
 end, { desc = "Set fold method to manual" })
-map("n", "<leader>zme", function()
-	opt.foldmethod = "expr"
-end, { desc = "Set fold method to expr" })
 map("n", "<leader>zmk", function()
 	opt.foldmethod = "marker"
 end, { desc = "Set fold method to marker" })
@@ -285,18 +285,6 @@ map("n", "<leader>zt", function()
 	local status = vim.opt.foldenable:get() and "enabled" or "disabled"
 	vim.notify("Folding " .. status)
 end, { desc = "Toggle folding" })
-
--- Fold all functions (for programming languages)
--- map("n", "<leader>zff", function()
---   cmd("normal! zE")  -- Clear existing folds
---   cmd("g/^\\s*function\\|^\\s*def\\|^\\s*class/,/^}/fold")
--- end, { desc = "Fold all functions" })
-
--- Fold all comments
-map("n", "<leader>zcc", function()
-	cmd("normal! zE") -- Clear existing folds
-	cmd('g/^\\s*\\/\\*\\|^\\s*\\/\\/\\|^\\s*#\\|^\\s*"/,/\\*\\/\\|$/fold')
-end, { desc = "Fold all comments" })
 
 -- Save and restore fold state
 map("n", "<leader>zs", function()

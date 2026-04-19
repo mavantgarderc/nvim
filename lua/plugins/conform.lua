@@ -3,6 +3,7 @@ return {
 	lazy = true,
 	cmd = { "ConformInfo" },
 	priority = 10,
+
 	keys = {
 		{
 			"<leader>lf",
@@ -13,6 +14,7 @@ return {
 			desc = "Format buffer",
 		},
 	},
+
 	opts = {
 		formatters_by_ft = {
 			lua = { "stylua" },
@@ -34,6 +36,19 @@ return {
 			cpp = { "clang_format" },
 			sh = { "shfmt" },
 		},
+
+		formatters = {
+			black = {
+				command = "/usr/bin/black",
+			},
+			isort = {
+				command = "/usr/bin/isort",
+			},
+			prettier = {
+				command = "prettier",
+			},
+		},
+
 		format_on_save = {
 			timeout_ms = 500,
 			lsp_fallback = true,

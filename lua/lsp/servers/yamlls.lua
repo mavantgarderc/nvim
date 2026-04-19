@@ -1,41 +1,54 @@
-return {
-	setup = function(capabilities)
-		require("lspconfig").yamlls.setup({
-			capabilities = capabilities,
-			settings = {
-				yaml = {
-					schemas = {
-						["https://json.schemastore.org/github-workflow.json"] = "/.github/workflows/*",
-						["https://json.schemastore.org/github-action.json"] = ".github/action.{yml,yaml}",
-						["https://json.schemastore.org/prettierrc.json"] = ".prettierrc.{yml,yaml}",
-						["https://json.schemastore.org/stylelintrc.json"] = ".stylelintrc.{yml,yaml}",
-						["https://json.schemastore.org/circleciconfig.json"] = ".circleci/**/*.{yml,yaml}",
-					},
-					customTags = {
-						"!fn",
-						"!And",
-						"!If",
-						"!Not",
-						"!Equals",
-						"!Or",
-						"!FindInMap sequence",
-						"!Base64",
-						"!Cidr",
-						"!Ref",
-						"!Sub",
-						"!GetAtt",
-						"!GetAZs",
-						"!ImportValue",
-						"!Select",
-						"!Split",
-						"!Join sequence",
-					},
+local M = {}
+
+function M.setup(capabilities)
+	if #vim.api.nvim_list_uis() == 0 then
+		return
+	end
+
+	vim.lsp.config("yamlls", {
+		capabilities = capabilities,
+
+		settings = {
+			yaml = {
+				keyOrdering = false,
+				format = {
+					enable = true,
+				},
+				validate = true,
+				hover = true,
+				completion = true,
+				trace = {
+					server = "off",
+				},
+				schemas = {
+					["https://json.schemastore.org/github-workflow.json"] = "/.github/workflows/*",
+					["https://json.schemastore.org/github-action.json"] = "/.github/actions/*",
+				},
+				customTags = {
+					"!Ref scalar",
+					"!Ref mapping",
+					"!Sub scalar",
+					"!Sub mapping",
+					"!GetAtt scalar",
+					"!GetAtt mapping",
+					"!FindInMap scalar",
+					"!FindInMap mapping",
+					"!ImportValue scalar",
+					"!ImportValue mapping",
+					"!Join scalar",
+					"!Join mapping",
+					"!Select scalar",
+					"!Select mapping",
 				},
 				inlayHints = {
 					chainingHints = true,
 					parameterHints = true,
 				},
 			},
-		})
-	end,
-}
+		},
+	})
+
+	vim.lsp.enable("yamlls")
+end
+
+return M

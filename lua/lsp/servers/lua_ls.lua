@@ -1,64 +1,64 @@
 local M = {}
 
 function M.setup(capabilities)
-	vim.schedule(function()
-		local lua_ls_ok, lspconfig = pcall(require, "lspconfig")
-		if not lua_ls_ok then
-			vim.notify("[lsp.servers.lua_ls] nvim-lspconfig not found", vim.log.levels.WARN)
-			return
-		end
+	if #vim.api.nvim_list_uis() == 0 then
+		return
+	end
 
-		local lua_ls_configs_ok, configs = pcall(require, "lspconfig.configs")
-		if not lua_ls_configs_ok then
-			vim.notify("[lsp.servers.lua_ls] lspconfig.configs missing", vim.log.levels.WARN)
-			return
-		end
+	vim.lsp.config("lua_ls", {
+		capabilities = capabilities,
 
-		if not configs.lua_ls then
-			configs.lua_ls = {
-				default_config = {
-					cmd = { "lua-language-server" },
-					filetypes = { "lua" },
-					root_dir = lspconfig.util.root_pattern(
-						".git",
-						".luarc.json",
-						".luarc.jsonc",
-						".luacheckrc",
-						".stylua.toml",
-						"selene.toml"
-					),
-					settings = {},
+		on_attach = function(client)
+			client.server_capabilities.documentFormattingProvider = false
+			client.server_capabilities.documentRangeFormattingProvider = false
+		end,
+
+		settings = {
+			Lua = {
+				runtime = {
+					version = "LuaJIT",
 				},
-			}
-		end
-
-		lspconfig.lua_ls.setup({
-			capabilities = capabilities,
-			on_attach = function(client)
-				client.server_capabilities.documentFormattingProvider = false
-				client.server_capabilities.documentRangeFormattingProvider = false
-			end,
-			settings = {
-				Lua = {
-					diagnostics = { globals = { "vim" } },
-					workspace = {
-						library = {
-							[vim.fn.expand("$VIMRUNTIME/lua")] = true,
-							[vim.fn.stdpath("config") .. "/lua"] = true,
-						},
-						checkThirdParty = false,
+				diagnostics = {
+					globals = { "vim" },
+				},
+				workspace = {
+					library = {
+						vim.env.VIMRUNTIME,
+						"${3rd}/luv/library",
 					},
-					telemetry = { enable = false },
-					completion = { callSnippet = "Replace" },
-					format = { enable = false },
-					inlayHints = {
-						chainingHints = true,
-						parameterHints = true,
-					},
+					checkThirdParty = false,
+				},
+				telemetry = {
+					enable = false,
+				},
+				hint = {
+					enable = true,
+					setType = true,
+					paramType = true,
+					paramName = "All",
 				},
 			},
-		})
-	end)
+		},
+	})
+
+	vim.lsp.enable("lua_ls")
+end
+
+-- ── Extender (micro-plugin) ──────────────────────────────────────
+-- Runs on every LspAttach for this server, per-buffer
+function M.extend(client, bufnr)
+	local opts = { buffer = bufnr, silent = true }
+
+	-- Toggle inlay hints
+	vim.keymap.set("n", "<leader>le", function()
+		vim.lsp.inlay_hint.enable(not vim.lsp.inlay_hint.is_enabled({ bufnr = bufnr }), { bufnr = bufnr })
+	end, vim.tbl_extend("force", opts, { desc = "Toggle inlay hints (lua)" }))
+
+	-- Quick access to Lua workspace library reload
+	vim.keymap.set("n", "<leader>lw", function()
+		client:notify("workspace/didChangeConfiguration", { settings = client.config.settings })
+		vim.notify("lua_ls: workspace config reloaded", vim.log.levels.INFO)
+	end, vim.tbl_extend("force", opts, { desc = "Reload lua_ls workspace" }))
 end
 
 return M

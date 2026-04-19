@@ -26,4 +26,14 @@ function M.setup(capabilities)
 	end, 150) -- Increased delay to ensure lspconfig is ready
 end
 
+-- Optional: per-buffer hooks that fire on every LspAttach
+-- Signature: extend(client, bufnr)
+--
+-- function M.extend(client, bufnr)
+--   local opts = { buffer = bufnr, silent = true }
+--   vim.keymap.set("n", "<leader>xx", function()
+--     -- your action
+--   end, vim.tbl_extend("force", opts, { desc = "My action" }))
+-- end
+
 return M

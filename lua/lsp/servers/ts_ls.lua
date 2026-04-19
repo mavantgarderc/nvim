@@ -1,24 +1,26 @@
-if #vim.api.nvim_list_uis() == 0 then
-	return { setup = function() end }
-end
-
 local M = {}
 
 function M.setup(capabilities)
-	vim.defer_fn(function()
-		local ts_ls_ok, lspconfig = pcall(require, "lspconfig")
-		if not ts_ls_ok then
-			vim.notify("[lsp.servers.typescript] nvim-lspconfig not found", vim.log.levels.WARN)
-			return
-		end
+	if #vim.api.nvim_list_uis() == 0 then
+		return
+	end
 
-		local ts_ls_config_ok = pcall(require, "lspconfig.server_configurations.ts_ls")
-		if not ts_ls_config_ok then
-			vim.notify("[lsp.servers.typescript] ts_ls configuration not available", vim.log.levels.WARN)
-			return
-		end
+	vim.lsp.config("ts_ls", {
+		capabilities = capabilities,
 
-		local settings = {
+		filetypes = {
+			"javascript",
+			"javascriptreact",
+			"typescript",
+			"typescriptreact",
+		},
+
+		on_attach = function(client)
+			client.server_capabilities.documentFormattingProvider = false
+			client.server_capabilities.documentRangeFormattingProvider = false
+		end,
+
+		settings = {
 			typescript = {
 				inlayHints = {
 					includeInlayParameterNameHints = "all",
@@ -29,6 +31,10 @@ function M.setup(capabilities)
 					includeInlayPropertyDeclarationTypeHints = true,
 					includeInlayFunctionLikeReturnTypeHints = true,
 					includeInlayEnumMemberValueHints = true,
+				},
+				preferences = {
+					importModuleSpecifierPreference = "non-relative",
+					quoteStyle = "double",
 				},
 			},
 			javascript = {
@@ -42,23 +48,39 @@ function M.setup(capabilities)
 					includeInlayFunctionLikeReturnTypeHints = true,
 					includeInlayEnumMemberValueHints = true,
 				},
+				preferences = {
+					importModuleSpecifierPreference = "non-relative",
+					quoteStyle = "double",
+				},
 			},
-		}
+		},
 
-		local solidity_server_setup_ok, err = pcall(function()
-			lspconfig.ts_ls.setup({
-				capabilities = capabilities,
-				settings = settings,
-				on_attach = function(client)
-					client.server_capabilities.documentFormattingProvider = false
-				end,
+		root_dir = vim.fs.root(0, {
+			"tsconfig.json",
+			"package.json",
+			"jsconfig.json",
+			".git",
+		}),
+	})
+
+	vim.lsp.enable("ts_ls")
+end
+
+function M.extend(client, bufnr)
+	local opts = { buffer = bufnr, silent = true }
+
+	for _, map in ipairs({
+		{ "<leader>to", "source.organizeImports.ts", "Organize imports (TS)" },
+		{ "<leader>ta", "source.addMissingImports.ts", "Add missing imports (TS)" },
+		{ "<leader>tu", "source.removeUnused.ts", "Remove unused (TS)" },
+	}) do
+		vim.keymap.set("n", map[1], function()
+			vim.lsp.buf.code_action({
+				apply = true,
+				context = { only = { map[2] }, diagnostics = {} },
 			})
-		end)
-
-		if not solidity_server_setup_ok then
-			vim.notify("[lsp.servers.typescript] Setup failed: " .. tostring(err), vim.log.levels.WARN)
-		end
-	end, 100)
+		end, vim.tbl_extend("force", opts, { desc = map[3] }))
+	end
 end
 
 return M

@@ -14,14 +14,50 @@ return {
 		config = function()
 			local cmp = require("cmp")
 			local luasnip = require("luasnip")
-			local cmp_luasnip = require("cmp_luasnip")
-			local types = require("cmp.types")
-			local api = require("cmp.utils.api")
+			local fn = vim.fn
+			local g = vim.g
 
-			-- Load snippets
 			require("luasnip.loaders.from_vscode").lazy_load()
 			luasnip.filetype_extend("javascript", { "javascriptreact" })
 			luasnip.filetype_extend("typescript", { "typescriptreact" })
+
+			if g.have_nerd_font == nil then
+				g.have_nerd_font = fn.has("nvim-0.7") == 1
+			end
+
+			local kind_icons = {
+				Text = "󰉿 ",
+				Method = "󰆧 ",
+				Function = "󰡱 ",
+				Constructor = " ",
+				Field = "󰜢 ",
+				Variable = "󰀫 ",
+				Class = "󰠱 ",
+				Interface = " ",
+				Module = " ",
+				Property = "󰜢 ",
+				Unit = "󰑭 ",
+				Value = "󰎠 ",
+				Enum = " ",
+				Keyword = "󰌋 ",
+				Snippet = " ",
+				Color = "󰏘 ",
+				File = "󰈙 ",
+				Reference = "󰈇 ",
+				Folder = "󰉋 ",
+				EnumMember = " ",
+				Constant = "󰏿 ",
+				Struct = "󰙅 ",
+				Event = " ",
+				Operator = "󰆕 ",
+				TypeParameter = "󰊄 ",
+			}
+
+			if not g.have_nerd_font then
+				for k in pairs(kind_icons) do
+					kind_icons[k] = ""
+				end
+			end
 
 			cmp.setup({
 				snippet = {
@@ -67,34 +103,6 @@ return {
 				formatting = {
 					fields = { "kind", "abbr", "menu" },
 					format = function(entry, vim_item)
-						local kind_icons = {
-							Text = "󰉿 ",
-							Method = "󰆧 ",
-							Function = "󰡱 ",
-							Constructor = " ",
-							Field = "󰜢 ",
-							Variable = "󰀫 ",
-							Class = "󰠱 ",
-							Interface = " ",
-							Module = " ",
-							Property = "󰜢 ",
-							Unit = "󰑭 ",
-							Value = "󰎠 ",
-							Enum = " ",
-							Keyword = "󰌋 ",
-							Snippet = " ",
-							Color = "󰏘 ",
-							File = "󰈙 ",
-							Reference = "󰈇 ",
-							Folder = "󰉋 ",
-							EnumMember = " ",
-							Constant = "󰏿 ",
-							Struct = "󰙅 ",
-							Event = " ",
-							Operator = "󰆕 ",
-							TypeParameter = "󰊄 ",
-						}
-
 						vim_item.kind = string.format("%s %s", kind_icons[vim_item.kind] or " ", vim_item.kind)
 
 						vim_item.menu = ({
@@ -102,7 +110,15 @@ return {
 							luasnip = "[Snp]",
 							buffer = "[Buf]",
 							path = "[Path]",
-						})[entry.source.name]
+							cmdline = "[CMD]",
+							nvim_lua = "[Lua]",
+						})[entry.source.name] or string.format("[%s]", entry.source.name)
+
+						local label = vim_item.abbr
+						local truncated = fn.strcharpart(label, 0, 40)
+						if truncated ~= label then
+							vim_item.abbr = truncated .. "..."
+						end
 
 						return vim_item
 					end,
@@ -112,7 +128,6 @@ return {
 				},
 			})
 
-			-- Use buffer source for `/` and `?` (if you enabled `native_menu`, this won't work anymore)
 			cmp.setup.cmdline({ "/", "?" }, {
 				mapping = cmp.mapping.preset.cmdline(),
 				sources = {
@@ -120,7 +135,6 @@ return {
 				},
 			})
 
-			-- Use cmdline & path source for ':' (if you enabled `native_menu`, this won't work anymore)
 			cmp.setup.cmdline(":", {
 				mapping = cmp.mapping.preset.cmdline(),
 				sources = cmp.config.sources({
