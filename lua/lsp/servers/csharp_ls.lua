@@ -88,22 +88,6 @@ function M.extend()
 			if not client or client.name ~= "csharp_ls" then
 				return
 			end
-
-			local buf = args.buf
-			local opts = function(desc)
-				return { buffer = buf, silent = true, desc = desc }
-			end
-
-			vim.keymap.set("n", "<leader>cd", vim.lsp.buf.definition, opts("Go to definition"))
-			vim.keymap.set("n", "<leader>cr", vim.lsp.buf.references, opts("Find references"))
-			vim.keymap.set("n", "<leader>ci", vim.lsp.buf.implementation, opts("Go to implementation"))
-			vim.keymap.set("n", "<leader>ct", vim.lsp.buf.type_definition, opts("Type definition"))
-			vim.keymap.set("n", "<leader>cn", vim.lsp.buf.rename, opts("Rename symbol"))
-			vim.keymap.set("n", "<leader>ca", vim.lsp.buf.code_action, opts("Code action"))
-			vim.keymap.set("n", "K", vim.lsp.buf.hover, opts("Hover docs"))
-			vim.keymap.set("n", "<leader>cf", function()
-				vim.lsp.buf.format({ timeout_ms = 3000 })
-			end, opts("Format buffer"))
 		end,
 	})
 end

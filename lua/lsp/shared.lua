@@ -1,3 +1,4 @@
+-- shared.lua
 local M = {}
 
 local cmp_ok, cmp_lsp = pcall(require, "cmp_nvim_lsp")
@@ -15,6 +16,16 @@ capabilities.textDocument.foldingRange = {
 
 capabilities.textDocument.semanticTokens = {
 	dynamicRegistration = false,
+}
+
+capabilities.textDocument.rename = {
+	dynamicRegistration = false,
+	prepareSupport = true,
+}
+
+capabilities.textDocument.hover = {
+  dynamicRegistration = true,
+  contentFormat = { "markdown", "plaintext" },
 }
 
 M.capabilities = capabilities
