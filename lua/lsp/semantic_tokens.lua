@@ -1,5 +1,3 @@
--- semantic_tokens.lua
-
 local M = {}
 
 local config = {

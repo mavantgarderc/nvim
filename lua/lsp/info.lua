@@ -1,4 +1,5 @@
 local M = {}
+
 local commands_registered = false
 
 function M.show_server_info()

@@ -1,6 +1,3 @@
--- lua/lsp/codeaction.lua
--- Smart code action manager with preview, filtering, history, and monorepo grouping
-
 local M = {}
 
 local monorepo = require("lsp.monorepo")

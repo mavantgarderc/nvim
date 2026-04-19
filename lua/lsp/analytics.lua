@@ -1,5 +1,3 @@
--- lsp/analytics.lua
-
 local M = {}
 
 local mason_registry_ok, mason_registry = pcall(require, "mason-registry")
@@ -21,7 +19,7 @@ local server_to_mason_map = {
 	rust_analyzer = "rust-analyzer",
 	gopls = "gopls",
 	zls = "zls",
-	omnisharp = "omnisharp",
+	csharp_ls = "csharp_ls",
 }
 
 --- Ensure a server's Mason package is installed.

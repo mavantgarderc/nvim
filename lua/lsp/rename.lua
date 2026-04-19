@@ -1,6 +1,3 @@
--- lua/lsp/rename.lua
--- Cross-package smart rename with preview, monorepo awareness, and undo
-
 local M = {}
 
 local monorepo = require("lsp.monorepo")

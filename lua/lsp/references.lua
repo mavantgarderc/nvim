@@ -1,6 +1,3 @@
--- lua/lsp/references.lua
--- Cross-Package Reference Finder with monorepo grouping
-
 local M = {}
 
 local monorepo = require("lsp.monorepo")

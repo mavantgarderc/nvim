@@ -1,5 +1,3 @@
--- lsp/dynamic.lua
-
 local M = {}
 
 --- @class DynamicServerConfig

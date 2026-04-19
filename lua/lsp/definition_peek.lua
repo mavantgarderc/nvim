@@ -1,4 +1,3 @@
--- definition_peek.lua
 local M = {}
 
 local peek_buf = nil

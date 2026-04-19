@@ -1,6 +1,3 @@
--- lua/lsp/codelens.lua
--- Code Lens Manager with auto-refresh, toggle, and dynamic server awareness
-
 local M = {}
 
 local _enabled = {} -- per-buffer toggle state: buf -> bool

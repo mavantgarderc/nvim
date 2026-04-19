@@ -16,6 +16,7 @@ local servers = {
 	"bashls",
 	"yamlls",
 	"terraformls",
+	"csharp_ls",
 }
 
 mason_lspconfig.setup({

@@ -63,7 +63,7 @@ vim.filetype.add({
 	filename = {
 		["omnisharp.json"] = "json",
 		["global.json"] = "json",
-		["nuget.config"] = "xml",
+		["Nuget.config"] = "xml",
 		["Chart.yaml"] = "yaml.helm-values",
 		["values.yaml"] = "yaml.helm-values",
 		["model.yml"] = "yaml",

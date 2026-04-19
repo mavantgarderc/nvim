@@ -1,5 +1,3 @@
--- lightbulb.lua
-
 local M = {}
 
 local ns = vim.api.nvim_create_namespace("lsp_lightbulb")

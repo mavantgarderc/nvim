@@ -247,10 +247,7 @@ function M.show()
 		for _, t in ipairs(tasks) do
 			local elapsed = (vim.uv.hrtime() / 1e6 - t.begin_ms) / 1000
 			local pct = t.percentage and string.format(" %d%%", t.percentage) or ""
-			table.insert(
-				lines,
-				string.format("  [%s] %s%s (%.1fs)", t.client_name, t.title, pct, elapsed)
-			)
+			table.insert(lines, string.format("  [%s] %s%s (%.1fs)", t.client_name, t.title, pct, elapsed))
 			if t.message then
 				table.insert(lines, "         " .. t.message)
 			end
