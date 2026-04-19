@@ -5,12 +5,21 @@ return {
 
 	config = function()
 		require("prismpunk").setup({
-			-- theme = "kanagawa/paper-edo",
+			-- scheme = "kanagawa/paper/pebble",
+
+			-- themes = {
+			-- 	"kanagawa",
+			-- 	"tmnt",
+			-- 	"dc",
+			-- 	-- "detox",
+			-- 	-- "punk-cultures",
+			-- 	"nvim-builtins",
+			-- },
 
 			styles = {
 				comments = { italic = true },
 				keywords = { bold = false },
-				functions = { bold = false },
+				functions = { bold = true },
 				variables = {},
 			},
 
@@ -28,12 +37,16 @@ return {
 
 			terminals = {
 				enabled = true,
-				emulator = { "ghostty" },
-
+				emulator = { "alacritty", "ghostty" },
 				ghostty = {
 					enabled = true,
 					auto_reload = true,
 					config_path = vim.fn.expand("~/.config/ghostty/themes/prismpunk.toml"),
+				},
+				alacritty = {
+					enabled = true,
+					auto_reload = true,
+					config_path = vim.fn.expand("~/.config/alacritty/prismpunk.toml"),
 				},
 			},
 		})

@@ -1,6 +1,7 @@
 return {
 	"mavantgarderc/raphael.nvim",
 	"mavantgarderc/prismpunk.nvim",
+	"mavantgarderc/leetcode.nvim",
 	-- "mavantgarderc/conscious.nvim",
 	-- ==================================================
 	-- === ui ===
