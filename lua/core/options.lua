@@ -93,7 +93,9 @@ map.set("n", "<leader>ww", toggle_wrap, { desc = "Toggle line wrap, linebreak, a
 
 opt.foldmethod = "expr"
 opt.foldexpr = "v:lua.vim.treesitter.foldexpr()"
-opt.foldlevel = 99
+opt.foldcolumn = "1" -- Shows a fold indicator column on the left
+opt.foldlevel = 99   -- Start with all folds open by default
+opt.foldlevelstart = 99
 
 opt.number = true -- show absolute line number on the current line
 opt.relativenumber = true -- show relative line numbers on others

@@ -11,6 +11,7 @@ map("n", "<leader>oo", function()
 	else
 		vim.notify(" 󱓎 ", vim.log.levels.INFO)
 	end
+	vim.cmd("mkview")
 end, { desc = "Save all; source if Lua" })
 
 -- map("n", "<leader>o<leader>o", ":wa<CR>:qa", { desc = "Save all, then quit; confirmation needed" })
