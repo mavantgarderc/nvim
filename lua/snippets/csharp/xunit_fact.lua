@@ -1,0 +1,22 @@
+local ls = require("luasnip")
+local s = ls.snippet
+local fmt = require("luasnip.extras.fmt").fmt
+
+return {
+	s(
+		"fact",
+		fmt(
+			[[
+[Fact]
+public void {Name}()
+{{
+    {body}
+}}
+  ]],
+			{
+				Name = ls.insert_node(1, "TestMethod"),
+				body = ls.insert_node(2, "// arrange-act-assert"),
+			}
+		)
+	),
+}
