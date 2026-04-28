@@ -14,4 +14,18 @@ map("n", "<leader>oo", function()
 	vim.cmd("mkview")
 end, { desc = "Save all; source if Lua" })
 
+map("n", "<leader>;w", function()
+	vim.cmd("wall")
+	local filetype = vim.bo.filetype
+	if filetype == "lua" then
+		vim.cmd("source %")
+		vim.notify(" 󱓎 ", vim.log.levels.INFO)
+	else
+		vim.notify(" 󱓎 ", vim.log.levels.INFO)
+	end
+	vim.cmd("mkview")
+end, { desc = "Save all; source if Lua" })
+
+map("n", "<leader>;z", "ZZ", { noremap = true, silent = true })
+
 -- map("n", "<leader>o<leader>o", ":wa<CR>:qa", { desc = "Save all, then quit; confirmation needed" })

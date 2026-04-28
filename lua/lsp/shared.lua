@@ -24,8 +24,8 @@ capabilities.textDocument.rename = {
 }
 
 capabilities.textDocument.hover = {
-  dynamicRegistration = true,
-  contentFormat = { "markdown", "plaintext" },
+	dynamicRegistration = true,
+	contentFormat = { "markdown", "plaintext" },
 }
 
 M.capabilities = capabilities

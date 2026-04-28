@@ -3,7 +3,10 @@ local s = ls.snippet
 local fmt = require("luasnip.extras.fmt").fmt
 
 return {
-  s("audit", fmt([[
+	s(
+		"audit",
+		fmt(
+			[[
 function audit(action) {{
   return (req, res, next) => {{
     const entry = {{
@@ -20,6 +23,8 @@ function audit(action) {{
 }}
 
 module.exports = audit;
-  ]], {})),
+  ]],
+			{}
+		)
+	),
 }
-
